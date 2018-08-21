@@ -94,6 +94,7 @@ spec:
       nodePort: 31231
   selector:
     app: aqua-csp
+  type: NodePort
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
