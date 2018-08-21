@@ -1,0 +1,76 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: aqua-agent
+  namespace: aqua-security
+spec:
+  template:
+    metadata:
+      labels:
+        app: aqua-agent
+      name: aqua-agent
+    spec:      
+      nodeSelector:
+        aqua-enforcer=deploy
+      serviceAccount: aqua-sa
+      hostPID: true
+      containers:
+      - name: aqua-agent
+        image: registry.aquasec/agent:3.5
+        securityContext:
+          privileged: true
+        env:
+        - name: AQUA_TOKEN
+          value: AQUA_BATCH_TOKEN
+        - name: AQUA_SERVER
+          value: aqua-gateway:3622
+        - name: AQUA_INSTALL_PATH
+          value: /var/lib/aquasec
+        - name: RESTART_CONTAINERS
+          value: "no"
+        volumeMounts:
+        - mountPath: /var/run
+          name: var-run
+        - mountPath: /dev
+          name: dev
+        - mountPath: /host/sys
+          name: sys
+          readOnly: true
+        - mountPath: /host/proc
+          name: proc
+          readOnly: true
+        - mountPath: /host/etc
+          name: etc
+          readOnly: true
+        - mountPath: /host/opt/aquasec
+          name: aquasec
+          readOnly: true
+        - mountPath: /opt/aquasec/tmp
+          name: aquasec-tmp
+        - mountPath: /opt/aquasec/audit
+          name: aquasec-audit
+      volumes:
+      - name: var-run
+        hostPath:
+          path: /var/run
+      - name: dev
+        hostPath:
+          path: /dev
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: etc
+        hostPath:
+          path: /etc
+      - name: aquasec
+        hostPath:
+          path: /var/lib/aquasec
+      - name: aquasec-tmp
+        hostPath: 
+          path: /var/lib/aquasec/tmp
+      - name: aquasec-audit
+        hostPath: 
+          path: /var/lib/aquasec/audit
