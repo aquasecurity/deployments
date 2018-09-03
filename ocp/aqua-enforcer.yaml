@@ -16,7 +16,7 @@ spec:
       hostPID: true
       containers:
       - name: aqua-agent
-        image: registry.aquasec/agent:3.5.fp1
+        image: registry.aquasec.com/agent:3.5.fp1
         securityContext:
           privileged: true
         env:
