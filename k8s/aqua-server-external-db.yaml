@@ -95,6 +95,11 @@ spec:
               secretKeyRef:
                 name: aqua-db
                 key: password
+          - name: ADMIN_PASSWORD
+            valueFrom: 
+              secretKeyRef:
+                name: console-admin-password
+                key: admin-password
           - name: SCALOCK_DBNAME
             value: "scalock"
           - name: SCALOCK_DBHOST
