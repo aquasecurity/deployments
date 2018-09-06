@@ -100,6 +100,11 @@ spec:
               secretKeyRef:
                 name: console-admin-password
                 key: admin-password
+          - name: LICENSE_TOKEN
+            valueFrom: 
+              secretKeyRef:
+                name: aqua-license-token
+                key: license-token
           - name: SCALOCK_DBNAME
             value: "scalock"
           - name: SCALOCK_DBHOST
