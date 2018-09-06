@@ -22,8 +22,6 @@ spec:
         volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-socket-mount
-        ports:
-        - containerPort: 8080
       volumes:
         - name: docker-socket-mount
           hostPath:
