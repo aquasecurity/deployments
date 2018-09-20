@@ -11,12 +11,12 @@ spec:
       name: aqua-agent
     spec:      
       nodeSelector:
-        aqua-enforcer=deploy
+        aqua-enforcer: deploy
       serviceAccount: aqua-sa
       hostPID: true
       containers:
       - name: aqua-agent
-        image: registry.aquasec.com/agent:3.5.fp1
+        image: registry.aquasec.com/agent:3.5.fp2
         securityContext:
           privileged: true
         env:
