@@ -82,7 +82,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-csp
-        image: registry.aquasec.com/csp:3.5.fp1
+        image: registry.aquasec.com/csp:3.5.fp2
         env:
           - name: BATCH_INSTALL_TOKEN
             value: AQUA_BATCH_TOKEN
