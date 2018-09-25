@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ClusterRole
 metadata:
   annotations:
-    openshift.io/description: A user who can search and scan images from openshift integrated registry.
+    openshift.io/description: A user who can search and scan images from OpenShift integrated registry.
   name: image-scanner
 rules:
 - apiGroups:
@@ -39,7 +39,7 @@ metadata:
   name: aquadb-pv
   namespace: aqua-security
   labels:
-    app: aqua-csp
+    app: aqua-all-in-one
 spec:
   storageClassName: local-storage
   capacity:
@@ -65,7 +65,7 @@ spec:
   volumeName: aquadb-pv
   selector:
     matchLabels:
-      app: aqua-csp
+      app: aqua-all-in-one
 ---
 apiVersion: v1
 kind: Service
@@ -79,7 +79,7 @@ spec:
     - port: 3622
       name: aqua-gateway
   selector:
-    app: aqua-csp
+    app: aqua-all-in-one
 ---
 apiVersion: v1
 kind: Service
@@ -93,24 +93,24 @@ spec:
     - port: 8080
       nodePort: 31231
   selector:
-    app: aqua-csp
+    app: aqua-all-in-one
   type: NodePort
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: aqua-csp
+  name: aqua-all-in-one
   namespace: aqua-security
 spec:
   template:
     metadata:
       labels:
-        app: aqua-csp
-      name: aqua-csp
+        app: aqua-all-in-one
+      name: aqua-all-in-one
     spec:
       serviceAccount: aqua-sa
       containers:
-      - name: aqua-csp
+      - name: all-in-one
         image: registry.aquasec.com/all-in-one:3.5.fp2
         env:
           - name: BATCH_INSTALL_TOKEN
