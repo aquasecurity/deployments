@@ -1,21 +1,21 @@
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: aqua-agent
+  name: aqua-enforcer
   namespace: aqua-security
 spec:
   template:
     metadata:
       labels:
-        app: aqua-agent
-      name: aqua-agent
+        app: aqua-enforcer
+      name: aqua-enforcer
     spec:      
       nodeSelector:
         aqua-enforcer: deploy
       serviceAccount: aqua-sa
       hostPID: true
       containers:
-      - name: aqua-agent
+      - name: aqua-enforcer
         image: registry.aquasec.com/enforcer:3.5.fp2
         securityContext:
           privileged: true
