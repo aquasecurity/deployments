@@ -26,14 +26,6 @@ subjects:
     namespace: aqua-security
 ---
 apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: aqua-sa
-  namespace: aqua-security
-imagePullSecrets:
-- name: aqua-registry
----
-apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: aquadb-pv
