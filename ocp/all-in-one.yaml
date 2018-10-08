@@ -83,7 +83,6 @@ metadata:
 spec:
   ports:
     - port: 8080
-      nodePort: 31231
   selector:
     app: aqua-all-in-one
   type: NodePort
