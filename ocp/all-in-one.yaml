@@ -102,7 +102,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: all-in-one
-        image: registry.aquasec.com/all-in-one:3.5.fp2
+        image: registry.aquasec.com/all-in-one:3.5.rc3
         env:
           - name: BATCH_INSTALL_TOKEN
             value: AQUA_BATCH_TOKEN
