@@ -1,1 +1,1 @@
-# Deployments Repository For Aqua Security
+# Redhat Openshift
