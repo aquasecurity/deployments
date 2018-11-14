@@ -11,13 +11,14 @@
     * [**Bash**](automation/bash/) - Bash scripts to deploy aqua container security platform (CSP) on your servers. 
     * [**Terraform**](automation/terraform/) - ***Comming Soon*** - Terraform templates for provisioning your servers in cloud and etc, for deploying aqua container security platform (CSP).
 * [**Cloud**](cloud/) - Aqua CSP Templates and deployments in public clouds.
-    * [**AWS**](cloud/aws/) - 
-    * [**Azure**](cloud/azure/) - 
-    * [**GCP**](cloud/gcp/) - 
-* [**Orchestrators**](orchestrators/) - 
-    * [**DC/OS**](orchestrators/dcos/) - 
-    * [**Kubernetes**](orchestrators/kubernetes/) -
-    * [**Openshift**](orchestrators/openshift/) - 
+    * [**AWS**](cloud/aws/) - AWS deployment with CloudFormation templates ,Terraform and etc.
+    * [**Azure**](cloud/azure/) - Microsoft Azure deployment with Templates and etc.
+    * [**GCP**](cloud/gcp/) - Google GCP deployment with marketplace helm and etc.
+* [**Orchestrators**](orchestrators/) - Deploy Aqua container security platform (CSP) on docker orchestrators
+    * [**DC/OS**](orchestrators/dcos/) - Deploy Aqua CSP on Mesosphere DC/OS.
+    * [**Kubernetes**](orchestrators/kubernetes/) - Deploy Aqua CSP on Kubernetes with Helm or Templates and etc.
+    * [**Nomad**](orchestrators/nomad/) - Deploy Aqua CSP on Nomad.
+    * [**Openshift**](orchestrators/openshift/) - Deploy Aqua CSP on Openshift with templates.
 
 ## CI Plugins
 

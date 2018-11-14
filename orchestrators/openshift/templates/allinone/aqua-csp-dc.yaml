@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: ClusterRole
+metadata:
+  annotations:
+    openshift.io/description: A user who can search and scan images from openshift integrated registry.
+  name: image-scanner
+rules:
+- apiGroups:
+  resources:
+  - imagestreams
+  - imagestreams/layers
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: v1
+kind: ClusterRoleBinding
+metadata:
+  name: aqua-scanner-binding
+roleRef:
+  name: image-scanner
+subjects:
+  - kind: ServiceAccount
+    name: aqua-sa
+    namespace: aqua
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: aquadb-pv
+  labels:
+  app: aqua-csp
+spec:
+  storageClassName: local-storage
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/var/lib/aquadata/"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: aquadb-pvc
+  app: :aqua-csp
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 3Gi
+  volumeName: "aquadb-pv"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-csp
+  labels:
+    app: aqua-csp
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 8443
+      name: aqua-web-ssl
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+      name: aqua-web
+    - port: 3622
+      protocol: TCP
+      targetPort: 3622
+      name: aqua-gateway
+  selector:
+    app: aqua-csp
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: aqua-csp
+spec:
+  nodeSelector:
+    aqua-role: csp
+  template:
+    metadata:
+      labels:
+        app: aqua-csp
+    spec:
+      serviceAccount: aqua-sa
+      nodeSelector:
+        aqua-csp: "yes"
+      imagePullSecrets:
+        - name: dockerhub
+      containers:
+      - name: aqua-csp
+        image: docker.io/aquasec/csp:3.0
+        securityContext:
+          privileged: true
+        env:
+          - name: SCALOCK_GATEWAY_PUBLIC_IP
+            value: "aqua-csp.aqua.svc.cluster.local"
+          - name: SCALOCK_GATEWAY_NAME
+            value: "aqua-csp.aqua.svc.cluster.local"
+          - name: BATCH_INSTALL_NAME
+            value: "default"
+          - name: BATCH_INSTALL_TOKEN
+            value: "aqua-csp"
+          - name: BATCH_INSTALL_GATEWAY
+            value: "csp"
+          - name: BATCH_INSTALL_ENFORCE_MODE
+            value: "n"
+        ports:
+          - containerPort: 3622
+          - containerPort: 8080
+          - containerPort: 8443
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: aquadb-datavolume
+          - mountPath: /var/run/docker.sock
+            name: docker-socket-mount
+      volumes:
+        - name: docker-socket-mount
+          hostPath:
+            path: /var/run/docker.sock
+        - name: aquadb-datavolume
+          persistentVolumeClaim:
+            claimName: aquadb-pvc
+  replicas: 1
+  triggers:
+    - type: "ConfigChange"
