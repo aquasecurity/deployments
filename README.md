@@ -8,7 +8,7 @@
 
 * [**Automation**](automation/) - Contains deployment code for Aqua CSP
     * [**Ansible**](automation/ansible/) - ***Comming Soon*** - Ansible playbooks and roles to deploy aqua container security platform (CSP) on your servers.
-    * [**Bash**](automation/bash/) - Bash scripts to deploy aqua container security platform (CSP) on your servers. 
+    * [**Shell**](automation/bash/) - Shell scripts to deploy aqua container security platform (CSP) on your servers. 
     * [**Terraform**](automation/terraform/) - ***Comming Soon*** - Terraform templates for provisioning your servers in cloud and etc, for deploying aqua container security platform (CSP).
 * [**Cloud**](cloud/) - Aqua CSP Templates and deployments in public clouds.
     * [**AWS**](cloud/aws/) - AWS deployment with CloudFormation templates ,Terraform and etc.
