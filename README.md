@@ -1,4 +1,4 @@
-<img src="https://www.aquasec.com/wp-content/uploads/2016/05/aqua_logo_fullcolor.png" heigth="89" width="246" />
+<img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" heigth="100" width="100" />
 
 # Aqua Security Deployment Integrations
 
