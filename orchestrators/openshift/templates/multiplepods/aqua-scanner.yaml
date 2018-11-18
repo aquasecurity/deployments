@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: aqua-scanner
+spec:
+  template:
+    metadata:
+      labels:
+        app: aqua-scanner
+      name: aqua-scanner
+    spec:
+      serviceAccount: aqua-account
+      imagePullSecrets:
+        - name: dockerhub
+      containers:
+      - name: aqua-scanner
+        image: docker.io/aquasec/scanner-cli:3.2
+        args: ["daemon", "--user", "<user>", "--password", "<password>", "--host", "http://aqua-web:8080"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - mountPath: /var/run/docker.sock
+            name: docker-socket-mount
+        ports:
+        - containerPort: 8080
+      volumes:
+        - name: docker-socket-mount
+          hostPath:
+            path: /var/run/docker.sock

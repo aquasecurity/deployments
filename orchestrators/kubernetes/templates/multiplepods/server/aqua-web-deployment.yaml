@@ -1,0 +1,52 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: aqua-web
+spec:
+  template:
+    metadata:
+      labels:
+        app: aqua-web
+      name: aqua-web
+    spec:
+      serviceAccount: aqua            
+      containers:
+      - name: aqua-web
+        image: aquasec/server:3.2
+        env:
+          - name: SCALOCK_DBUSER
+            value: "postgres"
+          - name: SCALOCK_DBPASSWORD
+            valueFrom: 
+              secretKeyRef:
+                name: aqua-db
+                key: password
+          - name: SCALOCK_DBNAME
+            value: "scalock"
+          - name: SCALOCK_DBHOST
+            value: aqua-db
+          - name: SCALOCK_DBPORT
+            value: "5432"
+          - name: SCALOCK_AUDIT_DBUSER
+            value: "postgres"
+          - name: SCALOCK_AUDIT_DBPASSWORD
+            valueFrom: 
+              secretKeyRef:
+                name: aqua-db
+                key: password
+          - name: SCALOCK_AUDIT_DBNAME
+            value: "slk_audit"
+          - name: SCALOCK_AUDIT_DBHOST
+            value: aqua-db
+          - name: SCALOCK_AUDIT_DBPORT
+            value: "5432"
+        volumeMounts:
+          - mountPath: /var/run/docker.sock
+            name: docker-socket-mount
+        ports:
+        - containerPort: 8080
+      volumes:
+        - name: docker-socket-mount
+          hostPath:
+            path: /var/run/docker.sock
