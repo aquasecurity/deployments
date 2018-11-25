@@ -103,6 +103,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: aquadb-pv
+  namespace: aqua
   labels:
     app: aqua-csp
 spec:
@@ -119,6 +120,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: aquadb-pvc
+  namespace: aqua
 spec:
   storageClassName: local-storage
   accessModes:
@@ -135,6 +137,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: aqua-gateway
+  namespace: aqua
   labels:
     app: aqua-gateway
 spec:
@@ -147,6 +150,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: aqua-web
+  namespace: aqua
   labels:
     app: aqua-web
 spec:
