@@ -83,6 +83,11 @@ echo "****************************************************************"
 echo "*                  Installing Aqua CSP Now                      *"
 echo "****************************************************************"
 
+FILE="aqua-csp.yaml"
+if [ -e "$FILE" ]; then
+    rm aqua-csp.yaml
+fi
+
 # Creating the CSP yaml file
 cat << EOF >> aqua-csp.yaml
 # Creating the service account to download Aqua images from dockerhub
@@ -163,10 +168,10 @@ spec:
         app: aqua-csp
       name: aqua-csp
     spec:
-      serviceAccount: aqua
+      serviceAccount: aqua-sa
       containers:
       - name: aqua-csp
-        image: registry.aquasec.com/all-in-one::$aquacsptag
+        image: registry.aquasec.com/all-in-one:${aquatag}
         env:
           - name: BATCH_INSTALL_TOKEN
             value: AQUA_BATCH_TOKEN

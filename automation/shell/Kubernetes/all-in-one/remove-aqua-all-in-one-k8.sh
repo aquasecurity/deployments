@@ -21,15 +21,10 @@ echo " *       Removing Aqua CSP from your system now.              * "
 echo " ************************************************************** "
 echo ""
 
- kubectl delete -f aqua-server.yaml
- #kubectl delete -f service-account.yaml
- kubectl delete secret aqua-db dockerhub
- kubectl delete pv aquadb-pv
- kubectl delete pvc aquadb-pvc
- kubectl delete -f aqua-enforcer-nodeselector.yaml
-
-#xargs rm -f < .aqualist 
-rm -f .aqualist
+ kubectl delete -f aqua-csp.yaml --force -n aqua
+ kubectl delete secret aqua-db dockerhub psql-password azurereg aqualicense aquapassword --force -n aqua
+ kubectl delete pv aquadb-pv --force -n aqua
+ kubectl delete pvc aquadb-pvc --force -n aqua
 
 echo " "
 echo " ******************************************************************* "
