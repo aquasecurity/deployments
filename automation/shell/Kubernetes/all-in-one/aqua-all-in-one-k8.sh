@@ -83,6 +83,11 @@ echo "****************************************************************"
 echo "*                  Installing Aqua CSP Now                      *"
 echo "****************************************************************"
 
+FILE="aqua-csp.yaml"
+if [ -e "$FILE" ]; then
+    rm aqua-csp.yaml
+fi
+
 # Creating the CSP yaml file
 cat << EOF >> aqua-csp.yaml
 # Creating the service account to download Aqua images from dockerhub
@@ -98,6 +103,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: aquadb-pv
+  namespace: aqua
   labels:
     app: aqua-csp
 spec:
@@ -114,6 +120,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: aquadb-pvc
+  namespace: aqua
 spec:
   storageClassName: local-storage
   accessModes:
@@ -130,6 +137,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: aqua-gateway
+  namespace: aqua
   labels:
     app: aqua-gateway
 spec:
@@ -142,6 +150,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: aqua-web
+  namespace: aqua
   labels:
     app: aqua-web
 spec:
@@ -163,10 +172,10 @@ spec:
         app: aqua-csp
       name: aqua-csp
     spec:
-      serviceAccount: aqua
+      serviceAccount: aqua-sa
       containers:
       - name: aqua-csp
-        image: registry.aquasec.com/all-in-one::$aquacsptag
+        image: registry.aquasec.com/all-in-one:${aquatag}
         env:
           - name: BATCH_INSTALL_TOKEN
             value: AQUA_BATCH_TOKEN

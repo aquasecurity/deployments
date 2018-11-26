@@ -1,24 +1,24 @@
 <img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" heigth="100" width="100" />
 
-# Aqua Container Security Platform (CSP) Deployment Integrations
+# Aqua Security Deployment Integrations
 
 [Aqua Security](https://www.aquasec.com) deployment repository.
 
 ## Navigation and description
 
 * [**Automation**](automation/) - Contains deployment code for Aqua CSP
-    * [**Ansible**](automation/ansible/) - ***Coming Soon*** - Ansible playbooks and roles
-    * [**Shell**](automation/shell/) - Shell scripts
-    * [**Terraform**](automation/terraform/) - ***Coming Soon*** - Terraform templates
-* [**Cloud**](cloud/) - Aqua CSP templates and deployments for use with public cloud services.
-    * [**AWS**](cloud/aws/) - CloudFormation templates
-    * [**Azure**](cloud/azure/) - Microsoft Azure templates
-    * [**GCP**](cloud/gcp/) - Google GCP deployments
-* [**Orchestrators**](orchestrators/) - Deploy Aqua Container Security Platform (CSP) with various docker orchestrators
+    * [**Ansible**](automation/ansible/) - ***Coming Soon*** - Ansible playbooks and roles to deploy aqua container security platform (CSP) on your servers.
+    * [**Shell**](automation/shell/) - Shell scripts to deploy aqua container security platform (CSP) on your servers. 
+    * [**Terraform**](automation/terraform/) - ***Coming Soon*** - Terraform templates for provisioning your servers in cloud and etc, for deploying aqua container security platform (CSP).
+* [**Cloud**](cloud/) - Aqua CSP Templates and deployments in public clouds.
+    * [**AWS**](cloud/aws/) - AWS deployment with CloudFormation templates ,Terraform and etc.
+    * [**Azure**](cloud/azure/) - Microsoft Azure deployment with Templates and etc.
+    * [**GCP**](cloud/gcp/) - Google GCP deployment with marketplace helm and etc.
+* [**Orchestrators**](orchestrators/) - Deploy Aqua container security platform (CSP) on docker orchestrators
     * [**DC/OS**](orchestrators/dcos/) - Deploy Aqua CSP on Mesosphere DC/OS.
-    * [**Kubernetes**](orchestrators/kubernetes/) - Deploy Aqua CSP on Kubernetes with Helm templates, etc
-    * [**Nomad**](orchestrators/nomad/) - Deploy Aqua CSP on Nomad
-    * [**Openshift**](orchestrators/openshift/) - Deploy Aqua CSP on Openshift
+    * [**Kubernetes**](orchestrators/kubernetes/) - Deploy Aqua CSP on Kubernetes with Helm or Templates and etc.
+    * [**Nomad**](orchestrators/nomad/) - Deploy Aqua CSP on Nomad.
+    * [**Openshift**](orchestrators/openshift/) - Deploy Aqua CSP on Openshift with templates.
 
 ## CI Plugins
 
