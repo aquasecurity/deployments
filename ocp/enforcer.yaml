@@ -16,7 +16,7 @@ spec:
       hostPID: true
       containers:
       - name: enforcer
-        image: registry.aquasec.com/enforcer:3.5.rc3
+        image: registry.aquasec.com/enforcer:3.5.0
         securityContext:
           privileged: true
         env:
