@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aqua-sa
+  namespace: aqua-security
+imagePullSecrets:
+- name: aqua-registry
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aquadb-pv
+  namespace: aqua-security
+  labels:
+    app: aqua-all-in-one
+spec:
+  storageClassName: local-storage
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  hostPath:
+    path: "/var/lib/aquadata/"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: aquadb-pvc
+  namespace: aqua-security
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 3Gi
+  volumeName: aquadb-pv
+  selector:
+    matchLabels:
+      app: aqua-all-in-one
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-gateway
+  namespace: aqua-security
+  labels:
+    app: aqua-gateway
+spec:
+  ports:
+    - port: 3622
+  selector:
+    app: aqua-all-in-one
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-web
+  namespace: aqua-security
+  labels:
+    app: aqua-web
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: aqua-all-in-one
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: aqua-all-in-one
+  namespace: aqua-security
+spec:
+  template:
+    metadata:
+      labels:
+        app: aqua-all-in-one
+      name: aqua-all-in-one
+    spec:
+      serviceAccount: aqua-sa
+      containers:
+      - name: all-in-one
+        image: registry.aquasec.com/all-in-one:4.0
+        env:
+          - name: BATCH_INSTALL_TOKEN
+            value: AQUA_BATCH_TOKEN
+          - name: BATCH_INSTALL_NAME
+            value: AQUA_BATCH_AGENT
+          - name: BATCH_INSTALL_GATEWAY
+            value: "aqua-gateway:3622"
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: aquadb-data-mount
+          - mountPath: /var/run/docker.sock
+            name: docker-socket-mount
+        ports:
+        - containerPort: 8080
+        - containerPort: 3622
+      volumes:
+        - name: docker-socket-mount
+          hostPath:
+            path: /var/run/docker.sock
+        - name: aquadb-data-mount
+          persistentVolumeClaim:
+            claimName: aquadb-pvc
