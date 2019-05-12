@@ -27,7 +27,7 @@ spec:
         - name: dockerhub
       containers:
       - name: aqua-db
-        image: docker.io/aquasec/database:3.2
+        image: registry.aquasec.com/database:4.0
         securityContext:
           privileged: true
         env:

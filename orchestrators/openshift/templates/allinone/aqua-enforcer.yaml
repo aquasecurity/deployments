@@ -17,7 +17,7 @@ spec:
       hostPID: true
       containers:
       - name: aqua-enforcer
-        image: docker.io/aquasec/agent:<tag>
+        image: registry.aquasec.com/enforcer:<tag>
         securityContext:
           privileged: true
         env:

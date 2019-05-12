@@ -47,11 +47,11 @@ echo ""
 read -p  "Enter your openshift registry address (e.g. docker-registry.default.svc:5000): " REG_PREFIX
 echo ""
 echo " **** Starting to Tag the images **** "
-sudo docker tag aquasec/agent:${aquatag} ${REG_PREFIX}/aqua-security/agent:${aquatag}
+sudo docker tag aquasec/enforcer:${aquatag} ${REG_PREFIX}/aqua-security/enforcer:${aquatag}
 echo ""
 echo "**** Pushing images to registry **** "
 sudo docker login ${REG_PREFIX} -u $(oc whoami) -p $(oc whoami -t)
-sudo docker push ${REG_PREFIX}/aqua-security/agent:${aquatag}
+sudo docker push ${REG_PREFIX}/aqua-security/enforcer:${aquatag}
 
 echo ""
 echo " Completed pushing images into registry "

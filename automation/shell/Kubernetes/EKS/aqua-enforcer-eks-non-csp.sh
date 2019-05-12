@@ -48,7 +48,7 @@ spec:
         aqua-enforcer: "yes"
       containers:
       - name: aqua-agent
-        image: docker.io/aquasec/agent:${aquaenforcertag}
+        image: registry.aquasec.com/enforcer:${aquaenforcertag}
         securityContext:
           privileged: true
         env:

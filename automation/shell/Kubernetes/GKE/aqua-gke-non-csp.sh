@@ -159,7 +159,7 @@ spec:
       - name: aqua-database
         securityContext:
           privileged: true
-        image: docker.io/aquasec/database:${aquatag}
+        image: registry.aquasec.com/database:${aquatag}
         env:
         - name: "POSTGRES_PASSWORD"
           valueFrom:
@@ -277,7 +277,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-web
-        image: docker.io/aquasec/server:${aquatag}
+        image: registry.aquasec.com/server:${aquatag}
         securityContext:
           privileged: true
         env:
@@ -353,7 +353,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-gateway
-        image: docker.io/aquasec/gateway:${aquatag}
+        image: registry.aquasec.com/gateway:${aquatag}
         env:
         - name: "SCALOCK_AUDIT_DBPASSWORD"
           valueFrom:
@@ -403,7 +403,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-cc
-        image: docker.io/aquasec/cybercenter-standard:latest
+        image: registry.aquasec.com/cybercenter-standard:latest
         imagePullPolicy: Always
         command: []
         args:

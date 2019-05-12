@@ -655,7 +655,7 @@ EOF
 ##      serviceAccount: aqua-sa
 ##      containers:
 ##      - name: aqua-cc
-##        image: docker.io/aquasec/cybercenter-standard:latest
+##        image: registry.aquasec.com/cybercenter-standard:latest
 ##        imagePullPolicy: Always
 ##        command: []
 ##        args:

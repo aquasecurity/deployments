@@ -15,7 +15,7 @@ spec:
         - name: dockerhub
       containers:
       - name: aqua-agent
-        image: docker.io/aquasec/agent:3.2
+        image: registry.aquasec.com/enforcer:4.0
         securityContext:
           privileged: true
         env:

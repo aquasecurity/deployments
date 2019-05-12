@@ -38,4 +38,4 @@ echo " **** Now loading images into docker **** "
 sudo docker load -i aquasec-agent-${aquatag}.tar.gz
 echo " **** Loading images Completed **** "
 echo ""
-docker run --rm -e SILENT=yes -e AQUA_TOKEN=LINUXPOC -e AQUA_SERVER=$saasenv -e AQUA_NETWORK_CONTROL=1 -v /var/run/docker.sock:/var/run/docker.sock aquasec/agent:$aquatag
+docker run --rm -e SILENT=yes -e AQUA_TOKEN=LINUXPOC -e AQUA_SERVER=$saasenv -e AQUA_NETWORK_CONTROL=1 -v /var/run/docker.sock:/var/run/docker.sock aquasec/enforcer:$aquatag

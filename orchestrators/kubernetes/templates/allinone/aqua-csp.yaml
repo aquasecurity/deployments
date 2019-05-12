@@ -69,7 +69,7 @@ spec:
       serviceAccount: aqua
       containers:
       - name: aqua-csp
-        image: docker.io/aquasec/csp:3.2
+        image: registry.aquasec.com/csp:4.0
         env:
           - name: BATCH_INSTALL_TOKEN
             value: AQUA_BATCH_TOKEN

@@ -14,7 +14,7 @@ spec:
         - name: dockerhub
       containers:
       - name: aqua-scanner
-        image: docker.io/aquasec/scanner-cli:3.2
+        image: registry.aquasec.com/scanner-cli:4.0
         args: ["daemon", "--user", "<user>", "--password", "<password>", "--host", "http://aqua-web:8080"]
         securityContext:
           privileged: true

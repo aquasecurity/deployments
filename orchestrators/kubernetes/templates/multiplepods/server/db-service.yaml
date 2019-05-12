@@ -6,7 +6,8 @@ metadata:
   labels:
     app: aqua-db
 spec:
-  ports:
-    - port: 5432
+  type: ClusterIP
   selector:
     app: aqua-db
+  ports:
+    - port: 5432

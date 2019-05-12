@@ -3,6 +3,8 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: aqua-db
+  labels:
+    app: aqua-db
 spec:
   template:
     metadata:
@@ -10,10 +12,11 @@ spec:
         app: aqua-db
       name: aqua-db
     spec:
-      serviceAccount: aqua
+      serviceAccount: aqua-sa
       containers:
       - name: aqua-db
-        image: aquasec/database:3.2
+        image: registry.aquasec.com/database:4.0
+        imagePullPolicy: IfNotPresent
         env:
           - name: POSTGRES_PASSWORD
             valueFrom:
@@ -25,6 +28,7 @@ spec:
             name: postgres-db
         ports:
         - containerPort: 5432
+          protocol: TCP
       volumes:
         - name: postgres-db
           hostPath:

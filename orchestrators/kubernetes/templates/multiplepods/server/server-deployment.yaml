@@ -2,25 +2,24 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: aqua-gateway
+  name: aqua-web
 spec:
   template:
     metadata:
       labels:
-        app: aqua-gateway
-      name: aqua-gateway
+        app: aqua-web
+      name: aqua-web
     spec:
-      serviceAccount: aqua      
+      serviceAccount: aqua-sa
       containers:
-      - name: aqua-gateway
-        image: aquasec/gateway:3.2
+      - name: aqua-web
+        image: registry.aquasec.com/console:4.0
+        imagePullPolicy: IfNotPresent
         env:
-          - name: SCALOCK_GATEWAY_PUBLIC_IP
-            value: aqua-gateway
           - name: SCALOCK_DBUSER
             value: "postgres"
           - name: SCALOCK_DBPASSWORD
-            valueFrom: 
+            valueFrom:
               secretKeyRef:
                 name: aqua-db
                 key: password
@@ -43,5 +42,12 @@ spec:
             value: aqua-db
           - name: SCALOCK_AUDIT_DBPORT
             value: "5432"
+        volumeMounts:
+          - mountPath: /var/run/docker.sock
+            name: docker-socket-mount
         ports:
-        - containerPort: 3622
+        - containerPort: 8080
+      volumes:
+        - name: docker-socket-mount
+          hostPath:
+            path: /var/run/docker.sock

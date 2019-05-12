@@ -6,6 +6,7 @@ metadata:
   labels:
     app: aqua-gateway
 spec:
+  type: ClusterIP
   ports:
     - port: 3622
   selector:

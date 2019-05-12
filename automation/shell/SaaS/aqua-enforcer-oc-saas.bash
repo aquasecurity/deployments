@@ -64,7 +64,7 @@ spec:
       hostPID: true
       containers:
       - name: aqua-enforcer
-        image: ${REG_PREFIX}/aqua-security/agent:$aquaenforcertag
+        image: ${REG_PREFIX}/aqua-security/enforcer:$aquaenforcertag
         securityContext:
           privileged: true
         env:

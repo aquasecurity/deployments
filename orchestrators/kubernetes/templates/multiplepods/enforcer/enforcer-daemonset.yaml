@@ -14,7 +14,7 @@ spec:
       hostPID: true
       containers:
       - name: aqua-agent
-        image: aquasec/agent:3.2
+        image: aquasec/enforcer:4.0
         securityContext:
           privileged: true
         env:

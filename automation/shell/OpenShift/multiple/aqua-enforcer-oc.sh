@@ -80,7 +80,7 @@ spec:
       hostPID: true
       containers:
       - name: aqua-enforcer
-        image: docker.io/aquasec/agent:$aquaenforcertag
+        image: registry.aquasec.com/enforcer:$aquaenforcertag
         securityContext:
           privileged: true
         env:

@@ -30,7 +30,7 @@ spec:
         - name: dockerhub
       containers:
       - name: aqua-gateway
-        image: docker.io/aquasec/gateway:3.2
+        image: registry.aquasec.com/gateway:4.0
         securityContext:
           privileged: true
         env:

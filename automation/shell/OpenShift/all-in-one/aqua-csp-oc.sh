@@ -186,7 +186,7 @@ spec:
         - name: dockerhub
       containers:
       - name: aqua-csp
-        image: docker.io/aquasec/csp:$aquacsptag
+        image: registry.aquasec.com/csp:$aquacsptag
         securityContext:
           privileged: true
         env:
