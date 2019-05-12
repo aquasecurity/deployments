@@ -10,11 +10,12 @@ spec:
         app: aqua-scanner
       name: aqua-scanner
     spec:
-      serviceAccount: aqua
+      serviceAccount: aqua-sa
       containers:
       - name: aqua-scanner
-        image: aquasec/scanner-cli:4.0
-        args: ["daemon", "--user", "<user>", "--password", "<password>", "--host", "http://aqua-web:8080"]
+        image: registry.aquasec.com/scanner:4.0
+        imagePullPolicy: Always
+        args: ["daemon", "--direct-cc", "--user", "administrator", "--password", "Password1", "--host", "http://aqua-web:8080"]
         volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-socket-mount

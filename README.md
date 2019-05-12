@@ -7,9 +7,8 @@
 ## Navigation and description
 
 * [**Automation**](automation/) - Contains deployment code for Aqua Container Security Platform (CSP)
-    * [**Ansible**](automation/ansible/) - ***Coming Soon*** - Ansible playbooks and roles to deploy Aqua Container Security Platform (CSP) on your servers.
     * [**Shell**](automation/shell/) - Shell scripts to deploy Aqua Container Security Platform (CSP) on your servers. 
-    * [**Terraform**](automation/terraform/) - ***Coming Soon*** - Terraform templates for provisioning your servers in the cloud, and deploying Aqua Container Security Platform (CSP)
+    * [**Aquactl**](automation/aquactl/) - Aqua Command line for deploy aqua components and manage aqua
 * [**Cloud**](cloud/) - Aqua Container Security Platform (CSP) templates and deployments in public clouds.
     * [**AWS**](cloud/aws/) - AWS deployment with CloudFormation templates, Terraform, etc.
     * [**Azure**](cloud/azure/) - Microsoft Azure deployment with templates, etc.
@@ -17,7 +16,6 @@
 * [**Orchestrators**](orchestrators/) - Deploy Aqua Container Security Platform (CSP) on Docker orchestrators
     * [**Kubernetes**](orchestrators/kubernetes/) - Deploy Aqua Container Security Platform (CSP) on Kubernetes with Helm, templates, etc.
     * [**Mesosphere DC/OS**](orchestrators/dcos/) - Deploy Aqua Container Security Platform (CSP) on Mesosphere DC/OS.
-    * [**Nomad**](orchestrators/nomad/) - Deploy Aqua Container Security Platform (CSP) on Nomad.
     * [**OpenShift**](orchestrators/openshift/) - Deploy Aqua Container Security Platform (CSP) on OpenShift with templates.
 
 ## CI Plugins

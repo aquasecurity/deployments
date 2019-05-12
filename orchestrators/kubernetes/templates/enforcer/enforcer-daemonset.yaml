@@ -1,34 +1,29 @@
+---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: aqua-enforcer
+  name: aqua-agent
 spec:
   template:
     metadata:
       labels:
-        app: aqua-enforcer
-      name: aqua-enforcer
+        app: aqua-agent
+      name: aqua-agent
     spec:
       serviceAccount: aqua-sa
-      nodeSelector:
-           aqua-enforcer: "yes"
-      imagePullSecrets:
-      - name: dockerhub
       hostPID: true
       containers:
-      - name: aqua-enforcer
-        image: registry.aquasec.com/enforcer:<tag>
+      - name: aqua-agent
+        image: registry.aquasec.com/enforcer:4.0
         securityContext:
           privileged: true
         env:
         - name: AQUA_TOKEN
-          value: aqua-csp
+          value: <installation_token>
         - name: AQUA_SERVER
-          value: aqua-csp.aqua.svc.cluster.local:3622
-        - name: AQUA_LOGICAL_NAME
-          value: cluster
-        - name: AQUA_NETWORK_CONTROL
-          value: "0"
+          value: aqua-gateway:3622
+        - name: RESTART_CONTAINERS
+          value: "no"
         volumeMounts:
         - mountPath: /var/run
           name: var-run
@@ -68,10 +63,10 @@ spec:
           path: /etc
       - name: aquasec
         hostPath:
-          path: /opt/aquasec
+          path: /var/lib/aquasec
       - name: aquasec-tmp
         hostPath:
-          path: /opt/aquasec/tmp
+          path: /var/lib/aquasec/tmp
       - name: aquasec-audit
         hostPath:
-          path: /opt/aquasec/audit
+          path: /var/lib/aquasec/audit
