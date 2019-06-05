@@ -1,0 +1,50 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: aqua-gateway
+spec:
+  template:
+    metadata:
+      labels:
+        app: aqua-gateway
+      name: aqua-gateway
+    spec:
+      serviceAccount: aqua-sa      
+      containers:
+      - name: aqua-gateway
+        image: registry.aquasec.com/gateway:4.0
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: false
+        env:
+          - name: SCALOCK_GATEWAY_PUBLIC_IP
+            value: aqua-gateway
+          - name: SCALOCK_DBUSER
+            value: "postgres"
+          - name: SCALOCK_DBPASSWORD
+            valueFrom: 
+              secretKeyRef:
+                name: aqua-db
+                key: password
+          - name: SCALOCK_DBNAME
+            value: "scalock"
+          - name: SCALOCK_DBHOST
+            value: aqua-db
+          - name: SCALOCK_DBPORT
+            value: "5432"
+          - name: SCALOCK_AUDIT_DBUSER
+            value: "postgres"
+          - name: SCALOCK_AUDIT_DBPASSWORD
+            valueFrom: 
+              secretKeyRef:
+                name: aqua-db
+                key: password
+          - name: SCALOCK_AUDIT_DBNAME
+            value: "slk_audit"
+          - name: SCALOCK_AUDIT_DBHOST
+            value: aqua-db
+          - name: SCALOCK_AUDIT_DBPORT
+            value: "5432"
+        ports:
+        - containerPort: 3622
