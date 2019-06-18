@@ -13,7 +13,7 @@ spec:
       serviceAccount: aqua-sa      
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:4.2
+        image: registry.aquasec.com/gateway:4.0
         imagePullPolicy: IfNotPresent
         env:
           - name: AQUA_CONSOLE_ADDRESS
