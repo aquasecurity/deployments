@@ -13,7 +13,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-scanner
-        image: registry.aquasec.com/scanner:4.0
+        image: registry.aquasec.com/scanner:4.2
         imagePullPolicy: Always
         args: ["daemon", "--direct-cc", "--user", "administrator", "--password", "Password1", "--host", "http://aqua-web:8080"]
         volumeMounts:

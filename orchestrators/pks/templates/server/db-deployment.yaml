@@ -15,7 +15,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:4.0
+        image: registry.aquasec.com/database:4.2
         imagePullPolicy: IfNotPresent
         securityContext:
           privileged: false

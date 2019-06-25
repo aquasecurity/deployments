@@ -67,7 +67,7 @@ spec:
         - name: dockerhub
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/server:4.0
+        image: registry.aquasec.com/server:4.2
         securityContext:
           privileged: true
         env:

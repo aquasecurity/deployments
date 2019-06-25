@@ -13,7 +13,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:4.0
+        image: registry.aquasec.com/console:4.2
         imagePullPolicy: IfNotPresent
         securityContext:
           privileged: false
