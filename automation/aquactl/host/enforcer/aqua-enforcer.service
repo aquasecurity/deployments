@@ -1,0 +1,12 @@
+[Unit]
+Description=Aqua Security Enforcer RunC
+
+[Service]
+Type=forking
+ExecStart=runc run -d --pid-file /run/aqua-enforcer.pid enforcer
+ExecStopPost=runc delete -f enforcer
+WorkingDirectory=/opt/aqua-enforcer
+PIDFile=/run/aqua-enforcer.pid
+
+[Install]
+WantedBy=multi-user.target

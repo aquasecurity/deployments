@@ -1,0 +1,35 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: aqua-db
+  labels:
+    app: aqua-db
+spec:
+  template:
+    metadata:
+      labels:
+        app: aqua-db
+      name: aqua-db
+    spec:
+      serviceAccount: aqua-sa
+      containers:
+      - name: aqua-db
+        image: registry.aquasec.com/database:4.0
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: aqua-db
+                key: password
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgres-db
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+      volumes:
+        - name: postgres-db
+          hostPath:
+            path: /var/lib/aqua/db

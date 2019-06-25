@@ -1,0 +1,12 @@
+[Unit]
+Description=Aqua Security Enforcer RunC
+
+[Service]
+Type=forking
+ExecStart={{ .Values.RuncPath }} run -d --pid-file /run/aqua-enforcer.pid enforcer
+ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
+WorkingDirectory={{ .Values.WorkingDirectory }}
+PIDFile=/run/aqua-enforcer.pid
+
+[Install]
+WantedBy=multi-user.target

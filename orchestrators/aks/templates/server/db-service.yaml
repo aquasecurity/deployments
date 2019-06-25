@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-db
+  labels:
+    app: aqua-db
+spec:
+  type: ClusterIP
+  selector:
+    app: aqua-db
+  ports:
+    - port: 5432
