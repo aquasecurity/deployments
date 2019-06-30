@@ -1,3 +1,4 @@
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -9,15 +10,12 @@ spec:
         app: aqua-scanner
       name: aqua-scanner
     spec:
-      serviceAccount: aqua-account
-      imagePullSecrets:
-        - name: dockerhub
+      serviceAccount: aqua-sa
       containers:
       - name: aqua-scanner
-        image: registry.aquasec.com/scanner-cli:4.2
-        args: ["daemon", "--user", "<user>", "--password", "<password>", "--host", "http://aqua-web:8080"]
-        securityContext:
-          privileged: true
+        image: registry.aquasec.com/scanner:4.2
+        imagePullPolicy: Always
+        args: ["daemon", "--direct-cc", "--user", "scanner", "--password", "{AQUA_SCANNER_PASSWORD}", "--host", "http://aqua-web:8080"]
         volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-socket-mount
