@@ -3,17 +3,19 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: aqua-web
+  namespace: aqua
 spec:
   template:
     metadata:
       labels:
         app: aqua-web
       name: aqua-web
+      namespace: aqua
     spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:4.2
+        image: registry.aquasec.com/console:4.0
         imagePullPolicy: IfNotPresent
         env:
           - name: SCALOCK_DBUSER

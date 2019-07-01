@@ -11,11 +11,12 @@ spec:
       labels:
         app: aqua-db
       name: aqua-db
+      namespace: aqua
     spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:4.2
+        image: registry.aquasec.com/database:4.0
         imagePullPolicy: IfNotPresent
         env:
           - name: POSTGRES_PASSWORD
