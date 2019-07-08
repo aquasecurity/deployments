@@ -3,7 +3,7 @@ Description=Aqua Security Enforcer RunC
 
 [Service]
 Type=forking
-ExecStart={{ .Values.RuncPath }} run -d --pid-file /run/aqua-enforcer.pid enforcer
+ExecStart={{ .Values.RuncPath }} run -d --pid-file /run/aqua-enforcer.pid enforcer >> {{ .Values.WorkingDirectory }}/tmp/aqua-enforcer.log 2>&1
 ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
 WorkingDirectory={{ .Values.WorkingDirectory }}
 PIDFile=/run/aqua-enforcer.pid
