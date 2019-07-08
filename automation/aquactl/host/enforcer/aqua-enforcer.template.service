@@ -8,7 +8,6 @@ ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
 WorkingDirectory={{ .Values.WorkingDirectory }}
 PIDFile=/run/aqua-enforcer.pid
 Restart=on-failure
-WatchdogSec=30s
 
 [Install]
 WantedBy=multi-user.target
