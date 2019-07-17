@@ -17,6 +17,11 @@ spec:
       - name: aqua-scanner
         image: registry.aquasec.com/scanner:4.2
         imagePullPolicy: Always
+        env:
+          - name: AQUA_SCANNER_LOGICAL_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
         args: ["daemon", "--direct-cc", "--user", "scanner", "--password", "{AQUA_SCANNER_PASSWORD}", "--host", "http://aqua-web:8080"]
         volumeMounts:
           - mountPath: /var/run/docker.sock
