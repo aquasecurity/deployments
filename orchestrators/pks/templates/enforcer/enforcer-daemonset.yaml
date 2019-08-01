@@ -63,6 +63,8 @@ spec:
           name: aquasec-tmp
         - mountPath: /opt/aquasec/audit
           name: aquasec-audit
+        - mountPath: /data
+          name: aquasec-data
       volumes:
       - name: var-run
         hostPath:
@@ -88,3 +90,6 @@ spec:
       - name: aquasec-audit
         hostPath:
           path: /var/lib/aquasec/audit
+      - name: aquasec-data
+        hostPath:
+          path: /var/lib/aquasec/data
