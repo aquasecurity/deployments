@@ -49,6 +49,7 @@ spec:
             name: docker-socket-mount
         ports:
         - containerPort: 8080
+        - containerPort: 8443
       volumes:
         - name: docker-socket-mount
           hostPath:

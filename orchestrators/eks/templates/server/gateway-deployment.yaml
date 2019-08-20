@@ -50,3 +50,4 @@ spec:
             value: "5432"
         ports:
         - containerPort: 3622
+        - containerPort: 8443
