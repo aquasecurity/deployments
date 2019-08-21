@@ -9,7 +9,13 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 3622
     - port: 8443
+      protocol: TCP
+      targetPort: 8443
+      name: aqua-gate-ssl
+    - port: 3622
+      protocol: TCP
+      targetPort: 3622
+      name: aqua-gate
   selector:
     app: aqua-gateway
