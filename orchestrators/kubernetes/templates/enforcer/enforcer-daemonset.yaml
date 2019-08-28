@@ -11,6 +11,8 @@ spec:
         app: aqua-agent
       name: aqua-agent
       namespace: aqua
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/aqua-agent: unconfined
     spec:
       serviceAccount: aqua-sa
       hostPID: true
@@ -42,7 +44,6 @@ spec:
           readOnly: true
         - mountPath: /host/opt/aquasec
           name: aquasec
-          readOnly: true
         - mountPath: /opt/aquasec/tmp
           name: aquasec-tmp
         - mountPath: /opt/aquasec/audit
