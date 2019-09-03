@@ -7,7 +7,7 @@ ExecStart={{ .Values.RuncPath }} run -d --pid-file /run/aqua-enforcer.pid enforc
 ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
 WorkingDirectory={{ .Values.WorkingDirectory }}
 PIDFile=/run/aqua-enforcer.pid
-Restart=on-failure
+Restart=always
 StandardOutput=file:/opt/aquasec/tmp/aqua-enforcer.log
 
 [Install]
