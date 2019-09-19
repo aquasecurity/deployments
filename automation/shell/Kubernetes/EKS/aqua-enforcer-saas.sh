@@ -33,7 +33,7 @@ read -p "What is your Aqua SaaS instance: " saasenv
 #read -s "Enter you docker password" dockerpassword
 
 kubectl create namespace aqua
-kubectl create --namespace aqua secret docker-registry dockerhub --docker-username=kzaidi --docker-password=Aqua1234 --docker-email="poc@aqua.com" > /dev/null
+kubectl create --namespace aqua secret docker-registry dockerhub --docker-username=XXX --docker-password=XXX --docker-email="poc@aqua.com" > /dev/null
 
 # Creating the Aqua Account yaml file
 cat << EOF >> aqua-account.yaml
