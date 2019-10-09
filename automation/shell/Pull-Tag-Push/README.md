@@ -1,12 +1,87 @@
 <img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" height="100" width="100" />
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 # Aqua Security Pre-Deployment Task
+=======
+<<<<<<< HEAD
+# Aqua Security Pre-Deployment Task
+=======
+# Aqua Security Deployment Integrations
+>>>>>>> 70743c6... Create README.md
+<<<<<<< HEAD
+>>>>>>> ba26701... Rename GettingImages to aquasec-ptp.sh
+=======
+=======
+# Aqua Security Pre-Deployment Task
+>>>>>>> 86f50ea... Update README.md
+>>>>>>> bb53c1a... pick Rename GettingImages to aquasec-ptp.sh
 
 [Aqua Security](https://www.aquasec.com) deployment repository.
 
 ## Pull - Tag - Push
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ba26701... Rename GettingImages to aquasec-ptp.sh
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> bb53c1a... pick Rename GettingImages to aquasec-ptp.sh
 * **Usage** ./aquaimages-ptp.sh [version] [registry prefix]
    
 * [**Example**]   ./aquaimages-ptp.sh 4.5 myregistry.internal.com
 
+<<<<<<< HEAD
+=======
+=======
+* [**Automation**](automation/) - Contains deployment code for Aqua Container Security Platform (CSP)
+    * [**Shell**](automation/shell/) - Shell scripts to deploy Aqua Container Security Platform (CSP) on your servers. 
+    * [**Aquactl**](automation/aquactl/) - Aqua Command line for deploy aqua components and manage aqua
+* [**Cloud**](cloud/) - Aqua Container Security Platform (CSP) templates and deployments in public clouds.
+    * [**AWS**](cloud/aws/) - AWS deployment with CloudFormation templates, Terraform, etc.
+    * [**Azure**](cloud/azure/) - Microsoft Azure deployment with templates, etc.
+    * [**GCP**](cloud/gcp/) - Google GCP deployment with Marketplace, Helm, etc.
+* [**Orchestrators**](orchestrators/) - Deploy Aqua Container Security Platform (CSP) on Docker orchestrators
+    * [**Kubernetes**](orchestrators/kubernetes/) - Deploy Aqua Container Security Platform (CSP) on Kubernetes with Helm, templates, etc.
+    * [**Mesosphere DC/OS**](orchestrators/dcos/) - Deploy Aqua Container Security Platform (CSP) on Mesosphere DC/OS.
+    * [**OpenShift**](orchestrators/openshift/) - Deploy Aqua Container Security Platform (CSP) on OpenShift with templates.
+
+## CI Plugins
+
+* **Jenkins** - [*Aqua Security Scanner Plugin*](https://github.com/jenkinsci/aqua-security-scanner-plugin) - Adds a Build Step for scanning Docker images, local or hosted on registries, for security vulnerabilities, using the API provided by Aqua Security.
+* **Bamboo** - [*Aqua Security Scanner Bamboo*](https://marketplace.atlassian.com/apps/1216895/container-security?hosting=server&tab=overview) - Vulnerability scanner for container images for Atlassian Bamboo.
+* **CircleCI** - [*CircleCI Orb MicroScanner*](https://github.com/aquasecurity/circleci-orb-microscanner) - Enables scanning of Docker builds in CircleCi for OS package vulnerabilities.
+* **VSTS** - [*Container Security For VSTS*](https://marketplace.visualstudio.com/items?itemName=aquasec.aquasec) - Microsoft VSTS users can integrate with Aqua’s continuous image assurance, which is the most comprehensive, automated solution on the market for scanning and locking down container images, with deep scanning of container layers for vulnerabilities, and persistent controls to assure image integrity throughout its lifecycle.
+
+##### Aqua Security CI/CD Blogs
+
+* [*10 Essential Container CI/CD Tools*](https://blog.aquasec.com/10-essential-container-ci/cd-tools) 
+
+## Open Source Tools
+* [**kube-bench**](https://github.com/aquasecurity/kube-bench) - The Kubernetes Bench for Security is a Go application that checks whether Kubernetes is deployed according to security best practices.
+* [**kube-hunter**](https://github.com/aquasecurity/kube-hunter) - Hunts for security weaknesses in Kubernetes clusters.
+* [**MicroScanner**](https://github.com/aquasecurity/microscanner) - Scans your container images for package vulnerabilities.
+
+## Issues and feedback
+If you encounter any problems or would like to give us feedback on deployments, we encourage you to raise issues here on GitHub.
+>>>>>>> 70743c6... Create README.md
+<<<<<<< HEAD
+>>>>>>> ba26701... Rename GettingImages to aquasec-ptp.sh
+=======
+=======
+* **Usage** ./aquaimages-ptp.sh <version> <tag>
+=======
+* **Usage** ./aquaimages-ptp.sh "<version>" "<registry prefix>"
+>>>>>>> 54d88a7... Update README.md
+=======
+* **Usage** ./aquaimages-ptp.sh [version] [registry prefix]
+>>>>>>> 3fd210a... Update README.md
+   
+* [**Example**]   ./aquaimages-ptp.sh 4.5 myregistry.internal.com
+
+>>>>>>> 86f50ea... Update README.md
+>>>>>>> bb53c1a... pick Rename GettingImages to aquasec-ptp.sh
