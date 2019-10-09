@@ -6,7 +6,7 @@
 
 ## Pull - Tag - Push
 
-* **Usage** ./aquaimages-ptp.sh <version> <tag>
+* **Usage** ./aquaimages-ptp.sh "<version>" "<registry prefix>"
    
 * [**Example**]   ./aquaimages-ptp.sh 4.5 myregistry.internal.com
 
