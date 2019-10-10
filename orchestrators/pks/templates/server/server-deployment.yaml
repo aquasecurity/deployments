@@ -1,10 +1,16 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: aqua-web
   name: aqua-web
   namespace: aqua
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-web
   template:
     metadata:
       labels:
@@ -13,44 +19,54 @@ spec:
       namespace: aqua
     spec:
       serviceAccount: aqua-sa
+      restartPolicy: Always
       containers:
-      - name: aqua-web
+      - env:
+        - name: SCALOCK_DBUSER
+          value: postgres
+        - name: SCALOCK_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+        - name: SCALOCK_DBNAME
+          value: scalock
+        - name: SCALOCK_DBHOST
+          value: aqua-db
+        - name: SCALOCK_DBPORT
+          value: "5432"
+        - name: SCALOCK_AUDIT_DBUSER
+          value: postgres
+        - name: SCALOCK_AUDIT_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+        - name: SCALOCK_AUDIT_DBNAME
+          value: slk_audit
+        - name: SCALOCK_AUDIT_DBHOST
+          value: aqua-db
+        - name: SCALOCK_AUDIT_DBPORT
+          value: "5432"
+        - name: AQUA_CONSOLE_RAW_SCAN_RESULTS_STORAGE_SIZE
+          value: 4
         image: registry.aquasec.com/console:4.2
         imagePullPolicy: IfNotPresent
-        env:
-          - name: SCALOCK_DBUSER
-            value: "postgres"
-          - name: SCALOCK_DBPASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: aqua-db
-                key: password
-          - name: SCALOCK_DBNAME
-            value: "scalock"
-          - name: SCALOCK_DBHOST
-            value: aqua-db
-          - name: SCALOCK_DBPORT
-            value: "5432"
-          - name: SCALOCK_AUDIT_DBUSER
-            value: "postgres"
-          - name: SCALOCK_AUDIT_DBPASSWORD
-            valueFrom: 
-              secretKeyRef:
-                name: aqua-db
-                key: password
-          - name: SCALOCK_AUDIT_DBNAME
-            value: "slk_audit"
-          - name: SCALOCK_AUDIT_DBHOST
-            value: aqua-db
-          - name: SCALOCK_AUDIT_DBPORT
-            value: "5432"
-        volumeMounts:
-          - mountPath: /var/run/docker.sock
-            name: docker-socket-mount
+        name: aqua-web
         ports:
         - containerPort: 8080
+          protocol: TCP
         - containerPort: 8443
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /opt/aquasec/raw-scan-results
+          name: aqua-web-pvc
+        - mountPath: /var/run/docker.sock
+          name: docker-socket-mount
       volumes:
-        - name: docker-socket-mount
-          hostPath:
-            path: /var/vcap/data/sys/run/docker/docker.sock
+      - hostPath:
+          path: /var/run/docker.sock
+        name: docker-socket-mount
+      - name: aqua-web-pvc
+        persistentVolumeClaim:
+          claimName: aqua-web-pvc
