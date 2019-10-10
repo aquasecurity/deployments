@@ -49,7 +49,7 @@ spec:
         - name: SCALOCK_AUDIT_DBPORT
           value: "5432"
         - name: AQUA_CONSOLE_RAW_SCAN_RESULTS_STORAGE_SIZE
-          value: 4
+          value: "4"
         image: registry.aquasec.com/console:4.2
         imagePullPolicy: IfNotPresent
         name: aqua-web
