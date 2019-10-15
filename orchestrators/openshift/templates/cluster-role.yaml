@@ -2,7 +2,7 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: aqua-discovery-role
+  name: aqua-discovery-cr
   labels:
     rbac.example.com/aggregate-to-monitoring: "true"
 rules:
@@ -11,7 +11,4 @@ rules:
   verbs: ["get", "list", "watch"]
 - apiGroups: ["rbac.authorization.k8s.io"]
   resources: ["*"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: [""]
-  resources: ["imagestreams", "imagestreams/layers"]
   verbs: ["get", "list", "watch"]

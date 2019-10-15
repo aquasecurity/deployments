@@ -18,4 +18,4 @@ spec:
       name: aqua-web
   selector:
     app: aqua-web
-  type: ClusterIP
+  type: LoadBalancer

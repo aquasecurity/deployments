@@ -1,10 +1,16 @@
 ---
-apiVersion: extensions/v1beta1
+
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  labels:
+    app: aqua-agent
   name: aqua-agent
   namespace: aqua
 spec:
+  selector:
+    matchLabels:
+      app: aqua-agent
   template:
     metadata:
       labels:
@@ -16,9 +22,11 @@ spec:
     spec:
       serviceAccount: aqua-sa
       hostPID: true
+      restartPolicy: Always
       containers:
       - name: aqua-agent
         image: registry.aquasec.com/enforcer:4.2
+        imagePullPolicy: IfNotPresent
         securityContext:
           privileged: true
         env:
@@ -44,6 +52,7 @@ spec:
           readOnly: true
         - mountPath: /host/opt/aquasec
           name: aquasec
+          readOnly: true
         - mountPath: /opt/aquasec/tmp
           name: aquasec-tmp
         - mountPath: /opt/aquasec/audit

@@ -1,11 +1,17 @@
 ---
-apiVersion: extensions/v1beta1
+
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aqua-db
+  namespace: aqua
   labels:
     app: aqua-db
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-db
   template:
     metadata:
       labels:
@@ -14,16 +20,17 @@ spec:
       namespace: aqua
     spec:
       serviceAccount: aqua-sa
+      restartPolicy: Always
       containers:
       - name: aqua-db
         image: registry.aquasec.com/database:4.2
         imagePullPolicy: IfNotPresent
         env:
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: aqua-db
-                key: password
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
         ports:
         - containerPort: 5432
           protocol: TCP
