@@ -8,7 +8,7 @@
 
 * [**Automation**](automation/) - Contains deployment code for Aqua Container Security Platform (CSP)
     * [**Shell**](automation/shell/) - Shell scripts to deploy Aqua Container Security Platform (CSP) on your servers. 
-    * [**Aquactl**](automation/aquactl/) - Aqua Command line for deploy aqua components and manage aqua
+    * [**Aquactl**](automation/aquactl/) - Aqua Command line for deploying aqua components and managing aqua
 * [**Cloud**](cloud/) - Aqua Container Security Platform (CSP) templates and deployments in public clouds.
     * [**AWS**](cloud/aws/) - AWS deployment with CloudFormation templates, Terraform, etc.
     * [**Azure**](cloud/azure/) - Microsoft Azure deployment with templates, etc.
