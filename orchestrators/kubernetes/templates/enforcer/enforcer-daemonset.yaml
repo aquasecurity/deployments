@@ -6,7 +6,6 @@ metadata:
   labels:
     app: aqua-agent
   name: aqua-agent
-  namespace: aqua
 spec:
   selector:
     matchLabels:
@@ -16,7 +15,7 @@ spec:
       labels:
         app: aqua-agent
       name: aqua-agent
-      namespace: aqua
+      
       annotations:
         container.apparmor.security.beta.kubernetes.io/aqua-agent: unconfined
     spec:

@@ -4,7 +4,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aqua-db
-  namespace: aqua
   labels:
     app: aqua-db
 spec:
@@ -17,7 +16,6 @@ spec:
       labels:
         app: aqua-db
       name: aqua-db
-      namespace: aqua
     spec:
       serviceAccount: aqua-sa
       restartPolicy: Always

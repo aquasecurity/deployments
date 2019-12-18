@@ -6,7 +6,6 @@ metadata:
   labels:
     app: aqua-agent
   name: aqua-agent
-  namespace: aqua
 spec:
   selector:
     matchLabels:
@@ -16,7 +15,6 @@ spec:
       labels:
         app: aqua-agent
       name: aqua-agent
-      namespace: aqua
     spec:
       serviceAccount: aqua-sa
       hostPID: true
