@@ -20,7 +20,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-scanner
-        image: registry.aquasec.com/scanner:4.5
+        image: registry.aquasec.com/scanner:4.6
         imagePullPolicy: Always
         args:
         - daemon

@@ -46,7 +46,7 @@ spec:
           value: aqua-db
         - name: SCALOCK_AUDIT_DBPORT
           value: "5432"
-        image: registry.aquasec.com/console:4.5
+        image: registry.aquasec.com/console:4.6
         imagePullPolicy: IfNotPresent
         name: aqua-web
         ports:
