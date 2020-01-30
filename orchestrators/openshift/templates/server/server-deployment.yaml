@@ -16,6 +16,12 @@ spec:
         app: aqua-web
       name: aqua-web
     spec:
+# To run Aqua components as a non-privileged account,
+# remove the comments from the following lines:
+#     securityContext:
+#         runAsUser: 431
+#         runAsGroup: 433
+#         fsGroup: 433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
