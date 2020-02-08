@@ -9,4 +9,4 @@
 * [**Microsoft Azure Kubernetes Service**](aks/) - Deploy Aqua CSP on Azure Kubernetes Service (AKS) with templates.
 * [**Amazon Elastic Kubernetes Service**](eks/) - Deploy Aqua CSP on Elastic Kubernetes Service (EKS) with templates.
 * [**Pivotal Container Service**](pks/) - Deploy Aqua CSP on Pivotal Container Service (PKS) with templates.
-* [**Rancher Kubernetes Engine**](rke/) - Deploy Aqua CSP on Rancher Kubernetes Engine (RKE) with templates.
+* [**Rancher Kubernetes Engine**](rancher/) - Deploy Aqua CSP on Rancher Kubernetes Engine (RKE) with templates.
