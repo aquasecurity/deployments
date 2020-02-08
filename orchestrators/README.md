@@ -8,3 +8,4 @@
 * [**Google Kubernetes Engine**](gke/) - Deploy Aqua CSP on Google Kubernetes Engine (GKE) with templates.
 * [**Microsoft Azure Kubernetes Service**](aks/) - Deploy Aqua CSP on Azure Kubernetes Service (AKS) with templates.
 * [**Amazon Elastic Kubernetes Service**](eks/) - Deploy Aqua CSP on Elastic Kubernetes Service (EKS) with templates.
+* [**Pivotal Container Service**](pks/) - Deploy Aqua CSP on Pivotal Container Service (PKS) with templates.
