@@ -4,7 +4,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aqua-db
-  namespace: aqua
   labels:
     app: aqua-db
 spec:
@@ -17,7 +16,6 @@ spec:
       labels:
         app: aqua-db
       name: aqua-db
-      namespace: aqua
     spec:
       serviceAccount: aqua-sa
       restartPolicy: Always
@@ -31,6 +29,13 @@ spec:
             secretKeyRef:
               key: password
               name: aqua-db
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-db
         ports:
         - containerPort: 5432
           protocol: TCP
+      volumes:
+      - name: postgres-db
+        persistentVolumeClaim:
+          claimName: aqua-db-pvc
