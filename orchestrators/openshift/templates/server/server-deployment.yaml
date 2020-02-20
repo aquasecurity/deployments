@@ -61,9 +61,14 @@ spec:
         - containerPort: 8443
           protocol: TCP
         volumeMounts:
+        - mountPath: /opt/aquasec/raw-scan-results
+          name: aqua-web-pvc
         - mountPath: /var/run/docker.sock
           name: docker-socket-mount
       volumes:
       - hostPath:
           path: /var/run/docker.sock
         name: docker-socket-mount
+      - name: aqua-web-pvc
+        persistentVolumeClaim:
+          claimName: aqua-web-pvc

@@ -29,6 +29,13 @@ spec:
             secretKeyRef:
               key: password
               name: aqua-db
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-db
         ports:
         - containerPort: 5432
           protocol: TCP
+      volumes:
+      - name: postgres-db
+        persistentVolumeClaim:
+          claimName: aqua-db-pvc
