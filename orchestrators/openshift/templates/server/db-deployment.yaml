@@ -39,5 +39,13 @@ spec:
           protocol: TCP
       volumes:
       - name: postgres-db
+        # To use persistentVolumeClaim to store DB content, comment out
+        # deployment.spec.template.spec.volumes.hostPath field as applicable,
+        # uncomment deployment.spec.template.spec.volumes.persistentVolumeClaim field
         persistentVolumeClaim:
           claimName: aqua-db-pvc
+        # To use hostPath to store DB content, comment out
+        # deployment.spec.template.spec.volumes.persistentVolumeClaim field as applicable,
+        # uncomment deployment.spec.template.spec.volumes.hostPath field
+        #hostPath:
+        #  path: /var/lib/aqua/db
