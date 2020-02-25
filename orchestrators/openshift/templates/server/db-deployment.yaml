@@ -23,6 +23,8 @@ spec:
       - name: aqua-db
         image: registry.aquasec.com/database:4.6
         imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
         env:
         - name: POSTGRES_PASSWORD
           valueFrom:
