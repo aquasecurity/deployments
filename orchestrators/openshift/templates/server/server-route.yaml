@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: aqua-web
+spec:
+  host: <PUBLIC_IP>
+  to:
+    kind: Service
+    name: aqua-web
+  port:
+    targetPort: 8080
