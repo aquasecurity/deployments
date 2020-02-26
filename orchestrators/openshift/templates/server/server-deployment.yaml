@@ -16,7 +16,6 @@ spec:
         app: aqua-web
       name: aqua-web
     spec:
-# To run Aqua components as a non-privileged account,
 # remove the comments from the following lines:
 #     securityContext:
 #         runAsUser: 431
@@ -52,6 +51,13 @@ spec:
           value: aqua-db
         - name: SCALOCK_AUDIT_DBPORT
           value: "5432"
+        # To use SSL for communication between Aqua & Kubernetes, uncomment env variables
+        # SEDOCK_CERT_PEM & SEDOCK_KEY_PEM in deployment.spec.template.spec.containers
+        # field as applicable, comment same if incase not used and it was uncommented
+        #- name: SEDOCK_CERT_PEM
+        #  value: "/opt/certs/cert.pem"
+        #- name: SEDOCK_KEY_PEM
+        #  value: "/opt/certs/key.pem"
         image: registry.aquasec.com/console:4.6
         imagePullPolicy: IfNotPresent
         name: aqua-web
@@ -65,6 +71,12 @@ spec:
           name: aqua-web-pvc
         - mountPath: /var/run/docker.sock
           name: docker-socket-mount
+        # To use SSL for communication between Aqua & Kubernetes, uncomment
+        # deployment.spec.template.spec.volumeMounts[name: aqua-key] field as applicable,
+        # comment same if incase not used and it was uncommented
+        #- name: aqua-key
+        #  mountPath: "/opt/certs"
+        #  readOnly: true
       volumes:
       - hostPath:
           path: /var/run/docker.sock
@@ -72,3 +84,10 @@ spec:
       - name: aqua-web-pvc
         persistentVolumeClaim:
           claimName: aqua-web-pvc
+      # To use SSL for communication between Aqua & Kubernetes, uncomment
+      # deployment.spec.template.spec.volumes[name: aqua-key] field as applicable,
+      # comment same if incase not used and it was uncommented
+      #- name: aqua-key
+      #  secret:
+      #    secretName: aqua-ssl-key
+
