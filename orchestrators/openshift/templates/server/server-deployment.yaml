@@ -16,11 +16,13 @@ spec:
         app: aqua-web
       name: aqua-web
     spec:
-# remove the comments from the following lines:
-#     securityContext:
-#         runAsUser: 431
-#         runAsGroup: 433
-#         fsGroup: 433
+      # To run Aqua components as a non-privileged account, comment out
+      # spec.template.spec.containers.securityContext field as applicable,
+      # and uncomment spec.template.spec.securityConext field:
+      #securityContext:
+      #  runAsUser: 431
+      #  runAsGroup: 433
+      #  fsGroup: 433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
@@ -60,6 +62,11 @@ spec:
         #  value: "/opt/certs/key.pem"
         image: registry.aquasec.com/console:4.6
         imagePullPolicy: IfNotPresent
+        # To run Aqua components as a privileged account, uncomment
+        # spec.template.spec.containers.securityContext field as applicable,
+        # and comment out spec.template.spec.securityContext field:
+        securityContext:
+          privileged: true
         name: aqua-web
         ports:
         - containerPort: 8080
@@ -82,12 +89,19 @@ spec:
           path: /var/run/docker.sock
         name: docker-socket-mount
       - name: aqua-web-pvc
+        # To use persistentVolumeClaim to store DB content, comment out
+        # deployment.spec.template.spec.volumes.hostPath field as applicable,
+        # uncomment deployment.spec.template.spec.volumes.persistentVolumeClaim field
         persistentVolumeClaim:
           claimName: aqua-web-pvc
+        # To use hostPath to store DB content, comment out
+        # deployment.spec.template.spec.volumes.persistentVolumeClaim field as applicable,
+        # uncomment deployment.spec.template.spec.volumes.hostPath field
+        #hostPath:
+        #  path: /var/lib/aqua/raw-scan-results
       # To use SSL for communication between Aqua & Kubernetes, uncomment
       # deployment.spec.template.spec.volumes[name: aqua-key] field as applicable,
       # comment same if incase not used and it was uncommented
       #- name: aqua-key
       #  secret:
       #    secretName: aqua-ssl-key
-

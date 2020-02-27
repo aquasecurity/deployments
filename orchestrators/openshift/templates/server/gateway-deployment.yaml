@@ -16,12 +16,24 @@ spec:
         app: aqua-gateway
       name: aqua-gateway
     spec:
+      # To run Aqua components as a non-privileged account, comment out
+      # spec.template.spec.containers.securityContext field as applicable,
+      # and uncomment spec.template.spec.securityConext field:
+      #securityContext:
+      #  runAsUser: 431
+      #  runAsGroup: 433
+      #  fsGroup: 433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
       - name: aqua-gateway
         image: registry.aquasec.com/gateway:4.6
         imagePullPolicy: IfNotPresent
+        # To run Aqua components as a privileged account, uncomment
+        # spec.template.spec.containers.securityContext field as applicable,
+        # and comment out spec.template.spec.securityContext field:
+        securityContext:
+          privileged: true
         env:
         - name: AQUA_CONSOLE_SECURE_ADDRESS
           value: aqua-web:443

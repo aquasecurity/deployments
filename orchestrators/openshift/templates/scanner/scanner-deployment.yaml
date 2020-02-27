@@ -16,6 +16,13 @@ spec:
         app: aqua-scanner
       name: aqua-scanner
     spec:
+      # To run Aqua components as a non-privileged account, comment out
+      # spec.template.spec.containers.securityContext field as applicable,
+      # and uncomment spec.template.spec.securityConext field:
+      #securityContext:
+      #  runAsUser: 431
+      #  runAsGroup: 433
+      #  fsGroup: 433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
