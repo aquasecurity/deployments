@@ -1,6 +1,6 @@
 ---
 # Replace {AQUA_SCANNER_USERNAME}, & {AQUA_SCANNER_PASSWORD} \
-#   with the user details who has Scanner Role privileges
+#    with the credentials of an Aqua user with the Scanner role.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
