@@ -20,9 +20,9 @@ spec:
       # spec.template.spec.containers.securityContext field as applicable,
       # and uncomment spec.template.spec.securityConext field:
       #securityContext:
-      #  runAsUser: 431
-      #  runAsGroup: 433
-      #  fsGroup: 433
+      #  runAsUser: 11431
+      #  runAsGroup: 11433
+      #  fsGroup: 11433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
