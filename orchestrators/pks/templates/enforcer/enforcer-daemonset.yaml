@@ -74,7 +74,7 @@ spec:
       volumes:
       - name: var-run
         hostPath:
-          path: /var/run
+          path: /var/vcap/sys/run/docker 
       - name: dev
         hostPath:
           path: /dev
