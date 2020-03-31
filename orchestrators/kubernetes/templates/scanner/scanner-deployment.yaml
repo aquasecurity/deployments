@@ -1,4 +1,6 @@
 ---
+# Replace {AQUA_SCANNER_USERNAME}, & {AQUA_SCANNER_PASSWORD} \
+#    with the credentials of an Aqua user with the Scanner role.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,6 +18,12 @@ spec:
         app: aqua-scanner
       name: aqua-scanner
     spec:
+      # To run Aqua components as a non-privileged account
+      # uncomment spec.template.spec.securityConext field:
+      #securityContext:
+      #  runAsUser: 11431
+      #  runAsGroup: 11433
+      #  fsGroup: 11433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
@@ -26,7 +34,7 @@ spec:
         - daemon
         - --direct-cc
         - --user
-        - scanner
+        - '{AQUA_SCANNER_USERNAME}'
         - --password
         - '{AQUA_SCANNER_PASSWORD}'
         - --host
