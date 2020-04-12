@@ -53,8 +53,6 @@ spec:
           value: aqua-db
         - name: SCALOCK_AUDIT_DBPORT
           value: "5432"
-        - name: AQUA_CONSOLE_RAW_SCAN_RESULTS_STORAGE_SIZE
-          value: "4"
         # To use SSL for communication between Aqua & Kubernetes, uncomment env variables
         # SEDOCK_CERT_PEM & SEDOCK_KEY_PEM in deployment.spec.template.spec.containers
         # field as applicable, comment same if incase not used and it was uncommented
