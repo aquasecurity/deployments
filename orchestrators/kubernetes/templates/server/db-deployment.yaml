@@ -17,6 +17,9 @@ spec:
         app: aqua-db
       name: aqua-db
     spec:
+      securityContext:
+        fsGroup: 70
+        fsUser: 70
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
