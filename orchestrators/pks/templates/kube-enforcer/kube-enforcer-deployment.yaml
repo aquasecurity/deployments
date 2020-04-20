@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+  labels:
+    app: kube-enforcer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kube-enforcer
+    spec:
+      serviceAccountName: aqua-kube-enforcer
+      containers:
+        - name: kube-enforcer
+          image: registry.aquasec.com/kube-enforcer:5.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8086
+          env:
+            # Specify the aqua server username in the <username> placeholder.
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: aqua-server-credentials
+                  key: username
+            # Specify the aqua server password in the <password> placeholder.
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: aqua-server-credentials
+                  key: password
+            # Specify whether to enable/disable the cache by using "yes", "true", "no", "false" values.
+            # Default value is "yes".
+            - name: AQUA_ENABLE_CACHE
+              value: "yes"
+            # Specify cache expiration period in seconds.
+            # Default value is 60
+            - name: AQUA_CACHE_EXPIRATION_PERIOD
+              value: "60"
+            - name: TLS_SERVER_CERT_FILEPATH
+              value: /certs/server.crt
+            - name: TLS_SERVER_KEY_FILEPATH
+              value: /certs/server.key
+            - name: AQUA_GATEWAY_SECURE_ADDRESS
+              value: aqua-gateway:8443
+            - name: AQUA_TOKEN
+              value: <aqua_kube-enforcer-token>
+            - name: AQUA_TLS_PORT
+              value: "8443"
+            - name: CLUSTER_NAME
+              value: <cluster_name>
+          volumeMounts:
+            - name: "certs"
+              mountPath: "/certs"
+      volumes:
+        - name: "certs"
+          secret:
+            secretName: "kube-enforcer-certs"
+      imagePullSecrets:
+        - name: aqua-registry
+  selector:
+    matchLabels:
+      app: kube-enforcer

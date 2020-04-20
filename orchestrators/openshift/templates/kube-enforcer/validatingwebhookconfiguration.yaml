@@ -1,0 +1,17 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: kube-enforcer-admission-hook-config
+  namespace: aqua
+webhooks:
+  - name: imageassurance.aquasec.com
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["pods", "deployments", "replicasets", "replicationcontrollers", "statefulsets", "daemonsets", "jobs", "cronjobs"]
+    clientConfig:
+      caBundle: <ca_bundle>
+      service:
+        namespace: aqua
+        name: aqua-kube-enforcer
