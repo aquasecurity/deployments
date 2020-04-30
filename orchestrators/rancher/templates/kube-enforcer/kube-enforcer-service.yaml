@@ -8,4 +8,4 @@ spec:
     - port: 443
       targetPort: 8443
   selector:
-    app: kube-enforcer
+    app: aqua-kube-enforcer
