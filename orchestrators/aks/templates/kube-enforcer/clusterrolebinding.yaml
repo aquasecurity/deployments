@@ -8,5 +8,5 @@ roleRef:
   name: aqua-kube-enforcer
 subjects:
   - kind: ServiceAccount
-    name: aqua-kube-enforcer
+    name: aqua-kube-enforcer-sa
     namespace: aqua

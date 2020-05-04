@@ -11,7 +11,8 @@ webhooks:
         apiVersions: ["*"]
         resources: ["pods", "deployments", "replicasets", "replicationcontrollers", "statefulsets", "daemonsets", "jobs", "cronjobs"]
     clientConfig:
-      caBundle: <ca_bundle>
+      # Configure the CA certificate in the below caBundle
+      # caBundle: <ca_bundle>
       service:
         namespace: aqua
         name: aqua-kube-enforcer

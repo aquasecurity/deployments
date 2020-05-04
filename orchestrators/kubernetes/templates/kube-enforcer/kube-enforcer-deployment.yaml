@@ -4,34 +4,39 @@ metadata:
   name: aqua-kube-enforcer
   namespace: aqua
   labels:
-    app: kube-enforcer
+    app: aqua-kube-enforcer
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: kube-enforcer
+        app: aqua-kube-enforcer
     spec:
-      serviceAccountName: aqua-kube-enforcer
+      serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
           image: registry.aquasec.com/kube-enforcer:5.0
           imagePullPolicy: Always
           ports:
-            - containerPort: 8086
+            - containerPort: 8000
           env:
             # Specify the aqua server username in the <username> placeholder.
             - name: USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: aqua-server-credentials
+                  name: aqua-kube-enforcer-token
                   key: username
             # Specify the aqua server password in the <password> placeholder.
             - name: PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: aqua-server-credentials
+                  name: aqua-kube-enforcer-token
                   key: password
+            - name: AQUA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aqua-kube-enforcer-token
+                  key: token
             # Specify whether to enable/disable the cache by using "yes", "true", "no", "false" values.
             # Default value is "yes".
             - name: AQUA_ENABLE_CACHE
@@ -44,23 +49,25 @@ spec:
               value: /certs/server.crt
             - name: TLS_SERVER_KEY_FILEPATH
               value: /certs/server.key
+            # Specify the gateway address if it's different
+            # from default one.  
             - name: AQUA_GATEWAY_SECURE_ADDRESS
               value: aqua-gateway:8443
-            - name: AQUA_TOKEN
-              value: <aqua_kube-enforcer-token>
             - name: AQUA_TLS_PORT
               value: "8443"
+            # Specify the cluster name else
+            # kube-enforcer will gnerate name for you.  
             - name: CLUSTER_NAME
-              value: <cluster_name>
+              value: ""
           volumeMounts:
             - name: "certs"
               mountPath: "/certs"
       volumes:
         - name: "certs"
           secret:
-            secretName: "kube-enforcer-certs"
+            secretName: "aqua-kube-enforcer-certs"
       imagePullSecrets:
         - name: aqua-registry
   selector:
     matchLabels:
-      app: kube-enforcer
+      app: aqua-kube-enforcer
