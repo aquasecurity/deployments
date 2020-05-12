@@ -20,7 +20,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:4.6
+        image: registry.aquasec.com/gateway:5.0
         imagePullPolicy: IfNotPresent
         env:
         - name: AQUA_CONSOLE_SECURE_ADDRESS
