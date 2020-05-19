@@ -18,7 +18,7 @@ spec:
           image: registry.aquasec.com/kube-enforcer:5.0
           imagePullPolicy: Always
           ports:
-            - containerPort: 8000
+            - containerPort: 8080
           env:
             # Specify the aqua server username in the <username> placeholder.
             - name: USERNAME
