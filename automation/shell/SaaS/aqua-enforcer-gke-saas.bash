@@ -22,7 +22,7 @@ echo "                 Secure once, Run Anywhere                      "
 echo ""
 echo " ***************************************************************"
 
-read -p "What version of Aqua Enforcer tag do you want to install (i.e. 4.6.0): " aquatag
+read -p "What version of Aqua Enforcer tag do you want to install (i.e. 5.0.0): " aquatag
 read -p "What is the address of your Aqua SaaS instance (i.e. saas01.aquasec.com) : " saasenv
 echo ""
 # Pull down the images from AquaSec
