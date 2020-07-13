@@ -18,20 +18,8 @@ spec:
           image: registry.aquasec.com/kube-enforcer:5.0
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: 8443
           env:
-            # Specify the aqua server username in the <username> placeholder.
-            - name: USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: aqua-kube-enforcer-token
-                  key: username
-            # Specify the aqua server password in the <password> placeholder.
-            - name: PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: aqua-kube-enforcer-token
-                  key: password
             - name: AQUA_TOKEN
               valueFrom:
                 secretKeyRef:
