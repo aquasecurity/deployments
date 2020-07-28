@@ -6,7 +6,7 @@ This is the repository for [Aqua Security](https://www.aquasec.com) product depl
 
 ## Deployment of Aqua Cloud Native Security Platform (CSP)
 
-[Aqua CSP](https://www.aquasec.com/products/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native aecurity platform that secures containerized, serverless and VM-based applications, from CI/CD pipelines to production runtime environments. Aqua CSP runs on-prem or in the cloud, at any scale.
+[Aqua CSP](https://www.aquasec.com/products/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native security platform that secures containerized, serverless and VM-based applications, from CI/CD pipelines to production runtime environments. Aqua CSP runs on-prem or in the cloud, at any scale.
 
 * [**Orchestrators**](orchestrators/)
     * [**Kubernetes**](orchestrators/kubernetes/)
