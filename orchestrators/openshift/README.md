@@ -1,5 +1,5 @@
-# Redhat Openshift
+# Red Hat OpenShift
 
 ## Deployments
-* [**Openshift Templates**](templates/) - Deploy the Aqua Server and Enforcer components on an OpenShift cluster.
+* [**OpenShift templates**](templates/) - Deploy Aqua CSP on an OpenShift cluster.
   
