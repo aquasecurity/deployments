@@ -5,6 +5,7 @@ metadata:
   namespace: aqua
 webhooks:
   - name: imageassurance.aquasec.com
+    failurePolicy: Ignore
     rules:
       - operations: ["CREATE"]
         apiGroups: ["*"]
