@@ -15,6 +15,8 @@ spec:
         app: aqua-agent
       name: aqua-agent
       namespace: aqua
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/aqua-agent: unconfined
     spec:
       containers:
       - env:
@@ -31,7 +33,21 @@ spec:
         name: aqua-agent
         resources: {}
         securityContext:
-          privileged: true
+          privileged: false
+          capabilities:
+              add:
+                - SYS_ADMIN
+                - NET_ADMIN
+                - NET_RAW
+                - SYS_PTRACE
+                - KILL
+                - MKNOD
+                - SETGID
+                - SETUID
+                - SYS_MODULE
+                - AUDIT_CONTROL
+                - SYSLOG
+                - SYS_CHROOT
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
@@ -63,7 +79,6 @@ spec:
       - name: aqua-registry
       restartPolicy: Always
       schedulerName: default-scheduler
-      securityContext: {}
       serviceAccount: aqua-sa
       serviceAccountName: aqua-sa
       terminationGracePeriodSeconds: 30
