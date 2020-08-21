@@ -28,7 +28,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:5.0
+        image: registry.aquasec.com/enforcer:5.3.preview6
         imagePullPolicy: Always
         name: aqua-agent
         resources: {}

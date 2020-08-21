@@ -37,7 +37,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:5.0
+        image: registry.aquasec.com/database:5.3.preview6
         imagePullPolicy: IfNotPresent
         env:
         - name: POSTGRES_PASSWORD
@@ -103,7 +103,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:5.0
+        image: registry.aquasec.com/console:5.3.preview6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -219,7 +219,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.0
+        image: registry.aquasec.com/gateway:5.3.preview6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
