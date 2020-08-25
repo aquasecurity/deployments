@@ -40,7 +40,7 @@ spec:
             # Specify the gateway address if it's different
             # from default one.  
             - name: AQUA_GATEWAY_SECURE_ADDRESS
-              value: aqua-gateway:8443
+              value: aqua-gateway.aqua:8443
             - name: AQUA_TLS_PORT
               value: "8443"
             # Specify the cluster name else
