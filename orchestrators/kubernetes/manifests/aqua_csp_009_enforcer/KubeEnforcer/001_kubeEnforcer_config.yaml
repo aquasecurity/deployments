@@ -1,0 +1,66 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: kube-enforcer-admission-hook-config
+  namespace: aqua
+webhooks:
+  - name: imageassurance.aquasec.com
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["pods", "deployments", "replicasets", "replicationcontrollers", "statefulsets", "daemonsets", "jobs", "cronjobs"]
+    clientConfig:
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNyRENDQVpRQ0NRQ1kwYXoreDMvMWVqQU5CZ2txaGtpRzl3MEJBUXNGQURBWE1SVXdFd1lEVlFRRERBeGgKWkcxcGMzTnBiMjVmWTJFd0lCY05NakF3TlRJM01qQTFNREUyV2hnUE1qSTVOREF6TVRJeU1EVXdNVFphTUJjeApGVEFUQmdOVkJBTU1ER0ZrYldsemMybHZibDlqWVRDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDCkFRb0NnZ0VCQUxEOEhsN2pUdGpLNGZ6ZDRqanpkWUFkY2lXS3JjazFob3U2dWtVa25NVXNVODBEUmkwME5ic0gKdUd1N3Z3RVhOd1Z2NnY2Mi9PUCtNOWwvWmpKcUpNRXRZKzgyMGtKNUkxV2cwdDh2YW03ck45cmowRFhIb21ZQwpDWEZQb3hndjlCUEQzTEU5SFhNcnV1Nnh2Z2xXMEhlLzlIWnc0NXRQSkRMdWJwbXg3eHU3bmRqZzJ0WWMxcjJRCmtHcE01N1g3K01LWUZER3EvekR6V3RvazVTNm56alhwV1hqSFg2aTBiVitKVmVZemtrRUdWZFphWTl5aVRVVVYKWW9BRGQ0LzVMM3NqTnE0UmV0dzA2TjYvVDRSVWZJamZVbjh5OE93c0JrQ0dxaEVabHNlSVZCbTBoQXRTT25aRgo2WWZLbmcxKzJzaEJGYUUwS01pczVGUTl0eWlaUEIwQ0F3RUFBVEFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBCmh3anpOT1NmSENXR3ZwaXhyb2RTRk55TWhoV1BFMVN4Q29SaDY5UFJ5MG9TL0pyem55cGgwcUZLYkd3KzZmWkgKYU9sV3RqTC9oL29ONjVZU1BiZ3luMlpmQ0xxRC83VVNvUXlWS3BWdmsxL2FLeWxpUkNHUC9BZnl6UkNyN1F3bApjVk5oc0F2R3NkRkxkU1pUU1QrbGlvMWlDU0dVSTdsYWUxTnRxcWdyNmtmbEdVVEtpaVJEZmdLTHFqVVFaR2ZtCkpEckFCMHd1N0k3dmZYNkJjL2dPdS90NXM5NmFuSXVnYktSSy9UQm04SmtFbENrYVVOYkwzaE43dTc5NXVnMnQKTGpRRllwL210Kys4bHJDck9NNHNjTTA3cmtUQ3BSWVFhbk15WU5Ec1BUWnBrUzg4WnErYnlpRlFCRWxmUlpsNwptRjFDVmluUTN6WnJ3ck9FMXJyWjl3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+      service:
+        namespace: aqua
+        name: aqua-kube-enforcer
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aqua-kube-enforcer-sa
+  namespace: aqua
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aqua-kube-enforcer
+rules:
+  - apiGroups: ["*"]
+    resources: ["pods", "secrets", "nodes", "namespaces", "deployments", "statefulsets", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: aqua-kube-enforcer
+subjects:
+  - kind: ServiceAccount
+    name: aqua-kube-enforcer-sa
+    namespace: aqua
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-kube-enforcer
+  namespace: aqua
+data:
+  # Specify whether to enable/disable the cache by using "yes", "true", "no", "false" values.
+  # Default value is "yes".
+  AQUA_ENABLE_CACHE: "yes"
+  # Specify cache expiration period in seconds.
+  # Default value is 60
+  AQUA_CACHE_EXPIRATION_PERIOD: "60"
+  TLS_SERVER_CERT_FILEPATH: "/certs/server.crt"
+  TLS_SERVER_KEY_FILEPATH: "/certs/server.key"
+  ## Based on your ingress config update the name here ##
+  AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway:8443"
+  AQUA_TLS_PORT: "8443"
+  # Cluster display name in aqua csp.
+  CLUSTER_NAME: ""
