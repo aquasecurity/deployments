@@ -1,11 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: aqua-csp-console
+  name: aqua-csp-server-config
   namespace: aqua
-data:
-  AQUA_CLUSTER_MODE: "active-active"
-  
+data:  
   # The name of the HTTP header used by the Aqua Server for authentication. Defaults to the standard Authorization header. Can be used when running behind reverse proxies that override this header.
   #AUTHORIZATION_HEADER: "aqua-auth"
   
@@ -19,7 +17,7 @@ data:
   SCALOCK_AUDIT_DBPORT: "5432"
   
   # Set the value of this variable to require to strictly require an SSL encrypted connection to the Postgres Audit database.
-  #SCALOCK_AUDIT_DBSSL: "require"
+  SCALOCK_AUDIT_DBSSL: "require"
   
   # Username for connection to the Postgres Audit database.
   SCALOCK_AUDIT_DBUSER: "postgres"
@@ -34,7 +32,7 @@ data:
   SCALOCK_DBPORT: "5432"
   
   # Set the value of this variable to require to strictly require an SSL-encrypted connection to the Postgres configuration database.
-  #SCALOCK_DBSSL: "require"
+  SCALOCK_DBSSL: "require"
   
   # Username for connection to the Postgres configuration database
   SCALOCK_DBUSER: "postgres"
@@ -60,15 +58,17 @@ data:
   # Server's root CA cert for HTTPS and Mutual Auth. The root CA certificate file should be mutual for both Gateway and Server certificates
   #AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
   
+  #AQUA_CLUSTER_MODE: "active-active"
+  
   # DNS name or IP address of the host of the Postgres pubsub database
-  AQUA_PUBSUB_DBHOST: "aqua-db"
+  #AQUA_PUBSUB_DBHOST: "aqua-db"
   
   # Database schema name; set this to the name of your choice. All letters must be lower-case.
-  AQUA_PUBSUB_DBNAME: "aqua_pubsub"
+  #AQUA_PUBSUB_DBNAME: "aqua_pubsub"
   
   # Username for connection to the Postgres pubsub database
-  AQUA_PUBSUB_DBUSER: "postgres"
-  AQUA_PUBSUB_DBPORT: "5432"
+  #AQUA_PUBSUB_DBUSER: "postgres"
+  #AQUA_PUBSUB_DBPORT: "5432"
   
   # DNS name or IP address of an Aqua Gateway that the Aqua Enforcer will first connect to.
   #BATCH_INSTALL_GATEWAY: "aqua-gateway"

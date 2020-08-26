@@ -66,28 +66,15 @@ spec:
           protocol: TCP
         envFrom:
         - configMapRef:
-            name: aqua-csp-console
+            name: aqua-csp-server-config
+        - secretRef:
+            name: aqua-csp-server-secret
         env:
-        - name: ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: password
-              name: aqua-admin
         - name: AQUA_PUBSUB_DBPASSWORD
           valueFrom:
             secretKeyRef:
               key: password
               name: aqua-db
-        - name: BATCH_INSTALL_TOKEN
-          valueFrom:
-            secretKeyRef:
-              key: token
-              name: enforcer-token
-        - name: LICENSE_TOKEN
-          valueFrom:
-            secretKeyRef:
-              key: license
-              name: aqua-license
         - name: SCALOCK_AUDIT_DBPASSWORD
           valueFrom:
             secretKeyRef:
@@ -182,7 +169,7 @@ spec:
           protocol: TCP
         envFrom:
         - configMapRef:
-            name: aqua-csp-console
+            name: aqua-csp-server-config
         env:
         - name: SCALOCK_DBPASSWORD
           valueFrom:
