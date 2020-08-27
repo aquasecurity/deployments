@@ -29,8 +29,21 @@ spec:
         - name: kube-enforcer
           image: registry.aquasec.com/kube-enforcer:5.3.preview6
           imagePullPolicy: Always
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
           ports:
             - containerPort: 8443
+              protocol: TCP
+            - containerPort: 8080
+              protocol: TCP
           env:
             - name: AQUA_TOKEN
               valueFrom:
@@ -41,16 +54,16 @@ spec:
           - configMapRef:
               name: aqua-csp-kube-enforcer
           volumeMounts:
-            - name: "aquasec-ssl"
+            - name: "kube-enforcer-ssl"
               mountPath: "/certs"
       volumes:
-        - name: "aquasec-ssl"
+        - name: "kube-enforcer-ssl"
           secret:
-            secretName: "aqua-ssl"
+            secretName: "kube-enforcer-ssl"
             items:
-            - key: aqua.crt
+            - key: server.crt
               path: server.crt
-            - key: aqua.key
+            - key: server.key
               path: server.key            
       imagePullSecrets:
         - name: aqua-registry

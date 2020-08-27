@@ -5,4 +5,3 @@ metadata:
   namespace: aqua
 data:
   AQUA_ENV_SIZE: "S" # Possible values: “S”, “M”, “L”, defaults to “S”.
-  PGDATA: /var/lib/postgresql/data/db-files
