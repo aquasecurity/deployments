@@ -20,6 +20,10 @@ spec:
     spec:
       containers:
       - env:
+        - name: AQUA_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         - name: AQUA_TOKEN
           valueFrom:
             secretKeyRef:
@@ -30,6 +34,21 @@ spec:
             name: aqua-csp-enforcer
         image: registry.aquasec.com/enforcer:5.3.preview6
         imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8096
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8096
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        ports:
+        - containerPort: 8096
+          protocol: TCP
         name: aqua-agent
         resources: {}
         securityContext:
