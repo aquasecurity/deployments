@@ -32,7 +32,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:5.3.preview6
+        image: registry.aquasec.com/enforcer:5.3.preview7
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
