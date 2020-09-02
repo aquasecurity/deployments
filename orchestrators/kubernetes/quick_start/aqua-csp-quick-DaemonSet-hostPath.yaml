@@ -71,7 +71,7 @@ data:
   # Username for connection to the Postgres configuration database
   SCALOCK_DBUSER: "postgres"
   # Setting this might be helpful for problem determination. Acceptable values are DEBUG, INFO, WARN, and ERROR
-  SCALOCK_LOG_LEVEL: "DEBUG"
+  SCALOCK_LOG_LEVEL: "INFO"
   # Configure this variable with the IP address or DNS name of the Aqua Server, including the port number (8443 by default).
   AQUA_CONSOLE_SECURE_ADDRESS: "aqua-web:443"
   # Specify the desired public IP address of the Aqua Gateway. Used to make the Enforcer connect to the Gateway through this IP address.
@@ -84,14 +84,14 @@ data:
   #AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/cert.pem"
   # Server's root CA cert for HTTPS and Mutual Auth. The root CA certificate file should be mutual for both Gateway and Server certificates
   #AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
-  #AQUA_CLUSTER_MODE: "active-active"
+  AQUA_CLUSTER_MODE: "active-active"
   # DNS name or IP address of the host of the Postgres pubsub database
-  #AQUA_PUBSUB_DBHOST: "aqua-db"
+  AQUA_PUBSUB_DBHOST: "aqua-db"
   # Database schema name; set this to the name of your choice. All letters must be lower-case.
-  #AQUA_PUBSUB_DBNAME: "aqua_pubsub"
+  AQUA_PUBSUB_DBNAME: "aqua_pubsub"
   # Username for connection to the Postgres pubsub database
-  #AQUA_PUBSUB_DBUSER: "postgres"
-  #AQUA_PUBSUB_DBPORT: "5432"
+  AQUA_PUBSUB_DBUSER: "postgres"
+  AQUA_PUBSUB_DBPORT: "5432"
   # DNS name or IP address of an Aqua Gateway that the Aqua Enforcer will first connect to.
   BATCH_INSTALL_GATEWAY: "aqua-gateway"
   # Orchestrator type to be configured on enforcers.
@@ -126,6 +126,36 @@ metadata:
   name: aqua-sa
   namespace: aqua
 ---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: aqua-discovery-cr
+  labels:
+    rbac.example.com/aggregate-to-monitoring: "true"
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "services", "endpoints", "pods", "deployments", "namespaces","componentstatuses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["imagestreams", "imagestreams/layers"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aqua-discovery-crb
+roleRef:
+  name: aqua-discovery-cr
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+subjects:
+  - kind: ServiceAccount
+    name: aqua-sa
+    namespace: aqua
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -156,6 +186,32 @@ subjects:
     name: aqua-sa
     namespace: aqua
 ---
+#Create the storage class for the Aqua Database
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: aqua-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+#Create the volume for the Aqua Database
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aquadb-pv
+  namespace: aqua
+  labels:
+    app: aqua-database
+spec:
+  storageClassName: aqua-storage
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /tmp/aquadb/
+---
 #Create a PVC for the Aqua Database
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -163,11 +219,17 @@ metadata:
   name: aqua-db-pvc
   namespace: aqua
 spec:
+  storageClassName: aqua-storage
+  volumeMode: Filesystem
+  volumeName: aquadb-pv
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
       storage: 50Gi
+  selector:
+    matchLabels:
+      app: aqua-database
 ---
 apiVersion: v1
 kind: Service
@@ -208,7 +270,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:5.3.preview7
+        image: registry.aquasec.com/database:5.3.preview6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -287,7 +349,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:5.3.preview7
+        image: registry.aquasec.com/console:5.3.preview6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -390,7 +452,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.3.preview7
+        image: registry.aquasec.com/gateway:5.3.preview6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -473,7 +535,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:5.3.preview7
+        image: registry.aquasec.com/enforcer:5.3.preview6
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
