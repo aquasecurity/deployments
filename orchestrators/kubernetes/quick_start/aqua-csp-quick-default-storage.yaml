@@ -84,14 +84,14 @@ data:
   #AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/cert.pem"
   # Server's root CA cert for HTTPS and Mutual Auth. The root CA certificate file should be mutual for both Gateway and Server certificates
   #AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
-  #AQUA_CLUSTER_MODE: "active-active"
+  AQUA_CLUSTER_MODE: "active-active"
   # DNS name or IP address of the host of the Postgres pubsub database
-  #AQUA_PUBSUB_DBHOST: "aqua-db"
+  AQUA_PUBSUB_DBHOST: "aqua-db"
   # Database schema name; set this to the name of your choice. All letters must be lower-case.
-  #AQUA_PUBSUB_DBNAME: "aqua_pubsub"
+  AQUA_PUBSUB_DBNAME: "aqua_pubsub"
   # Username for connection to the Postgres pubsub database
-  #AQUA_PUBSUB_DBUSER: "postgres"
-  #AQUA_PUBSUB_DBPORT: "5432"
+  AQUA_PUBSUB_DBUSER: "postgres"
+  AQUA_PUBSUB_DBPORT: "5432"
   # DNS name or IP address of an Aqua Gateway that the Aqua Enforcer will first connect to.
   BATCH_INSTALL_GATEWAY: "aqua-gateway"
   # Orchestrator type to be configured on enforcers.
@@ -125,6 +125,36 @@ metadata:
     deployedby: aqua-yaml
   name: aqua-sa
   namespace: aqua
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: aqua-discovery-cr
+  labels:
+    rbac.example.com/aggregate-to-monitoring: "true"
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "services", "endpoints", "pods", "deployments", "namespaces","componentstatuses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["imagestreams", "imagestreams/layers"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aqua-discovery-crb
+roleRef:
+  name: aqua-discovery-cr
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+subjects:
+  - kind: ServiceAccount
+    name: aqua-sa
+    namespace: aqua
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -208,7 +238,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:5.3.preview7
+        image: registry.aquasec.com/database:5.3.preview6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -287,7 +317,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:5.3.preview7
+        image: registry.aquasec.com/console:5.3.preview6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -390,7 +420,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.3.preview7
+        image: registry.aquasec.com/gateway:5.3.preview6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -565,7 +595,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:5.3.preview7
+          image: registry.aquasec.com/kube-enforcer:5.3.preview6
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -608,3 +638,148 @@ spec:
   selector:
     matchLabels:
       app: aqua-kube-enforcer
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: aqua-agent
+  name: aqua-agent
+  namespace: aqua
+spec:
+  selector:
+    matchLabels:
+      app: aqua-agent
+  template:
+    metadata:
+      labels:
+        app: aqua-agent
+      name: aqua-agent
+      namespace: aqua
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/aqua-agent: unconfined
+    spec:
+      containers:
+      - env:
+        - name: AQUA_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: AQUA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: enforcer-token
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-enforcer
+        image: registry.aquasec.com/enforcer:5.3.preview6
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8096
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8096
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        ports:
+        - containerPort: 8096
+          protocol: TCP
+        name: aqua-agent
+        resources: {}
+        securityContext:
+          privileged: false
+          capabilities:
+              add:
+                - SYS_ADMIN
+                - NET_ADMIN
+                - NET_RAW
+                - SYS_PTRACE
+                - KILL
+                - MKNOD
+                - SETGID
+                - SETUID
+                - SYS_MODULE
+                - AUDIT_CONTROL
+                - SYSLOG
+                - SYS_CHROOT
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/run
+          name: var-run
+        - mountPath: /dev
+          name: dev
+        - mountPath: /host/sys
+          name: sys
+          readOnly: true
+        - mountPath: /host/proc
+          name: proc
+          readOnly: true
+        - mountPath: /host/etc
+          name: etc
+          readOnly: true
+        - mountPath: /host/opt/aquasec
+          name: aquasec
+          readOnly: true
+        - mountPath: /opt/aquasec/tmp
+          name: aquasec-tmp
+        - mountPath: /opt/aquasec/audit
+          name: aquasec-audit
+        - mountPath: /data
+          name: aquasec-data
+      dnsPolicy: ClusterFirst
+      hostPID: true
+      imagePullSecrets:
+      - name: aqua-registry
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: aqua-sa
+      serviceAccountName: aqua-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /var/run
+          type: ""
+        name: var-run
+      - hostPath:
+          path: /dev
+          type: ""
+        name: dev
+      - hostPath:
+          path: /sys
+          type: ""
+        name: sys
+      - hostPath:
+          path: /proc
+          type: ""
+        name: proc
+      - hostPath:
+          path: /etc
+          type: ""
+        name: etc
+      - hostPath:
+          path: /var/lib/aquasec
+          type: ""
+        name: aquasec
+      - hostPath:
+          path: /var/lib/aquasec/tmp
+          type: ""
+        name: aquasec-tmp
+      - hostPath:
+          path: /var/lib/aquasec/audit
+          type: ""
+        name: aquasec-audit
+      - hostPath:
+          path: /var/lib/aquasec/data
+          type: ""
+        name: aquasec-data
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
