@@ -58,8 +58,8 @@ data:
   # Specify cache expiration period in seconds.
   # Default value is 60
   AQUA_CACHE_EXPIRATION_PERIOD: "60"
-  TLS_SERVER_CERT_FILEPATH: "/certs/server.crt"
-  TLS_SERVER_KEY_FILEPATH: "/certs/server.key"
+  TLS_SERVER_CERT_FILEPATH: "/certs/aqua_ke.crt"
+  TLS_SERVER_KEY_FILEPATH: "/certs/aqua_ke.key"
   ## Based on your ingress config update the name here ##
   AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway:8443"
   AQUA_TLS_PORT: "8443"

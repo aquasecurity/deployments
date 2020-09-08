@@ -61,10 +61,10 @@ spec:
           secret:
             secretName: "kube-enforcer-ssl"
             items:
-            - key: server.crt
-              path: server.crt
-            - key: server.key
-              path: server.key            
+            - key: aqua_ke.crt
+              path: aqua_ke.crt
+            - key: aqua_ke.key
+              path: aqua_ke.key 
       imagePullSecrets:
         - name: aqua-registry
   selector:
