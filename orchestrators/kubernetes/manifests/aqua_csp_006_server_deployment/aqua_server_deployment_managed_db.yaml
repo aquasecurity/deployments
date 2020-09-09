@@ -87,18 +87,18 @@ spec:
               name: aqua-db
       #   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
-      #     name: aquasec-ssl
+      #     name: aqua-grpc-web
       #     readOnly: true
       # volumes:
-      # - name: aquasec-ssl
+      # - name: aqua-grpc-web
       #   secret:
-      #     secretName: aqua-ssl
+      #     secretName: aqua-grpc-web
       #     items:
-      #     - key: aqua.crt
+      #     - key: aqua_web.crt
       #       path: cert.pem
-      #     - key: aqua.key
+      #     - key: aqua_web.key
       #       path: key.pem
-      #     - key: ca.crt
+      #     - key: rootCA.crt
       #       path: ca.pem
 ---
 apiVersion: v1
@@ -183,16 +183,16 @@ spec:
               name: aqua-db
       #   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
-      #     name: aquasec-ssl
+      #     name: aqua-grpc-gateway
       #     readOnly: true
       # volumes:
-      # - name: aquasec-ssl
+      # - name: aqua-grpc-gateway
       #   secret:
-      #     secretName: aqua-ssl
+      #     secretName: aqua-grpc-gateway
       #     items:
-      #     - key: aqua.crt
+      #     - key: aqua_gateway.crt
       #       path: cert.pem
-      #     - key: aqua.key
+      #     - key: aqua_gateway.key
       #       path: key.pem
-      #     - key: ca.crt
+      #     - key: rootCA.crt
       #       path: ca.pem

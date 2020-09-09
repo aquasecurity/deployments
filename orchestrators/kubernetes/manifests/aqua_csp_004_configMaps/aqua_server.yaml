@@ -57,6 +57,9 @@ data:
   
   # Server's root CA cert for HTTPS and Mutual Auth. The root CA certificate file should be mutual for both Gateway and Server certificates
   #AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
+
+  # Setting this to 1 configures the gateway to verify the certificate sent by the Enforcer. This is required if you configure mutual authentication between the Enforcer and gateway.
+  #AQUA_VERIFY_ENFORCER = 1
   
   #AQUA_CLUSTER_MODE: "active-active"
   
@@ -77,7 +80,7 @@ data:
   #BATCH_INSTALL_ORCHESTRATOR: "Kubernetes"
   
   # Name of the Batch Install object used to connect Aqua Enforcers to the environment.
-  #BATCH_INSTALL_NAME: "aquayaml-default" 
+  #BATCH_INSTALL_NAME: "aquayaml-default"
   
   AQUA_GATEWAY_TOKEN: "1234"
   AQUA_DEFAULT_GATEWAY_TOKEN: "1234"
