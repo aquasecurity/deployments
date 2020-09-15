@@ -241,7 +241,7 @@ spec:
               key: password
               name: aqua-db
         volumeMounts:
-        - mountPath: /var/lib/postgresql
+        - mountPath: /var/lib/postgresql/data
           name: postgres-db
         ports:
         - containerPort: 5432
