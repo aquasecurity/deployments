@@ -23,7 +23,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-agent
-        image: registry.aquasec.com/enforcer:5.0
+        image: registry.aquasec.com/enforcer:5.3
         imagePullPolicy: IfNotPresent
         securityContext:
           privileged: false
@@ -46,11 +46,22 @@ spec:
           value: <installation_token>
         - name: AQUA_SERVER
           value: aqua-gateway:8443
+        # replace for using envoy service
+        # - name: AQUA_SERVER
+        #   value: aqua-lb:443
+        # if envoy working with certificate
+        # - name: AQUA_TLS_VERIFY
+        #   value: "true"
         - name: AQUA_HOST_RUN_PATH
           value: /var/vcap/sys/run/docker
         - name: RESTART_CONTAINERS
           value: "no"
         volumeMounts:
+        # for envoy certificates
+        # - mountPath: /etc/ssl/custom-certificates/aqua-ca.pem
+        #   name: ca-certs
+        #   subPath: aqua-ca.pem
+        #   readOnly: true
         - mountPath: /var/run
           name: var-run
         - mountPath: /dev
@@ -74,6 +85,9 @@ spec:
         - mountPath: /data
           name: aquasec-data
       volumes:
+      # - name: ca-certs
+      #   configMap:
+      #     name: agent-crt
       - name: var-run
         hostPath:
           path: /var/vcap/sys/run/docker 

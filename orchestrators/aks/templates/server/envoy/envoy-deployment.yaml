@@ -1,0 +1,69 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy
+  labels:
+    app: envoy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: envoy
+  template:
+    metadata:
+      labels:
+        app: envoy
+    spec:
+      containers:
+      - name: envoy
+        image: envoyproxy/envoy-alpine:v1.15.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        - containerPort: 8082
+          name: healthserver
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            httpHeaders:
+            - name: x-envoy-livenessprobe
+              value: healthz
+            path: /healthz
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            httpHeaders:
+            - name: x-envoy-livenessprobe
+              value: healthz
+            path: /healthz
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        volumeMounts:
+        - mountPath: /etc/envoy
+          name: config
+        - mountPath: /etc/ssl/envoy
+          name: certs
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: envoy-conf
+        name: config
+      - name: certs
+        secret:
+          defaultMode: 420
+          secretName: aqua-lb-certs
