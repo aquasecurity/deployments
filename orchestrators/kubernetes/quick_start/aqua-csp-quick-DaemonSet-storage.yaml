@@ -156,19 +156,37 @@ subjects:
     name: aqua-sa
     namespace: aqua
 ---
-#Create a PVC for the Aqua Database
+# Create PV for the Aqua Database
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aqua-db-pv
+  namespace: aqua
+  labels:
+    for_pod: aqua-db
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+---
+# Create a PVC for the Aqua Database
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: aqua-db-pvc
   namespace: aqua
 spec:
+  selector:
+    matchLabels:
+      for_pod: aqua-db
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
       storage: 50Gi
----
+  volumeName: aqua-db-pv
 apiVersion: v1
 kind: Service
 metadata:
@@ -213,13 +231,13 @@ spec:
         livenessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 5
+          periodSeconds: 10
         readinessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 5
+          periodSeconds: 10
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
@@ -294,13 +312,13 @@ spec:
             path: /
             port: 8080
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /
             port: 8080
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         ports:
         - containerPort: 8080
           protocol: TCP
@@ -397,13 +415,13 @@ spec:
             path: /
             port: 8000
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /
             port: 8000
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         ports:
         - containerPort: 3622
           protocol: TCP
@@ -480,13 +498,13 @@ spec:
             path: /healthz
             port: 8096
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /healthz
             port: 8096
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         ports:
         - containerPort: 8096
           protocol: TCP

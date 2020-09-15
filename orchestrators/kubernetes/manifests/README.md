@@ -82,7 +82,7 @@ gRPC allows the addition of a security layer of mutual authentication and this i
 
      * Aqua Gateway
 
-       * Specify Aqua Gateway service name followed by HTTPS port as common name and any other alternate names as SAN DNS entries
+       * Specify Aqua Gateway service name as common name and any other alternate names as SAN DNS entries
 
          ```shell
          cat >aqua-gateway.conf <<EOF
@@ -100,8 +100,7 @@ gRPC allows the addition of a security layer of mutual authentication and this i
          subjectAltName = @alt_names
          [alt_names]
          DNS.1 = <gateway public DNS>
-         DNS.2 = aqua-gateway:8443
-         DNS.3 = aqua-gateway
+         DNS.2 = aqua-gateway
          EOF
          ```
 

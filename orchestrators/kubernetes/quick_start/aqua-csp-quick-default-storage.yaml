@@ -156,18 +156,37 @@ subjects:
     name: aqua-sa
     namespace: aqua
 ---
-#Create a PVC for the Aqua Database
+# Create PV for the Aqua Database
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aqua-db-pv
+  namespace: aqua
+  labels:
+    for_pod: aqua-db
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+---
+# Create a PVC for the Aqua Database
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: aqua-db-pvc
   namespace: aqua
 spec:
+  selector:
+    matchLabels:
+      for_pod: aqua-db
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
       storage: 50Gi
+  volumeName: aqua-db-pv
 ---
 apiVersion: v1
 kind: Service
@@ -476,7 +495,7 @@ metadata:
 webhooks:
   - name: imageassurance.aquasec.com
     rules:
-      - operations: ["CREATE"]
+      - operations: ["CREATE", "UPDATE"]
         apiGroups: ["*"]
         apiVersions: ["*"]
         resources: ["pods", "deployments", "replicasets", "replicationcontrollers", "statefulsets", "daemonsets", "jobs", "cronjobs"]
@@ -486,6 +505,25 @@ webhooks:
       service:
         namespace: aqua
         name: aqua-kube-enforcer
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: kube-enforcer-me-injection-hook-config
+  namespace: aqua
+webhooks:
+  - name: microenforcer.aquasec.com
+    clientConfig:
+      service:
+        name: aqua-kube-enforcer
+        namespace: aqua
+        path: "/mutate"
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFVENDQWZtZ0F3SUJBZ0lVTkljWmkzL2xqbEtObFZ0WXBwVyttN2xWZnNVd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUNBWERUSXdNRGd5TnpBNU5EZ3dNMW9ZRHpJeQpPVFF3TmpFeU1EazBPREF6V2pBWE1SVXdFd1lEVlFRRERBeGhaRzFwYzNOcGIyNWZZMkV3Z2dFaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURZSlovRmRjVUtDdmdqSHlVVnhxWitRTTBRLzNGYzQyTzkKUGlXTllGS2l3L1FJTUIxTHZpQklXSFQyVEZLRkVYYUtZcmdzTHE0MElFZWMyN2Jvd2RTbXJVZEV3bEdtNkQrMQpIaGROQWI4WEllWTNteEpUUlR2cVhzYitrUnptYjJCL2xRVVlLNFJxaW8vN2RyZjFEYjBwWEFYVmxzRFNvQUhoCkxUWUxXbmhldGNLTUEvT3FCQXBoaWM4VzZZN1VJY2FtWnVZZUMxOVBlMlZKSHFxZ3o5MDNybjFGTnNMWnA4Q00Kb0dXeENEU0RFSWRuTmMxVis1WUg4VmxLRk9wb2IxYWtIZFFPeVlROFVPR2hnMHh3YXNGMnRRc2RCQ3BTUFBNYwo3K01kWnF0c2dtVGJQaUN6bWRra25uWWZ4cmxsWVVmOGFCelBrMzhyQ2ZiMnF5ZHJLTGZSQWdNQkFBR2pVekJSCk1CMEdBMVVkRGdRV0JCVDlDWlVURzRtQThrYzBISEJsamhRZUxKWjZoekFmQmdOVkhTTUVHREFXZ0JUOUNaVVQKRzRtQThrYzBISEJsamhRZUxKWjZoekFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFDUE5Ick5rcTBpN2tpMnNGcUtWa3l0RGpRWTFzaVNRcjNsbXVweDlVL1FuaytBQ2huYUhjNDVqSFVTCi9JdmNWMnljQVZ1aUQ3eFJXWkdYVzRuRE14QjdBZ0RKWmhJd3hGTVl1bVpGZEtCUlBLKy9WY3ZFTFFoZ3Z6T0QKNWhvNHZ0RzlHTzBDUzhqNUtGZ3pWaDgxcmsyU2c1RDN6TGVISjVVNDVRK2xlRGtldXJmMzFqQWJsMU1vai9JWgpndVUyd1Y5RkJJaFZONTMwd1Y4b01oWnVZRWZvUmZhOEpIbXhTMmNNbHUxQWZ5YmZkcFB2cCtpUHZKc0t2UTgzCmdueEd4K1k5NldzL0pmWDlXSFpBT1kyQXVVYS9hUjZLSnVraG9KVTk2Z3p5VXd0eFV5aWExdDg5M0hZNmQ3bG0KU1BmaVEzWm40dXdxaEczMUhGSmZMMG5iSmlxZQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["*"]
+        apiVersions: ["v1"]
+        resources: ["pods"]
 ---
 apiVersion: v1
 kind: ServiceAccount
