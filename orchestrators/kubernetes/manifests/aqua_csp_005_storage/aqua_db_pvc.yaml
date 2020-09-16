@@ -1,18 +1,3 @@
-# Create PV for the Aqua Database
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: aqua-db-pv
-  namespace: aqua
-  labels:
-    for_pod: aqua-db
-spec:
-  persistentVolumeReclaimPolicy: Retain
-  capacity:
-    storage: 50Gi
-  accessModes:
-    - ReadWriteOnce
----
 # Create a PVC for the Aqua Database
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,12 +5,8 @@ metadata:
   name: aqua-db-pvc
   namespace: aqua
 spec:
-  selector:
-    matchLabels:
-      for_pod: aqua-db
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
       storage: 50Gi
-  volumeName: aqua-db-pv

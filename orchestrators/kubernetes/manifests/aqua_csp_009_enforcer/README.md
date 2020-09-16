@@ -1,3 +1,9 @@
+## The Enforcer Family
+
+- Enforcers provide runtime security for your workloads and infrastructure, and generate related audit events for your review.
+   - **Aqua Enforcer**: Running on Kubernetes as DaemonSet to block deployment; monitor/restrict runtime activities.
+   - **Aqua KubeEnforcer**: Running on Kubernetes as single replica deployment to block deployment. It can automatically discover Kubernetes cluster infrastructure in order to assist in static risk analysis.
+
 ## Prerequisites
 
 - Aqua registry access to pull images, Cluster access via kubectl, and RBAC authorization to deploy applications, Capacity requirements.
@@ -5,8 +11,6 @@
 - Aqua uses a token to authenticate the Enforcers. In order to deploy a new Enforcer you will need to access Aqua's console and get the relevant token from the Enforcer view. The token is provisioned to the Enforcer as a secret.
 
 - If you plan to connect to an Aqua Server on a different cluster then you'll need the remote gateway address
-
-
 
 ## Considerations
 
@@ -17,8 +21,6 @@ Before you deploy the Aqua Enforcer, you should consider the following options -
   - If you want to enable mutual auth between aqua components or if you want to use your own SSL certificates. Please refer to SSL considerations
 
 - By default, enforcers are deployed in non-privileged mode and note that protection is only applied to new or restarted containers.
-
-
 
 ## Deploy Aqua Enforcer
 
@@ -74,8 +76,6 @@ Step 1-3 are only required if you are deploying the Enforcer in a cluster that d
    $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/003_aqua_enforcer_daemonset.yaml
    ```
 
-
-
 ## Deploy Kube Enforcer
 
 The Kube-Enforcer is an optional enforcement option that deployed as an admission-control. 
@@ -90,7 +90,7 @@ Step 1-2 are only required if you are deploying Kube-Enforcer in a new cluster t
    $ kubectl create namespace aqua
    ```
 
-2. **Create the docker-registry secret **
+2. **Create the docker-registry secret**
 
    ```shell
    $ kubectl create secret docker-registry aqua-registry \
@@ -102,8 +102,9 @@ Step 1-2 are only required if you are deploying Kube-Enforcer in a new cluster t
 
 3. **Create admission controller, service account, and the configMap**
 
-   * The Kube Enforcer requires SSL certificates to support TLS communication with Kube API server. 
-   * The [admission controller](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/) requires CA root certificate and kube enforcer container requires SSL certificates generated form the same admission controller CA root cert. 
+   * The Aqua KubeEnforcer uses native Kubernetes functionality to perform two functions, without the need for an Aqua Enforcer. One KubeEnforcer can be deployed on each Kubernetes cluster.
+   * This functionality is implemented using a [ValidatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/), and is deployed as a pod on a single node in a cluster. To work in the Kubernetes environment, the KubeEnforcer is configured to communicate with the Kubernetes API server located on the master node over a TLS connection
+   * Kube enforcer container requires SSL certificates generated form the admission controller CA root cert. 
    * Aqua Kube Enforcer admission controller is packaged with a default CA root cert. If you want to use your own CA authority, Please refer to **KubeEnforcer SSL considerations** section below.
    * By default Aqua Kube Enforcer will connect to an internal gateway over aqua-gateway service name on port 8443.
    * If you want to connect to an external Aqua gateway in a multi cluster deployment please update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the external gateway end-point address in 001_kube_enforcer_config.yaml
@@ -135,8 +136,6 @@ Step 1-2 are only required if you are deploying Kube-Enforcer in a new cluster t
    ```shell
    $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/003_kube_enforcer_deploy.yaml
    ```
-
-
 
 ## KubeEnforcer SSL Considerations
 

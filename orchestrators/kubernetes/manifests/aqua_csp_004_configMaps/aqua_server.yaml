@@ -38,7 +38,7 @@ data:
   SCALOCK_DBUSER: "postgres"
   
   # Setting this might be helpful for problem determination. Acceptable values are DEBUG, INFO, WARN, and ERROR
-  SCALOCK_LOG_LEVEL: "DEBUG"
+  SCALOCK_LOG_LEVEL: "INFO"
   
   # Configure this variable with the IP address or DNS name of the Aqua Server, including the port number (8443 by default).
   AQUA_CONSOLE_SECURE_ADDRESS: "aqua-web:443"
