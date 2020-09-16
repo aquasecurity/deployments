@@ -15,7 +15,7 @@ spec:
       serviceAccountName: aqua-sa
       containers:
         - name: kube-scanner
-          image: registry.aquasec.com/scanner:5.3.20251
+          image: registry.aquasec.com/scanner:5.3.20258RC2
           imagePullPolicy: Always
           command: ["/bin/sh"]
           args: ["-c", "/opt/aquasec/scannercli daemon --host https://${AQUA_SERVER} --user ${AQUA_SCANNER_USERNAME} --password ${AQUA_SCANNER_PASSWORD} --no-verify"]

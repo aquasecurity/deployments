@@ -1,4 +1,4 @@
-#Create a PVC for the Aqua Database
+# Create a PVC for the Aqua Database
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

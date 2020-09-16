@@ -9,3 +9,6 @@ data:
   AQUA_SERVER: "aqua-gateway:8443"
   RESTART_CONTAINERS: "no"
   AQUA_LOGICAL_NAME: ""
+  # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_enforcer.crt"
+  # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_enforcer.key"
+  # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"

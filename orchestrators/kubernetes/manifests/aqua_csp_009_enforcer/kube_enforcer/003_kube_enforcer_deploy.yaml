@@ -27,7 +27,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:5.3.20251
+          image: registry.aquasec.com/kube-enforcer:5.3.20258RC2
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -61,10 +61,10 @@ spec:
           secret:
             secretName: "kube-enforcer-ssl"
             items:
-            - key: server.crt
-              path: server.crt
-            - key: server.key
-              path: server.key            
+            - key: aqua_ke.crt
+              path: aqua_ke.crt
+            - key: aqua_ke.key
+              path: aqua_ke.key 
       imagePullSecrets:
         - name: aqua-registry
   selector:

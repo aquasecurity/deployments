@@ -37,18 +37,24 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:5.3.20251
+        image: registry.aquasec.com/database:5.3.20258RC2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
         readinessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
@@ -59,7 +65,7 @@ spec:
               key: password
               name: aqua-db
         volumeMounts:
-        - mountPath: /var/lib/postgresql
+        - mountPath: /var/lib/postgresql/data
           name: postgres-db
         ports:
         - containerPort: 5432
@@ -116,7 +122,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:5.3.20251
+        image: registry.aquasec.com/console:5.3.20258RC2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -158,18 +164,18 @@ spec:
               name: aqua-db
       #   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
-      #     name: aquasec-ssl
+      #     name: aqua-grpc-web
       #     readOnly: true
       # volumes:
-      # - name: aquasec-ssl
+      # - name: aqua-grpc-web
       #   secret:
-      #     secretName: aqua-ssl
+      #     secretName: aqua-grpc-web
       #     items:
-      #     - key: aqua.crt
+      #     - key: aqua_web.crt
       #       path: cert.pem
-      #     - key: aqua.key
+      #     - key: aqua_web.key
       #       path: key.pem
-      #     - key: ca.crt
+      #     - key: rootCA.crt
       #       path: ca.pem
 ---
 apiVersion: v1
@@ -219,7 +225,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.3.20251
+        image: registry.aquasec.com/gateway:5.3.20258RC2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -254,16 +260,16 @@ spec:
               name: aqua-db
       #   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
-      #     name: aquasec-ssl
+      #     name: aqua-grpc-gateway
       #     readOnly: true
       # volumes:
-      # - name: aquasec-ssl
+      # - name: aqua-grpc-gateway
       #   secret:
-      #     secretName: aqua-ssl
+      #     secretName: aqua-grpc-gateway
       #     items:
-      #     - key: aqua.crt
+      #     - key: aqua_gateway.crt
       #       path: cert.pem
-      #     - key: aqua.key
+      #     - key: aqua_gateway.key
       #       path: key.pem
-      #     - key: ca.crt
+      #     - key: rootCA.crt
       #       path: ca.pem

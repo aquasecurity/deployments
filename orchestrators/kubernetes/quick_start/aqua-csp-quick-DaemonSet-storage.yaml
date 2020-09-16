@@ -1,11 +1,3 @@
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    deployedby: aqua-yaml
-  name: aqua
----
 apiVersion: v1
 data:
   ### Aqua database password. Defaults to "password". Please change the same if needed.
@@ -156,48 +148,37 @@ subjects:
     name: aqua-sa
     namespace: aqua
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+# Create PV for the Aqua Database
+apiVersion: v1
+kind: PersistentVolume
 metadata:
+  name: aqua-db-pv
+  namespace: aqua
   labels:
-    rbac.example.com/aggregate-to-monitoring: "true"
-    deployedby: aqua-yaml
-  name: aqua-discovery-cr
-  namespace: aqua
-rules:
-- apiGroups: [""]
-  resources: ["nodes", "services", "endpoints", "pods", "deployments", "namespaces","componentstatuses"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["rbac.authorization.k8s.io"]
-  resources: ["*"]
-  verbs: ["get", "list", "watch"]
+    for_pod: aqua-db
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: aqua-discovery-crb
-  namespace: aqua
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: aqua-discovery-cr
-subjects:
-  - kind: ServiceAccount
-    name: aqua-sa
-    namespace: aqua
----
-#Create a PVC for the Aqua Database
+# Create a PVC for the Aqua Database
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: aqua-db-pvc
   namespace: aqua
 spec:
+  selector:
+    matchLabels:
+      for_pod: aqua-db
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
       storage: 50Gi
+  volumeName: aqua-db-pv
 ---
 apiVersion: v1
 kind: Service
@@ -243,13 +224,13 @@ spec:
         livenessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 5
+          periodSeconds: 10
         readinessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 5
+          periodSeconds: 10
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
@@ -260,7 +241,7 @@ spec:
               key: password
               name: aqua-db
         volumeMounts:
-        - mountPath: /var/lib/postgresql
+        - mountPath: /var/lib/postgresql/data
           name: postgres-db
         ports:
         - containerPort: 5432
@@ -324,13 +305,13 @@ spec:
             path: /
             port: 8080
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /
             port: 8080
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         ports:
         - containerPort: 8080
           protocol: TCP
@@ -427,13 +408,13 @@ spec:
             path: /
             port: 8000
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /
             port: 8000
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         ports:
         - containerPort: 3622
           protocol: TCP
@@ -510,13 +491,13 @@ spec:
             path: /healthz
             port: 8096
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /healthz
             port: 8096
           initialDelaySeconds: 60
-          periodSeconds: 30
+          periodSeconds: 10
         ports:
         - containerPort: 8096
           protocol: TCP

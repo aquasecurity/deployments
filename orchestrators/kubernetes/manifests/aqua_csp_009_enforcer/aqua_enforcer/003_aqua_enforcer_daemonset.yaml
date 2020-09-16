@@ -32,7 +32,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:5.3.20251
+        image: registry.aquasec.com/enforcer:5.3.20258RC2
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -92,6 +92,8 @@ spec:
           name: aquasec-audit
         - mountPath: /data
           name: aquasec-data
+        # - mountPath: /opt/aquasec/ssl
+        #   name: aqua-grpc-gateway
       dnsPolicy: ClusterFirst
       hostPID: true
       imagePullSecrets:
@@ -138,6 +140,9 @@ spec:
           path: /var/lib/aquasec/data
           type: ""
         name: aquasec-data
+      # - name: aqua-grpc-enforcer
+      #   secret:
+      #     secretName: aqua-grpc-enforcer
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
