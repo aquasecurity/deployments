@@ -37,7 +37,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:5.3.20258RC2
+        image: registry.aquasec.com/database:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -122,7 +122,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:5.3.20258RC2
+        image: registry.aquasec.com/console:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -186,7 +186,7 @@ metadata:
   labels:
     app: aqua-gateway
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - port: 8443
       protocol: TCP
@@ -225,7 +225,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.3.20258RC2
+        image: registry.aquasec.com/gateway:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

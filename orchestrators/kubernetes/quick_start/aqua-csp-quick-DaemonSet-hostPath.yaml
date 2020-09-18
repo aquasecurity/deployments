@@ -232,18 +232,24 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:5.3.20251
+        image: registry.aquasec.com/database:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
         readinessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
@@ -311,7 +317,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:5.3.20251
+        image: registry.aquasec.com/console:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -375,7 +381,7 @@ metadata:
   labels:
     app: aqua-gateway
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - port: 8443
       protocol: TCP
@@ -414,7 +420,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.3.20251
+        image: registry.aquasec.com/gateway:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -497,7 +503,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:5.3.20251
+        image: registry.aquasec.com/enforcer:5.3.20261
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

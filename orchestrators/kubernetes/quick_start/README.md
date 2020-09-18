@@ -10,7 +10,7 @@
     ```
 2. Deploy
     ```SHELL
-    $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/quick_start/<<aquick_start_yaml_from_github>>
+    $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/quick_start/aqua-csp-quick-hostpath.yaml
     ```
 
 3. Post Install considerations
