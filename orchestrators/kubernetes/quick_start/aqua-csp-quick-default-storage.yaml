@@ -119,12 +119,14 @@ metadata:
   name: aqua-sa
   namespace: aqua
 ---
-kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
 metadata:
-  name: aqua-discovery-cr
   labels:
     rbac.example.com/aggregate-to-monitoring: "true"
+    deployedby: aqua-yaml
+  name: aqua-discovery-cr
+  namespace: aqua
 rules:
 - apiGroups: [""]
   resources: ["nodes", "services", "endpoints", "pods", "deployments", "namespaces","componentstatuses"]
@@ -132,18 +134,16 @@ rules:
 - apiGroups: ["rbac.authorization.k8s.io"]
   resources: ["*"]
   verbs: ["get", "list", "watch"]
-- apiGroups: [""]
-  resources: ["imagestreams", "imagestreams/layers"]
-  verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: aqua-discovery-crb
+  namespace: aqua
 roleRef:
-  name: aqua-discovery-cr
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
+  name: aqua-discovery-cr
 subjects:
   - kind: ServiceAccount
     name: aqua-sa
@@ -359,18 +359,18 @@ spec:
               name: aqua-db
       #   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
-      #     name: aquasec-ssl
+      #     name: aqua-grpc-web
       #     readOnly: true
       # volumes:
-      # - name: aquasec-ssl
+      # - name: aqua-grpc-web
       #   secret:
-      #     secretName: aqua-ssl
+      #     secretName: aqua-grpc-web
       #     items:
-      #     - key: aqua.crt
+      #     - key: aqua_web.crt
       #       path: cert.pem
-      #     - key: aqua.key
+      #     - key: aqua_web.key
       #       path: key.pem
-      #     - key: ca.crt
+      #     - key: rootCA.crt
       #       path: ca.pem
 ---
 apiVersion: v1
@@ -455,18 +455,18 @@ spec:
               name: aqua-db
       #   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
-      #     name: aquasec-ssl
+      #     name: aqua-grpc-gateway
       #     readOnly: true
       # volumes:
-      # - name: aquasec-ssl
+      # - name: aqua-grpc-gateway
       #   secret:
-      #     secretName: aqua-ssl
+      #     secretName: aqua-grpc-gateway
       #     items:
-      #     - key: aqua.crt
+      #     - key: aqua_gateway.crt
       #       path: cert.pem
-      #     - key: aqua.key
+      #     - key: aqua_gateway.key
       #       path: key.pem
-      #     - key: ca.crt
+      #     - key: rootCA.crt
       #       path: ca.pem
 ---
 apiVersion: v1
@@ -496,7 +496,7 @@ metadata:
 type: Opaque
 data:
   ## In the Enforcers screen, edit the KubeEnforcer to get the token from the default KubeEnforcer group configuration. - Base64 encoded ##
-  token: "dG9rZW4="
+  token: ""
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration
@@ -548,7 +548,7 @@ metadata:
   name: aqua-kube-enforcer
 rules:
   - apiGroups: ["*"]
-    resources: ["pods", "secrets", "nodes", "namespaces", "deployments", "statefulsets", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers"]
+    resources: ["pods", "secrets", "nodes", "namespaces", "deployments", "statefulsets", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "clusterroles", "clusterrolebindings", "componentstatuses"]
     verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
