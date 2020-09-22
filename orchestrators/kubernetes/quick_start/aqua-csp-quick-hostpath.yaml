@@ -232,18 +232,24 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:5.3.20251
+        image: registry.aquasec.com/database:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
         readinessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
@@ -311,7 +317,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:5.3.20251
+        image: registry.aquasec.com/console:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -375,7 +381,7 @@ metadata:
   labels:
     app: aqua-gateway
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - port: 8443
       protocol: TCP
@@ -414,7 +420,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.3.20251
+        image: registry.aquasec.com/gateway:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -500,7 +506,7 @@ metadata:
 webhooks:
   - name: imageassurance.aquasec.com
     rules:
-      - operations: ["CREATE"]
+      - operations: ["CREATE", "UPDATE"]
         apiGroups: ["*"]
         apiVersions: ["*"]
         resources: ["pods", "deployments", "replicasets", "replicationcontrollers", "statefulsets", "daemonsets", "jobs", "cronjobs"]
@@ -510,6 +516,25 @@ webhooks:
       service:
         namespace: aqua
         name: aqua-kube-enforcer
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: kube-enforcer-me-injection-hook-config
+  namespace: aqua
+webhooks:
+  - name: microenforcer.aquasec.com
+    clientConfig:
+      service:
+        name: aqua-kube-enforcer
+        namespace: aqua
+        path: "/mutate"
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFVENDQWZtZ0F3SUJBZ0lVTkljWmkzL2xqbEtObFZ0WXBwVyttN2xWZnNVd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUNBWERUSXdNRGd5TnpBNU5EZ3dNMW9ZRHpJeQpPVFF3TmpFeU1EazBPREF6V2pBWE1SVXdFd1lEVlFRRERBeGhaRzFwYzNOcGIyNWZZMkV3Z2dFaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURZSlovRmRjVUtDdmdqSHlVVnhxWitRTTBRLzNGYzQyTzkKUGlXTllGS2l3L1FJTUIxTHZpQklXSFQyVEZLRkVYYUtZcmdzTHE0MElFZWMyN2Jvd2RTbXJVZEV3bEdtNkQrMQpIaGROQWI4WEllWTNteEpUUlR2cVhzYitrUnptYjJCL2xRVVlLNFJxaW8vN2RyZjFEYjBwWEFYVmxzRFNvQUhoCkxUWUxXbmhldGNLTUEvT3FCQXBoaWM4VzZZN1VJY2FtWnVZZUMxOVBlMlZKSHFxZ3o5MDNybjFGTnNMWnA4Q00Kb0dXeENEU0RFSWRuTmMxVis1WUg4VmxLRk9wb2IxYWtIZFFPeVlROFVPR2hnMHh3YXNGMnRRc2RCQ3BTUFBNYwo3K01kWnF0c2dtVGJQaUN6bWRra25uWWZ4cmxsWVVmOGFCelBrMzhyQ2ZiMnF5ZHJLTGZSQWdNQkFBR2pVekJSCk1CMEdBMVVkRGdRV0JCVDlDWlVURzRtQThrYzBISEJsamhRZUxKWjZoekFmQmdOVkhTTUVHREFXZ0JUOUNaVVQKRzRtQThrYzBISEJsamhRZUxKWjZoekFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFDUE5Ick5rcTBpN2tpMnNGcUtWa3l0RGpRWTFzaVNRcjNsbXVweDlVL1FuaytBQ2huYUhjNDVqSFVTCi9JdmNWMnljQVZ1aUQ3eFJXWkdYVzRuRE14QjdBZ0RKWmhJd3hGTVl1bVpGZEtCUlBLKy9WY3ZFTFFoZ3Z6T0QKNWhvNHZ0RzlHTzBDUzhqNUtGZ3pWaDgxcmsyU2c1RDN6TGVISjVVNDVRK2xlRGtldXJmMzFqQWJsMU1vai9JWgpndVUyd1Y5RkJJaFZONTMwd1Y4b01oWnVZRWZvUmZhOEpIbXhTMmNNbHUxQWZ5YmZkcFB2cCtpUHZKc0t2UTgzCmdueEd4K1k5NldzL0pmWDlXSFpBT1kyQXVVYS9hUjZLSnVraG9KVTk2Z3p5VXd0eFV5aWExdDg5M0hZNmQ3bG0KU1BmaVEzWm40dXdxaEczMUhGSmZMMG5iSmlxZQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["*"]
+        apiVersions: ["v1"]
+        resources: ["pods"]
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -555,7 +580,7 @@ data:
   TLS_SERVER_CERT_FILEPATH: "/certs/server.crt"
   TLS_SERVER_KEY_FILEPATH: "/certs/server.key"
   ## Based on your ingress config update the name here ##
-  AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway:8443"
+  AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway.aqua:8443"
   AQUA_TLS_PORT: "8443"
   # Cluster display name in aqua csp.
   CLUSTER_NAME: "aqua-secure"
@@ -589,7 +614,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:5.3.20251
+          image: registry.aquasec.com/kube-enforcer:5.3.20261
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -667,7 +692,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:5.3.20251
+        image: registry.aquasec.com/enforcer:5.3.20261
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

@@ -105,7 +105,7 @@ Step 1-2 are only required if you are deploying Kube-Enforcer in a new cluster t
    * The Aqua KubeEnforcer uses native Kubernetes functionality to perform two functions, without the need for an Aqua Enforcer. One KubeEnforcer can be deployed on each Kubernetes cluster.
    * This functionality is implemented using a [ValidatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/), and is deployed as a pod on a single node in a cluster. To work in the Kubernetes environment, the KubeEnforcer is configured to communicate with the Kubernetes API server located on the master node over a TLS connection
    * Kube enforcer container requires SSL certificates generated form the admission controller CA root cert. 
-   * Aqua Kube Enforcer admission controller is packaged with a default CA root cert. If you want to use your own CA authority, Please refer to **KubeEnforcer SSL considerations** section below.
+   * Aqua Kube Enforcer admission controller is packaged with a default CA root cert. If you want to use your own CA authority, Please use [gen_ke_certs.sh](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/gen_ke_certs.sh) script to generate your own SSL certificates. You can also refer to KubeEnforcer SSL considerations section to manually generate SSL certs.
    * By default Aqua Kube Enforcer will connect to an internal gateway over aqua-gateway service name on port 8443.
    * If you want to connect to an external Aqua gateway in a multi cluster deployment please update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the external gateway end-point address in 001_kube_enforcer_config.yaml
 
@@ -197,7 +197,7 @@ Step 1-2 are only required if you are deploying Kube-Enforcer in a new cluster t
 3. Generate the certificate using the aqua_ke.csr and key along with the CA Root key
 
    ```shell
-   openssl x509 -req -in aqua_ke.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out aqua_ke.crt -days 1024 -sha256 extensions v3_req -extfile server.conf 
+   openssl x509 -req -in aqua_ke.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out aqua_ke.crt -days 1024 -sha256 -extensions v3_req -extfile server.conf 
    ```
 
    

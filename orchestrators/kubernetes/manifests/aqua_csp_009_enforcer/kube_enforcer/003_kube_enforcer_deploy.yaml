@@ -24,10 +24,14 @@ spec:
       labels:
         app: aqua-kube-enforcer
     spec:
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:5.3.20258RC2
+          image: registry.aquasec.com/kube-enforcer:5.3.20261
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:

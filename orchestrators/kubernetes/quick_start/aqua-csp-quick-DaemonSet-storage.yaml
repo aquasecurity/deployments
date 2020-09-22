@@ -147,38 +147,38 @@ subjects:
   - kind: ServiceAccount
     name: aqua-sa
     namespace: aqua
----
-# Create PV for the Aqua Database
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: aqua-db-pv
-  namespace: aqua
-  labels:
-    for_pod: aqua-db
-spec:
-  persistentVolumeReclaimPolicy: Retain
-  capacity:
-    storage: 50Gi
-  accessModes:
-    - ReadWriteOnce
----
-# Create a PVC for the Aqua Database
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: aqua-db-pvc
-  namespace: aqua
-spec:
-  selector:
-    matchLabels:
-      for_pod: aqua-db
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 50Gi
-  volumeName: aqua-db-pv
+# ---
+# # Create PV for the Aqua Database
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: aqua-db-pv
+#   namespace: aqua
+#   labels:
+#     for_pod: aqua-db
+# spec:
+#   persistentVolumeReclaimPolicy: Retain
+#   capacity:
+#     storage: 50Gi
+#   accessModes:
+#     - ReadWriteOnce
+# ---
+# # Create a PVC for the Aqua Database
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: aqua-db-pvc
+#   namespace: aqua
+# spec:
+#   selector:
+#     matchLabels:
+#       for_pod: aqua-db
+#   accessModes:
+#   - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 50Gi
+#   volumeName: aqua-db-pv
 ---
 apiVersion: v1
 kind: Service
@@ -195,14 +195,14 @@ spec:
     app: aqua-db
   type: ClusterIP 
 ---
+kind: StatefulSet
 apiVersion: apps/v1
-kind: Deployment
 metadata:
+  name: aqua-db
+  namespace: aqua
   labels:
     app: aqua-db
     deployedby: aqua-yaml
-  name: aqua-db
-  namespace: aqua
 spec:
   replicas: 1
   selector:
@@ -215,41 +215,59 @@ spec:
       name: aqua-db
       namespace: aqua
     spec:
-      serviceAccount: aqua-sa
-      restartPolicy: Always
       containers:
-      - name: aqua-db
-        image: registry.aquasec.com/database:5.3.20251
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          tcpSocket:
-            port: 5432
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        readinessProbe:
-          tcpSocket:
-            port: 5432
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        envFrom:
-        - configMapRef:
-            name: aqua-csp-db-config
-        env:
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: password
-              name: aqua-db
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-db
-        ports:
-        - containerPort: 5432
-          protocol: TCP
-      volumes:
-      - name: postgres-db
-        persistentVolumeClaim:
-          claimName: aqua-db-pvc
+        - name: aqua-db
+          image: 'registry.aquasec.com/database:5.3.20261'
+          ports:
+            - name: aqua-db
+              containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - name: postgres-db
+              mountPath: /var/lib/postgresql/data
+          envFrom:
+            - configMapRef:
+                name: aqua-csp-db-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: aqua-db
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: aqua-sa
+      serviceAccount: aqua-sa
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-db
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50G
+  serviceName: aqua-db
 ---
 apiVersion: v1
 kind: Service
@@ -298,7 +316,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:5.3.20251
+        image: registry.aquasec.com/console:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -362,7 +380,7 @@ metadata:
   labels:
     app: aqua-gateway
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - port: 8443
       protocol: TCP
@@ -401,7 +419,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.3.20251
+        image: registry.aquasec.com/gateway:5.3.20261
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -484,7 +502,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:5.3.20251
+        image: registry.aquasec.com/enforcer:5.3.20261
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
