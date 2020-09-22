@@ -24,6 +24,10 @@ spec:
       labels:
         app: aqua-kube-enforcer
     spec:
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
