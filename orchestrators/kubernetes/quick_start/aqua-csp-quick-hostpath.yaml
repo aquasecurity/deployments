@@ -580,7 +580,7 @@ data:
   TLS_SERVER_CERT_FILEPATH: "/certs/server.crt"
   TLS_SERVER_KEY_FILEPATH: "/certs/server.key"
   ## Based on your ingress config update the name here ##
-  AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway:8443"
+  AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway.aqua:8443"
   AQUA_TLS_PORT: "8443"
   # Cluster display name in aqua csp.
   CLUSTER_NAME: "aqua-secure"

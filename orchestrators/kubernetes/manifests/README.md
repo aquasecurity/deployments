@@ -11,15 +11,13 @@ The above manifests file can be used to deploy Aqua CSP
 | Directory                                                    | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [aqua_csp_001_namespace](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_001_namespace) | Create aqua namespace                                        |
-| [aqua_csp_002_RBAC](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC) | Contains subdirectories with K8s platform names. Can be used to create K8s platform specific role based access controls |
-| [aqua_csp_003_secrets](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_003_secrets) | Create database password secret. Currently set to "password". Please change the secret if required |
-| [aqua_csp_004_configMaps](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_004_configMaps)^ | Create database (packaged) and server configMaps*            |
-| [aqua_csp_005_storage](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_005_storage)^ | Create PVC to store packaged database data                   |
-| [aqua_csp_006_server_deployment](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_006_server_deployment) | Contains two different manifests to deploy Aqua CSP. <br />One with packaged DB + server deployment and other with just server deployment. |
-| [aqua_csp_007_networking](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_007_networking) | Contains subdirectories with ingress names. Can be used to create ingress for advanced deployment scenarios. |
-| [aqua_csp_008_scanner](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_008_scanner) | Create Aqua Scanner deployment.                              |
-| [aqua_csp_009_enforcer](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer) | Create Aqua Enforcer Daemonset deployment or Aqua KubeEnforcer deployment (Only 1 for entire cluster) |
+| [aqua_csp_002_RBAC](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC) | Create aqua's service-account and its cluster-roles according to the K8s platform |
+| [aqua_csp_003_secrets](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_003_secrets) | Define secrets for Aqua's deployment |
+| [aqua_csp_004_configMaps](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_004_configMaps) | Define the config-maps for Aqua's deployment            |
+| [aqua_csp_005_storage](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_005_storage) | Create PVC for the packaged database                   |
+| [aqua_csp_006_server_deployment](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_006_server_deployment) | Deploy the Aqua's server |
+| [aqua_csp_007_networking](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_007_networking) | Advanced networking options for Aqua's server |
+| [aqua_csp_008_scanner](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_008_scanner) | Deploy the Aqua's Scanner |
+| [aqua_csp_009_enforcer](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer) | Deploy the Aqua's Enforcers |
 
-*Please read AQUA ENVIRONMENT AND CONFIGURATION topic in docs site.
-
-^Please skip creating database configMap and PVC if you intend to use managed database. Also update the server configMap with managed DB endpoint URL.
+Refer to Aqua's formal documentations for the complete deployment manual 
