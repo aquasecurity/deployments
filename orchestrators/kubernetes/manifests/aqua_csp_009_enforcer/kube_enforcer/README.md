@@ -54,7 +54,7 @@ Step 1-2 are only required if you are deploying Kube-Enforcer in a new cluster t
         - gen_ke_certs.sh script can be used to generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key,aqua_ke.crt) and to deploy kube enforcer config
         
         ```shell
-        $ curl -s https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/gen_ke_certs.sh | sudo bash
+        $ curl -s https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/gen_ke_certs.sh | bash
         ```
    - Option B: Manual
         - Download manifest [here](https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/001_kube_enforcer_config.yaml)
