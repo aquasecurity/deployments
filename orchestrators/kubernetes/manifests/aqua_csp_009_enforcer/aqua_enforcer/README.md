@@ -1,4 +1,4 @@
-## The Enforcer Family
+## Aqua Enforcer
 
 - Aqua Enforcer running as a DaemonSet deployment provides runtime security for your kubernetes workloads by blocking unauthrized deployments, monitor/restrict runtime activities and generate audit events for your review.
 
