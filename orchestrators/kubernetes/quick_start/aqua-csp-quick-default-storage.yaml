@@ -94,6 +94,12 @@ data:
   AQUA_GATEWAY_TOKEN: "1234"
   AQUA_DEFAULT_GATEWAY_TOKEN: "1234"
   BATCH_INSTALL_TOKEN: "token"
+  # URL of HTTPS proxy, if used.
+  #https_proxy: ""
+  # URL of HTTP proxy, if used.
+  #http_proxy: ""
+  # List of addresses that bypass the proxy. Specify the URLs of internal private registries, if used.
+  #no_proxy: ""
 ---
 apiVersion: v1
 kind: ConfigMap

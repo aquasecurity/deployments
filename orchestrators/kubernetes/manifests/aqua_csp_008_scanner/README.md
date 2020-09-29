@@ -6,17 +6,20 @@
   - Functions (serverless)
 
 ## Prerequisites
- - AQUA_SCANNER_USERNAME
-    - Base64 Encoded aqua scanner username
- - AQUA_SCANNER_PASSWORD
-    - Base64 Encoded aqua scanner password
- - AQUA_SERVER
-    - Base64 Encoded aqua server URL/IP followed by HTTPS port number
+
+Aqua scanner needs a username and password with a scanner role to authenticate itself over the server. Please define all the secrets in base64 encoding.
+   - AQUA_SCANNER_USERNAME
+      - Aqua scanner username from user management section in server web UI
+   - AQUA_SCANNER_PASSWORD
+      - Aqua scanner password from user management section in server web UI
+   - AQUA_SERVER
+      - Aqua server URL or IP followed by HTTPS port number.
+
 ## Considerations
- - Please deploy a scanner closure to your registry to quickly pull any images that requires scanning.
+ - Please deploy a scanner close to your registry for low latency and improved scanning throughput.
 ## Deploy Aqua Scanner
 
-Step 1-3 are only required if you are deploying the Enforcer in a cluster that doesn't have the Aqua's namespace and service-account. Otherwise, you can start with step 4.
+Step 1-3 is only required if you are deploying the Enforcer in a cluster that doesn't have the Aqua's namespace and service-account. Otherwise, you can start with step 4.
 
 1. **Create namespace**
    
@@ -34,7 +37,7 @@ Step 1-3 are only required if you are deploying the Enforcer in a cluster that d
    -n aqua
    ```
 
-3. **Create platform specific RBAC**
+3. **Create platform-specific RBAC**
 
    * RBAC definitions can vary between platforms. Please choose the right aqua_sa.yaml for your platform
 
