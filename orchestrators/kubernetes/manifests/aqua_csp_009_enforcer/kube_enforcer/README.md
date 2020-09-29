@@ -71,7 +71,7 @@ Step 1-2 are only required if you are deploying Kube-Enforcer in a new cluster t
     * The token secret is mandatory and used to authenticate the Kube Enforcer over server.
 
     ```shell
-    $ kubectl create secret generic aqua-kube-enforcer-token -from-literal=token=<token_from_server_ui>
+    $ kubectl create secret generic aqua-kube-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
     ```
     * You can use kubectl command to create SSL cert secret
     

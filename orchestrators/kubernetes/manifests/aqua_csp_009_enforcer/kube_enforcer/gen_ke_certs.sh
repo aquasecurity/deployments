@@ -35,27 +35,27 @@ _check_k8s_connection() {
 }
 
 _generate_ca() {
-    echo "Info: Generating root CA private key"
+    printf "\nInfo: Generating root CA private key\n"
     if `openssl genrsa -des3 -out rootCA.key 4096`; then
-        echo "Info: Successfully generated rootCA.key"
-        echo "Info: Generating root CA certificate from root CA private key with admission_ca as common name"
+        printf "\nInfo: Successfully generated rootCA.key\n"
+        printf "Info: Generating root CA certificate from root CA private key with admission_ca as common name\n"
         if `openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt -subj "/CN=admission_ca"`; then
-            echo "Info: Successfully generated rootCA.crt"
+            printf "\nInfo: Successfully generated rootCA.crt\n"
             _generate_ssl
         else
-            echo "Error: Failed to generate root CA certificate"
+            printf "\nError: Failed to generate root CA certificate"
             exit 1
         fi
     else
-        echo "Error: Failed to generate root CA private key"
+        printf "\nError: Failed to generate root CA private key"
         exit 1
     fi
 }
 
 _generate_ssl() {
-    echo "Info: Generating kubeEnforcer SSL private key"
+    printf "\nInfo: Generating kubeEnforcer SSL private key\n"
     if `openssl genrsa -out aqua_ke.key 2048`; then
-        echo "Info: Successfully generated aqua_ke.key"
+        printf "\nInfo: Successfully generated aqua_ke.key\n"
         # CSR config file to generate kubeEnforcer CSR
         cat > server.conf <<-EOF
         [req]
@@ -67,24 +67,24 @@ _generate_ssl() {
         keyUsage = nonRepudiation, digitalSignature, keyEncipherment
         extendedKeyUsage = clientAuth, serverAuth
 EOF
-        echo "Info: Generating kubeEnforcer CSR"
+        printf "\nInfo: Generating kubeEnforcer CSR\n"
         if `openssl req -new -sha256 -key aqua_ke.key -subj "/CN=aqua-kube-enforcer.aqua.svc" -config server.conf -out aqua_ke.csr`; then
-            echo "Info: Successfully generated aqua_ke.csr"
-            echo "Info: Generating kubeEnforcer certificate"
+            printf "\nInfo: Successfully generated aqua_ke.csr\n"
+            printf "\nInfo: Generating kubeEnforcer certificate\n"
             if `openssl x509 -req -in aqua_ke.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out aqua_ke.crt -days 365 -sha256 -extensions v3_req -extfile server.conf`; then
-                echo "Info: Successfully generated aqua_ke.crt"
+                printf "\nInfo: Successfully generated aqua_ke.crt\n"
                 _prepare_ke
             else
-                echo "Error: Failed to generate KubeEnforcer certificate"
+                printf "\nError: Failed to generate KubeEnforcer certificate"
                 exit 1
             fi
         else
-            echo "Error: Failed to generate kubeEnforcer CSR"
+            printf "\nError: Failed to generate kubeEnforcer CSR"
             exit 1
         fi
 
     else
-        echo "Error: Failed to generate kubeEnforcer SSL private key"
+        printf "\nError: Failed to generate kubeEnforcer SSL private key"
         exit 1
     fi
 }
@@ -93,30 +93,31 @@ _prepare_ke() {
     if `curl https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"`; then
         _rootCA=`cat rootCA.crt | base64 -w 0`
         if `sed -i'.original' "s/caBundle:/caBundle\:\ $_rootCA/g" 001_kube_enforcer_config.yaml`; then
-            echo "Info: Successfully prepared 001_kube_enforcer_config.yaml manifest file."
+            printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
             _deploy_ke_admin
         else
-            echo "Error: Failed to prepare KubeEnforcer config file"
+            printf "\nError: Failed to prepare KubeEnforcer config file"
             exit 1
         fi
     else
-        echo "Error: Failed to download 001_kube_enforcer_config.yaml manifest file"
+        printf "\nError: Failed to download 001_kube_enforcer_config.yaml manifest file"
     fi
 }
 
 _deploy_ke_admin() {
-    echo "Info: Do you want to deploy KubeEnforcer config? [y/N] "
+    printf "Info: Do you want to deploy KubeEnforcer config? [y/N] "
     read _user_input < /dev/tty
     if [ "$_user_input" = "y" ] || [ "$_user_input" = "Y" ]; then
         _check_k8s_connection
-        if `kubectl apply -f 001_kube_enforcer_config.yaml`; then
-            echo "Info: KubeEnforcer config successfully deployed"
-            echo "Info: Please proceed with secrets and pod deployment"
+        echo
+        if `$(command -v kubectl) apply -f 001_kube_enforcer_config.yaml &> /dev/tty`; then
+            printf "\nInfo: KubeEnforcer config successfully deployed\n"
+            printf "Info: Please proceed with secrets and pod deployment\n"
         else
-            echo "Error: Failed to apply KubeEnforcer config to the cluster"
+            printf "Error: Failed to apply KubeEnforcer config to the cluster\n"
         fi
     else
-        echo "User abandoned"
+        printf "\nUser abandoned. Please deploy KubeEnforcer config from 001_kube_enforcer_config.yaml manifest using kubectl\n"
         exit 1
     fi
 }
