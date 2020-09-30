@@ -1,6 +1,9 @@
 ## Kube Enforcer
 
-- Kube Enforcer running as single replica deployment provides runtime security for your kubernetes workloads and infrastructure. It uses native Kubernetes Admission Controller API ([ValidatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)) to automatically discover the cluster infrastructure and to assist in static risk analysis by generating related audit events for your review.
+- Kube Enforcer running as single replica deployment provides runtime security for your kubernetes workloads and infrastructure. It uses native Kubernetes Admission Controller API
+  - [MutatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#mutatingadmissionwebhook) is invoked first, and can modify objects sent to the API server to enforce custom defaults like enforcer injection into the pods.
+  - [ValidatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#validatingadmissionwebhook) is  invoked after mutating admission webhook and can reject requests to enforce custom policies.
+  - Kube enforcer can automatically discover the cluster infrastructure and will assist in static risk analysis by running kube hunter scans and by generating related audit events for your review.
 
 ## Prerequisites
 
@@ -59,7 +62,7 @@ Step 1-2 are only required if you are deploying Kube-Enforcer in a new cluster t
    - Option B: Manual
         - Download manifest [here](https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/001_kube_enforcer_config.yaml)
         - Follow SSL considerations section below to generate CA bundle and SSL certs
-        - Modify manifestfile to include PEM encoded CA bundle and SSL certs
+        - Modify manifestfile to include PEM encoded CA bundle (caBundle)
         - Use kubectl to apply the modified manifest file config.
         
         ```shell

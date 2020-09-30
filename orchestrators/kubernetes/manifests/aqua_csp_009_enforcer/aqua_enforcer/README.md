@@ -65,7 +65,7 @@ Step 1-3 are only required if you are deploying the Enforcer in a cluster that d
    * The only mandatory secret is the **token** that authenticates the Enforcer over Aqua server.
 
    ```SHELL
-   $ kubectl create secret generic aqua-kube-enforcer-token -from-literal=enforcer-token=<token_from_server_ui>
+   $ kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
    ```
 
    * You can also manually modify the secret manifest file and use kubectl apply to create token secret
