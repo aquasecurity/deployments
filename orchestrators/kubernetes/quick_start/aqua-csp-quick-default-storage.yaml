@@ -94,6 +94,9 @@ data:
   AQUA_GATEWAY_TOKEN: "1234"
   AQUA_DEFAULT_GATEWAY_TOKEN: "1234"
   BATCH_INSTALL_TOKEN: "token"
+  # Automatic connection KE Batch Install (Enforcer Group) name + token
+  AQUA_KE_GROUP_NAME: "aquayaml-default-ke"
+  AQUA_KE_GROUP_TOKEN: "token-ke"
   # URL of HTTPS proxy, if used.
   #https_proxy: ""
   # URL of HTTP proxy, if used.
@@ -494,7 +497,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   annotations:
-    description: Aqua Enforcer token secret
+    description: Aqua KubeEnforcer token secret
   labels:
     deployedby: aqua-yaml
   name: aqua-kube-enforcer-token
@@ -502,7 +505,7 @@ metadata:
 type: Opaque
 data:
   ## In the Enforcers screen, edit the KubeEnforcer to get the token from the default KubeEnforcer group configuration. - Base64 encoded ##
-  token: ""
+  token: "dG9rZW4ta2U="
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration
