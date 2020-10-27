@@ -93,3 +93,12 @@ data:
   
   # List of addresses that bypass the proxy. Specify the URLs of internal private registries, if used.
   #no_proxy: ""
+  
+  # Batch installation to token to authenticate enforcer with server
+  #BATCH_INSTALL_TOKEN: ""
+  
+  # Batch installation group name for KubeEnforcer
+  #AQUA_KE_GROUP_NAME: ""
+  
+  # Batch installation token to authenticate KubeEnforcer with server
+  #AQUA_KE_GROUP_TOKEN: ""
