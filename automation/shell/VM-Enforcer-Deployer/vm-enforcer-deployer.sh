@@ -68,7 +68,7 @@ get_app(){
 
 	ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.${ENFORCER_VERSION}.tar"  
 	ENFORCER_RUNC_TAR_FILE_URL="https://download.aquasec.com/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"    
-	ENFORCER_RUNC_CONFIG_URL="https://download.aquasec.com/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_CONFIG_FILE}"
+	ENFORCER_RUNC_CONFIG_URL="https://download.aquasec.com/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_CONFIG_TEMPLATE}"
 	ENFORCER_RUNC_TAR_FILE_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"
 	ENFORCER_RUNC_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-runc-config.json"
 	ENFORCER_RUNC_OLD_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-v1.0.0-rc2-runc-config.json"
@@ -77,21 +77,21 @@ get_app(){
 	  error_message "Unable to download package. please check credentials or the version"
 	fi
 	
-	echo "Info: Downloading enforcer package version ${ENFORCER_VERSION}"
+	echo "Info: Downloading enforcer filesystem version ${ENFORCER_VERSION}."
 	curl -u ${AQUA_USERNAME}:${AQUA_PWD} -s -o ${ENFORCER_RUNC_TAR_FILE_NAME} ${ENFORCER_RUNC_TAR_FILE_URL}
-	echo "Info: Downloading enforcer config file version ${ENFORCER_RUNC_CONFIG_FILE}"
-	curl -u ${AQUA_USERNAME}:${AQUA_PWD} -s -o ${ENFORCER_RUNC_CONFIG_FILE} ${ENFORCER_RUNC_CONFIG_URL}
+	echo "Info: Downloading enforcer config file template ${ENFORCER_RUNC_CONFIG_TEMPLATE}."
+	curl -u ${AQUA_USERNAME}:${AQUA_PWD} -s -o ${ENFORCER_RUNC_CONFIG_TEMPLATE} ${ENFORCER_RUNC_CONFIG_URL}
 }
 
 
 edit_templates(){
-	echo "Info: Creating ${ENFORCER_RUNC_CONFIG_FILE}"
-	jq ".process.env = [\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"HOSTNAME=$(hostname)\",\"TERM=xterm\",\"AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\",\"AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\",\"AQUA_MODE=SERVICE\",\"RESTART_CONTAINERS=no\",\"AQUA_LOGICAL_NAME=Default\",\"AQUA_SERVER=${GATEWAY_ENDPOINT}\",\"AQUA_TOKEN=${TOKEN}\",\"LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"]" ${ENFORCER_RUNC_CONFIG_FILE} > ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE}
+	echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME} file."
+	jq ".process.env = [\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"HOSTNAME=$(hostname)\",\"TERM=xterm\",\"AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\",\"AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\",\"AQUA_MODE=SERVICE\",\"RESTART_CONTAINERS=no\",\"AQUA_LOGICAL_NAME=Default\",\"AQUA_SERVER=${GATEWAY_ENDPOINT}\",\"AQUA_TOKEN=${TOKEN}\",\"LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"]" ${ENFORCER_RUNC_CONFIG_TEMPLATE} > ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
 	
-	echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/run.sh"
-	sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${RUN_SCRIPT_TEMPLATE_FILE_NAME} > ${ENFORCER_RUNC_DIRECTORY}/run.sh && chmod +x ${ENFORCER_RUNC_DIRECTORY}/run.sh
+	echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} file."
+	sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${RUN_SCRIPT_TEMPLATE_FILE_NAME} > ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} && chmod +x ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME}
 	
-	echo "Info: Creating ${ENFORCER_SERVICE_SYSTEMD_FILE_PATH}"
+	echo "Info: Creating ${ENFORCER_SERVICE_SYSTEMD_FILE_PATH} file."
 	sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_;s_{{ .Values.WorkingDirectory }}_${ENFORCER_RUNC_DIRECTORY}_" ${SYSTEMD_TEMPLATE_TO_USE} > ${ENFORCER_SERVICE_SYSTEMD_FILE_PATH}
 
 }
@@ -106,13 +106,12 @@ systemd_type(){
 }
 
 untar(){
-	echo "Info: Unpacking enforcer file system"
+	echo "Info: Unpacking enforcer filesystem to ${ENFORCER_RUNC_FS_DIRECTORY}."
 	tar -xf ${ENFORCER_RUNC_TAR_FILE_NAME} -C ${ENFORCER_RUNC_FS_DIRECTORY}
 }
 
 runc_type(){
-	RUNC_VERSION="1.0.0-rc22"
-	ENFORCER_RUNC_CONFIG_FILE="aqua-enforcer-runc-config.json"
+	ENFORCER_RUNC_CONFIG_TEMPLATE="aqua-enforcer-runc-config.json"
 	if [[ $RUNC_VERSION == "1.0.0-rc1" ]] \
     || [[ $RUNC_VERSION == "1.0.0-rc2" ]] \
     || [[ $RUNC_VERSION == 1.0.0-rc2-* ]] \
@@ -123,15 +122,20 @@ runc_type(){
     || [[ $RUNC_VERSION == 1.0.0-rc1_* ]] \
     || [[ $RUNC_VERSION == 1.0.0-rc1+* ]] \
     || [[ $RUNC_VERSION == 1.0.0-rc1.* ]];then
-		ENFORCER_RUNC_CONFIG_FILE="aqua-enforcer-v1.0.0-rc2-runc-config.json"
+		ENFORCER_RUNC_CONFIG_TEMPLATE="aqua-enforcer-v1.0.0-rc2-runc-config.json"
 	fi
-	# echo "Info: RUNC_VERSION ${RUNC_VERSION} ENFORCER_RUNC_CONFIG_FILE ${ENFORCER_RUNC_CONFIG_FILE}"
-	
 }
 
 start_service(){
+    echo "Info: Enabling the ${ENFORCER_SERVICE_FILE_NAME} service."
 	systemctl enable ${ENFORCER_SERVICE_FILE_NAME}
+    echo "Info: Starting the ${ENFORCER_SERVICE_FILE_NAME} service."
 	systemctl start ${ENFORCER_SERVICE_FILE_NAME}
+    if [ $? -eq 0 ];then
+        echo "Info: VM Enforcer was successfully deployed and started."
+    else
+        error_message "Unable to start service. please check the logs."
+    fi
 }
 
 craete_folder(){
@@ -173,6 +177,7 @@ ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD="aqua-enforcer.template.old.service"
 RUN_SCRIPT_FILE_NAME="run.sh"
 RUN_SCRIPT_TEMPLATE_FILE_NAME="run.template.sh"
 ENFORCER_SERVICE_SYSTEMD_FILE_PATH="${SYSTEMD_FOLDER}/${ENFORCER_SERVICE_FILE_NAME}"
+ENFORCER_RUNC_CONFIG_FILE_NAME="config.json"
 
 for arg in "$@";do
     case $arg in
