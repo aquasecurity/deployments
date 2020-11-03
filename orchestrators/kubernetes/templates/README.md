@@ -1,3 +1,3 @@
-# Kubernetes CSP Deployment
+# Kubernetes Deployment
 
-For full guide enter this [**link**](https://docs.aquasec.com/docs/deployment-kubernetes)
+For full guide enter this [**link**](https://docs.aquasec.com/5.3/docs/deployment-kubernetes)
