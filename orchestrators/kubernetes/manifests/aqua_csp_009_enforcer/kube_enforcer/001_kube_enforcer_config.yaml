@@ -5,8 +5,9 @@ metadata:
   namespace: aqua
 webhooks:
   - name: imageassurance.aquasec.com
+    failurePolicy: Ignore
     rules:
-      - operations: ["CREATE", "UPDATE"]
+      - operations: ["CREATE"]
         apiGroups: ["*"]
         apiVersions: ["*"]
         resources: ["pods", "deployments", "replicasets", "replicationcontrollers", "statefulsets", "daemonsets", "jobs", "cronjobs"]
@@ -24,6 +25,7 @@ metadata:
   namespace: aqua
 webhooks:
   - name: microenforcer.aquasec.com
+    failurePolicy: Ignore
     clientConfig:
       service:
         name: aqua-kube-enforcer
