@@ -1,0 +1,18 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: aqua-web
+  namespace: aqua
+  labels:
+    app: aqua-web
+spec:
+  to:
+    kind: Service
+    name: aqua-web
+    weight: 100
+  port:
+    targetPort: aqua-web-ssl
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
