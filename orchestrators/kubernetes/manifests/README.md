@@ -1,7 +1,7 @@
 # Overview
 
 The directories and files in this branch relate to enterprise-grade and advanced deployments of Aqua Enterprise on these Kubernetes platforms:
-Kubernetes RAW, OpenShift, EKS, GKE, ICP, AKS, PKS
+Kubernetes RAW, OpenShift, EKS, GKE, ICP, AKS, TKG, TKGI
 
 Refer to the product documentation for deployment instructions: [Deployment on Kubernetes (most platforms)](https://docs.aquasec.com/v5.3/docs/deploy-k8s-most-platforms).
 
@@ -32,5 +32,5 @@ You can optionally deploy one or more of each of these components:
 
 Refer to the product documentation for deployment of Aqua Enterprise:
 - Using Helm Charts: [Deployment on K8s using Helm Charts](https://docs.aquasec.com/v5.3/docs/kubernetes-with-helm)
-- Other platforms: [Rancher / Kubernetes](https://docs.aquasec.com/v5.3/docs/rancher-kubernetes) and [VMware Tanzu Kubernetes Grid Integrated Edition (TKGI)](https://docs.aquasec.com/v5.3/docs/tanzu-kubernetes-grid-integrated-edition-tkgi).
+- Other platforms: [Rancher / Kubernetes](https://docs.aquasec.com/v5.3/docs/rancher-kubernetes)
 - Quick-start: To deploy Aqua Enterprise in your Kubernetes cluster quickly and easily, follow the instructions on [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/v5.3/docs/quick-start-guide-for-kubernetes). The quick-start deployment is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test.
