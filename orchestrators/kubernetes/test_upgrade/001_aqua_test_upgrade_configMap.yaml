@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-test-upgrade-config
+  namespace: aqua
+data:
+  SCALOCK_DBUSER: "postgres"
+  SCALOCK_DBNAME: "scalock"
+  SCALOCK_DBHOST: "aqua-db"
+  SCALOCK_DBPORT: "5432"
+  SCALOCK_AUDIT_DBUSER: "postgres"
+  SCALOCK_AUDIT_DBNAME: "slk_audit"
+  SCALOCK_AUDIT_DBHOST: "aqua-db"
+  SCALOCK_AUDIT_DBPORT: "5432"
