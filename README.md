@@ -6,7 +6,7 @@ This is the repository for [Aqua Security](https://www.aquasec.com) product depl
 
 ## Deployment of Aqua Enterprise
 
-[Aqua Enterprise](https://www.aquasec.com/products/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native security platform that secures containerized, serverless and VM-based applications, from CI/CD pipelines to production runtime environments. Aqua CSP runs on-prem or in the cloud, at any scale.
+[Aqua Enterprise](https://www.aquasec.com/products/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native security platform that secures containerized, serverless and VM-based applications, from CI/CD pipelines to production runtime environments. Aqua Enterprise runs on-prem or in the cloud, at any scale.
 
 * [**Orchestrators**](orchestrators/)
     * [**Kubernetes**](orchestrators/kubernetes/)
@@ -26,7 +26,6 @@ This is the repository for [Aqua Security](https://www.aquasec.com) product depl
 ## CI Plugins
 
 * **Bamboo** - [*Aqua Security Scanner Bamboo*](https://marketplace.atlassian.com/apps/1216895/container-security?hosting=server&tab=overview) - Vulnerability scanner for container images for Atlassian Bamboo.
-* **CircleCI** - [*CircleCI Orb MicroScanner*](https://github.com/aquasecurity/circleci-orb-microscanner) - Enables scanning of Docker builds in CircleCi for OS package vulnerabilities.
 * **Jenkins** - [*Aqua Security Scanner Jenkins Plugin*](https://github.com/jenkinsci/aqua-security-scanner-plugin) - Adds a Build Step for scanning Docker images, local or hosted on registries, for security vulnerabilities, using the API provided by Aqua Security.
 * **Microsoft VSTS** - [*Container Security For VSTS*](https://marketplace.visualstudio.com/items?itemName=aquasec.aquasec) - Microsoft VSTS users can integrate with Aqua’s continuous image assurance, which is the most comprehensive, automated solution on the market for scanning and locking down container images, with deep scanning of container layers for vulnerabilities, and persistent controls to assure image integrity throughout its lifecycle.
 
