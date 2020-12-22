@@ -29,6 +29,7 @@ spec:
             secretKeyRef:
               key: token
               name: enforcer-token
+              optional: true
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
