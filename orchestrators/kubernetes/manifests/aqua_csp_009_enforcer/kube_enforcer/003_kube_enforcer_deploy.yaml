@@ -54,6 +54,7 @@ spec:
                 secretKeyRef:
                   name: aqua-kube-enforcer-token
                   key: token
+                  optional: true
           envFrom:
           - configMapRef:
               name: aqua-csp-kube-enforcer
@@ -74,3 +75,4 @@ spec:
   selector:
     matchLabels:
       app: aqua-kube-enforcer
+      

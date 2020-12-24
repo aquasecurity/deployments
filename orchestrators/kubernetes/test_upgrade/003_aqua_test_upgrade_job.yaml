@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-upgrade
+  namespace: aqua
+spec:
+  template:
+    metadata:
+      labels:
+        app: test-upgrade
+      name: test-upgrade
+    spec:
+      serviceAccount: aqua-sa
+      imagePullSecrets:
+      - name: aqua-registry
+      containers:
+      - name: test-upgrade
+        image: registry.aquasec.com/console:5.3
+        command: ["/opt/aquasec/sedockweb"]
+        args: ["test-upgrade"]
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-test-upgrade-config
+        env:
+        - name: SCALOCK_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+        - name: SCALOCK_AUDIT_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-audit-db
+      restartPolicy: Never
+      
