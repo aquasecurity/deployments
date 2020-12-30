@@ -79,7 +79,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: password
-              name: aqua-db
+              name: aqua-audit-db
         - name: SCALOCK_DBPASSWORD
           valueFrom:
             secretKeyRef:

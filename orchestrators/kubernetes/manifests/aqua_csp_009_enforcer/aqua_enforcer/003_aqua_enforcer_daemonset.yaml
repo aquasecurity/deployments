@@ -43,7 +43,7 @@ spec:
           periodSeconds: 30
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: /readinessz
             port: 8096
           initialDelaySeconds: 60
           periodSeconds: 30
