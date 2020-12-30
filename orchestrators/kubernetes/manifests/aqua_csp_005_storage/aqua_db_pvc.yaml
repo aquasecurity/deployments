@@ -10,3 +10,16 @@ spec:
   resources:
     requests:
       storage: 50Gi
+---
+# Create a PVC for the Aqua Database
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aqua-audit-db-pvc
+  namespace: aqua
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi

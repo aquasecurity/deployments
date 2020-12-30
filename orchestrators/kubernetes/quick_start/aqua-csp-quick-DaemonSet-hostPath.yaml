@@ -14,6 +14,20 @@ type: Opaque
 ---
 apiVersion: v1
 data:
+  ### Aqua database password. Defaults to "password". Please change the same if needed.
+  password: cGFzc3dvcmQK
+kind: Secret
+metadata:
+  annotations:
+    description: Aqua database password secret
+  labels:
+    deployedby: aqua-yaml
+  name: aqua-audit-db
+  namespace: aqua
+type: Opaque
+---
+apiVersion: v1
+data:
   ### Aqua enforcer token input needed - Base64 encoded ###
   token: "dG9rZW4="
 kind: Secret
@@ -57,7 +71,7 @@ data:
   # The name of the HTTP header used by the Aqua Server for authentication. Defaults to the standard Authorization header. Can be used when running behind reverse proxies that override this header.
   #AUTHORIZATION_HEADER: "aqua-auth"
   # DNS name or IP address of the host of the Postgres Audit database.
-  SCALOCK_AUDIT_DBHOST: "aqua-db" 
+  SCALOCK_AUDIT_DBHOST: "aqua-audit-db" 
   # Name of the Postgres Audit database; all letters must be lower-case
   SCALOCK_AUDIT_DBNAME: "slk_audit"
   # Port of the Postgres Audit database.
@@ -210,6 +224,43 @@ spec:
     matchLabels:
       app: aqua-database
 ---
+#Create the volume for the Aqua Audit Database
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aqua-audit-db-pv
+  namespace: aqua
+  labels:
+    app: aqua-audit-database
+spec:
+  storageClassName: aqua-storage
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /tmp/aqua-audit-db/
+---
+#Create a PVC for the Aqua Audit Database
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aqua-audit-db-pvc
+  namespace: aqua
+spec:
+  storageClassName: aqua-storage
+  volumeMode: Filesystem
+  volumeName: aqua-audit-db-pv
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+  selector:
+    matchLabels:
+      app: aqua-audit-database
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -249,7 +300,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:5.3
+        image: registry.aquasec.com/database:6.0.preview7
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -286,6 +337,83 @@ spec:
       - name: postgres-db
         persistentVolumeClaim:
           claimName: aqua-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: aqua-audit-db
+    deployedby: aqua-yaml
+  name: aqua-db
+  namespace: aqua
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: aqua-audit-db
+  type: ClusterIP 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aqua-audit-db
+    deployedby: aqua-yaml
+  name: aqua-audit-db
+  namespace: aqua
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-audit-db
+  template:
+    metadata:
+      labels:
+        app: aqua-audit-db
+      name: aqua-audit-db
+      namespace: aqua
+    spec:
+      serviceAccount: aqua-sa
+      restartPolicy: Always
+      containers:
+      - name: aqua-audit-db
+        image: registry.aquasec.com/database:6.0.preview7
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-db-config
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+        volumeMounts:
+        - mountPath: /var/lib/postgresql
+          name: postgres-audit-db
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+      volumes:
+      - name: postgres-audit-db
+        persistentVolumeClaim:
+          claimName: aqua-audit-db-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -334,7 +462,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:5.3
+        image: registry.aquasec.com/console:6.0.preview7
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -368,7 +496,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: password
-              name: aqua-db
+              name: aqua-audit-db
         - name: SCALOCK_DBPASSWORD
           valueFrom:
             secretKeyRef:
@@ -437,7 +565,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.3
+        image: registry.aquasec.com/gateway:6.0.preview7
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -469,7 +597,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: password
-              name: aqua-db
+              name: aqua-audit-db
       #   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
       #     name: aquasec-ssl
@@ -647,7 +775,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:5.3.20261
+          image: registry.aquasec.com/kube-enforcer:6.0.preview7
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -725,7 +853,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:5.3
+        image: registry.aquasec.com/enforcer:6.0.preview7
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -735,7 +863,7 @@ spec:
           periodSeconds: 30
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: /readinessz
             port: 8096
           initialDelaySeconds: 60
           periodSeconds: 30
