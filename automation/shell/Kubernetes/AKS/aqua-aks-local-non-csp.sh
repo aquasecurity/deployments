@@ -1,5 +1,5 @@
 #!/bin/bash
-# Non-CSP Install Script for demo / PoC Only
+# Non-Auqa Enterprise Install Script for demo / PoC Only
 # Please don't use this for production environment
 # First run: chmod +x NAMEOFSCRIPT.sh
 # Use of this script comes with no warranty
