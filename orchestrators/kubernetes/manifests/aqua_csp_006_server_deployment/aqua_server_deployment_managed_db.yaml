@@ -45,7 +45,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.0.preview7
+        image: registry.aquasec.com/console:6.0.preview8
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -79,7 +79,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: password
-              name: aqua-db
+              name: aqua-audit-db
         - name: SCALOCK_DBPASSWORD
           valueFrom:
             secretKeyRef:
@@ -148,7 +148,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.0.preview7
+        image: registry.aquasec.com/gateway:6.0.preview8
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

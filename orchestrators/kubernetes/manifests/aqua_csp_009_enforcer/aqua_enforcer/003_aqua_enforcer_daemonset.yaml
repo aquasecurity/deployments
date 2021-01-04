@@ -33,7 +33,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:6.0.preview7
+        image: registry.aquasec.com/enforcer:6.0.preview8
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -43,7 +43,7 @@ spec:
           periodSeconds: 30
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: /readinessz
             port: 8096
           initialDelaySeconds: 60
           periodSeconds: 30
