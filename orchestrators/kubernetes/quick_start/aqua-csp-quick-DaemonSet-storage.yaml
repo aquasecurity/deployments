@@ -717,7 +717,7 @@ data:
   ## Based on your ingress config update the name here ##
   AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway.aqua:8443"
   AQUA_TLS_PORT: "8443"
-  # Cluster display name in aqua csp.
+  # Cluster display name in aqua enterprise.
   CLUSTER_NAME: "aqua-secure"
 ---
 apiVersion: v1
