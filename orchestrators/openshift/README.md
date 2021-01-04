@@ -1,5 +1,5 @@
 # Red Hat OpenShift
 
 ## Deployments
-* [**OpenShift templates**](templates/) - Deploy Aqua CSP on an OpenShift cluster.
+* [**OpenShift templates**](templates/) - Deploy Aqua Enterprise on an OpenShift cluster.
   

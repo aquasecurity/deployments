@@ -1,5 +1,5 @@
 #!/bin/bash
-# CSP Install Script for demo / PoC Only
+# Aqua Enterprise Install Script for demo / PoC Only
 # Please don't use this for production environment
 # Use of this script comes with no warranty
 # For support with this script, contact your local solutions architect
