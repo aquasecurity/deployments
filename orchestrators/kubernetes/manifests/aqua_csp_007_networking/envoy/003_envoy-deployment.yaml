@@ -38,7 +38,7 @@ spec:
         fsGroup: 11433
       containers:
       - name: envoy
-        image: envoyproxy/envoy-alpine:v1.14.1
+        image: envoyproxy/envoy-alpine:v1.15.0
         ports:
         - name: https
           containerPort: 8443
