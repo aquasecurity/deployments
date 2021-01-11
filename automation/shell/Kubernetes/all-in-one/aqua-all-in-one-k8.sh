@@ -1,5 +1,5 @@
 #!/bin/bash
-# CSP Install Script for demo / PoC Only
+# Aqua Enterprise Install Script for demo / PoC Only
 # Please don't use this for production environment
 # First run: chmod +x NAMEOFSCRIPT.sh
 # Use of this script comes with no warranty
@@ -22,7 +22,7 @@ echo "###############################################################"
 echo "#      Welcome to the Aqua Deployment Script for Kubernetes    #"
 echo "#           This is only for Demo/PoC purpose only            #"
 echo "#          Use of this script comes with no warranty          #"
-echo "#                       Version 0.9 CSP                       #"
+echo "#               Version 0.9 Aqua Enterprise                   #"
 echo "###############################################################"
 echo ""
 
@@ -80,7 +80,7 @@ kubectl create -n aqua secret generic aquapassword --from-literal=aquapassword=$
 
 
 echo "****************************************************************"
-echo "*                  Installing Aqua CSP Now                      *"
+echo "*             Installing Aqua Enterprise Now                   *"
 echo "****************************************************************"
 
 FILE="aqua-csp.yaml"

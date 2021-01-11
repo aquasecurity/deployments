@@ -23,7 +23,7 @@ echo "###############################################################"
 echo "# Welcome to the Aqua Enforcer deployment Script for OpenShift #"
 echo "#           This is only for Demo/PoC purpose only            #"
 echo "#          Use of this script comes with no warranty          #"
-echo "#                       Version 0.9 CSP                       #"
+echo "#               Version 0.9 Aqua Enterprise                   #"
 echo "###############################################################"
 echo ""
 # Pull down the images from AquaSec

@@ -248,7 +248,7 @@ spec:
     spec:
       containers:
         - name: aqua-audit-db
-          image: 'registry.aquasec.com/database:6.0.preview7'
+          image: registry.aquasec.com/database:6.0.preview9
           ports:
             - name: aqua-audit-db
               containerPort: 5432
@@ -337,7 +337,7 @@ spec:
     spec:
       containers:
         - name: aqua-db
-          image: 'registry.aquasec.com/database:6.0.preview7'
+          image: registry.aquasec.com/database:6.0.preview9
           ports:
             - name: aqua-db
               containerPort: 5432
@@ -436,7 +436,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.0.preview7
+        image: registry.aquasec.com/console:6.0.preview9
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -539,7 +539,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.0.preview7
+        image: registry.aquasec.com/gateway:6.0.preview9
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -717,7 +717,7 @@ data:
   ## Based on your ingress config update the name here ##
   AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway.aqua:8443"
   AQUA_TLS_PORT: "8443"
-  # Cluster display name in aqua csp.
+  # Cluster display name in Aqua Enterprise.
   CLUSTER_NAME: "aqua-secure"
 ---
 apiVersion: v1
@@ -749,7 +749,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:6.0.preview7
+          image: registry.aquasec.com/kube-enforcer:6.0.preview9
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -827,7 +827,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:6.0.preview7
+        image: registry.aquasec.com/enforcer:6.0.preview9
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

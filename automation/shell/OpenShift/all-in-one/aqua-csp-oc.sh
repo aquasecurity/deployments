@@ -1,5 +1,5 @@
 #!/bin/bash
-# CSP Install Script for demo / PoC Only
+# Aqua Enterprise Install Script for demo / PoC Only
 # Please don't use this for production environment
 # First run: chmod +x NAMEOFSCRIPT.sh
 # Use of this script comes with no warranty
@@ -22,11 +22,11 @@ echo "###############################################################"
 echo "#      Welcome to the Aqua Deployment Script for OpenShift    #"
 echo "#           This is only for Demo/PoC purpose only            #"
 echo "#          Use of this script comes with no warranty          #"
-echo "#                       Version 0.9 CSP                       #"
+echo "#               Version 0.9 Aqua Enterprise                   #"
 echo "###############################################################"
 echo ""
 
-# Ask what version of Aqua CSP to install
+# Ask what version of Aqua Aqua Enterprise to install
 read -p "What version of Aqua tag do you want to install: " aquacsptag
 # Ask for docker hub username
 read -p "Enter your docker hub username: " dockeruser
@@ -68,7 +68,7 @@ done
 
 echo 
 # Aqua license file. set to -p so we get screen confirmation that the license was entered. 
-read -p "Insert Aqua CSP license: "  aqualicense
+read -p "Insert Aqua license: "  aqualicense
 
 # Make project aqua
 echo "Creating new OC Project Named Aqua"
@@ -85,7 +85,7 @@ oc create secret docker-registry dockerhub --docker-server="https://index.docker
 
 
 echo "****************************************************************"
-echo "*                  Installing Aqua CSP Now                     *"
+echo "*             Installing Aqua Enterprise Now                   *"
 echo "****************************************************************"
 
 cat << EOF >> aqua-csp.yml
@@ -251,7 +251,7 @@ sleep 5
 echo ""
 
 # Aqua deployment done, just waiting for orchestrator to do its thing
-echo "> Waiting for Aqua CSP Pods to come up... "
+echo "> Waiting for Aqua Enterprise Pods to come up... "
 results=$(oc get pods | grep 'ContainerCreating\|Pending')
 count=0
 while [[ ! -z "$results" && $count -lt 15 ]];
@@ -274,7 +274,7 @@ if [[ ! -z $results2 ]]
     oc get po | grep 'ImagePullBackOff\|ErrImagePull'
     echo ""
     echo "run oc describe on the pod above that's having the error"
-    echo "note: some issue can be fixed by pulling the csp images on the other nodes"
+    echo "note: some issue can be fixed by pulling the aqua enterprise images on the other nodes"
     echo "by running sudo docker pull name-of-image:tag"
     echo ""
     echo " ********* Script exited in an error state *********"
@@ -292,7 +292,7 @@ if [[ ! -z $results2 ]]
     echo ""
     echo "                        Yippie!                                     "
     echo "          Aqua was successfully installed!                          "
-    echo "	You can now get to you Aqua CSP Web interface on : "
+    echo "	You can now get to you Aqua Enterprise Web interface on : "
     echo ""
     echo "	> " $nodefqdn
     echo ""
