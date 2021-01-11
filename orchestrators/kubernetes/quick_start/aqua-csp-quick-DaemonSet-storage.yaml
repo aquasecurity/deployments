@@ -548,9 +548,8 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 10
         readinessProbe:
-          httpGet:
-            path: /
-            port: 8000
+          tcpSocket:
+            port: 8443
           initialDelaySeconds: 60
           periodSeconds: 10
         ports:
