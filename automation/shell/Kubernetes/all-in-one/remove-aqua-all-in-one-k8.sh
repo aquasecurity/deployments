@@ -1,5 +1,5 @@
 #!/bin/bash
-# CSP Install Script for demo / PoC Only
+# Aqua Enterprise Install Script for demo / PoC Only
 # Please don't use this for production environment
 # Use of this script comes with no warranty
 # For support with this script, contact your local solutions architect
@@ -17,7 +17,7 @@ echo " ***************************************************************"
 echo "           Secure once, Run Anywhere                          "  
 echo " "
 echo " ************************************************************** "
-echo " *       Removing Aqua CSP from your system now.              * " 
+echo " *    Removing Aqua Enterprise from your system now.          * " 
 echo " ************************************************************** "
 echo ""
 
@@ -28,7 +28,7 @@ echo ""
 
 echo " "
 echo " ******************************************************************* "
-echo " *       Aqua CSP has been removed from your system now.           * " 
+echo " *    Aqua Enterprise has been removed from your system now.       * " 
 echo " *  You should remove the label from the node manually by          * "
 echo " *   >  kubectl label node NODENAME aqua-                          * "
 echo " ******************************************************************* "

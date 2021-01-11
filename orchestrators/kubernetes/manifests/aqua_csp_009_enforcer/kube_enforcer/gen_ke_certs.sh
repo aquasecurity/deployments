@@ -62,10 +62,14 @@ _generate_ssl() {
         req_extensions = v3_req
         distinguished_name = req_distinguished_name
         [req_distinguished_name]
+        [ alt_names ]
+        DNS.1 = aqua-kube-enforcer.aqua.svc
+        DNS.2 = aqua-kube-enforcer.aqua.svc.cluster.local
         [ v3_req ]
         basicConstraints = CA:FALSE
         keyUsage = nonRepudiation, digitalSignature, keyEncipherment
         extendedKeyUsage = clientAuth, serverAuth
+        subjectAltName = @alt_names
 EOF
         printf "\nInfo: Generating kubeEnforcer CSR\n"
         if `openssl req -new -sha256 -key aqua_ke.key -subj "/CN=aqua-kube-enforcer.aqua.svc" -config server.conf -out aqua_ke.csr`; then
