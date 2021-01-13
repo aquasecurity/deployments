@@ -47,7 +47,7 @@ data:
   SCALOCK_GATEWAY_PUBLIC_IP: "aqua-gateway"
   
   # Specify 0.0.0.0:80 to bring up an HTTP responder on port 80, for use with active load balancers. The port can be changed as needed.
-  HEALTH_MONITOR: "0.0.0.0:8000"
+  HEALTH_MONITOR: "0.0.0.0:8082"
   
   # Server's private key for HTTPS and Mutual Auth
   #AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/key.pem"
