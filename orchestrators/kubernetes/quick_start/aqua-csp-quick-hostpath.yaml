@@ -84,7 +84,7 @@ data:
   # Specify the desired public IP address of the Aqua Gateway. Used to make the Enforcer connect to the Gateway through this IP address.
   SCALOCK_GATEWAY_PUBLIC_IP: "aqua-gateway"
   # Specify 0.0.0.0:80 to bring up an HTTP responder on port 80, for use with active load balancers. The port can be changed as needed.
-  HEALTH_MONITOR: "0.0.0.0:8000"
+  HEALTH_MONITOR: "0.0.0.0:8082"
   # Server's private key for HTTPS and Mutual Auth
   #AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/key.pem"
   # Server's public key for HTTPS and Mutual Auth
@@ -557,7 +557,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: 8000
+            port: 8082
           initialDelaySeconds: 60
           periodSeconds: 30
         readinessProbe:
