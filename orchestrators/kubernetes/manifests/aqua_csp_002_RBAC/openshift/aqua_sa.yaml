@@ -39,3 +39,63 @@ subjects:
   - kind: ServiceAccount
     name: aqua-sa
     namespace: aqua
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cluster-reader
+subjects:
+  - kind: ServiceAccount
+    name: aqua-sa
+    namespace: aqua
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-reader
+---
+allowHostDirVolumePlugin: true
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: false
+allowedCapabilities: null
+apiVersion: security.openshift.io/v1
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+    kubernetes.io/description: aqua scc provides all features of the restricted SCC
+      but allows users to run with any non-root UID and access hostPath. The user must
+      specify the UID or it must be specified on the by the manifest of the container runtime.
+    release.openshift.io/create-only: "true"
+  generation: 2
+  name: aqua-scc
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+- KILL
+- MKNOD
+- SETUID
+- SETGID
+runAsUser:
+  type: MustRunAsNonRoot
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:aqua:aqua-sa
+- system:serviceaccount:aqua:aqua-kube-enforcer-sa
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret
+- hostPath
