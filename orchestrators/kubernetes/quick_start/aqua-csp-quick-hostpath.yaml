@@ -286,7 +286,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-audit-db
-        image: registry.aquasec.com/database:6.0.preview9
+        image: registry.aquasec.com/database:6.0.preview10
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -363,7 +363,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:6.0.preview9
+        image: registry.aquasec.com/database:6.0.preview10
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -448,7 +448,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.0.preview9
+        image: registry.aquasec.com/console:6.0.preview10
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -551,7 +551,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.0.preview9
+        image: registry.aquasec.com/gateway:6.0.preview10
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -746,7 +746,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:6.0.preview9
+          image: registry.aquasec.com/kube-enforcer:6.0.preview10
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -824,7 +824,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:6.0.preview9
+        image: registry.aquasec.com/enforcer:6.0.preview10
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
