@@ -89,7 +89,7 @@ seLinuxContext:
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:aqua:aqua-sa
+- system:serviceaccount:aqua:aqua-kube-enforcer-sa
 volumes:
 - configMap
 - downwardAPI
