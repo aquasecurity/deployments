@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -32,13 +33,10 @@ spec:
       labels:
         app: envoy
     spec:
-      securityContext:
-        runAsUser: 11431
-        runAsGroup: 11433
-        fsGroup: 11433
       containers:
       - name: envoy
         image: envoyproxy/envoy-alpine:v1.15.0
+        imagePullPolicy: IfNotPresent
         ports:
         - name: https
           containerPort: 8443
@@ -58,6 +56,9 @@ spec:
               value: healthz
             port: 8443
           initialDelaySeconds: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
         livenessProbe:
           httpGet:
             scheme: HTTPS
@@ -67,10 +68,15 @@ spec:
               value: healthz
             port: 8443
           initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
       volumes:
       - name: config
         configMap:
+          defaultMode: 420
           name: envoy-conf
       - name: certs
         secret:
+          defaultMode: 420
           secretName: aqua-lb-certs
