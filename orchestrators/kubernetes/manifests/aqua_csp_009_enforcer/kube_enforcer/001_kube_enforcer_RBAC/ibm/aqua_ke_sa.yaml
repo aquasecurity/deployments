@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aqua-kube-enforcer-sa
+  namespace: aqua
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aqua-kube-enforcer
+rules:
+  - apiGroups: ["*"]
+    resources: ["pods", "nodes", "namespaces", "deployments", "statefulsets", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "clusterroles", "clusterrolebindings", "componentstatuses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [ "*" ]
+    resources: [ "secrets" ]
+    verbs: [ "get", "list", "watch", "update", "create" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: aqua-kube-enforcer
+subjects:
+  - kind: ServiceAccount
+    name: aqua-kube-enforcer-sa
+    namespace: aqua
+---
+# This role specific to kube-bench scans permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+rules:
+  - apiGroups: ["*"]
+    resources: ["pods/log"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["*"]
+    resources: ["jobs"]
+    verbs: ["create", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: aqua-kube-enforcer
+subjects:
+- kind: ServiceAccount
+  name: aqua-kube-enforcer-sa
+  namespace: aqua
