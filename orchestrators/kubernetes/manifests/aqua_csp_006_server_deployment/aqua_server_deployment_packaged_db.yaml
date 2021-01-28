@@ -33,10 +33,16 @@ spec:
       name: aqua-db
       namespace: aqua
     spec:
+      securityContext:
+        runAsUser: 70
+        runAsGroup: 70
+        fsGroup: 11433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
       - name: aqua-db
+        securityContext:
+          privileged: false
         image: registry.aquasec.com/database:6.0.preview10
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -110,10 +116,16 @@ spec:
       name: aqua-audit-db
       namespace: aqua
     spec:
+      securityContext:
+        runAsUser: 70
+        runAsGroup: 70
+        fsGroup: 11433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
       - name: aqua-audit-db
+        securityContext:
+          privileged: false
         image: registry.aquasec.com/database:6.0.preview10
         imagePullPolicy: IfNotPresent
         livenessProbe:
