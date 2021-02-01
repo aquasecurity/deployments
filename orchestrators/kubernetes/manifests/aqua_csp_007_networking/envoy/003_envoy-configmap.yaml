@@ -71,7 +71,7 @@ data:
             - endpoint:
                 address:
                   socket_address:
-                    address: aqua-gateway.aqua.svc.cluster.local
+                    address: aqua-gateway-headless.aqua.svc.cluster.local
                     port_value: 8443
         transport_socket:
             name: envoy.transport_sockets.tls

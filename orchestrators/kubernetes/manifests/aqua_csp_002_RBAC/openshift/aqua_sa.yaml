@@ -56,11 +56,23 @@ roleRef:
 allowHostDirVolumePlugin: true
 allowHostIPC: false
 allowHostNetwork: false
-allowHostPID: false
+allowHostPID: true
 allowHostPorts: false
-allowPrivilegeEscalation: true
+allowPrivilegeEscalation: false
 allowPrivilegedContainer: false
-allowedCapabilities: null
+allowedCapabilities:
+- SYS_ADMIN
+- NET_ADMIN
+- NET_RAW
+- SYS_PTRACE
+- KILL
+- MKNOD
+- SETGID
+- SETUID
+- SYS_MODULE
+- AUDIT_CONTROL
+- SYSLOG
+- SYS_CHROOT
 apiVersion: security.openshift.io/v1
 defaultAddCapabilities: null
 fsGroup:
@@ -73,24 +85,18 @@ metadata:
       but allows users to run with any non-root UID and access hostPath. The user must
       specify the UID or it must be specified on the by the manifest of the container runtime.
     release.openshift.io/create-only: "true"
-  generation: 2
   name: aqua-scc
 priority: null
 readOnlyRootFilesystem: false
-requiredDropCapabilities:
-- KILL
-- MKNOD
-- SETUID
-- SETGID
+requiredDropCapabilities: null
 runAsUser:
-  type: MustRunAsNonRoot
+  type: RunAsAny
 seLinuxContext:
   type: MustRunAs
 supplementalGroups:
   type: RunAsAny
 users:
 - system:serviceaccount:aqua:aqua-sa
-- system:serviceaccount:aqua:aqua-kube-enforcer-sa
 volumes:
 - configMap
 - downwardAPI

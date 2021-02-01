@@ -13,6 +13,10 @@ spec:
         app: aqua-scanner
     spec:
       serviceAccountName: aqua-sa
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
       containers:
         - name: kube-scanner
           image: registry.aquasec.com/scanner:6.0.preview10

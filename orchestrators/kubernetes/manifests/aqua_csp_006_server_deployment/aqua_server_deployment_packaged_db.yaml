@@ -33,10 +33,16 @@ spec:
       name: aqua-db
       namespace: aqua
     spec:
+      securityContext:
+        runAsUser: 70
+        runAsGroup: 70
+        fsGroup: 11433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
       - name: aqua-db
+        securityContext:
+          privileged: false
         image: registry.aquasec.com/database:6.0.preview10
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -110,10 +116,16 @@ spec:
       name: aqua-audit-db
       namespace: aqua
     spec:
+      securityContext:
+        runAsUser: 70
+        runAsGroup: 70
+        fsGroup: 11433
       serviceAccount: aqua-sa
       restartPolicy: Always
       containers:
       - name: aqua-audit-db
+        securityContext:
+          privileged: false
         image: registry.aquasec.com/database:6.0.preview10
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -151,27 +163,6 @@ spec:
       - name: postgres-db
         persistentVolumeClaim:
           claimName: aqua-audit-db-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: aqua-web
-  namespace: aqua
-  labels:
-    app: aqua-web
-spec:      
-  ports:
-    - port: 443
-      protocol: TCP
-      targetPort: 8443
-      name: aqua-web-ssl
-    - port: 8080
-      protocol: TCP
-      targetPort: 8080
-      name: aqua-web
-  selector:
-    app: aqua-web
-  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -254,27 +245,6 @@ spec:
       #       path: key.pem
       #     - key: rootCA.crt
       #       path: ca.pem
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: aqua-gateway
-  namespace: aqua
-  labels:
-    app: aqua-gateway
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 8443
-      protocol: TCP
-      targetPort: 8443
-      name: aqua-gateway-ssl
-    - port: 3622
-      protocol: TCP
-      targetPort: 3622
-      name: aqua-gateway
-  selector:
-    app: aqua-gateway
 ---
 apiVersion: apps/v1
 kind: Deployment
