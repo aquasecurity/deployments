@@ -19,10 +19,10 @@ spec:
         fsGroup: 11433
       containers:
         - name: kube-scanner
-          image: registry.aquasec.com/scanner:6.0.preview10
+          image: registry.aquasec.com/scanner:6.0.RC1
           imagePullPolicy: Always
           command: ["/bin/sh"]
-          args: ["-c", "/opt/aquasec/scannercli daemon --host https://${AQUA_SERVER} --user ${AQUA_SCANNER_USERNAME} --password ${AQUA_SCANNER_PASSWORD}"]
+          args: ["-c", "/opt/aquasec/scannercli daemon --host https://${AQUA_SERVER} --user ${AQUA_SCANNER_USERNAME} --password ${AQUA_SCANNER_PASSWORD} --no-verify"]
           env:
             - name: AQUA_SCANNER_LOGICAL_NAME
               valueFrom:

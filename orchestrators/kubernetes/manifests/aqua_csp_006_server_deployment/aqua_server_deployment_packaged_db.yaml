@@ -43,7 +43,7 @@ spec:
       - name: aqua-db
         securityContext:
           privileged: false
-        image: registry.aquasec.com/database:6.0.preview10
+        image: registry.aquasec.com/database:6.0.RC1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -126,7 +126,7 @@ spec:
       - name: aqua-audit-db
         securityContext:
           privileged: false
-        image: registry.aquasec.com/database:6.0.preview10
+        image: registry.aquasec.com/database:6.0.RC1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -190,7 +190,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.0.preview10
+        image: registry.aquasec.com/console:6.0.RC1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -272,7 +272,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.0.preview10
+        image: registry.aquasec.com/gateway:6.0.RC1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
