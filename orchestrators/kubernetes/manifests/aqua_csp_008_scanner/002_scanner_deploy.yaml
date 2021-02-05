@@ -13,12 +13,16 @@ spec:
         app: aqua-scanner
     spec:
       serviceAccountName: aqua-sa
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
       containers:
         - name: kube-scanner
           image: registry.aquasec.com/scanner:5.3
           imagePullPolicy: Always
           command: ["/bin/sh"]
-          args: ["-c", "/opt/aquasec/scannercli daemon --host https://${AQUA_SERVER} --user ${AQUA_SCANNER_USERNAME} --password ${AQUA_SCANNER_PASSWORD}"]
+          args: ["-c", "/opt/aquasec/scannercli daemon --host https://${AQUA_SERVER} --user ${AQUA_SCANNER_USERNAME} --password ${AQUA_SCANNER_PASSWORD} --no-verify"] 
           env:
             - name: AQUA_SCANNER_LOGICAL_NAME
               valueFrom:

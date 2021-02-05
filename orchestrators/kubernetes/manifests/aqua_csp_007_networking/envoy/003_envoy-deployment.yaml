@@ -39,6 +39,9 @@ spec:
       containers:
       - name: envoy
         image: envoyproxy/envoy-alpine:v1.15.0
+        env:
+        - name: ENVOY_UID
+          value: "0"
         ports:
         - name: https
           containerPort: 8443
