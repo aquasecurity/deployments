@@ -39,22 +39,6 @@ spec:
         fsGroup: 11433
       serviceAccount: aqua-sa
       restartPolicy: Always
-      initContainers:
-      - name: aqua-db-init
-        env:
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: password
-              name: aqua-db
-        envFrom:
-        - configMapRef:
-            name: aqua-csp-db-config
-        image: registry.aquasec.com/database:6.0.RC1
-        command: [ "sh", "-c", "[ -f $PGDATA/server.key ] && chmod 600 $PGDATA/server.key || echo 'OK' " ]
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-db
       containers:
       - name: aqua-db
         securityContext:
@@ -138,22 +122,6 @@ spec:
         fsGroup: 11433
       serviceAccount: aqua-sa
       restartPolicy: Always
-      initContainers:
-      - name: aqua-audit-db-init
-        env:
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: password
-              name: aqua-db
-        envFrom:
-        - configMapRef:
-            name: aqua-csp-db-config
-        image: registry.aquasec.com/database:6.0.RC1
-        command: [ "sh", "-c", "[ -f $PGDATA/server.key ] && chmod 600 $PGDATA/server.key || echo 'OK' " ]
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-db
       containers:
       - name: aqua-audit-db
         securityContext:
