@@ -40,7 +40,7 @@ spec:
       serviceAccount: aqua-sa
       restartPolicy: Always
       initContainers:
-      - name: aqua-audit-db-init
+      - name: aqua-db-init
         env:
         - name: POSTGRES_PASSWORD
           valueFrom:
