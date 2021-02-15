@@ -637,7 +637,7 @@ webhooks:
   - name: imageassurance.aquasec.com
     failurePolicy: Ignore
     rules:
-      - operations: ["CREATE"]
+      - operations: ["CREATE", "UPDATE"]
         apiGroups: ["*"]
         apiVersions: ["*"]
         resources: ["pods", "deployments", "replicasets", "replicationcontrollers", "statefulsets", "daemonsets", "jobs", "cronjobs"]
