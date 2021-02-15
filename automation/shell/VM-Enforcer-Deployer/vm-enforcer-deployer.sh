@@ -18,10 +18,18 @@ error_message(){
 prerequisites_check(){
 	is_root
 	
-	if [ -z "$ENFORCER_VERSION" ] || [ -z "$AQUA_USERNAME" ] || [ -z "$AQUA_PWD" ] || [ -z "$GATEWAY_ENDPOINT" ];then
+	if [ -z "$ENFORCER_VERSION" ] || [ -z "$GATEWAY_ENDPOINT" ] || [ -z "$TOKEN" ];then
 		usage
 		exit 1
 	fi	
+	
+    if [ "$DOWNLOAD_MODE" == "true" ];then
+			if  [ -z "$AQUA_USERNAME" ] || [ -z "$AQUA_PWD" ];then
+				usage
+				exit 1
+			fi
+		is_bin_in_path curl || error_message "curl is not installed on this host"
+	fi
 	
 	if is_bin_in_path runc; then
 		RUNC_LOCATION=$(which runc)
@@ -42,9 +50,8 @@ prerequisites_check(){
 	is_bin_in_path systemd || error_message "systemd is not installed on this host"
 	SYSTEMD_VERION=$(systemd --version| grep systemd|awk '{print $2}')
 
-	is_bin_in_path curl || error_message "curl is not installed on this host"
+	
 	is_bin_in_path awk || error_message "awk is not installed on this host"
-	is_bin_in_path jq || error_message "jq is not installed on this host"
 	is_bin_in_path tar || error_message "tar is not installed on this host"
 }
 
@@ -59,20 +66,80 @@ is_flag_value_valid(){
 }
 
 get_templates(){
-	curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/master/automation/aquactl/host/enforcer/aqua-enforcer.template.service
-	curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/master/automation/aquactl/host/enforcer/aqua-enforcer.template.old.service
-	curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/master/automation/aquactl/host/enforcer/run.template.sh
+
+cat > ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} <<EOF
+[Unit]
+Description=Aqua Security Enforcer RunC
+
+[Service]
+Type=forking
+ExecStart={{ .Values.RuncPath }} run -d --pid-file /run/aqua-enforcer.pid enforcer
+ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
+WorkingDirectory={{ .Values.WorkingDirectory }}
+PIDFile=/run/aqua-enforcer.pid
+Restart=always
+StandardOutput=file:/opt/aquasec/tmp/aqua-enforcer.log
+StandardError=file:/opt/aquasec/tmp/aqua-enforcer.log
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD}  <<EOF
+[Unit]
+Description=Aqua Security Enforcer RunC
+
+[Service]
+Type=forking
+ExecStart={{ .Values.WorkingDirectory }}/run.sh
+ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
+WorkingDirectory={{ .Values.WorkingDirectory }}
+PIDFile=/run/aqua-enforcer.pid
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > ${RUN_SCRIPT_TEMPLATE_FILE_NAME} << EOF
+#!/bin/bash
+
+{{ .Values.RuncPath }} run -d --pid-file /run/aqua-enforcer.pid enforcer > /opt/aquasec/tmp/aqua-enforcer.log 2>&1
+
+exit 0
+EOF
+
 }
+
 
 get_app(){
 
-	ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.${ENFORCER_VERSION}.tar"  
+	ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.${ENFORCER_VERSION}.tar" 
+	if [ "$DOWNLOAD_MODE" == "true" ];then
+		get_app_online
+	else
+		get_app_local
+	fi
+}
+
+get_app_local(){
+
+	if [ ! -f "$ENFORCER_RUNC_TAR_FILE_NAME" ]; then
+		error_message "Unable to locate $ENFORCER_RUNC_TAR_FILE_NAME on current directory"
+	fi
+	if [ ! -f "$ENFORCER_RUNC_CONFIG_TEMPLATE" ]; then
+		error_message "Unable to locate $ENFORCER_RUNC_CONFIG_TEMPLATE on current directory"
+	fi
+}
+
+get_app_online(){
+	
 	ENFORCER_RUNC_TAR_FILE_URL="https://download.aquasec.com/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"    
 	ENFORCER_RUNC_CONFIG_URL="https://download.aquasec.com/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_CONFIG_TEMPLATE}"
 	ENFORCER_RUNC_TAR_FILE_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"
 	ENFORCER_RUNC_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-runc-config.json"
 	ENFORCER_RUNC_OLD_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-v1.0.0-rc2-runc-config.json"
-
+	
 	if ! curl --output /dev/null --silent --head --fail -u ${AQUA_USERNAME}:${AQUA_PWD} ${ENFORCER_RUNC_TAR_FILE_URL}; then
 	  error_message "Unable to download package. please check credentials or the version"
 	fi
@@ -81,12 +148,20 @@ get_app(){
 	curl -u ${AQUA_USERNAME}:${AQUA_PWD} -s -o ${ENFORCER_RUNC_TAR_FILE_NAME} ${ENFORCER_RUNC_TAR_FILE_URL}
 	echo "Info: Downloading enforcer config file template ${ENFORCER_RUNC_CONFIG_TEMPLATE}."
 	curl -u ${AQUA_USERNAME}:${AQUA_PWD} -s -o ${ENFORCER_RUNC_CONFIG_TEMPLATE} ${ENFORCER_RUNC_CONFIG_URL}
+
 }
 
 
 edit_templates(){
 	echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME} file."
-	jq ".process.env = [\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"HOSTNAME=$(hostname)\",\"TERM=xterm\",\"AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\",\"AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\",\"AQUA_MODE=SERVICE\",\"RESTART_CONTAINERS=no\",\"AQUA_LOGICAL_NAME=Default\",\"AQUA_SERVER=${GATEWAY_ENDPOINT}\",\"AQUA_TOKEN=${TOKEN}\",\"LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"]" ${ENFORCER_RUNC_CONFIG_TEMPLATE} > ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
+
+	sed "s|HOSTNAME=.*\"|HOSTNAME=$(hostname)\"|;
+		s|AQUA_PRODUCT_PATH=.*\"|AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\"|;
+		s|AQUA_INSTALL_PATH=.*\"|AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\"|;
+		s|AQUA_SERVER=.*\"|AQUA_SERVER=${GATEWAY_ENDPOINT}\"|;
+		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${TOKEN}\"|;
+		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"|" ${ENFORCER_RUNC_CONFIG_TEMPLATE} > ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
+
 	
 	echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} file."
 	sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${RUN_SCRIPT_TEMPLATE_FILE_NAME} > ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} && chmod +x ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME}
@@ -139,12 +214,12 @@ start_service(){
 }
 
 craete_folder(){
-	mkdir ${INSTALL_PATH}/aquasec
-	mkdir ${INSTALL_PATH}/aquasec/audit
-	mkdir ${INSTALL_PATH}/aquasec/tmp	
-	mkdir ${INSTALL_PATH}/aquasec/data
+	mkdir ${INSTALL_PATH}/aquasec 2>/dev/null
+	mkdir ${INSTALL_PATH}/aquasec/audit 2>/dev/null
+	mkdir ${INSTALL_PATH}/aquasec/tmp 2>/dev/null
+	mkdir ${INSTALL_PATH}/aquasec/data 2>/dev/null
 	touch ${INSTALL_PATH}/aquasec/tmp/aqua-enforcer.log
-	mkdir -p ${ENFORCER_RUNC_FS_DIRECTORY}
+	mkdir -p ${ENFORCER_RUNC_FS_DIRECTORY} 2>/dev/null
 }
 
 usage(){
@@ -154,12 +229,14 @@ Usage:
   sudo ./vm-enforcer-deployer.sh [flags]
 
 Flags:
-  -u, --aqua-username string   Aqua username
-  -p, --aqua-password string   Aqua password
+  -v, --version string         Aqua Enforcer version
   -g, --gateway string         Aqua Gateway address
   -t, --token string           Aqua Enforcer token
-  -v, --version string         Aqua Enforcer version
-
+  
+Optional: Download Mode Flags
+  -d, --download	download artifacts from aquasec
+  -u, --aqua-username string	Aqua username
+  -p, --aqua-password string	Aqua password
 EOF
 }
 
@@ -178,6 +255,7 @@ RUN_SCRIPT_FILE_NAME="run.sh"
 RUN_SCRIPT_TEMPLATE_FILE_NAME="run.template.sh"
 ENFORCER_SERVICE_SYSTEMD_FILE_PATH="${SYSTEMD_FOLDER}/${ENFORCER_SERVICE_FILE_NAME}"
 ENFORCER_RUNC_CONFIG_FILE_NAME="config.json"
+DOWNLOAD_MODE=false
 
 for arg in "$@";do
     case $arg in
@@ -211,6 +289,10 @@ for arg in "$@";do
         shift 
         shift 
         ;;
+        -d|--download)
+		DOWNLOAD_MODE=true
+        shift 
+        ;;		
         -f|--tar-file)
 		is_flag_value_valid "-f|--tar-file" "$2"
         TAR_FILE="$2"
