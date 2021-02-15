@@ -65,60 +65,37 @@ is_flag_value_valid(){
 	done
 }
 
-get_templates(){
+get_templates_online(){
 
-cat > ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} <<EOF
-[Unit]
-Description=Aqua Security Enforcer RunC
-
-[Service]
-Type=forking
-ExecStart={{ .Values.RuncPath }} run -d --pid-file /run/aqua-enforcer.pid enforcer
-ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
-WorkingDirectory={{ .Values.WorkingDirectory }}
-PIDFile=/run/aqua-enforcer.pid
-Restart=always
-StandardOutput=file:/opt/aquasec/tmp/aqua-enforcer.log
-StandardError=file:/opt/aquasec/tmp/aqua-enforcer.log
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD}  <<EOF
-[Unit]
-Description=Aqua Security Enforcer RunC
-
-[Service]
-Type=forking
-ExecStart={{ .Values.WorkingDirectory }}/run.sh
-ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
-WorkingDirectory={{ .Values.WorkingDirectory }}
-PIDFile=/run/aqua-enforcer.pid
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > ${RUN_SCRIPT_TEMPLATE_FILE_NAME} << EOF
-#!/bin/bash
-
-{{ .Values.RuncPath }} run -d --pid-file /run/aqua-enforcer.pid enforcer > /opt/aquasec/tmp/aqua-enforcer.log 2>&1
-
-exit 0
-EOF
+	curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/master/automation/aquactl/host/enforcer/aqua-enforcer.template.service
+	curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/master/automation/aquactl/host/enforcer/aqua-enforcer.template.old.service
+	curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/master/automation/aquactl/host/enforcer/run.template.sh
 
 }
 
+get_templates_local(){
+
+	if [ ! -f "$ENFORCER_SERVICE_TEMPLATE_FILE_NAME" ]; then
+		error_message "Unable to locate $ENFORCER_SERVICE_TEMPLATE_FILE_NAME on current directory"
+	fi
+	if [ ! -f "$ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD" ]; then
+		error_message "Unable to locate $ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD on current directory"
+	fi
+	if [ ! -f "$RUN_SCRIPT_TEMPLATE_FILE_NAME" ]; then
+		error_message "Unable to locate $RUN_SCRIPT_TEMPLATE_FILE_NAME on current directory"
+	fi
+	
+}
 
 get_app(){
 
 	ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.${ENFORCER_VERSION}.tar" 
 	if [ "$DOWNLOAD_MODE" == "true" ];then
 		get_app_online
+		get_templates_online
 	else
 		get_app_local
+		get_templates_local
 	fi
 }
 
@@ -323,7 +300,6 @@ prerequisites_check
 systemd_type
 runc_type
 craete_folder
-get_templates
 get_app
 edit_templates
 untar
