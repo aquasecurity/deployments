@@ -67,8 +67,8 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-server-config
-        - secretRef:
-            name: aqua-csp-server-secret
+      #  - secretRef:
+      #      name: aqua-csp-server-secret
         env:
         - name: AQUA_PUBSUB_DBPASSWORD
           valueFrom:
