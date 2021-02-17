@@ -1,0 +1,105 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+spec:
+  ports:
+    - port: 443
+      targetPort: 8443
+      name: envoy
+  selector:
+    app: aqua-kube-enforcer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+  labels:
+    app: aqua-kube-enforcer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: aqua-kube-enforcer
+    spec:
+      serviceAccountName: aqua-kube-enforcer-sa
+      containers:
+        - name: kube-enforcer
+          image: registry.aquasec.com/kube-enforcer:6.0.RC1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8449
+            - containerPort: 8442
+          env:
+            - name: AQUA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aqua-kube-enforcer-token
+                  key: token
+                  optional: true
+            # Specify whether to enable/disable the cache by using "yes", "true", "no", "false" values.
+            # Default value is "yes".
+            - name: AQUA_ENABLE_CACHE
+              value: "yes"
+            # Specify cache expiration period in seconds.
+            # Default value is 60
+            - name: AQUA_CACHE_EXPIRATION_PERIOD
+              value: "60"
+            - name: TLS_SERVER_CERT_FILEPATH
+              value: /certs/server.crt
+            - name: TLS_SERVER_KEY_FILEPATH
+              value: /certs/server.key
+            - name: AQUA_GATEWAY_SECURE_ADDRESS
+              value: aqua-gateway.aqua:8443
+            - name: AQUA_TLS_PORT
+              value: "8449"
+            - name: AQUA_KE_SERVER_PORT
+              value: "8442"
+            - name: CLUSTER_NAME
+              value: "aqua-secure"   # Cluster display name in aqua enterprise.
+            - name: AQUA_ENVOY_MODE
+              value: "true"
+          volumeMounts:
+            - name: "certs"
+              mountPath: "/certs"
+            - name: "envoy-shared"
+              mountPath: "/etc/aquasec/envoy"
+        - name: envoy
+          image: envoyproxy/envoy-alpine:v1.15.1
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c", "cp /etc/envoy/cds.yaml /etc/aquasec/envoy/cds.yaml && touch /etc/aquasec/envoy/ca-certificates.crt && envoy -c /etc/envoy/envoy.yaml"]
+          volumeMounts:
+            - name: "envoy-config"
+              mountPath: "/etc/envoy"
+            - name: "certs"
+              mountPath: "/etc/ssl/envoy"
+            - name: "envoy-shared"
+              mountPath: "/etc/aquasec/envoy"
+          ports:
+            - containerPort: 8443
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /etc/aquasec/envoy/configured
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: "certs"
+          secret:
+            secretName: "aqua-kube-enforcer-certs"
+        - name: "envoy-config"
+          configMap:
+            name: "ke-envoy-conf"
+        - name: "envoy-shared"
+          emptyDir: {}
+      imagePullSecrets:
+        - name: aqua-registry
+  selector:
+    matchLabels:
+      app: aqua-kube-enforcer
