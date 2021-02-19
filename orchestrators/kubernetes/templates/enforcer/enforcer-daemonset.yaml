@@ -24,6 +24,14 @@ spec:
       containers:
       - name: aqua-agent
         image: registry.aquasec.com/enforcer:5.3
+        resources:
+  # Note: For recommendations please check the official sizing guide.
+          requests:
+            cpu: 350m
+            memory: 0.512Gi
+          limits:
+            cpu: 1500m
+            memory: 1.5Gi
         imagePullPolicy: IfNotPresent
         securityContext:
           privileged: true
