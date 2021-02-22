@@ -94,7 +94,7 @@ spec:
         - mountPath: /data
           name: aquasec-data
         # - mountPath: /opt/aquasec/ssl
-        #   name: aqua-grpc-gateway
+        #   name: aqua-grpc-enforcer
       dnsPolicy: ClusterFirst
       hostPID: true
       imagePullSecrets:

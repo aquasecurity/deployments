@@ -68,6 +68,8 @@ spec:
               mountPath: "/certs"
             - name: "envoy-shared"
               mountPath: "/etc/aquasec/envoy"
+          # - mountPath: /opt/aquasec/ssl
+          #   name: aqua-grpc-kube-enforcer
         - name: envoy
           image: envoyproxy/envoy-alpine:v1.15.1
           imagePullPolicy: IfNotPresent
@@ -98,6 +100,9 @@ spec:
             name: "ke-envoy-conf"
         - name: "envoy-shared"
           emptyDir: {}
+      # - name: aqua-grpc-enforcer
+      #   secret:
+      #     secretName: aqua-grpc-kube-enforcer
       imagePullSecrets:
         - name: aqua-registry
   selector:
