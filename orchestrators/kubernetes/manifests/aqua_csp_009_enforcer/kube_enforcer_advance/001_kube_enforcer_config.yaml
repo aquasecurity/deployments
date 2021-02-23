@@ -104,6 +104,10 @@ metadata:
   name: ke-envoy-conf
   namespace: aqua
 data:
+  # Enable the below Env for mTLS between kube-enforcer and gateway
+  # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
+  # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
+  # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"
   envoy.yaml: |
     node:
       cluster: k8s
