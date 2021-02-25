@@ -57,12 +57,18 @@ data:
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
               common_tls_context:
+#                validation_context:
+#                   trusted_ca:
+#                      filename: "/etc/ssl/envoy/ca.crt
+# Used with self-signed certs and AQUA_TLS_VERIFY=true on the Enforcer and if the below chain does not include a root cert
                 alpn_protocols: "h2,http/1.1"
                 tls_certificates:
                 - certificate_chain:
                     filename: "/etc/ssl/envoy/tls.crt"
+#cert location for communication to Enforcer
                   private_key:
                     filename: "/etc/ssl/envoy/tls.key"
+#private_key location  for communication to Enforcer
       clusters:
       - name: aqua-gateway
         connect_timeout: 180s
@@ -84,12 +90,14 @@ data:
                 address:
                   socket_address:
                     address: aqua-gateway-headless.aqua.svc.cluster.local
+# This should match format <headlessSVCname.namespace.svc.cluster.local> (Default: aqua-gateway-headless.aqua.svc.cluster.local)                    
                     port_value: 8443
         transport_socket:
             name: envoy.transport_sockets.tls
             typed_config:
                 "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
                 sni: aqua-gateway
+# This should match the deployment name/app name (Default: aqua-gateway)                
     admin:
       access_log_path: "/dev/stdout"
       address:
