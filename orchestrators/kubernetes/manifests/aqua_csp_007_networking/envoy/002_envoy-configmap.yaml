@@ -47,11 +47,17 @@ data:
                 config: {}
           tls_context:
             common_tls_context:
+    # Used with self-signed certs and AQUA_TLS_VERIFY=true on the Enforcer and if the below chain does not include a root cert
+    #         validation_context:
+    #           trusted_ca:
+    #             filename: "/etc/ssl/envoy/ca.crt
               alpn_protocols: "h2,http/1.1"
               tls_certificates:
               - certificate_chain:
+    #cert location for communication to Enforcer
                   filename: "/etc/ssl/envoy/tls.crt"
                 private_key:
+    #private_key location  for communication to Enforcer
                   filename: "/etc/ssl/envoy/tls.key"
       clusters:
       - name: aqua-gateway
@@ -71,12 +77,14 @@ data:
             - endpoint:
                 address:
                   socket_address:
+    # This should match format <headless_SVC_name.namespace.svc.cluster.local> (Default: aqua-gateway-headless.aqua.svc.cluster.local)
                     address: aqua-gateway.aqua.svc.cluster.local
                     port_value: 8443
         transport_socket:
             name: envoy.transport_sockets.tls
             typed_config:
                 "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+    # This should match the deployment name/app name (Default: aqua-gateway)
                 sni: aqua-gateway
 
     admin:
