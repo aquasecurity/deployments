@@ -1,7 +1,7 @@
 # Overview
 
 The directories and files in this branch relate to enterprise-grade and advanced deployments of Aqua Enterprise on these Kubernetes platforms:
-Kubernetes RAW, OpenShift, EKS, GKE, ICP, AKS, TKG, TKGI
+Kubernetes (native), OpenShift, EKS, GKE, ICP, AKS, TKG, TKGI
 
 Refer to the product documentation for deployment instructions: [Deployment on Kubernetes (most platforms)](https://docs.aquasec.com/v5.3/docs/deploy-k8s-most-platforms).
 
