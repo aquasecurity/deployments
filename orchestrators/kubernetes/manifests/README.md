@@ -3,7 +3,7 @@
 The directories and files in this branch relate to enterprise-grade and advanced deployments of Aqua Enterprise on these Kubernetes platforms:
 Kubernetes (native), OpenShift, EKS, GKE, ICP, AKS, TKG, TKGI
 
-Refer to the product documentation for deployment instructions: [Deployment on Kubernetes (most platforms)](https://docs.aquasec.com/v5.3/docs/deploy-k8s-most-platforms).
+Refer to the product documentation for deployment instructions: [Deploy on Kubernetes and OpenShift](https://docs.aquasec.com/v5.3/docs/deploy-on-kubernetes-and-openshift).
 
 Aqua Enterprise deployment in a Kubernetes cluster begins with deployment of the Server components. These include the Server itself, its UI (console), the Aqua Gateway, and database (DB).
 
