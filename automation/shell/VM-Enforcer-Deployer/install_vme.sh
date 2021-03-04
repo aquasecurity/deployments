@@ -15,6 +15,10 @@ error_message(){
   exit 1
 }
 
+warning_message(){
+  echo "Warning: $1"
+}
+
 prerequisites_check(){
 	is_root
 	
@@ -42,17 +46,31 @@ prerequisites_check(){
 	fi
 	RUNC_VERSION=$($RUNC_LOCATION -v | grep runc | awk '{print $3}')
 
-	is_bin_in_path docker && error_message "docker is installed on this host"
-	is_bin_in_path crio && error_message "crio is installed on this host"
-	is_bin_in_path containerd && error_message "containerd is installed on this host"
+	is_bin_in_path docker && warning_message "docker is installed on this host"
+	is_bin_in_path crio && warning_message "crio is installed on this host"
+	is_bin_in_path containerd && warning_message "containerd is installed on this host"
 	
 	
-	is_bin_in_path systemd || error_message "systemd is not installed on this host"
-	SYSTEMD_VERION=$(systemd --version| grep systemd|awk '{print $2}')
+	is_bin_in_path systemd-run || error_message "systemd is not installed on this host"
+	SYSTEMD_VERION=$(systemd-run --version| grep systemd|awk '{print $2}')
 
 	
 	is_bin_in_path awk || error_message "awk is not installed on this host"
 	is_bin_in_path tar || error_message "tar is not installed on this host"
+	is_it_rhel
+}
+
+is_it_rhel(){
+
+	cat /etc/*release | grep PLATFORM_ID | grep "platform:el8" &>/dev/null
+	if [ $? -eq 0 ];then
+		echo "Info: This is RHEL 8 system. Going to apply SELinux policy"
+		if [ ! -f "$ENFORCER_SELINUX_POLICY_FILE_NAME" ]; then
+			error_message "Unable to locate $ENFORCER_SELINUX_POLICY_FILE_NAME on current directory"
+		fi
+		semodule -i aquavme.pp
+	fi
+
 }
 
 is_flag_value_valid(){
@@ -203,7 +221,7 @@ usage(){
 cat << EOF
 
 Usage:
-  sudo ./vm-enforcer-deployer.sh [flags]
+  sudo ./install_vme.sh [flags]
 
 Flags:
   -v, --version string         Aqua Enforcer version
@@ -232,6 +250,7 @@ RUN_SCRIPT_FILE_NAME="run.sh"
 RUN_SCRIPT_TEMPLATE_FILE_NAME="run.template.sh"
 ENFORCER_SERVICE_SYSTEMD_FILE_PATH="${SYSTEMD_FOLDER}/${ENFORCER_SERVICE_FILE_NAME}"
 ENFORCER_RUNC_CONFIG_FILE_NAME="config.json"
+ENFORCER_SELINUX_POLICY_FILE_NAME="aquavme.pp"
 DOWNLOAD_MODE=false
 
 for arg in "$@";do
