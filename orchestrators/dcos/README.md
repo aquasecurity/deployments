@@ -1,4 +1,3 @@
-# Mesosphere DC/OS
+### Use of the Mesosphere DC/OS folder has been deprecated, starting with Aqua Enterprise Version 5.3.
 
-## Catalog
-* [**Aqua Package for DC/OS Universe**](https://github.com/aquasecurity/dcos-universe) - 
+* Please go to [**Manifests**](https://github.com/aquasecurity/deployments/tree/6.0/orchestrators/kubernetes/manifests) for current Aqua Enterprise deployment manifests for all Kubernetes platforms and OpenShift.
