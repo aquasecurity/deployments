@@ -1,9 +1,3 @@
-# Kubernetes
+### Use of the EKS folder has been deprecated, starting with Aqua Enterprise Version 5.3.
 
-## Deployments
-* [**Helm Charts**](https://github.com/aquasecurity/aqua-helm) - Helm charts for installing Aqua server components and Aqua enforcers.
-* [**Kubernetes Templates**](templates/) - Deploy the Aqua Server and Enforcer components on a Kubernetes cluster.
-
-## Open Source Tools
-* [**kube-bench**](https://github.com/aquasecurity/kube-bench) - The Kubernetes Bench for Security is a Go application that checks whether Kubernetes is deployed according to security best practices.
-* [**kube-hunter**](https://github.com/aquasecurity/kube-hunter) - Hunt for security weaknesses in Kubernetes clusters.
+* Please go to [**Manifests**](https://github.com/aquasecurity/deployments/tree/6.0/orchestrators/kubernetes/manifests) for current Aqua Enterprise deployment manifests for all Kubernetes platforms and OpenShift.
