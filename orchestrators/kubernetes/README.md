@@ -1,9 +1,6 @@
 # Kubernetes
 
-## Deployments
-* [**Helm Charts**](https://github.com/aquasecurity/aqua-helm) - Helm charts for installing Aqua server components and Aqua enforcers.
-* [**Kubernetes Templates**](templates/) - Deploy the Aqua Server and Enforcer components on a Kubernetes cluster.
+For deployment of Aqua Enterprise on Kubernetes and OpenShift, please see the following:
 
-## Open Source Tools
-* [**kube-bench**](https://github.com/aquasecurity/kube-bench) - The Kubernetes Bench for Security is a Go application that checks whether Kubernetes is deployed according to security best practices.
-* [**kube-hunter**](https://github.com/aquasecurity/kube-hunter) - Hunt for security weaknesses in Kubernetes clusters.
+* [**Quick-start deployment**](https://github.com/aquasecurity/deployments/tree/6.0/orchestrators/kubernetes/quick_start) for proofs-of-concept (POCs) and environments intended for instruction, development, and test
+* [**Manifests**](https://github.com/aquasecurity/deployments/tree/6.0/orchestrators/kubernetes/manifests) for current Aqua Enterprise deployment manifests for all Kubernetes platforms and OpenShift
