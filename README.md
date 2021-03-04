@@ -9,7 +9,3 @@ This is the repository for Aqua Enterprise product deployments.
 For deployment of Aqua Enterprise, please see these deployment procedures:
 * [**Quick-start deployment**](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/quick_start) for proofs-of-concept (POCs) and environments intended for instruction, development, and test
 * [**Manifests**](https://github.com/aquasecurity/deployments/tree/5.3/orchestrators/kubernetes/manifests) for current Aqua Enterprise deployment manifests for all Kubernetes platforms and OpenShift
-
-## Feedback
-
-For all feedback related to deployments -- problems, suggestions, etc. -- we encourage you to raise issues here on GitHub.
