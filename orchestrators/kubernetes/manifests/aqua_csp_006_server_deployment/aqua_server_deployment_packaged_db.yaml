@@ -196,6 +196,27 @@ spec:
         persistentVolumeClaim:
           claimName: aqua-audit-db-pvc
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-web
+  namespace: aqua
+  labels:
+    app: aqua-web
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 8443
+      name: aqua-web-ssl
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+      name: aqua-web
+  selector:
+    app: aqua-web
+  type: LoadBalancer
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -277,6 +298,27 @@ spec:
       #       path: key.pem
       #     - key: rootCA.crt
       #       path: ca.pem
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-gateway
+  namespace: aqua
+  labels:
+    app: aqua-gateway
+spec:
+  type: NodePort # changed from 'LoadBalancer'
+  ports:
+    - port: 8443
+      protocol: TCP
+      targetPort: 8443
+      name: aqua-gateway-ssl
+    - port: 3622
+      protocol: TCP
+      targetPort: 3622
+      name: aqua-gateway
+  selector:
+    app: aqua-gateway
 ---
 apiVersion: apps/v1
 kind: Deployment
