@@ -29,29 +29,29 @@ Steps 1-3 are required only if you are deploying the Tenant Manager in a cluster
 4. **Create Tenant Manager secrets**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_010_tenant_manager/001-tm-secret.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/tenant_manager/001-tm-secret.yaml
    ```
 
 5. **Deploy the Tenant Manager database config map**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_010_tenant_manager/001-tm-db-config-map.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/tenant_manager/002-tm-db-config-map.yaml
    ```
    
 6. **Deploy the Tenant Manager database PVC**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_010_tenant_manager/001-tm-db-pvc.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/tenant_manager/003-tm-db-pvc.yaml
    ```   
    
 7. **Deploy the Tenant Manager database**
    
       ```shell
-      $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_010_tenant_manager/001-tm-db.yaml
+      $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/tenant_manager/004-tm-db.yaml
       ```
    
 8. **Deploy the Tenant Manager service**
    
       ```shell
-      $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_010_tenant_manager/001-tm-deploy.yaml
+      $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/tenant_manager/005-tm-deploy.yaml
       ```
