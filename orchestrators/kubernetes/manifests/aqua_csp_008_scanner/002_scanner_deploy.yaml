@@ -32,15 +32,15 @@ spec:
           - secretRef:
               name: aqua-scanner
           volumeMounts:
-            - name: "docker-socket-mount"
-              mountPath: "/var/run/docker.sock"
+            #- name: "docker-socket-mount"
+            #  mountPath: "/var/run/docker.sock"
             - name: "ssl-certs"
               mountPath: "/etc/ssl/certs"
               readOnly: true
       volumes:
-        - name: "docker-socket-mount"
-          hostPath:
-            path: "/var/run/docker.sock"
+        #- name: "docker-socket-mount"
+        #  hostPath:
+        #    path: "/var/run/docker.sock"
         - name: "ssl-certs"
           secret:
             secretName: "aqua-scanner"
