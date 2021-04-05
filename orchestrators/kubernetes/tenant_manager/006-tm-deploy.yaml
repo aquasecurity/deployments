@@ -56,34 +56,19 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 30
           env:
-            - name: AQUA_TM_DBNAME
-              value: "tenantmanager"
-            - name: AQUA_TM_DBUSER
-              value: "postgres"
             - name: AQUA_TM_DBPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: aqua-tm-db
                   key: password
-            - name: AQUA_TM_DBHOST
-              value: aqua-tm-db
-            - name: AQUA_TM_DBPORT
-              value: "5432"
-            - name: AQUA_TM_AUDIT_DBNAME
-              value: "tm_audit"
-            - name: AQUA_TM_AUDIT_DBUSER
-              value: "postgres"
             - name: AQUA_TM_AUDIT_DBPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: aqua-tm-db
                   key: password
-            - name: AQUA_TM_AUDIT_DBHOST
-              value: aqua-tm-db
-            - name: AQUA_TM_AUDIT_DBPORT
-              value: "5432"
-            - name: SCALOCK_LOG_LEVEL
-              value: "INFO"
+          envFrom:
+          - configMapRef:
+              name: aqua-tenant-manager-config
           ports:
             - containerPort: 8081
               protocol: TCP
