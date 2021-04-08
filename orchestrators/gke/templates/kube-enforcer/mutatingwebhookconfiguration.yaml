@@ -18,3 +18,4 @@ webhooks:
         apiGroups: ["*"]
         apiVersions: ["v1"]
         resources: ["pods"]
+    timeoutSeconds: 5

@@ -1,0 +1,113 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: aqua-tm-db
+    deployedby: aqua-yaml
+  name: aqua-tm-db
+  namespace: aqua
+spec:
+  ports:
+    - port: 5432
+      targetPort: 0
+  selector:
+    app: aqua-tm-db
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: aqua-tm-db
+    deployedby: aqua-yaml
+  name: aqua-tm-db
+  namespace: aqua
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-tm-db
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: aqua-tm-db
+      name: aqua-tm-db
+      namespace: aqua
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: aqua-tm-db
+          envFrom:
+            - configMapRef:
+                name: aqua-csp-tm-db-config
+          image: registry.aquasec.com/database:5.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 5
+          name: aqua-tm-db
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 5
+          resources: {}
+          securityContext:
+            privileged: false
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-db
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - '[ -f $PGDATA/server.key ] && chmod 600 $PGDATA/server.key || echo ''OK'' '
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: aqua-tm-db
+          envFrom:
+            - configMapRef:
+                name: aqua-csp-tm-db-config
+          image: registry.aquasec.com/database:5.3
+          name: aqua-tm-db-init
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-db
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 11433
+        runAsGroup: 70
+        runAsUser: 70
+      serviceAccount: aqua-sa
+      serviceAccountName: aqua-sa
+      volumes:
+        - name: postgres-db
+          persistentVolumeClaim:
+            claimName: aqua-tm-db-pvc
+status: {}
