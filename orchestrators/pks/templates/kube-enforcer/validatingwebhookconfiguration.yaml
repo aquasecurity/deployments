@@ -17,3 +17,4 @@ webhooks:
       service:
         namespace: aqua
         name: aqua-kube-enforcer
+    timeoutSeconds: 5
