@@ -24,7 +24,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.0
+        image: registry.aquasec.com/console:6.2.preview5
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -106,7 +106,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.0
+        image: registry.aquasec.com/gateway:6.2.preview5
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
