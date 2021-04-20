@@ -1,9 +1,9 @@
 ## Introduction
 
 The quick-start deployment is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test. 
-Refer to the product documentation: [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/v6.0/docs/quick-start-guide-for-kubernetes).
+Refer to the product documentation: [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/v6.2/docs/quick-start-guide-for-kubernetes).
 
-For enterprise-grade deployments, see [Deploy Aqua Enterprise](https://docs.aquasec.com/v6.0/docs/deployment-overview) and select the procedure that is relevant to your orchestration platform.
+For enterprise-grade deployments, see [Deploy Aqua Enterprise](https://docs.aquasec.com/v6.2/docs/deployment-overview) and select the procedure that is relevant to your orchestration platform.
 
 ## Purpose of the files in this directory
 
