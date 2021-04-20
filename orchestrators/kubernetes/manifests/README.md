@@ -31,6 +31,5 @@ You can optionally deploy one or more of each of these components:
 # Other Kubernetes deployments
 
 Refer to the product documentation for deployment of Aqua Enterprise:
-- Using Helm Charts: [Deployment on K8s using Helm Charts](https://docs.aquasec.com/v6.0/docs/kubernetes-with-helm)
-- Other platforms: [Rancher / Kubernetes](https://docs.aquasec.com/v6.0/docs/rancher-kubernetes)
 - Quick-start: To deploy Aqua Enterprise in your Kubernetes cluster quickly and easily, follow the instructions on [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/v6.0/docs/quick-start-guide-for-kubernetes). The quick-start deployment is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test.
+- Using Helm Charts: [Deployment on K8s using Helm Charts](https://docs.aquasec.com/v6.0/docs/kubernetes-with-helm)

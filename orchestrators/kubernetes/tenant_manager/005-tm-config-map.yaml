@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-tenant-manager-config
+  namespace: aqua
+data:
+  # DNS name or IP address of the host of the Postgres database.
+  AQUA_TM_DBHOST: "aqua-tm-db"
+
+  # Name of the Postgres database; all letters must be lower-case
+  AQUA_TM_DBNAME: "tenantmanager"
+
+  # Port of the Postgres database.
+  AQUA_TM_DBPORT: "5432"
+
+  # Username for connection to the Postgres database.
+  AQUA_TM_DBUSER: "postgres"
+
+  # DNS name or IP address of the host of the Postgres Audit database.
+  AQUA_TM_AUDIT_DBHOST: "aqua-tm-db"
+
+  # Name of the Postgres Audit database; all letters must be lower-case
+  AQUA_TM_AUDIT_DBNAME: "tm_audit"
+
+  # Port of the Postgres Audit database.
+  AQUA_TM_AUDIT_DBPORT: "5432"
+
+  # Username for connection to the Postgres Audit database.
+  AQUA_TM_AUDIT_DBUSER: "postgres"
+
+  SCALOCK_LOG_LEVEL: "INFO"
