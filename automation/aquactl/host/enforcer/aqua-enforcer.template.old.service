@@ -4,7 +4,7 @@ Description=Aqua Security Enforcer RunC
 [Service]
 Type=forking
 ExecStart={{ .Values.WorkingDirectory }}/run.sh
-ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
+ExecStopPost={{ .Values.RuncPath }} delete enforcer
 WorkingDirectory={{ .Values.WorkingDirectory }}
 PIDFile=/run/aqua-enforcer.pid
 Restart=always
