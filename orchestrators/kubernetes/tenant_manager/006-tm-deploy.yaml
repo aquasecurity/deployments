@@ -40,37 +40,37 @@ spec:
         runAsGroup: 11433
         fsGroup: 11433
       containers:
-        - name: aqua-tenantmanager
-          image: registry.aquasec.com/tenantmanager:6.0
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8081
-            initialDelaySeconds: 60
-            periodSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8081
-            initialDelaySeconds: 60
-            periodSeconds: 30
-          env:
-            - name: AQUA_TM_DBPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: aqua-tm-db
-                  key: password
-            - name: AQUA_TM_AUDIT_DBPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: aqua-tm-db
-                  key: password
-            envFrom:
-            - configMapRef:
-                name: aqua-tenant-manager-config
-          ports:
-            - containerPort: 8081
-              protocol: TCP
-            - containerPort: 8444
-              protocol: TCP
+      - name: aqua-tenantmanager
+        image: registry.aquasec.com/tenantmanager:6.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8081
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8081
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        env:
+        - name: AQUA_TM_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aqua-tm-db
+              key: password
+        - name: AQUA_TM_AUDIT_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aqua-tm-db
+              key: password
+        envFrom:
+        - configMapRef:
+            name: aqua-tenant-manager-config
+        ports:
+          - containerPort: 8081
+            protocol: TCP
+          - containerPort: 8444
+            protocol: TCP
