@@ -145,7 +145,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: password
-              name: aqua-db
+              name: aqua-audit-db
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
@@ -184,7 +184,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: password
-              name: aqua-db
+              name: aqua-audit-db
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: postgres-db
