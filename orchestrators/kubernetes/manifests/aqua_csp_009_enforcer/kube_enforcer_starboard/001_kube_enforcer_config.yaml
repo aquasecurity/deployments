@@ -254,6 +254,12 @@ rules:
   - apiGroups:
       - ""
     resources:
+      - secrets
+    verbs:
+      - delete
+  - apiGroups:
+      - ""
+    resources:
       - events
     verbs:
       - create
@@ -306,7 +312,6 @@ rules:
       - create
       - get
       - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -345,8 +350,6 @@ spec:
       automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
-        runAsUser: 10000
-        fsGroup: 10000
       containers:
         - name: operator
           image: docker.io/aquasec/starboard-operator:0.10.1

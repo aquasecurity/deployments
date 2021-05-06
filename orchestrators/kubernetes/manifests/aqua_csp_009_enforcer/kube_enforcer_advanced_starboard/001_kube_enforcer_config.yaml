@@ -407,6 +407,12 @@ rules:
   - apiGroups:
       - ""
     resources:
+      - secrets
+    verbs:
+      - delete
+  - apiGroups:
+      - ""
+    resources:
       - events
     verbs:
       - create
@@ -498,8 +504,6 @@ spec:
       automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
-        runAsUser: 10000
-        fsGroup: 10000
       containers:
         - name: operator
           image: docker.io/aquasec/starboard-operator:0.10.1
