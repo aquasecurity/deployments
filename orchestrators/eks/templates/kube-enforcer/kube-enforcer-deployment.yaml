@@ -47,6 +47,8 @@ spec:
             # kube-enforcer will gnerate name for you.  
             - name: CLUSTER_NAME
               value: ""
+            - name: AQUA_LOGICAL_NAME
+              value: ""
           volumeMounts:
             - name: "certs"
               mountPath: "/certs"
