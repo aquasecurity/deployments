@@ -68,6 +68,8 @@ spec:
               value: "true"
             - name: AQUA_WATCH_CONFIG_AUDIT_REPORT
               value: "true"
+            - name: AQUA_LOGICAL_NAME
+              value: ""
           volumeMounts:
             - name: "certs"
               mountPath: "/certs"
