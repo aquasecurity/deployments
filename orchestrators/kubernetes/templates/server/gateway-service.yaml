@@ -12,7 +12,7 @@ spec:
   - port: 8443
     protocol: TCP
     targetPort: 8443
-    name: aqua-gate-ssl
+    name: aqua-gateway-ssl
   - port: 3622
     protocol: TCP
     targetPort: 3622
