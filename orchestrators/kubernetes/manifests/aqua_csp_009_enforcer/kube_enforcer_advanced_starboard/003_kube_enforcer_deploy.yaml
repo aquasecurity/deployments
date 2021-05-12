@@ -63,6 +63,11 @@ spec:
               value: "aqua-secure"   # Cluster display name in aqua enterprise.
             - name: AQUA_ENVOY_MODE
               value: "true"
+            # Enable KA policy scanning via starboard
+            - name: AQUA_KAP_ADD_ALL_CONTROL
+              value: "true"
+            - name: AQUA_WATCH_CONFIG_AUDIT_REPORT
+              value: "true"
             - name: AQUA_LOGICAL_NAME
               value: ""
           volumeMounts:
