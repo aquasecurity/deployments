@@ -24,7 +24,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.2.preview5
+        image: registry.aquasec.com/console:6.2.RC1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -106,7 +106,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.2.preview5
+        image: registry.aquasec.com/gateway:6.2.RC1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -137,7 +137,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: password
-              name: aqua-db
+              name: aqua-audit-db
       #   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
       #     name: aqua-grpc-gateway
