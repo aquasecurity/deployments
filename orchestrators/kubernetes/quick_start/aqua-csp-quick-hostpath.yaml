@@ -253,7 +253,7 @@ metadata:
   labels:
     app: aqua-audit-db
     deployedby: aqua-yaml
-  name: aqua-db
+  name: aqua-audit-db
   namespace: aqua
 spec:
   ports:
