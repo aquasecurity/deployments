@@ -5,6 +5,14 @@
 ##### Prerequisites
 1) NFPM (RPM Package Creator)
 `curl -sfL https://install.goreleaser.com/github.com/goreleaser/nfpm.sh | sh`
+2) Create json config file in the target machine at `/etc/conf/aquasec.json` with the following syntax (Install only)
+```
+{
+  "AQUA_SERVER": "<HOSTENAME>:<PORT>",
+  "AQUA_TOKEN": "<TOKEN VALUE>"
+}
+```
+
 
 
 ##### Build
