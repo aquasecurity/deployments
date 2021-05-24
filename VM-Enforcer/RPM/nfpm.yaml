@@ -1,0 +1,33 @@
+name: aqua-vm-enforcer
+arch: "arm64"
+platform: "linux"
+version: "v1.0.0"
+section: "default"
+priority: "extra"
+depends:
+  - bash
+  - tar
+  - jq
+  - runc
+replaces:
+  - aqua-vm-enforcer
+provides:
+  - aqua-vm-enforcer
+maintainer: "Amir Jerbi <amir@aquasec.com>"
+description: |
+  Aqua Enterprise is a layered, full-lifecycle cloud native security platform that secures containerized, serverless, and VM-based applications, from CI/CD pipelines through production runtime environments.
+vendor: "aqua-enterprise"
+homepage: "https://github.com/aquasecurity/deployments"
+license: "MIT"
+disable_globbing: false
+contents:
+- src: ../templates/*
+  dst: /tmp/aqua/templates/
+- src: ./archives/*
+  dst: /tmp/aqua/
+- src: ./selinux/aquavme/aquavme.pp
+  dst: /usr/share/selinux/targeted/aquavme.pp
+scripts:
+  postinstall: ./scripts/postinstall.sh
+  preremove: ./scripts/preuninstall.sh
+  postremove: ./scripts/postuninstall.sh
