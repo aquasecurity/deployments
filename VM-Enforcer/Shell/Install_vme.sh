@@ -421,6 +421,10 @@ bootstrap_args_rpm(){
     "2" | "upgrade")
         main -u
         ;;
+    ""  | "empty")
+        echo "Error: Invalid Input, Terminating installation."
+        usage
+        ;;
     esac
 }
 
