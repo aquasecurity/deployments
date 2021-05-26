@@ -202,7 +202,7 @@ metadata:
   namespace: aqua
 data:
   configAuditReports.scanner: Conftest
-  conftest.imageRef: registry.aquasec.com/kube-enforcer:6.2.RC1
+  conftest.imageRef: registry.aquasec.com/kube-enforcer:6.2.RC2
 ---
 apiVersion: v1
 kind: Secret
