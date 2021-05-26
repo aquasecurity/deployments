@@ -5,8 +5,8 @@ SELINUX_POLICY_MODULE="aquavme"
 
 
 error_message(){
-  echo "Error: ${1}"
-  exit 1
+    echo "Error: ${1}"
+    exit 1
 }
 
 
@@ -61,10 +61,10 @@ restart_service() {
 action="$1"
 
 case "$action" in
-  "0" | "remove")
+"0" | "remove")
     remove
     ;;
-  "1" | "upgrade")
+"1" | "upgrade")
     restart_service
     ;;
 esac

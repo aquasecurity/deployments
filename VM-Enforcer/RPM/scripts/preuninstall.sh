@@ -20,10 +20,10 @@ stop_service() {
 action="$1"
 
 case "$action" in
-  "0" | "remove")
+"0" | "remove")
     stop_service
     ;;
-  "1" | "upgrade")
+"1" | "upgrade")
     ### pass
     ;;
 esac
