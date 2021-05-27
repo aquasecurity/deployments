@@ -502,8 +502,7 @@ spec:
     spec:
       serviceAccountName: starboard-operator
       automountServiceAccountToken: true
-      securityContext:
-        runAsNonRoot: true
+      securityContext: {}
       containers:
         - name: operator
           image: docker.io/aquasec/starboard-operator:0.10.1
