@@ -1,0 +1,178 @@
+---
+- name: Check if runc is installed
+  block:
+    - name: Check if runc is installed
+      shell: which runc
+      register: runC
+      ignore_errors: yes
+
+    - name: Check if docker-runc is installed
+      shell: which docker-runc
+      register: dockerRunc
+      ignore_errors: yes
+
+    - name: Check if docker-runc-current is installed
+      shell: which docker-runc-current
+      register: dockerRuncCurrent
+      ignore_errors: yes
+
+    - name: Print runc error message
+      debug:
+        msg: "runc is not installed on this host"
+      when: not runC or not dockerRunc or not dockerRuncCurrent
+
+- name: Check if container runtime is installed
+  block:
+    - name: Check if Docker is installed
+      shell: which docker
+      register: docker_bin
+      ignore_errors: yes
+
+    - name: Check if cri-o is installed
+      shell: which crio
+      register: crio_bin
+      ignore_errors: yes
+
+    - name: Check if containerd is installed
+      shell: which containerd
+      register: containerd_bin
+      ignore_errors: yes
+
+    - name: Print container runtime error message
+      debug:
+        mgs: "Non of the supported container runtimes (cri-o, containerd, docker) installed on this host"
+      when: not docker_bin or not crio_bin or not containerd_bin
+
+- name: Check systemd and set enforcer systemd template
+  block:
+    - name: Get systemd version
+      shell: systemctl --version | grep systemd | awk '{print $2}'
+      register: systemd_version
+
+    - name: specify systemd type
+      set_fact:
+        SYSTEMD_TEMPLATE_TO_USE: "{{ 'aqua-enforcer.template.old.service' if (systemd_version.stdout < '236') else 'aqua-enforcer.template.service' }}"
+
+- name: Check runc and set enforcer runc config template
+  block:
+    - name: Check runc version
+      shell: runc -v | grep runc | awk '{print $3}'
+      register: runc_version
+
+    - name: Setting enforcer runc config template
+      set_fact:
+        ENFORCER_RUNC_CONFIG_TEMPLATE: "{{ 'aqua-enforcer-v1.0.0-rc2-runc-config.json' if (runc_version.stdout == '1.0.0-rc1*' or runc_version.stdout == '1.0.0-rc2*' ) else 'aqua-enforcer-runc-config.json' }}"
+
+- name: Check and create required directories
+  block:
+    - name: Create aquasec directories
+      file:
+        path: "{{ INSTALL_PATH }}/aquasec/{{ item }}"
+        state: directory
+        recurse: yes
+        mode: "0755"
+      with_items:
+        - audit
+        - tmp
+        - data
+
+    - name: Create enforcer runc directory
+      file:
+        path: "{{ ENFORCER_RUNC_FS_DIRECTORY }}"
+        state: directory
+        recurse: yes
+        mode: "0755"
+
+    - name: Deleting existing aqua enforcer log file
+      file:
+        path: "/var/log/aquasec.log"
+        state: absent
+
+    - name: Create aqua enforcer log file
+      file:
+        path: "/var/log/aquasec.log"
+        state: touch
+
+- name: Installing tar and jq
+  ansible.builtin.package:
+    name:
+      - tar
+      - jq
+    state: present
+
+- name: Download required artifacts
+  block:
+    - name: Download templates
+      get_url:
+        url: https://raw.githubusercontent.com/aquasecurity/deployments/{{ (ENFORCER_VERSION)[:3] }}/VM-Enforcer/templates/{{ item }}
+        dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
+      with_items:
+        - aqua-enforcer.template.service
+        - aqua-enforcer.template.old.service
+        - run.template.sh
+    - name: Download aquavme.pp binary
+      get_url:
+        url: https://raw.githubusercontent.com/aquasecurity/deployments/{{ (ENFORCER_VERSION)[:3] }}/VM-Enforcer/RPM/selinux/aquavme/aquavme.pp
+        dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
+
+
+    - name: Download App
+      get_url:
+        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_TAR_FILE_NAME }}"
+        dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
+        username: "{{ USERNAME }}"
+        password: "{{ PASSWORD }}"
+
+    - name: Download config templates
+      get_url:
+        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }}"
+        dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
+        username: "{{ USERNAME }}"
+        password: "{{ PASSWORD }}"
+
+- name: Modify templates
+  block:
+    - name: Creating enforcer runc config file
+      shell: |
+        jq ".process.env = [\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"HOSTNAME={{ ansible_hostname }}\",\"TERM=xterm\",\"AQUA_PRODUCT_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_INSTALL_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_MODE=SERVICE\",\"RESTART_CONTAINERS=no\",\"AQUA_LOGICAL_NAME=Default\",\"AQUA_SERVER={{ GATEWAY_ENDPOINT }}\",\"AQUA_TOKEN={{ TOKEN }}\",\"LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"]" {{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }} > {{ ENFORCER_RUNC_DIRECTORY }}/{{ ENFORCER_RUNC_CONFIG_FILE_NAME }}
+    
+    - name: templating runc script and enforcer systemd
+      replace:
+        path: "{{ item.path }}"
+        regexp: "{{ item.regexp }}"
+        replace: "{{ item.replace }}"
+      with_items:
+      - { path: "{{ INSTALL_PATH }}/aquasec/tmp/{{ RUN_SCRIPT_TEMPLATE_FILE_NAME }}", regexp: '^\{\{ \.Values\.RuncPath \}\}' , replace: "{{ runC.stdout }}" }
+      - { path: "{{ INSTALL_PATH }}/aquasec/tmp/{{ SYSTEMD_TEMPLATE_TO_USE }}", regexp: '\{\{ \.Values\.RuncPath \}\}', replace: "{{ runC.stdout }}" }
+      - { path: "{{ INSTALL_PATH }}/aquasec/tmp/{{ SYSTEMD_TEMPLATE_TO_USE }}", regexp: '\{\{ \.Values\.WorkingDirectory \}\}', replace: "{{ ENFORCER_RUNC_DIRECTORY }}" }
+    
+    - name: copying runc template and enforcer systemd
+      copy:
+        src: "{{ item.source }}"
+        dest: "{{ item.dest }}"
+        mode: "{{ item.mode }}"
+        remote_src: yes
+      with_items:
+      - { source: "{{ INSTALL_PATH }}/aquasec/tmp/{{ RUN_SCRIPT_TEMPLATE_FILE_NAME }}", dest: "{{ ENFORCER_RUNC_DIRECTORY }}/{{ RUN_SCRIPT_FILE_NAME }}",  mode: '744' }
+      - { source: "{{ INSTALL_PATH }}/aquasec/tmp/{{ SYSTEMD_TEMPLATE_TO_USE }}", dest: "{{ ENFORCER_SERVICE_SYSTEMD_FILE_PATH }}", mode: '644' }
+
+- name: Extract enforcer archive
+  unarchive:
+    src: "{{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_TAR_FILE_NAME }}"
+    dest: "{{ ENFORCER_RUNC_FS_DIRECTORY }}"
+    remote_src: yes
+
+- name: Installing aquavme.pp policy if selinux is enabled
+  shell: semodule -i {{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_SELINUX_POLICY_FILE_NAME }}.pp
+  when: ansible_selinux.status == "enabled"
+
+- name: Enable enforcer service
+  systemd:
+    name: aqua-enforcer
+    enabled: yes
+    masked: no
+
+- name: Start enforcer service
+  systemd:
+    name: aqua-enforcer
+    state: started

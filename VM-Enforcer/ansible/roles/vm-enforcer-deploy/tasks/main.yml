@@ -1,0 +1,6 @@
+---
+- include_tasks: vme-install.yml
+  when: vme_install is defined | bool
+
+- include_tasks: vme-uninstall.yml
+  when: vme_uninstall is defined | bool
