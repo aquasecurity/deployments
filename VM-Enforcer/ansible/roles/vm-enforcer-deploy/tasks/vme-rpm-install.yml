@@ -10,7 +10,7 @@
 - name: copying config /etc/conf/
   template:
     src: aquasec.j2
-    dest: /etc/conf/aquasec.json
+    dest: /etc/conf/aquavmenforcer.json
 
 - name: Installing dependencies tar and jq
   ansible.builtin.package:
@@ -50,4 +50,3 @@
         name: "{{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_ARM64_RPM_FILE_NAME }}"
         state: latest
       when: ansible_architecture == "aarch64"
-

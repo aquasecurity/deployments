@@ -4,7 +4,7 @@
     path: "{{ item }}"
     state: absent
   with_items:
-    - "/etc/conf/aquasec.json"
+    - "/etc/conf/aquavmenforcer.json"
     - "{{ INSTALL_PATH }}/aquasec/tmp/"
 
 - name: Uninstalling RPM
