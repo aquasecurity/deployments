@@ -1,108 +1,98 @@
 <img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" height="100" width="100" />
 
-# Installing VM-Enforcer using RPM
-
-## Contents
-
-- [Installing VM-Enforcer using RPM](#installing-vm-enforcer-using-rpm)
-  - [Contents](#contents)
-  - [Description](#description)
-  - [Install VM-Enforcer RPM](#install-vm-enforcer-rpm)
-      - [Download VM-Enforcer RPM package](#download-vm-enforcer-rpm-package)
-      - [Configuring Gateway Address and Enforcer group token](#configuring-gateway-address-and-enforcer-group-token)
-      - [Install RPM](#install-rpm)
-  - [Upgrade VM-Enforcer using RPM package](#upgrade-vm-enforcer-using-rpm-package)
-  - [Checking VM-Enforcer application logs](#checking-vm-enforcer-application-logs)
-  - [Troubleshooting VM-Enforcer RPM Installation/Upgrade](#troubleshooting-vm-enforcer-rpm-installationupgrade)
-  - [Building VM Enforcer RPM package](#building-vm-enforcer-rpm-package)
+# Deploying the VM Enforcer using RPM
 
 ## Description
-The RPM Package Manager (RPM) is a powerful package management system used by Red Hat Linux and its derivatives such as CentOS and Fedora. RPM also refers to the rpm command and .rpm file format. 
+The RPM Package Manager (RPM) is a powerful package management system used by Red Hat Linux and its derivatives such as CentOS and Fedora. RPM also refers to the `rpm` command and `.rpm` file format. 
 
-## Install VM-Enforcer RPM
-#### Download VM-Enforcer RPM package
+You can use RPM to deploy a VM Enforcer on one or more VMs (hosts).
 
-Download RPM package from aqua downloads with autorized user and password
-For amd64 systems:
+## Deploy the VM Enforcer
+
+1. Download the RPM package from Aqua Security, using an authorized user and password:
+   1. For x86_64/amd64 systems:
+    ```shell
+    wget -v https://download.aquasec.com/internal/host-enforcer/5.3.0/aqua-vm-enforcer-5.3.0.x86_64.rpm --user=<Username> --ask-password
+    ```
+   2. For arm64 systems:
+    ```shell
+    wget -v https://download.aquasec.com/internal/host-enforcer/5.3.0/aqua-vm-enforcer-5.3.0.aarch64.rpm --user=<Username> --ask-password
+    ```
+
+2. Copy the downloaded RPM package to the VM(s) on which you want to deploy a VM Enforcer.
+
+3. To configure the Gateway address and Enforcer group token, start by creating the `aquasec.json` configuration file: 
+    ```shell
+    sudo mkdir -p /etc/conf/ && sudo touch /etc/conf/aquasec.json
+    ```
+
+4. In the command that follows, change the `<GATEWAY_HOSTENAME>:<PORT>` to the Aqua Gateway host/IP address and port, and change `<TOKEN VALUE>` to the Enforcer group token.
+Then execute the command.
+    ```shell
+        sudo tee >/etc/conf/aquasec.json << END
+        {
+          "AQUA_GATEWAY": "{GATEWAY_HOSTENAME}:{PORT}",
+          "AQUA_TOKEN": "<{OKEN VALUE}"
+        }
+        END
+    ```
+
+5. Deploy the RPM: Once the configuration completes, deploy the RPM package using this command:
+
+    ```shell
+    sudo rpm -ivh /path/to/aqua-vm-enforcer-{version}.{arch}.rpm
+    ```
+
+## Upgrade the VM Enforcer using the RPM package
+
+1. Download the (updated) RPM package from Aqua Security, using an authorized user and password:
+   1. For x86_64/amd64 systems:
+    ```shell
+    wget -v https://download.aquasec.com/internal/host-enforcer/5.3.0/aqua-vm-enforcer-{version}.x86_64.rpm --user=<Username> --ask-password
+    ```
+   2. For arm64 systems:
+    ```shell
+    wget -v https://download.aquasec.com/internal/host-enforcer/5.3.0/aqua-vm-enforcer-{version}.aarch64.rpm --user=<Username> --ask-password
+    ```
+
+    `version : change {version} to latest available vm-enforcer version and download`
+
+2. Once the package has been downloaded, upgrade the VM Enforcer using this command:
+
 ```shell
-$ curl https://download.aquasec.com/internal/host-enforcer/5.3.0/aqua-vm-enforcer-5.3.0.x86_64.rpm -u <Username>
-```
-For arm64 systems:
-```shell
-$ curl https://download.aquasec.com/internal/host-enforcer/5.3.0/aqua-vm-enforcer-5.3.0.aarch64.rpm -u <Username>
-```
-
-Copy the downloaded rpm package to the respective VMs and follow the below instructions for installing and configuring VM-Enforcers
-
-#### Configuring Gateway Address and Enforcer group token
-
-Creating aquasec.json file for configuaration 
-```shell
-$ sudo mkdir -p /etc/conf/ && touch /etc/conf/aquasec.json
-```
-
-Change the `<GATEWAY_HOSTENAME>:<PORT>` to aqua gateway host/IP address, gateway port and Change `<TOKEN VALUE>` to the enforcer group token in the below command execute it 
-```shell
-$ sudo tee >/etc/conf/aquasec.json <<END
-{
-  "AQUA_GATEWAY": "<GATEWAY_HOSTENAME>:<PORT>",
-  "AQUA_TOKEN": "<TOKEN VALUE>"
-}
-END
-```
-
-#### Install RPM
-
-Once the configuaration completes install the rpm package using below command
-
-```shell
-$ sudo rpm -ivh /path/to/aqua-vm-enforcer-{version}.{arch}.rpm
-```
-## Upgrade VM-Enforcer using RPM package
-
-Download updated RPM package from aqua downloads with autorized user and password
-
-For amd64 systems:
-```shell
-$ curl https://download.aquasec.com/internal/host-enforcer/5.3.0/aqua-vm-enforcer-5.3.0.x86_64.rpm -u <Username>
-```
-For arm64 systems:
-```shell
-$ curl https://download.aquasec.com/internal/host-enforcer/5.3.0/aqua-vm-enforcer-5.3.0.aarch64.rpm -u <Username>
-```
-
-Once the package completes download, upgrade VM-Enforcer using below command
-
-```shell
-$ sudo rpm -U /path/to/aqua-vm-enforcer-{version}.{arch}.rpm
-```
-
-## Checking VM-Enforcer application logs
-For checking logs of the VM-Enforcer
-```shell
-$ less /var/log/aquasec.log
-```
-## Troubleshooting VM-Enforcer RPM Installation/Upgrade
-
-After vvm-enforcer rpm installs you can check the service status using below command
-```shell
-$ sudo systemctl status aqua-enforcer
-```
-If Service status is inactive and you can check the journalctl logs for more details
-```shell
-$ sudo journalctl -u aqua-enforcer.service
+    sudo rpm -U /path/to/aqua-vm-enforcer-{version}.{arch}.rpm
 ```
 
-## Building VM Enforcer RPM package 
+## Check the VM Enforcer application logs
 
-1) Update the RPM scripts as required
-2) Update the RPM version in `nfpm.yaml`
-3) Change the architecture in `nfpm.yaml` if required (supported values: `x86_64`, `arm64`)
-4) Download NFPM (RPM Package Creator)
-```shell
-curl -sfL https://install.goreleaser.com/github.com/goreleaser/nfpm.sh | sh
-```
-5) Build the RPM
-```shell
-./bin/nfpm pkg --packager rpm --target ./pkg/
-```
+To check the VM Enforcer logs:
+  ```shell
+  cat /var/log/aquasec.log
+  ```
+
+## Troubleshooting the VM Enforcer RPM deployment or upgrade
+
+1. After the VM Enforcer RPM has been deployed, you can check the service status using this command:
+    ```shell
+        sudo systemctl status aqua-enforcer
+    ```
+
+2. If the service status is inactive, you can check the journalctl logs for more details:
+    ```shell
+        sudo journalctl -u aqua-enforcer.service
+    ```
+
+## Building a VM Enforcer RPM package (Optional: Not required for deploying VM-Enforcer)
+The below instructions helps to build a rpm package for VM-Enforcer
+1. Update the RPM scripts as required.
+2. Update the RPM version in `nfpm.yaml`.
+3. Upload the VM-Enforcer archive to `archives` folder.
+4. Change the architecture in `nfpm.yaml` if required (supported values: `x86_64`, `arm64`).
+5. Download NFPM (RPM Package Creator):
+    ```shell
+    curl -sfL https://install.goreleaser.com/github.com/goreleaser/nfpm.sh | sh
+    ```
+6. Build the RPM:
+    ```shell
+    ./bin/nfpm pkg --packager rpm --target ./pkg/
+    ```

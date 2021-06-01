@@ -1,0 +1,53 @@
+---
+- name: Create config folder
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "/etc/conf"
+    - "{{ INSTALL_PATH }}/aquasec/tmp/"
+
+- name: copying config /etc/conf/
+  template:
+    src: aquasec.j2
+    dest: /etc/conf/aquasec.json
+
+- name: Installing dependencies tar and jq
+  ansible.builtin.package:
+    name:
+      - tar
+      - jq
+    state: present
+
+- name: downloading rpm file
+  block:
+    - name: Download x86_64 App
+      get_url:
+        url: "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_AMD64_RPM_FILE_NAME }}"
+        dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
+        username: "{{ USERNAME }}"
+        password: "{{ PASSWORD }}"
+      when: ansible_architecture == "x86_64"
+
+    - name: Download aarch64 App
+      get_url:
+        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_ARM64_RPM_FILE_NAME }}"
+        dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
+        username: "{{ USERNAME }}"
+        password: "{{ PASSWORD }}"
+      when: ansible_architecture == "aarch64"
+
+- name: installing RPM
+  block:
+    - name: Installing VM-Enforcer rpm x86_64 package
+      yum:
+        name: "{{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_AMD64_RPM_FILE_NAME }}"
+        state: latest
+      when: ansible_architecture == "x86_64"
+
+    - name: Installing VM-Enforcer rpm aarch64 package
+      yum:
+        name: "{{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_ARM64_RPM_FILE_NAME }}"
+        state: latest
+      when: ansible_architecture == "aarch64"
+
