@@ -58,7 +58,7 @@ load_config_from_env() {
 
     elif [ "${ENV}" == "rpm" ]; then
 
-        CONFIG_FILE="/etc/conf/aquasec.json"
+        CONFIG_FILE="/etc/conf/aquavmenforcer.json"
         if [ ! -f ${CONFIG_FILE} ]; then
             echo "Config File not found, Setting Default Configuration!"
             GATEWAY_ENDPOINT=""
