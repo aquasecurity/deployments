@@ -1,0 +1,22 @@
+---
+- name: Deleting config folder
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/etc/conf/aquavmenforcer.json"
+    - "{{ INSTALL_PATH }}/aquasec/tmp/"
+
+- name: Uninstalling RPM
+  block:
+    - name: Uninstalling VM-Enforcer rpm x86_64 package
+      ansible.builtin.package:
+        name: "aqua-vm-enforcer*"
+        state: absent
+      when: ansible_architecture == "x86_64"
+
+    - name: Uninstalling VM-Enforcer rpm aarch64 package
+      ansible.builtin.package:
+        name: "aqua-vm-enforcer*"
+        state: absent
+      when: ansible_architecture == "aarch64"
