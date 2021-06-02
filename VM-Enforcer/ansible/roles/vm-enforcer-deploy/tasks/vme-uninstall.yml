@@ -1,0 +1,29 @@
+---
+- name: Stop enforcer service
+  systemd:
+    name: aqua-enforcer
+    state: stopped
+    daemon_reload: yes
+  ignore_errors: yes
+
+- name: Disable enforcer service
+  systemd:
+    name: aqua-enforcer
+    enabled: no
+  ignore_errors: yes
+
+- name: removing vm-enforcer service and files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ ENFORCER_SERVICE_SYSTEMD_FILE_PATH }}"
+    - "/usr/lib/systemd/system/{{ ENFORCER_SERVICE_FILE_NAME }}"
+    - "/etc/init.d/{{ ENFORCER_SERVICE_FILE_NAME }}"
+    - "{{ INSTALL_PATH }}/aquasec"
+    - "{{ INSTALL_PATH }}/aqua-runc"
+    - "/var/log/aquasec.log"
+
+- name: Diabling aquavme policy from selinux if enabled
+  shell: semodule -X 300 -r {{ ENFORCER_SELINUX_POLICY_FILE_NAME }}
+  when: ansible_selinux.status == "enabled"
