@@ -155,9 +155,9 @@ is_flag_value_valid(){
 
 get_templates_online(){
 
-	curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/5.3/VM-Enforcer/templates/aqua-enforcer.template.service
-	curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/5.3/VM-Enforcer/templates/aqua-enforcer.template.old.service
-	curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/5.3/VM-Enforcer/templates/run.template.sh
+	curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/6.2/VM-Enforcer/templates/aqua-enforcer.template.service
+	curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/6.2/VM-Enforcer/templates/aqua-enforcer.template.old.service
+	curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/6.2/VM-Enforcer/templates/run.template.sh
 
 }
 
@@ -219,7 +219,7 @@ edit_templates_rpm(){
 		s|AQUA_PRODUCT_PATH=.*\"|AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\"|;
 		s|AQUA_INSTALL_PATH=.*\"|AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\"|;
 		s|AQUA_SERVER=.*\"|AQUA_SERVER=${GATEWAY_ENDPOINT}\"|;
-		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${TOKEN}\"|;
+		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${AQUA_TOKEN}\"|;
 		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"|" ${TEMPLATE_DIR}/${ENFORCER_RUNC_CONFIG_TEMPLATE} > ${RUNC_TMP_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
 
 	echo "Info: Creating ${RUN_SCRIPT_FILE_NAME} file."
