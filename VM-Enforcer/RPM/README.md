@@ -6,6 +6,12 @@
 The RPM Package Manager (RPM) is a powerful package management system used by Red Hat Linux and its derivatives such as CentOS and Fedora. RPM also refers to the `rpm` command and `.rpm` file format. 
 
 You can use RPM to deploy a VM Enforcer on one or more VMs (hosts).
+## Prerequisites
+Following packages are required for installing VM Enforcer `.rpm` package
+* wget
+* tar
+* jq
+* runc
 
 ## Deploy the VM Enforcer
 
@@ -32,7 +38,7 @@ Then execute the command.
 sudo tee /etc/conf/aquavmenforcer.json << EOF
 {
     "AQUA_GATEWAY": "{GATEWAY_HOSTENAME}:{PORT}",
-    "AQUA_TOKEN": "<{TOKEN VALUE}"
+    "AQUA_TOKEN": "{TOKEN VALUE}"
 }
 EOF
 ```
@@ -82,17 +88,27 @@ To check the VM Enforcer logs:
     sudo journalctl -u aqua-enforcer.service
     ```
 
+## Uninstalling VM Enforcer
+For uninstall the VM Enforcer `.rpm` package:
+```shell
+    sudo rpm -e aqua-vm-enforcer
+```
 ## Building a VM Enforcer RPM package (optional: not required for deploying the VM Enforcer)
 The below instructions helps to build a rpm package for VM-Enforcer
 1. Update the RPM scripts as required.
 2. Update the RPM version in `nfpm.yaml`.
 3. Upload the VM-Enforcer archive to `archives` folder.
-4. Change the architecture in `nfpm.yaml` if required (supported values: `x86_64`, `arm64`).
+4. create environment variables of `RPM_ARCH` and `RPM_VERSION`
+    ```shell
+    export RPM_ARCH=amd64 #change to arm64 for arm based systems
+    export RPM_VERSION=6.0.0 #mention version for VM Enforcer
+    ```
 5. Download NFPM (RPM Package Creator):
     ```shell
     curl -sfL https://install.goreleaser.com/github.com/goreleaser/nfpm.sh | sh
     ```
 6. Build the RPM:
     ```shell
+    mkdir -p pkg
     ./bin/nfpm pkg --packager rpm --target ./pkg/
     ```
