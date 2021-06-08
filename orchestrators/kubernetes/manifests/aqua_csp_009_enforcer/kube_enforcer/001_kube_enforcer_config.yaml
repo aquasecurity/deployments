@@ -1,4 +1,4 @@
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: kube-enforcer-admission-hook-config
@@ -18,8 +18,10 @@ webhooks:
         namespace: aqua
         name: aqua-kube-enforcer
     timeoutSeconds: 5
+    admissionReviewVersions: ["v1beta1"]	
+    sideEffects: "None"
 ---
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: kube-enforcer-me-injection-hook-config
@@ -39,6 +41,8 @@ webhooks:
         apiVersions: ["v1"]
         resources: ["pods"]
     timeoutSeconds: 5
+    admissionReviewVersions: ["v1beta1"]	
+    sideEffects: "None"
 ---
 apiVersion: v1
 kind: ServiceAccount
