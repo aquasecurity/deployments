@@ -1,6 +1,6 @@
 ## Aqua KubeEnforcer Advance
 
-{ Need to update here about KE advance }
+{ Need to update here about KE advanced }
 
 ## Prerequisites
 
