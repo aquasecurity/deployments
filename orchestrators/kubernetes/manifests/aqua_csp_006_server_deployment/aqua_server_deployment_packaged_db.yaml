@@ -61,14 +61,6 @@ spec:
           privileged: false
         image: registry.aquasec.com/database:6.2.21166
         imagePullPolicy: IfNotPresent
-        readinessProbe:
-          tcpSocket:
-            port: 5432
-          initialDelaySeconds: 10
-          timeoutSeconds: 5
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 3
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
@@ -152,14 +144,6 @@ spec:
           privileged: false
         image: registry.aquasec.com/database:6.2.21166
         imagePullPolicy: IfNotPresent
-        readinessProbe:
-          tcpSocket:
-            port: 5432
-          initialDelaySeconds: 10
-          timeoutSeconds: 5
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 3
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
