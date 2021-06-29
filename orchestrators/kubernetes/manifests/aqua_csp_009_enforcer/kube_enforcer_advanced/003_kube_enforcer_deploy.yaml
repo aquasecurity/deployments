@@ -29,7 +29,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:6.2.21166
+          image: registry.aquasec.com/kube-enforcer:6.2
           imagePullPolicy: Always
           ports:
             - containerPort: 8449
