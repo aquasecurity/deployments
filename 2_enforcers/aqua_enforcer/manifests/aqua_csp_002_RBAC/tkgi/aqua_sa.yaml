@@ -1,0 +1,41 @@
+apiVersion: v1
+imagePullSecrets:
+- name: aqua-registry
+kind: ServiceAccount
+metadata:
+  annotations:
+    description: Service account for pulling Aqua images and for Aqua privileged
+  labels:
+    deployedby: aqua-yaml
+  name: aqua-sa
+  namespace: aqua
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    rbac.example.com/aggregate-to-monitoring: "true"
+    deployedby: aqua-yaml
+  name: aqua-discovery-cr
+  namespace: aqua
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "services", "endpoints", "pods", "deployments", "namespaces","componentstatuses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aqua-discovery-crb
+  namespace: aqua
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: aqua-discovery-cr
+subjects:
+  - kind: ServiceAccount
+    name: aqua-sa
+    namespace: aqua
