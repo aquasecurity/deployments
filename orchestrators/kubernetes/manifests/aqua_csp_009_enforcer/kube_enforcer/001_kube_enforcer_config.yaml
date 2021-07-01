@@ -18,7 +18,7 @@ webhooks:
         namespace: aqua
         name: aqua-kube-enforcer
     timeoutSeconds: 5
-    admissionReviewVersions: ["v1beta1"]	
+    admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
 ---
 apiVersion: admissionregistration.k8s.io/v1
@@ -41,7 +41,7 @@ webhooks:
         apiVersions: ["v1"]
         resources: ["pods"]
     timeoutSeconds: 5
-    admissionReviewVersions: ["v1beta1"]	
+    admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
 ---
 apiVersion: v1
@@ -123,3 +123,7 @@ data:
   AQUA_TLS_PORT: "8443"
   # Cluster display name in aqua csp.
   CLUSTER_NAME: "aqua-secure"
+  # Enable the below Env for mTLS between kube-enforcer and gateway
+  # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
+  # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
+  # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"
