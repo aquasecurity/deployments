@@ -242,6 +242,7 @@ spec:
           volumeMounts:
             - name: postgres-audit-db
               mountPath: /var/lib/postgresql/data
+              subPath: postgres
           envFrom:
             - configMapRef:
                 name: aqua-csp-db-config
@@ -331,6 +332,7 @@ spec:
           volumeMounts:
             - name: postgres-db
               mountPath: /var/lib/postgresql/data
+              subPath: postgres
           envFrom:
             - configMapRef:
                 name: aqua-csp-db-config
