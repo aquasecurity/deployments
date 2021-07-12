@@ -1,0 +1,10 @@
+[Unit]
+Description=Aqua Security Enforcer Loader
+
+[Service]
+Type=exec
+ExecStart={{ .Values.LoaderDirectory }}/aqua-loader.sh
+PIDFile={{ .Values.LoaderDirectory }}/aqua-loader.pid
+
+[Install]
+WantedBy=multi-user.target
