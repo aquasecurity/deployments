@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aqua-scanner
+  namespace: aqua
+  labels:
+    app: aqua-scanner
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: aqua-scanner
+    spec:
+      serviceAccountName: aqua-sa
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
+      containers:
+        - name: kube-scanner
+          image: registry.aquasec.com/scanner:6.2.RC2
+          imagePullPolicy: Always
+          command: ["/bin/sh"]
+          args: ["-c", "/opt/aquasec/scannercli daemon --host https://${AQUA_SERVER} --user ${AQUA_SCANNER_USERNAME} --password ${AQUA_SCANNER_PASSWORD} --no-verify"]
+          env:
+            - name: AQUA_SCANNER_LOGICAL_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          envFrom:
+          - secretRef:
+              name: aqua-scanner
+          volumeMounts:
+            #- name: "docker-socket-mount"
+            #  mountPath: "/var/run/docker.sock"
+            - name: "ssl-certs"
+              mountPath: "/etc/ssl/certs"
+              readOnly: true
+      volumes:
+        #- name: "docker-socket-mount"
+        #  hostPath:
+        #    path: "/var/run/docker.sock"
+        - name: "ssl-certs"
+          secret:
+            secretName: "aqua-scanner"
+            items:
+            - key: aqua-web-root-cert
+              path: aqua-ssl.crt
+      imagePullSecrets:
+        - name: aqua-registry
+  selector:
+    matchLabels:
+      app: aqua-scanner
+      
