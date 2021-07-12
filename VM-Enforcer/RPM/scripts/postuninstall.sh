@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+ENFORCER_LOADER_SERVICE_FILENAME="aqua-loader.service"
 ENFORCER_SERVICE_FILE_NAME="aqua-enforcer.service"
 SELINUX_POLICY_MODULE="aquavme"
 
@@ -11,21 +12,24 @@ error_message(){
 
 
 remove_service() {
+    rm -f /etc/systemd/system/${ENFORCER_LOADER_SERVICE_FILENAME}
+    rm -f /usr/lib/systemd/system/${ENFORCER_LOADER_SERVICE_FILENAME}
+    rm -f /etc/init.d/${ENFORCER_LOADER_SERVICE_FILENAME}
     rm -f /etc/systemd/system/${ENFORCER_SERVICE_FILE_NAME}
     rm -f /usr/lib/systemd/system/${ENFORCER_SERVICE_FILE_NAME}
     rm -f /etc/init.d/${ENFORCER_SERVICE_FILE_NAME}
     systemctl daemon-reload
     systemctl reset-failed
     if [ $? -eq 0 ]; then
-        echo "Info: VM Enforcer service was successfully removed."
+        echo "Info: VM Enforcer services are successfully removed."
     else
-        error_message "Unable to remove the service. please check the logs."
+        error_message "Unable to remove the services. please check the logs."
     fi
 }
 
 remove_policy_module() {
     rm -rf /usr/share/selinux/targeted/${SELINUX_POLICY_MODULE}.pp
-    /usr/sbin/semodule -s targeted -X 300 -r ${SELINUX_POLICY_MODULE} &> /dev/null || :
+    /usr/sbin/semodule -s targeted -X 500 -r ${SELINUX_POLICY_MODULE} &> /dev/null || :
     echo "Info: Removed Selinux Policy module ${SELINUX_POLICY_MODULE}"
 
 }
@@ -38,22 +42,28 @@ remove_dirs() {
 
 remove_logs() {
     rm -f /var/log/aquasec.log
+    rm -f /var/log/aqua-loader.log
+}
+
+remove_env_file() {
+    rm -f /tmp/aqua/aqua-loader.env
 }
 
 remove() {
     remove_service
     remove_policy_module
     remove_dirs
+    remove_env_file
     remove_logs
 }
 
 restart_service() {
     systemctl daemon-reload
-    systemctl try-restart ${ENFORCER_SERVICE_FILE_NAME}
+    systemctl try-restart ${ENFORCER_LOADER_SERVICE_FILENAME}
     if [ $? -eq 0 ]; then
-        echo "Info: VM Enforcer was successfully re-deployed and started."
+        echo "Info: VM Enforcer Loader is successfully re-deployed and started."
     else
-        error_message "Unable to re-start service. please check the logs."
+        error_message "Unable to re-start loader service. please check the logs."
     fi
 }
 

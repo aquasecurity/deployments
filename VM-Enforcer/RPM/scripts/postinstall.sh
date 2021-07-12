@@ -55,23 +55,6 @@ load_config_from_env() {
                 fi
             is_bin_in_path curl || error_message "curl is not installed on this host"
         fi
-
-    elif [ "${ENV}" == "rpm" ]; then
-
-        CONFIG_FILE="/etc/conf/aquavmenforcer.json"
-        if [ ! -f ${CONFIG_FILE} ]; then
-            echo "Config File not found, Setting Default Configuration!"
-            GATEWAY_ENDPOINT=""
-            AQUA_TOKEN=""
-        else
-            AQUA_CONFIG=$(cat ${CONFIG_FILE})
-            GATEWAY_ENDPOINT=$(echo ${AQUA_CONFIG} | jq .AQUA_GATEWAY | sed -e 's/^"//' -e 's/"$//')
-            AQUA_TOKEN=$(echo ${AQUA_CONFIG}| jq .AQUA_TOKEN | sed -e 's/^"//' -e 's/"$//')
-            if [ -z "${GATEWAY_ENDPOINT}" ] || [ -z "${AQUA_TOKEN}" ]; then
-                echo "Requires \$GATEWAY_ENDPOINT && \$AQUA_TOKEN to be exposed an ENV variables."
-                exit 1
-            fi
-        fi
     fi
 }
 
@@ -88,7 +71,7 @@ is_it_rhel(){
             ## Install
             if [[ ${1} == "1" ]]; then
                 SELINUX_POLICY_MODULE_PATH="/usr/share/selinux/targeted/${SELINUX_POLICY_MODULE_FILE}"
-                /usr/sbin/semodule -s targeted -X 300 -i ${SELINUX_POLICY_MODULE_PATH} &> /dev/null || :
+                /usr/sbin/semodule -s targeted -X 500 -i ${SELINUX_POLICY_MODULE_PATH} &> /dev/null || :
                 echo "Installed policy module ${SELINUX_POLICY_MODULE}"
 
             ## Upgrade
@@ -159,6 +142,10 @@ get_templates_online(){
 	curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/6.0/VM-Enforcer/templates/aqua-enforcer.template.old.service
 	curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/6.0/VM-Enforcer/templates/run.template.sh
 
+    ### Download aqua loader service file template
+    curl -s -o ${ENFORCER_LOADER_SERVICE_TEMPLATE} https://raw.githubusercontent.com/aquasecurity/deployments/6.0/VM-Enforcer/templates/aqua-loader.template.service
+    ### Download aqua loader script file template
+    curl -s -o ${LOADER_SCRIPT_TEMPLATE} https://raw.githubusercontent.com/aquasecurity/deployments/6.0/VM-Enforcer/templates/aqua-loader.sh
 }
 
 get_templates_local(){
@@ -170,6 +157,14 @@ get_templates_local(){
 	fi
 	if [ ! -f "${RUN_SCRIPT_TEMPLATE_FILE_NAME}" ]; then
 		error_message "Unable to locate ${RUN_SCRIPT_TEMPLATE_FILE_NAME} on current directory"
+	fi
+    ### Check aqua loader service template existence locally
+    if [ ! -f "${ENFORCER_LOADER_SERVICE_TEMPLATE}" ]; then
+		error_message "Unable to locate ${ENFORCER_LOADER_SERVICE_TEMPLATE} on current directory"
+	fi
+    ### Check aqua loader script template existence locally
+    if [ ! -f "${LOADER_SCRIPT_TEMPLATE}" ]; then
+		error_message "Unable to locate ${LOADER_SCRIPT_TEMPLATE} on current directory"
 	fi
 }
 
@@ -213,47 +208,59 @@ get_app_local(){
 	fi
 }
 
-edit_templates_rpm(){
-	echo "Info: Creating ${ENFORCER_RUNC_CONFIG_FILE_NAME} file."
-	sed "s|HOSTNAME=.*\"|HOSTNAME=$(hostname)\"|;
-		s|AQUA_PRODUCT_PATH=.*\"|AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\"|;
-		s|AQUA_INSTALL_PATH=.*\"|AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\"|;
-		s|AQUA_SERVER=.*\"|AQUA_SERVER=${GATEWAY_ENDPOINT}\"|;
-		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${AQUA_TOKEN}\"|;
-		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"|" ${TEMPLATE_DIR}/${ENFORCER_RUNC_CONFIG_TEMPLATE} > ${RUNC_TMP_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
+persist_env() {
+    rm -f ${LOADER_ENV_FILE}
 
-	echo "Info: Creating ${RUN_SCRIPT_FILE_NAME} file."
-	sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${TEMPLATE_DIR}/${RUN_SCRIPT_TEMPLATE_FILE_NAME} > ${RUNC_TMP_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} && chmod +x ${RUNC_TMP_DIRECTORY}/${RUN_SCRIPT_FILE_NAME}
+    AQUA_TOKEN=${TOKEN}
 
-	echo "Info: Creating ${ENFORCER_SERVICE_FILE_NAME} file."
-	sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_;s_{{ .Values.WorkingDirectory }}_${ENFORCER_RUNC_DIRECTORY}_" ${TEMPLATE_DIR}/${SYSTEMD_TEMPLATE_TO_USE} > ${SYSTEMD_TMP_DIR}/${ENFORCER_SERVICE_FILE_NAME}
+    echo "ENV=${ENV}" >> ${LOADER_ENV_FILE}
+    echo "WORKING_DIR=${PWD}" >> ${LOADER_ENV_FILE}
+    echo "GATEWAY_ENDPOINT=${GATEWAY_ENDPOINT}" >> ${LOADER_ENV_FILE}
+    echo "INSTALL_PATH=${INSTALL_PATH}" >> ${LOADER_ENV_FILE}
+    echo "RUNC_LOCATION=${RUNC_LOCATION}" >> ${LOADER_ENV_FILE}
+    echo "RUN_SCRIPT_TEMPLATE_FILE_NAME=${RUN_SCRIPT_TEMPLATE_FILE_NAME}" >> ${LOADER_ENV_FILE}
+    echo "RUN_SCRIPT_FILE_NAME=${RUN_SCRIPT_FILE_NAME}" >> ${LOADER_ENV_FILE}
+    echo "ENFORCER_SERVICE_FILE_NAME=${ENFORCER_SERVICE_FILE_NAME}" >> ${LOADER_ENV_FILE}
+    echo "ENFORCER_RUNC_DIRECTORY=${ENFORCER_RUNC_DIRECTORY}" >> ${LOADER_ENV_FILE}
+    echo "ENFORCER_RUNC_FS_DIRECTORY=${ENFORCER_RUNC_FS_DIRECTORY}" >> ${LOADER_ENV_FILE}
+    echo "SYSTEMD_TEMPLATE_TO_USE=${SYSTEMD_TEMPLATE_TO_USE}" >> ${LOADER_ENV_FILE}
+    echo "ENFORCER_SERVICE_FILE_NAME_PATH=${ENFORCER_SERVICE_FILE_NAME_PATH}" >> ${LOADER_ENV_FILE}
+    echo "ENFORCER_RUNC_CONFIG_TEMPLATE=${ENFORCER_RUNC_CONFIG_TEMPLATE}" >> ${LOADER_ENV_FILE}
+    echo "ENFORCER_RUNC_CONFIG_FILE_NAME=${ENFORCER_RUNC_CONFIG_FILE_NAME}" >> ${LOADER_ENV_FILE}
 
-}
-
-edit_templates_sh(){
-	echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME} file."
-
-	sed "s|HOSTNAME=.*\"|HOSTNAME=$(hostname)\"|;
-		s|AQUA_PRODUCT_PATH=.*\"|AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\"|;
-		s|AQUA_INSTALL_PATH=.*\"|AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\"|;
-		s|AQUA_SERVER=.*\"|AQUA_SERVER=${GATEWAY_ENDPOINT}\"|;
-		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${TOKEN}\"|;
-		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"|" ${ENFORCER_RUNC_CONFIG_TEMPLATE} > ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
-
-
-	echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} file."
-	sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${RUN_SCRIPT_TEMPLATE_FILE_NAME} > ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} && chmod +x ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME}
-
-	echo "Info: Creating ${ENFORCER_SERVICE_FILE_NAME_PATH} file."
-	sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_;s_{{ .Values.WorkingDirectory }}_${ENFORCER_RUNC_DIRECTORY}_" ${SYSTEMD_TEMPLATE_TO_USE} > ${ENFORCER_SERVICE_FILE_NAME_PATH}
-
-}
-
-edit_templates() {
     if [ "${ENV}" == "rpm" ]; then
-        edit_templates_rpm
+        AQUA_TOKEN=${AQUA_TOKEN}
+        echo "TEMPLATE_DIR=${TEMPLATE_DIR}" >> ${LOADER_ENV_FILE}
+        echo "RUNC_TMP_DIRECTORY=${RUNC_TMP_DIRECTORY}" >> ${LOADER_ENV_FILE}
+        echo "SYSTEMD_TMP_DIR=${SYSTEMD_TMP_DIR}" >> ${LOADER_ENV_FILE}
+        echo "RUNC_TMP_DIRECTORY=${RUNC_TMP_DIRECTORY}" >> ${LOADER_ENV_FILE}
+        echo "RUNC_FS_TMP_DIRECTORY=${RUNC_FS_TMP_DIRECTORY}" >> ${LOADER_ENV_FILE}
+    fi
+
+    echo "AQUA_TOKEN=${AQUA_TOKEN}" >> ${LOADER_ENV_FILE}
+}
+
+edit_loader_service_template_rpm() {
+    echo "Info: Creating ${ENFORCER_LOADER_SERVICE_FILE_NAME} file."
+	sed "s_{{ .Values.LoaderDirectory }}_${ENFORCER_RUNC_FS_DIRECTORY}_" ${TEMPLATE_DIR}/${ENFORCER_LOADER_SERVICE_TEMPLATE} > ${SYSTEMD_TMP_DIR}/${ENFORCER_LOADER_SERVICE_FILE_NAME}
+
+    echo "Info: Creating ${LOADER_SCRIPT_FILE_NAME} file."
+	sed "s_{{ .Values.LoaderEnvPath }}_${LOADER_ENV_FILE}_" ${TEMPLATE_DIR}/${LOADER_SCRIPT_TEMPLATE} > ${TEMPLATE_DIR}/${LOADER_SCRIPT_FILE_NAME}
+}
+
+edit_loader_service_template_sh(){
+    echo "Info: Creating ${ENFORCER_LOADER_SERVICE_FILE_NAME} file."
+	sed "s_{{ .Values.LoaderDirectory }}_${ENFORCER_RUNC_DIRECTORY}_" ${ENFORCER_LOADER_SERVICE_TEMPLATE} > ${ENFORCER_LOADER_SERVICE_FILE_NAME_PATH}
+
+    echo "Info: Creating ${LOADER_SCRIPT_FILE_NAME} file."
+	sed "s_{{ .Values.LoaderEnvPath }}_${LOADER_ENV_FILE}_" ${LOADER_SCRIPT_TEMPLATE} > ${ENFORCER_RUNC_DIRECTORY}/${LOADER_SCRIPT_FILE_NAME} && chmod +x ${ENFORCER_RUNC_DIRECTORY}/${LOADER_SCRIPT_FILE_NAME}
+}
+
+edit_loader_service_template() {
+    if [ "${ENV}" == "rpm" ]; then
+        edit_loader_service_template_rpm
     else
-        edit_templates_sh
+        edit_loader_service_template_sh
     fi
 }
 
@@ -271,9 +278,11 @@ systemd_type(){
 untar(){
     if [ "${ENV}" == "rpm" ]; then
         ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.tar"
+        rm -rf ${RUNC_FS_TMP_DIRECTORY}/*
         echo "Info: Unpacking enforcer filesystem to ${RUNC_FS_TMP_DIRECTORY}."
         tar -xf ${TMP_DIR}/${ENFORCER_RUNC_TAR_FILE_NAME} -C ${RUNC_FS_TMP_DIRECTORY}
     else
+        rm -rf ${ENFORCER_RUNC_FS_DIRECTORY}/*
         echo "Info: Unpacking enforcer filesystem to ${ENFORCER_RUNC_FS_DIRECTORY}."
         tar -xf ${ENFORCER_RUNC_TAR_FILE_NAME} -C ${ENFORCER_RUNC_FS_DIRECTORY}
     fi
@@ -298,6 +307,7 @@ runc_type(){
 setup_rpm_env() {
     TMP_DIR="/tmp/aqua"
     TEMPLATE_DIR="${TMP_DIR}/templates"
+    LOADER_ENV_FILE="${TMP_DIR}/aqua-loader.env"
     SYSTEMD_TMP_DIR="${TMP_DIR}/systemd"
     RUNC_TMP_DIRECTORY="${TMP_DIR}/runc"
     RUNC_FS_TMP_DIRECTORY="${TMP_DIR}/fs"
@@ -322,6 +332,13 @@ setup_sh_env(){
     ENFORCER_SERVICE_FILE_NAME_PATH="${SYSTEMD_FOLDER}/${ENFORCER_SERVICE_FILE_NAME}"
     ENFORCER_RUNC_CONFIG_FILE_NAME="config.json"
     ENFORCER_SELINUX_POLICY_FILE_NAME="aquavme.pp"
+
+    LOADER_ENV_FILE="/tmp/aqua-loader.env"
+    LOADER_SCRIPT_TEMPLATE="aqua-loader.template.sh"
+    LOADER_SCRIPT_FILE_NAME="aqua-loader.sh"
+    ENFORCER_LOADER_SERVICE_TEMPLATE="aqua-loader.template.service"
+    ENFORCER_LOADER_SERVICE_FILE_NAME="aqua-loader.service"
+    ENFORCER_LOADER_SERVICE_FILE_NAME_PATH="${SYSTEMD_FOLDER}/${ENFORCER_LOADER_SERVICE_FILE_NAME}"
 }
 
 setup_env() {
@@ -332,10 +349,14 @@ setup_env() {
 }
 
 cp_files_rpm() {
-    cp --remove-destination -r ${RUNC_TMP_DIRECTORY}/. ${ENFORCER_RUNC_DIRECTORY}/
-    cp --remove-destination ${SYSTEMD_TMP_DIR}/${ENFORCER_SERVICE_FILE_NAME} ${ENFORCER_SERVICE_FILE_NAME_PATH}
-    cp --remove-destination -r ${RUNC_FS_TMP_DIRECTORY}/. ${ENFORCER_RUNC_FS_DIRECTORY}/
+    ### cp aqua loader service to systemd folder
+    cp --remove-destination ${SYSTEMD_TMP_DIR}/${ENFORCER_LOADER_SERVICE_FILE_NAME} ${ENFORCER_LOADER_SERVICE_FILE_NAME_PATH}
+    ### cp aqua loader script to /opt/aqua-enforcer folder
+    cp --remove-destination ${TEMPLATE_DIR}/${LOADER_SCRIPT_FILE_NAME} ${ENFORCER_RUNC_FS_DIRECTORY}/
+    chmod +x ${ENFORCER_RUNC_FS_DIRECTORY}/${LOADER_SCRIPT_FILE_NAME}
 }
+
+
 
 create_folder_sh(){
 	mkdir ${INSTALL_PATH}/aquasec 2>/dev/null
@@ -360,14 +381,14 @@ create_folders() {
     fi
 }
 
-
+### start aqua-loader service
 start_service(){
-    echo "Info: Enabling the ${ENFORCER_SERVICE_FILE_NAME} service."
-	systemctl enable ${ENFORCER_SERVICE_FILE_NAME}
-    echo "Info: Starting the ${ENFORCER_SERVICE_FILE_NAME} service."
-	systemctl start ${ENFORCER_SERVICE_FILE_NAME}
+    echo "Info: Enabling the ${ENFORCER_LOADER_SERVICE_FILE_NAME} service."
+	systemctl enable ${ENFORCER_LOADER_SERVICE_FILE_NAME}
+    echo "Info: Starting the ${ENFORCER_LOADER_SERVICE_FILE_NAME} service."
+	systemctl start ${ENFORCER_LOADER_SERVICE_FILE_NAME}
     if [ $? -eq 0 ]; then
-        echo "Info: VM Enforcer was successfully deployed and started."
+        echo "Info: VM Enforcer Loader service is successfully deployed and started."
     else
         error_message "Unable to start service. please check the logs."
     fi
@@ -384,9 +405,9 @@ init_common() {
 init_rpm() {
     # is_upgrade
     if [ "${1}" == "-u" ]; then
-        systemctl stop ${ENFORCER_SERVICE_FILE_NAME} >/dev/null 2>&1
+        systemctl stop ${ENFORCER_LOADER_SERVICE_FILE_NAME} >/dev/null 2>&1
         cp_files_rpm
-        systemctl start ${ENFORCER_SERVICE_FILE_NAME} >/dev/null 2>&1
+        systemctl start ${ENFORCER_LOADER_SERVICE_FILE_NAME} >/dev/null 2>&1
         return
     fi
 
@@ -401,13 +422,17 @@ main() {
         get_app
     fi
 
-    edit_templates
+    ### call function to create loader service unit files
+    edit_loader_service_template
+    ### call function to persist env variables for loader script
+    persist_env
+
     untar
 
     if [ "${ENV}" == "rpm" ]; then
         init_rpm "$@"
     else
-        start_service
+        start_service ### starting the loader service
     fi
 }
 

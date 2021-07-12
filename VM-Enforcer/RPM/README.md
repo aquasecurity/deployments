@@ -68,7 +68,13 @@ EOF
 ```shell
     sudo rpm -U /path/to/aqua-vm-enforcer-{version}.{arch}.rpm
 ```
+## Updating VM Enforcer configuration 
 
+1. Change configuration in `aquavmenforcer.json` as required
+2. Restart the VM Enforcer loader service:  
+```
+sudo systemctl restart aqua-loader.service
+```
 ## Check the VM Enforcer application logs
 
 To check the VM Enforcer logs:
@@ -78,12 +84,20 @@ To check the VM Enforcer logs:
 
 ## Troubleshooting the VM Enforcer RPM deployment or upgrade
 
-1. After the VM Enforcer RPM has been deployed, you can check the service status using this command:
+1. After the VM Enforcer RPM installation, you can check the VM Enforcer loader service status (should be completed/success for successful installation):
+    ```
+    sudo systemctl status aqua-loader
+    ```
+2. If the service status is failed, you can check journalctl logs for more details:
+    ```
+    sudo journalctl -u aqua-loader.service
+    ```
+2. After the VM Enforcer loader service has been completed, you can check the VM Enforcer service status using this command:
     ```shell
     sudo systemctl status aqua-enforcer
     ```
 
-2. If the service status is inactive, you can check the journalctl logs for more details:
+3. If the service status is inactive, you can check the journalctl logs for more details:
     ```shell
     sudo journalctl -u aqua-enforcer.service
     ```
