@@ -6,7 +6,7 @@ This is the repository for Aqua product deployments.
 
 [Aqua Security](https://www.aquasec.com/products/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native security platform that secures containerized, serverless, and VM-based applications, from application build, infrastructure through production runtime environments. Aqua runs either in SaaS or Self-Hosted Enterprise edition, at any scale.
 
-You should deploy Aqua product using different Aqua components, through the required platforms such as Kuberneters, AWS Cloud Formation, Openshift, etc. 
+You should deploy Aqua product using different Aqua components, on the required platforms such as Kuberneters, AWS Cloud Formation, Openshift, etc. 
 
 Following are the different Aqua components that you should deploy as required, to start using Aqua SaaS edition:
 * [Enforcers](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers): VM Enforcer, Kube Enforcer, Aqua Enforcer
