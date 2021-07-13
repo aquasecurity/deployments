@@ -9,8 +9,8 @@ This is the repository for Aqua Enterprise product deployments.
 You should deploy Aqua product using different Aqua components, through the required platforms such as Kuberneters, AWS Cloud Formation, Openshift, etc. 
 
 Following are the different Aqua components that you should deploy as required, to start using Aqua SaaS edition:
-* Enforcers: VM Enforcer, Kube Enforcer, Aqua Enforcer
-* Scanner
+* [Enforcers](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers): VM Enforcer, Kube Enforcer, Aqua Enforcer
+* [Scanner](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/3_scanner)
 
 Following are the different Aqua components that you should deploy as required in the order mentioned, to start using Aqua Self-Hosted Enterprise edition:
 * [Server](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server)
