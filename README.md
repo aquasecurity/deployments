@@ -2,7 +2,7 @@
 
 # Aqua Product Deployment
 
-This is the repository for Aqua Enterprise product deployments.
+This is the repository for Aqua product deployments.
 
 [Aqua Security](https://www.aquasec.com/products/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native security platform that secures containerized, serverless, and VM-based applications, from application build, infrastructure through production runtime environments. Aqua runs either in SaaS or Self-Hosted Enterprise edition, at any scale.
 
