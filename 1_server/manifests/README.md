@@ -1,35 +1,26 @@
 # Overview
+This repository shows all the directories and manifest yaml files required to deploy the Aqua server component on the following Kubernetes platforms:
+* Kubernetes (native) 
+* OpenShift 
+* Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-The directories and files in this branch relate to enterprise-grade and advanced deployments of Aqua Enterprise on these Kubernetes platforms:
-Kubernetes (native), OpenShift, EKS, GKE, ICP, AKS, TKG, TKGI
+Aqua product deployment in a Kubernetes cluster begins with deployment of the server, by using multiple manifest yaml files. This component includes the server itself, its UI (console), the Aqua Gateway, and database (DB). You can optionally deploy one or multiple other Aqua components later, as required.
 
-Refer to the product documentation for deployment instructions: [Deploy on Kubernetes and OpenShift](https://docs.aquasec.com/v6.2/docs/deploy-on-kubernetes-and-openshift).
+For detailed step-by-step instructions to deploy Aqua server component by using these yaml files, refer to the product documentation, [Deploy Server Components](https://docs.aquasec.com/docs/deploy-k8s-server-components).
 
-Aqua Enterprise deployment in a Kubernetes cluster begins with deployment of the Server components. These include the Server itself, its UI (console), the Aqua Gateway, and database (DB).
-
-You can optionally deploy one or more of each of these components:
-
-- Aqua Enforcers: one deployed per Kubernetes cluster as a DaemonSet
-- Aqua KubeEnforcers: one deployed per Kubernetes cluster as an Admission Controller
-- Aqua Scanners: can be deployed at multiple locations in your environment to optimize registry scanning performance and network utilization
-
-
-# Contents
+# Deploy Aqua server using Manifests
+Multiple manifest yaml files are required to deploy Aqua server component, manually. These manifest files are stored in the following directories.
 
 | Directory                                                    | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [aqua_csp_001_namespace](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_001_namespace) | Create the aqua namespace 
-| [aqua_csp_002_RBAC](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC) | Create platform-specific RBAC |
-| [aqua_csp_003_secrets](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_003_secrets) | Create secrets for the deployment |
-| [aqua_csp_004_configMaps](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_004_configMaps) | Define the desired configurations for the deployment |
-| [aqua_csp_005_storage](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_005_storage) | Configure the packaged database (optional) |
-| [aqua_csp_006_server_deployment](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_006_server_deployment) | Deploy the Aqua Server components |
-| [aqua_csp_007_networking](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_007_networking) | Advanced networking options for the Aqua Server components |
-| [aqua_csp_008_scanner](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_008_scanner) | Deploy Aqua Scanners (optional) |
-| [aqua_csp_009_enforcer](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer) | Deploy Aqua Enforcers and/or KubeEnforcers (optional) |
+| [aqua_self-hosted_001_namespace](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_001_namespace) | Create the aqua namespace 
+| [aqua_self-hosted_002_RBAC](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_002_RBAC) | Create platform-specific RBAC |
+| [aqua_self-hosted_003_secrets](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_003_secrets) | Create secrets for the deployment |
+| [aqua_self-hosted_004_configMaps](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_004_configMaps) | Define the desired configurations for the deployment |
+| [aqua_self-hosted_005_storage](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_005_storage) | Configure the packaged database (optional) |
+| [aqua_self-hosted_006_server_deployment](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_006_server_deployment) | Deploy the Aqua Server components |
+| [aqua_self-hosted_007_networking](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_007_networking) | Advanced networking options for the Aqua Server components |
 
-# Other Kubernetes deployments
-
-Refer to the product documentation for deployment of Aqua Enterprise:
-- Quick-start: To deploy Aqua Enterprise in your Kubernetes cluster quickly and easily, follow the instructions on [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/v6.2/docs/quick-start-guide-for-kubernetes). The quick-start deployment is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test.
-- Using Helm Charts: [Deployment on K8s using Helm Charts](https://docs.aquasec.com/v6.2/docs/kubernetes-with-helm)
+For detailed step-by-step instructions to deploy Aqua server component by using these yaml files, refer to the product documentation, [Deploy Server Components](https://docs.aquasec.com/docs/deploy-k8s-server-components).
+# Deploy Aqua server using Aquactl
+Aquactl is the command-line utility to automate the deployment steps mentioned in the previous section, Manifests. This utility creates (downloads) manifests that are customized to your specifications. For more information on the usage of Aquactl to deploy Aqua server, refer to the product documentation, [Aquactl: Download Server Component Manifests](https://docs.aquasec.com/docs/aquactl-download-manifests-server-components).
