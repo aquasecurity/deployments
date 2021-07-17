@@ -1,6 +1,22 @@
-## Aqua KubeEnforcer Advance
+## Aqua KubeEnforcer Advanced Deployment
 
-{ Need to update here about KE advanced }
+Use the YAML files in this directory to deploy KubeEnforcers in the Advanced configuration with Starboard. These features are explained immediately below; refer also to the product documentation: [Deploy Aqua KubeEnforcer(s)](https://docs.aquasec.com/v6.2/docs/deploy-k8s-aqua-kubeenforcers).
+
+### Advanced Deployment (for Pod Enforcer injection)
+
+When using KubeEnforcers for Pod Enforcer injection, it is recommended that you deploy the KubeEnforcers in a special Advanced configuration. This will cause Pod Enforcer traffic to be routed to the KubeEnforcers via a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways.
+
+### Starboard (co-requisite)
+
+Starboard is an Aqua Security open-source tool that increases the effectiveness of Kubernetes security. For this reason, Starboard is deployed by default when you deploy KubeEnforcers.
+
+An important part of Kubernetes security is the evaluation of workload compliance results with respect to Kubernetes Assurance Policies, and preventing the deployment of non-compliant workloads; see Admission control for Kubernetes containers.
+
+When Starboard **is** deployed, it assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
+* Re-evaluate workload compliance during workload runtime, taking any workload and policy changes into account
+* Reflect the results of compliance evaluation in the Aqua UI at all times, not only when workloads are created
+
+When Starboard is **not** deployed, the KubeEnforcer will check workloads for compliance only when the workloads are started.
 
 ## Prerequisites
 
