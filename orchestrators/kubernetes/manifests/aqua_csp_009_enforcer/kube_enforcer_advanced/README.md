@@ -1,6 +1,10 @@
-## Aqua KubeEnforcer Advance
+## Aqua KubeEnforcer Advanced Deployment
 
-{ Need to update here about KE advanced }
+Use the YAML files in this directory to deploy KubeEnforcers in the Advanced configuration. This feature is explained immediately below; refer also to the product documentation: [Deploy Aqua KubeEnforcer(s)](https://docs.aquasec.com/v6.0/docs/deploy-k8s-aqua-kubeenforcers).
+
+### Advanced Deployment (for Pod Enforcer injection)
+
+When using KubeEnforcers for Pod Enforcer injection, it is recommended that you deploy the KubeEnforcers in a special Advanced configuration. This will cause Pod Enforcer traffic to be routed to the KubeEnforcers via a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways.
 
 ## Prerequisites
 
