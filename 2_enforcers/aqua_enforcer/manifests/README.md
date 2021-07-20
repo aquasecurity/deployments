@@ -4,13 +4,11 @@ The Aqua Enforcer, running as a DaemonSet deployment, provides runtime security 
 
 ## Prerequisites for manifest deployment
 
-Make sure that you have the following available, before you start deploying Aqua enforcer using manifests:
-
 - Your Aqua credentials: username and password
 
 - Access to Aqua registry to pull images, access to cluster through kubectl, and RBAC authorization to deploy applications
 
-- Deployment token of the Aqua enforcer copied from the Aqua Server UI for authentication. This token is provisioned to the enforcer as a secret. Aqua uses this token to authenticate the enforcers and associate them with a specific enforcer group policy. When you deploy a new enforcer, you should provide this token as a Kubernetes secret. /to confirm this prereq with PM/
+- Deployment token of the Aqua enforcer copied from the Aqua Server UI for authentication. Aqua uses this token to authenticate the enforcers and associate them with a specific enforcer group policy. When you deploy a new enforcer, you should provide this token as a Kubernetes secret. /to confirm this prereq with PM/
 
 - Create or choose the relevant Enforcer group, and copy the group’s token from the Aqua UI, **Administration > Enforcers** page. For more information on the Enforcer groups and tokens, refer to [Aqua Enforcer Groups and Settings](https://docs.aquasec.com/docs/aqua-enforcer-groups-and-settings). /to know how to get enforcer group token and where to use this/
 
@@ -24,7 +22,7 @@ Consider the following options for deploying the Aqua Enforcer DaemonSet:
 
 - Mutual Auth / Custom SSL certs
 
-  - Aqua uses self-signed certificates for secure communication between its subcomponents. If you require using your own CA authority, you need to prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files. /to confirm this and get more information to add here/
+  - Aqua uses self-signed certificates for secure communication between its components. If you require using your own CA authority, you need to prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files. /to confirm this and get more information to add here/
 
 - Gateway
   - By default, the Aqua Enforcer will connect to an internal gateway over the aqua-gateway service name on port 8443.
@@ -38,20 +36,87 @@ Consider the following options for deploying the Aqua Enforcer DaemonSet:
 
 ## Deploy Aqua Enforcer using manifests
 
-Multiple manifest yaml files are required to deploy Aqua enforcer component, manually. These manifest files are stored in the following directories.
+You can deploy Aqua enforcer manually as a DaemonSet using the commands and manifests yaml files added in this directory. You should run commands as mentioned in the respective steps. From the following instructions:
+* Perform the steps 1 thru 3 only if you deploy the Enforcer in a cluster that does not have the Aqua namespace and service account
+* Skip to step 4 if the cluster already has Aqua namespace and service account
 
-| Directory                                                    | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [aqua_001_namespace](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_001_namespace) | Create the aqua namespace 
-| [aqua_002_RBAC](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_002_RBAC) | Create platform-specific RBAC |
-| [aqua_003_secrets](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_003_secrets) | Create secrets for the deployment |
-| [aqua_004_configMaps](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_004_configMaps) | Define the desired configurations for the deployment |
-| [aqua_005_storage](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_005_storage) | Configure the packaged database (optional) |
-| [aqua_006_server_deployment](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_006_server_deployment) | Deploy the Aqua Server components |
-| [aqua_007_networking](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_007_networking) | Advanced networking options for the Aqua Server components |
-| [aqua_008_daemonset](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server/manifests/aqua_csp_007_networking) | Advanced networking options for the Aqua Server components |
+1. **Create namespace**
+
+   ```SHELL
+   $ kubectl create namespace aqua
+   ```
+
+2. **Create the docker-registry secret**
+
+   ```shell
+   $ kubectl create secret docker-registry aqua-registry \
+   --docker-server=registry.aquasec.com \
+   --docker-username=<your-name> \
+   --docker-password=<your-password> \
+   --docker-email=<your-email> -n aqua
+   ```
+
+3. **Create service account**
+
+   ```SHELL
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/tree/6.5/2_enforcers/aqua_enforcer/manifests/001_aqua_enforcer_serviceAccount.yaml
+   ```
+
+4. **Define ConfigMap for the deployment**
+
+   ```SHELL
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/tree/6.5/2_enforcers/aqua_enforcer/manifests/002_aqua_enforcer_configMaps.yaml
+   ```
+
+5. **Create secrets for the deployment**: Run the following commands to create secrets for the deployment:
+
+  - The token secret is mandatory and used to authenticate the KubeEnforcer over the Aqua Server. You should pass the following command for authentication:
+
+    ```SHELL
+     $ kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
+    ```
+
+  - You can also modify the secret manifest file manually using the following command and use kubectl apply command to create the token and SSL cert secrets.
+
+    ```SHELL
+    $ https://raw.githubusercontent.com/aquasecurity/deployments/blob/6.5_dev/  2_enforcers/aqua_enforcer/manifests/003_aqua_enforcer_secrets.yaml
+     ```
+
+6. **Deploy the Aqua Enforcer DaemonSet**: Perform the following steps to deploy Aqua enforcer for different use cases as explained:
+
+  By default, the Aqua Enforcer DaemonSet is deployed only on worker nodes using the deamonset yaml file. You should run the following command to deploy Aqua enforcer on all the platforms except TKGI. You should edit the daemonset yaml file to configure deploying Aqua enforcer for TKGI platform only. To deploy Aqua enforcer as a daemonset on all the platforms except TKGI, run the following shell command:
+
+   ```SHELL
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/blob/6.5_dev/2_enforcers/aqua_enforcer/manifests/004_aqua_enforcer_daemonset.yaml
+   ```
+
+  To deploy Aqua enforcer on master nodes in addition to the worker nodes, perform the following steps:
+  
+  a. Download the [004_aqua_enforcer_daemonset.yaml](https://github.com/KoppulaRajender/deployments/blob/6.5_dev/2_enforcers/aqua_enforcer/manifests/004_aqua_enforcer_daemonset.yaml) file.
+  b. Add the following lines to the **spec.template.spec** section:
+
+   ```SHELL
+      tolerations:
+      - key: node-role.Kubernetes.io/master
+        effect: NoSchedule
+   ```  
+  c. Run the **kubectl apply -f** command on the edited file.
+
+To deploy Aqua enforcer as a daemonset on the TKGI platform:
+
+  a. Download the [004_aqua_enforcer_daemonset.yaml](https://github.com/KoppulaRajender/deployments/blob/6.5_dev/2_enforcers/aqua_enforcer/manifests/004_aqua_enforcer_daemonset.yaml) file.
+  b. Locate the following lines in the yaml file
+
+   ```SHELL
+    - hostPath:
+        path: /var/run
+        type: ""
+      name: var-run
+   ```  
+  c. In the hostpath line shown above, change **/var/run** to **/var/vcap/sys/run/docker**.
+  d. Run the **kubectl apply -f** command on the edited file.
 
 For detailed step-by-step instructions to deploy Aqua enforcer component by using these yaml files, refer to the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers).
 
-## Deploy Aqua server using Aquactl
+## Deploy Aqua Enforcer using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the previous section, Manifests. This utility creates (downloads) manifests that are customized to your specifications. For more information on the usage of Aquactl to deploy Aqua enforcer, refer to the product documentation, [Aquactl: Download Enforcer Manifests](https://docs.aquasec.com/docs/aquactl-download-manifests-aqua-enforcer).
