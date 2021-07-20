@@ -68,10 +68,10 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
         ```
    - **Option B (Manual)**: Perform the following steps to create the KubeEnforcer configuration file manually:
   
-    a. Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/001_kube_enforcer_config.yaml).
-    b. Follow the [SSL considerations](#kubeenforcer-ssl-considerations) section below to generate a CA bundle and SSL certs.
-    c. Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
-    d. Use kubectl to apply the modified manifest file config.
+      a. Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/001_kube_enforcer_config.yaml).
+      b. Follow the [SSL considerations](#kubeenforcer-ssl-considerations) section below to generate a CA bundle and SSL certs.
+      c. Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
+      d. Use kubectl to apply the modified manifest file config.
         
         ```shell
         $ kubectl apply -f 001_kube_enforcer_config.yaml
