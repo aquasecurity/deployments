@@ -70,51 +70,51 @@ You can deploy Aqua enforcer manually as a DaemonSet using the commands and mani
 
 5. **Create secrets for the deployment**: Run the following commands to create secrets for the deployment:
 
-  - The token secret is mandatory and used to authenticate the KubeEnforcer over the Aqua Server. You should pass the following command for authentication:
+     - The token secret is mandatory and used to authenticate the KubeEnforcer over the Aqua Server. You should pass the following command for authentication:
 
-    ```SHELL
-     $ kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
-    ```
+        ```SHELL
+        $ kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
+        ```
 
-  - You can also modify the secret manifest file manually using the following command and use kubectl apply command to create the token and SSL cert secrets.
+      - You can also modify the secret manifest file manually using the following command and use kubectl apply command to create the token and SSL cert secrets.
 
-    ```SHELL
-    $ https://raw.githubusercontent.com/aquasecurity/deployments/blob/6.5_dev/  2_enforcers/aqua_enforcer/manifests/003_aqua_enforcer_secrets.yaml
-     ```
+        ```SHELL
+        $ https://raw.githubusercontent.com/aquasecurity/deployments/blob/6.5_dev/  2_enforcers/aqua_enforcer/manifests/003_aqua_enforcer_secrets.yaml
+        ```
 
 6. **Deploy the Aqua Enforcer DaemonSet**: Perform the following steps to deploy Aqua enforcer for different use cases as explained:
 
-  By default, the Aqua Enforcer DaemonSet is deployed only on worker nodes using the deamonset yaml file. You should run the following command to deploy Aqua enforcer on all the platforms except TKGI. You should edit the daemonset yaml file to configure deploying Aqua enforcer for TKGI platform only. To deploy Aqua enforcer as a daemonset on all the platforms except TKGI, run the following shell command:
+    - By default, the Aqua Enforcer DaemonSet is deployed only on worker nodes using the deamonset yaml file. You should run the following command to deploy Aqua enforcer on all the platforms except TKGI. You should edit the daemonset yaml file to configure deploying Aqua enforcer for TKGI platform only. To deploy Aqua enforcer as a daemonset on all the platforms except TKGI, run the following shell command:
 
-   ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/blob/6.5_dev/2_enforcers/aqua_enforcer/manifests/004_aqua_enforcer_daemonset.yaml
-   ```
+      ```SHELL
+       $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/blob/6.5_dev/2_enforcers/aqua_enforcer/manifests/004_aqua_enforcer_daemonset.yaml
+       ```
 
-  To deploy Aqua enforcer on master nodes in addition to the worker nodes, perform the following steps:
+   - To deploy Aqua enforcer on master nodes in addition to the worker nodes, perform the following steps:
   
-  a. Download the [004_aqua_enforcer_daemonset.yaml](https://github.com/KoppulaRajender/deployments/blob/6.5_dev/2_enforcers/aqua_enforcer/manifests/004_aqua_enforcer_daemonset.yaml) file.
-  b. Add the following lines to the **spec.template.spec** section:
+        a. Download the [004_aqua_enforcer_daemonset.yaml](https://github.com/KoppulaRajender/deployments/blob/6.5_dev/2_enforcers/aqua_enforcer/manifests/004_aqua_enforcer_daemonset.yaml) file.
+        b. Add the following lines to the **spec.template.spec** section:
 
-   ```SHELL
-      tolerations:
-      - key: node-role.Kubernetes.io/master
-        effect: NoSchedule
-   ```  
-  c. Run the **kubectl apply -f** command on the edited file.
+        ```SHELL
+              tolerations:
+              - key: node-role.Kubernetes.io/master
+                effect: NoSchedule
+        ```  
+      c. Run the **kubectl apply -f** command on the edited file.
 
-To deploy Aqua enforcer as a daemonset on the TKGI platform:
+   - To deploy Aqua enforcer as a daemonset on the TKGI platform:
 
-  a. Download the [004_aqua_enforcer_daemonset.yaml](https://github.com/KoppulaRajender/deployments/blob/6.5_dev/2_enforcers/aqua_enforcer/manifests/004_aqua_enforcer_daemonset.yaml) file.
-  b. Locate the following lines in the yaml file
+      a. Download the [004_aqua_enforcer_daemonset.yaml](https://github.com/KoppulaRajender/deployments/blob/6.5_dev/2_enforcers/aqua_enforcer/manifests/004_aqua_enforcer_daemonset.yaml) file.
+      b. Locate the following lines in the yaml file
 
-   ```SHELL
-    - hostPath:
-        path: /var/run
-        type: ""
-      name: var-run
-   ```  
-  c. In the hostpath line shown above, change **/var/run** to **/var/vcap/sys/run/docker**.
-  d. Run the **kubectl apply -f** command on the edited file.
+        ```SHELL
+          - hostPath:
+              path: /var/run
+              type: ""
+            name: var-run
+      ```  
+      c. In the hostpath line shown above, change **/var/run** to **/var/vcap/sys/run/docker**.
+      d. Run the **kubectl apply -f** command on the edited file.
 
 For detailed step-by-step instructions to deploy Aqua enforcer component by using these yaml files, refer to the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers).
 
