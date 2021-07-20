@@ -4,7 +4,7 @@
   - [MutatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#mutatingadmissionwebhook) is invoked first, and can modify objects sent to the API server to enforce custom defaults like Pod Enforcer injection into the pods.
   - [ValidatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#validatingadmissionwebhook) is invoked next. It can reject requests to enforce custom policies.
 
-The KubeEnforcer can automatically discover the cluster infrastructure and will assist in static risk analysis by running Kube-hunter scans. The KubeEnforcer generates audit events for your review. For more information, refer to product documentation, [Aqua KubeEnforcer](https://docs.aquasec.com/docs/kubeenforcer)
+The KubeEnforcer can automatically discover the cluster infrastructure and will assist in static risk analysis by running Kube-hunter scans. The KubeEnforcer generates audit events for your review. For more information, refer to product documentation, [Aqua KubeEnforcer](https://docs.aquasec.com/docs/kubeenforcer).
 
 ## Prerequisites
 
@@ -61,16 +61,16 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
    ```
 
 3. **Create admission controller, service account, and the ConfigMap**
-   - **Option A (Automatic)**: Use the shell script provided by Aqua: **gen_ke_certs.sh** script to generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key, aqua_ke.crt), and create the KubeEnforcer configuration file. Run the following command to create the KubeEnforcer configuration file automatically.
+   - **Option A (Automatic)**: Use the shell script **gen_ke_certs.sh** provided by Aqua to generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key, aqua_ke.crt), and create the KubeEnforcer configuration file. Run the following command to create the KubeEnforcer configuration file automatically.
         
         ```shell
         $ curl -s https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/gen_ke_certs.sh | bash
         ```
-   - **Option B: Manual**: Perform the following steps to create the KubeEnforcer configuration file manually:
-  a. Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/001_kube_enforcer_config.yaml).
-  b. Follow the [SSL considerations](#kubeenforcer-ssl-considerations) section below to generate a CA bundle and SSL certs.
-  c. Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
-  d. Use kubectl to apply the modified manifest file config.
+   - **Option B (Manual)**: Perform the following steps to create the KubeEnforcer configuration file manually:
+    a. Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/001_kube_enforcer_config.yaml).
+    b. Follow the [SSL considerations](#kubeenforcer-ssl-considerations) section below to generate a CA bundle and SSL certs.
+    c. Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
+    d. Use kubectl to apply the modified manifest file config.
         
         ```shell
         $ kubectl apply -f 001_kube_enforcer_config.yaml
@@ -117,7 +117,7 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
      openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt -subj "/CN=admission_ca"
      ```
 
-    c. Replace the caBundle value at line number 15 in 001_kube_enforcer_config.yaml with the following command. The content of rootCA.crt should be base64-encoded.
+    c. Replace the caBundle value at line number 15 in *001_kube_enforcer_config.yaml* with the following command. The content of rootCA.crt should be base64-encoded.
 
      ```shell
      cat rootCA.crt | base64 -w 0
