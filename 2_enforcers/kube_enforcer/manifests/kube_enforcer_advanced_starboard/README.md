@@ -69,17 +69,20 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
    ```
 
 3. **Create admission controller, service account, and the ConfigMap**
-   - Option A: Use the shell script provided by Aqua
-        - gen_ke_certs.sh script can be used to generate CA bundle (rootCA.crt), SSL certs (server.key,server.crt) and to deploy the KubeEnforcer config
+   - **Option A (Automatic)**: Use the shell script **gen_ke_certs.sh** provided by Aqua to generate CA bundle (rootCA.crt), SSL certs (server.key,server.crt), and create the KubeEnforcer configuration file. Run the following command to create the KubeEnforcer configuration file automatically.
         
         ```shell
         $ curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced_starboard/gen_ke_certs.sh | bash
         ```
-   - Option B: Manual
-        - Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced_starboard/001_kube_enforcer_config.yaml).
-        - Follow the "SSL considerations" section below to generate a CA bundle and SSL certs.
-        - Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
-        - Use kubectl to apply the modified manifest file config.
+   - **Option B (Manual)**: Perform the following steps to create the KubeEnforcer configuration file manually:
+
+      a. Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced_starboard/001_kube_enforcer_config.yaml).
+      
+      b. Follow the [SSL considerations](#kubeenforcer-ssl-considerations) section to generate a CA bundle and SSL certs.
+      
+      c. Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
+      
+      d. Use kubectl to apply the modified manifest file config.
         
         ```shell
         $ kubectl apply -f 001_kube_enforcer_config.yaml
@@ -87,22 +90,22 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
 
 4.  **Create secrets for the KubeEnforcer deployment** 
 
-    * The token secret is mandatory and used to authenticate the KubeEnforcer over the Aqua Server.
+    * The token secret is mandatory and used to authenticate the KubeEnforcer over the Aqua Server. You should pass the following command for authentication:
 
-    ```shell
-    $ kubectl create secret generic aqua-kube-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
-    ```
-    * You can use kubectl command to create the SSL cert secret:
+      ```shell
+      $ kubectl create secret generic aqua-kube-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
+      ```
+    * You should use the following kubectl command to create the SSL cert secret:
     
-    ```shell
-    $ kubectl create secret generic aqua-kube-enforcer-certs--from-file server.key --from-file server.crt -n aqua
-    ```
+      ```shell
+      $ kubectl create secret generic aqua-kube-enforcer-certs--from-file server.key --from-file server.crt -n aqua
+      ```
 
-    * You can also manually modify the secret manifest file and use kubectl apply command to create the token and SSL cert secrets:
+    * You can also manually modify the secret manifest file and use kubectl apply command to create the token and SSL cert secrets as shown in the following command:
 
-    ```shell
-    https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced_starboard/002_kube_enforcer_secrets.yaml
-    ```
+      ```shell
+      $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced_starboard/002_kube_enforcer_secrets.yaml
+      ```
 
 5. **Create the KubeEnforcer deployment**
 
@@ -112,35 +115,37 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
 
 ## KubeEnforcer SSL considerations
 
-1. **Create root CA**
+Following are the SSL considerations supporting deployment of KubeEnforcer:
 
-   * Create root key:
+1. Create root CA: Perform the following steps to create a root CA.
+
+    a. Create root key:
 
      ```shell
      openssl genrsa -des3 -out rootCA.key 4096
      ```
 
-   * Create and self-sign the root certificate:
+    b. Create and self-sign the root certificate:
 
      ```shell
      openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt -subj "/CN=admission_ca"
      ```
 
-   * The content of rootCA.crt should be base64-encoded and replace the caBundle value at line number 15 in 001_kube_enforcer_config.yaml:
+   * Replace the caBundle value at line number 15 in *001_kube_enforcer_config.yaml* with the following command. The content of rootCA.crt should be base64-encoded
 
      ```shell
      cat rootCA.crt | base64 -w 0
      ```
 
-2. **Create a certificate**
+2. Create a certificate: Perform the following steps to create a certificate.
 
-   * Create the KubeEnforcer certificate key:
+    a. Create the KubeEnforcer certificate key:
 
      ```shell
      openssl genrsa -out server.key 2048
      ```
 
-   * Create the signing (csr):
+    b. Create the signing (csr):
 
      ```shell
      cat >server.conf <<EOF
@@ -187,3 +192,11 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
    --from-file server.crt \
    -n aqua
    ```
+
+## Deploy KubeEnforcer advanced Starboard using Aquactl
+
+Aquactl is the command-line utility to automate the deployment steps mentioned in the previous section, Manifests. This utility creates (downloads) manifests that are customized to your specifications. To deploy Aqua KubeEnforcer with Starboard in the Advanced configuration, include the **--advanced-configuration** and **--starboard** flags in the aquactl download command syntax, in addition to the required flags for KubeEnforcer. For more information on the usage of Aquactl to deploy KubeEnforcer, refer to the product documentation, [Aquactl: Download Aqua KubeEnforcer Manifests](https://docs.aquasec.com/docs/aquactl-download-manifests-kubeenforcer).
+
+## Deploy Aqua KubeEnforcer without Starboard
+
+If, for any reason, you do not want to deploy Starboard, you will need to modify the 001_kube_enforcer_config.yaml ConfigMap when it is used in the KubeEnforcer deployment procedure. Remove all text from this line through the end of the file:
