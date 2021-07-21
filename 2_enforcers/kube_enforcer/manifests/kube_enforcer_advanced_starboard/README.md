@@ -193,10 +193,16 @@ Following are the SSL considerations supporting deployment of KubeEnforcer:
    -n aqua
    ```
 
+## Deploy Aqua KubeEnforcer without Starboard
+
+If you do not want to deploy Starboard for any reason, you should modify *001_kube_enforcer_config.yaml*, while using in the KubeEnforcer deployment procedure. To exclude Starboard from the KubeEnforcer, remove all the text from the following line through the end of the file:
+
+```shell
+# Starboard resource yamls#############
+```
+
 ## Deploy KubeEnforcer advanced Starboard using Aquactl
 
 Aquactl is the command-line utility to automate the deployment steps mentioned in the previous section, Manifests. This utility creates (downloads) manifests that are customized to your specifications. To deploy Aqua KubeEnforcer with Starboard in the Advanced configuration, include the **--advanced-configuration** and **--starboard** flags in the aquactl download command syntax, in addition to the required flags for KubeEnforcer. For more information on the usage of Aquactl to deploy KubeEnforcer, refer to the product documentation, [Aquactl: Download Aqua KubeEnforcer Manifests](https://docs.aquasec.com/docs/aquactl-download-manifests-kubeenforcer).
 
-## Deploy Aqua KubeEnforcer without Starboard
 
-If, for any reason, you do not want to deploy Starboard, you will need to modify the 001_kube_enforcer_config.yaml ConfigMap when it is used in the KubeEnforcer deployment procedure. Remove all text from this line through the end of the file:
