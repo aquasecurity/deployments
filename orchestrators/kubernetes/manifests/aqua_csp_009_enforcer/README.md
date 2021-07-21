@@ -1,4 +1,3 @@
-## The Enforcer Family
+## Aqua Enforcer and KubeEnforcer
 
-   - [Aqua Enforcer](https://github.com/aquasecurity/deployments/tree/6.0/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer)
-   - [Aqua KubeEnforcer](https://github.com/aquasecurity/deployments/tree/6.0/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer)
+This folder contains subfolders related to the deployment of Aqua Enforcers and Aqua KubeEnforcers in Kubernetes and OpenShift environments. See the subfolders for more information.
