@@ -1,6 +1,6 @@
 ## Aqua KubeEnforcer Advanced
 
-It is a method of deploying Aqua KubeEnforcer in a special Advanced configuration While using KubeEnforcers for Pod Enforcer injection. This causes Pod Enforcer traffic to be routed to the KubeEnforcers through a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways. For more information, refer to product documentation, [Advanced Deployment for Aqua KubeEnforcer](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers#section-advanced-deployment-for-pod-enforcer-injection).
+It is a method of deploying Aqua KubeEnforcer in a special Advanced configuration while using KubeEnforcers for Pod Enforcer injection. This causes Pod Enforcer traffic to be routed to the KubeEnforcers through a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways. For more information, refer to product documentation, [Advanced Deployment for Aqua KubeEnforcer](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers#section-advanced-deployment-for-pod-enforcer-injection).
 
 To configure KubeEnforcer with Advnaced deployment:
 - While performing the manual deployment, use the manifest yaml files in the [kube_enforcer_advanced](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers/kube_enforcer/manifests/kube_enforcer_advanced) directory.
@@ -34,13 +34,13 @@ Consider the following options for deploying the KubeEnforcer:
 
 - Gateway
   - By default, the KubeEnforcer connects to an internal gateway over the aqua-gateway service name on port 8443.
-  - If you want to connect to an external gateway in a multi-cluster deployment, you should update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the external gateway endpoint address, followed by the port number, in the 001_kube_enforcer_config.yaml file.
+  - If you want to connect to an external gateway in a multi-cluster deployment, you should update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the external gateway endpoint address, followed by the port number, in the *001_kube_enforcer_config.yaml* file.
 
 - By default, KubeEnforcers are deployed in the non-privileged mode. Note that protection is only applied to new or restarted containers.
 
 ## Deploy the KubeEnforcer
 
-You can deploy KubeEnforcer manually using the commands and manifests yaml files added in this directory. You should run commands as mentioned in the respective steps. From the following instructions:
+You can deploy KubeEnforcer with advanced configuration manually using the commands and manifests yaml files added in this directory. You should run commands as mentioned in the respective steps. From the following instructions:
 - Perform the steps 1 and 2 only if you deploy the KubeEnforcer in a cluster that does not have the Aqua namespace and service account
 - Skip to step 3 if the cluster already has Aqua namespace and service account
 
@@ -66,11 +66,15 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
         ```shell
         $ curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced/gen_ke_certs.sh | bash
         ```
-   - **Option B (Manual)**:
-    a. Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced/001_kube_enforcer_config.yaml).
-    b. Follow the [SSL considerations](#kubeenforcer-ssl-considerations) section below to generate a CA bundle and SSL certs.
-    c. Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
-    d. Use kubectl to apply the modified manifest file config.
+   - **Option B (Manual)**: Perform the following steps to create the KubeEnforcer configuration file manually:
+  
+        a. Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced/001_kube_enforcer_config.yaml).
+
+        b. Follow the [SSL considerations](#kubeenforcer-ssl-considerations) section below to generate a CA bundle and SSL certs.
+
+        c. Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
+
+        d. Use kubectl to apply the modified manifest file config.
         
         ```shell
         $ kubectl apply -f 001_kube_enforcer_config.yaml
@@ -180,5 +184,5 @@ Following are the SSL considerations supporting deployment of KubeEnforcer:
    -n aqua
    ```
 
-   ## Deploy KubeEnforcer using Aquactl
+## Deploy KubeEnforcer with advanced configuration using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the previous section, Manifests. This utility creates (downloads) manifests that are customized to your specifications. To deploy Aqua KubeEnforcer in the Advanced configuration, include the **--advanced-configuration** flag in the aquactl download command syntax, in addition to the required flags for KubeEnforcer. For more information on the usage of Aquactl to deploy KubeEnforcer, refer to the product documentation, [Aquactl: Download Aqua KubeEnforcer Manifests](https://docs.aquasec.com/docs/aquactl-download-manifests-kubeenforcer).
