@@ -1,8 +1,8 @@
 ## Aqua KubeEnforcer Advanced
 
-It is a method of deploying Aqua KubeEnforcer in a special Advanced configuration while using KubeEnforcers for Pod Enforcer injection. This causes Pod Enforcer traffic to be routed to the KubeEnforcers through a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways. For more information, refer to product documentation, [Advanced Deployment for Aqua KubeEnforcer](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers#section-advanced-deployment-for-pod-enforcer-injection).
+Aqua KubeEnforcer Advanced is a method of deploying Aqua KubeEnforcer in a special Advanced configuration while using KubeEnforcers for Pod Enforcer injection. This causes Pod Enforcer traffic to be routed to the KubeEnforcers through a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways. For more information, refer to product documentation, [Advanced Deployment for Aqua KubeEnforcer](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers#section-advanced-deployment-for-pod-enforcer-injection).
 
-To configure KubeEnforcer with Advnaced deployment:
+To deploy KubeEnforcer with Advanced configuration:
 - While performing the manual deployment, use the manifest yaml files in the [kube_enforcer_advanced](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers/kube_enforcer/manifests/kube_enforcer_advanced) directory.
 - While deploying KubeEnforcer using Aquactl, add the relevant flag as specified in the section, [Deploy KubeEnforcer using Aquactl](#deploy-kubeenforcer-using-aquactl).
 
@@ -61,7 +61,7 @@ You can deploy KubeEnforcer with advanced configuration manually using the comma
    ```
 
 3. **Create admission controller, service account, and the ConfigMap**
-   - **Option A (Automatic)**: Use the shell script **gen_ke_certs.sh** provided by Aqua to generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key, aqua_ke.crt), and create the KubeEnforcer configuration file. Run the following command to create the KubeEnforcer configuration file automatically.
+   - **Option A (Automatic)**: Use the shell script **gen_ke_certs.sh** provided by Aqua to generate CA bundle (rootCA.crt), SSL certs (server.key, server.crt), and create the KubeEnforcer configuration file. Run the following command to create the KubeEnforcer configuration file automatically.
         
         ```shell
         $ curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced/gen_ke_certs.sh | bash

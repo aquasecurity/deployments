@@ -34,7 +34,7 @@ Consider the following options for deploying the KubeEnforcer:
 
 - Gateway
   - By default, the KubeEnforcer connects to an internal gateway over the aqua-gateway service name on port 8443.
-  - If you want to connect to an external gateway in a multi-cluster deployment, you should update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the external gateway endpoint address, followed by the port number, in the 001_kube_enforcer_config.yaml file.
+  - If you want to connect to an external gateway in a multi-cluster deployment, you should update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the external gateway endpoint address, followed by the port number, in the *001_kube_enforcer_config.yaml* file.
 
 - By default, KubeEnforcers are deployed in the non-privileged mode. Note that protection is only applied to new or restarted containers.
 
@@ -73,12 +73,11 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
         b. Follow the [SSL considerations](#kubeenforcer-ssl-considerations) section below to generate a CA bundle and SSL certs.
 
         c. Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
-        
+
         d. Use kubectl to apply the modified manifest file config.
-        
-          ```shell
-          $ kubectl apply -f 001_kube_enforcer_config.yaml
-          ```
+        ```shell
+        $ kubectl apply -f 001_kube_enforcer_config.yaml
+        ```
 
 4.  **Create secrets for the KubeEnforcer deployment** 
 

@@ -1,36 +1,56 @@
-## Aqua KubeEnforcer Advance
+## Aqua KubeEnforcer Advanced Starboard
 
-{ Need to update here about KE advanced }
+Aqua KubeEnforcer Advanced Starboard is the Aqua KubeEnforcer component with Starboard capability deployed in a special Advanced configuration.
+
+Aqua KubeEnforcer Advanced is a method of deploying Aqua KubeEnforcer in a special Advanced configuration while using KubeEnforcers for Pod Enforcer injection. This causes Pod Enforcer traffic to be routed to the KubeEnforcers through a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways. For more information, refer to product documentation, [Advanced Deployment for Aqua KubeEnforcer](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers#section-advanced-deployment-for-pod-enforcer-injection).
+
+Starboard is an Aqua Security open-source tool that increases the effectiveness of Kubernetes security. Starboard is deployed by default, when you deploy KubeEnforcer.
+
+When Starboard is deployed, it assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
+* Re-evaluate workload compliance during workload runtime, taking any workload and policy changes into account
+* Reflect the results of compliance evaluation in the Aqua UI at all times, not only when workloads are created.
+
+To deploy KubeEnforcer with Advanced configuration:
+- While performing the manual deployment, use the manifest yaml files in the [kube_enforcer_advanced](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers/kube_enforcer/manifests/kube_enforcer_advanced) directory.
+- While deploying KubeEnforcer using Aquactl, add the relevant flag as specified in the section, [Deploy KubeEnforcer using Aquactl](#deploy-kubeenforcer-using-aquactl).
 
 ## Prerequisites
 
-- Aqua registry access to pull images, cluster access via kubectl, and RBAC authorization to deploy applications
+- Your Aqua credentials: username and password
 
-- The KubeEnforcer deployment token copied from the Aqua Enterprise Server (console) UI for authentication. The token is provisioned to the KubeEnforcer as a secret
+- Access to Aqua registry to pull images, access to cluster through kubectl, and RBAC authorization to deploy applications
+
+- The KubeEnforcer deployment token copied from the Aqua Server UI for authentication. Aqua uses this token to authenticate the KubeEnforcers and associate them with a specific enforcer group policy. When you deploy a new KubeEnforcer, you should provide this token as a Kubernetes secret
 
 - A PEM-encoded CA bundle which will be used to validate the KubeEnforcer certificate
 
 - A PEM-encoded SSL cert to configure the KubeEnforcer
 
+- If you plan to connect to an Aqua Server on a different cluster, make sure that you have the remote Aqua gateway address.
+
+It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide).
+
 ## Considerations
 
-Please consider the following options for deploying the KubeEnforcer.
+Consider the following options for deploying the KubeEnforcer:
 
 - PEM-encoded CA bundle and SSL certs
-  - Use the [gen_ke_certs.sh](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced_starboard/gen_ke_certs.sh) script to generate the required CA bundle and SSL certificates. You can also refer to KubeEnforcer SSL considerations section to manually generate them.
+  - Use the [gen_ke_certs.sh](https://github.com/aquasecurity/deployments/tree/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced_starboard/gen_ke_certs.sh) script to generate the required CA bundle and SSL certificates. You can also refer to KubeEnforcer [SSL considerations](#kubeenforcer-ssl-considerations) section to manually generate them.
 
 - Mutual Auth
-  - If you want to enable mutual auth between the KubeEnforcer and the Gateway, refer to the [Aqua Enterprise documentation portal](https://docs.aquasec.com/v6.2/).
+  - Aqua uses self-signed certificates for secure communication between its components (KubeEnforcer and Gateway). If you require using your own CA authority, you need to prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files.
 
 - Gateway
-  - By default, the KubeEnforcer will connect to an internal gateway over the aqua-gateway service name on port 8443.
-  - If you want to connect to an external gateway in a multi-cluster deployment, you will need to update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the external gateway endpoint address, followed by the port number, in the 001_kube_enforcer_config.yaml file.
+  - By default, the KubeEnforcer connects to an internal gateway over the aqua-gateway service name on port 8443.
+  - If you want to connect to an external gateway in a multi-cluster deployment, you should update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the external gateway endpoint address, followed by the port number, in the *001_kube_enforcer_config.yaml file*.
 
-- By default, KubeEnforcers are deployed in non-privileged mode. Note that protection is only applied to new or restarted containers.
+- By default, KubeEnforcers are deployed in the non-privileged mode. Note that protection is only applied to new or restarted containers.
 
 ## Deploy the KubeEnforcer
 
-Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluster that doesn't have the Aqua namespace and service-account. Otherwise, you can start with step 3.
+You can deploy KubeEnforcer manually using the commands and manifests yaml files added in this directory. You should run commands as mentioned in the respective steps. From the following instructions:
+* Perform the steps 1 and 2 only if you deploy the KubeEnforcer in a cluster that does not have the Aqua namespace and service account
+* Skip to step 3 if the cluster already has Aqua namespace and service account
 
 1. **Create namespace**
 
