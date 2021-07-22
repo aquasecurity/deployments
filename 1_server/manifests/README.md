@@ -221,7 +221,7 @@ Flag and parameter type              | Values                                   
 | ---------------------- | ------------------------------------------------------------ |
 | -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, icp, openshift, tkg, tkgi**    |
 | * -v or --version
-(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **6.2** |
+(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **6.5** |
 | -r or --registry (string) | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com** |
 | --pull-policy (string) | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent** |
 | --service-account (string) | Kubernetes service account name, it defaults to **aqua-sa** |
@@ -245,7 +245,7 @@ Flag and type              | Values                                             
 | ---------------------- | ------------------------------------------------------------ |
 | --ingress-gw (string) | Route for Aqua Gateway connectivity, example: **envoy**, it does not have a default value|
 
-To get help on this function, enter the following command:
+To get help on the Aquactl function, enter the following command:
 
 ```SHELL
 aquactl download server -h

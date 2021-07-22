@@ -118,5 +118,44 @@ You can deploy Aqua enforcer manually as a DaemonSet using the commands and mani
 
 For detailed step-by-step instructions to deploy Aqua enforcer component by using these yaml files, refer to the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers).
 
-## Deploy Aqua Enforcer using Aquactl
-Aquactl is the command-line utility to automate the deployment steps mentioned in the previous section, Manifests. This utility creates (downloads) manifests that are customized to your specifications. For more information on the usage of Aquactl to deploy Aqua enforcer, refer to the product documentation, [Aquactl: Download Enforcer Manifests](https://docs.aquasec.com/docs/aquactl-download-manifests-aqua-enforcer).
+## Deploy Aqua server using Aquactl
+Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Aqua Enforcer using Manifests](#deploy-aqua-enforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml files) that can be used to deploy the Aqua Enforcer component on a Kubernetes cluster.
+
+### Command Syntax
+
+```SHELL
+aquactl download enforcer [flags]
+```
+
+### Flags
+You should pass the following deployment options through flags, as required.
+
+#### Aquactl operation
+
+Flag and parameter type              | Values                                                |
+| ---------------------- | ------------------------------------------------------------ |
+| -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, icp, openshift, tkg, tkgi**    |
+| * -v or --version
+(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **6.5** |
+| -r or --registry (string) | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com** |
+| --pull-policy (string) | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent** |
+| --service-account (string) | Kubernetes service account name, it defaults to **aqua-sa** |
+| -n, --namespace (string) | Kubernetes namespace name, it defaults to **aqua** |
+| --output-dir (string) | Output directory for the manifests (YAML files), it defaults to **aqua-deploy**, the directory aquactl was launched in |
+
+#### Aqua Enforcer configuration
+
+Flag and type              | Values                                                |
+| ---------------------- | ------------------------------------------------------------ |
+| --gateway-url (string) | Aqua Gateway URL (IP, DNS, or service name) and port, it defaults to **aqua-gateway:8443**|
+| --token (string) | Deployment token for the Aqua Enforcer group, it defaults to **enforcer-token**|
+
+The **--gateway-url** flag identifies an existing Aqua Gateway used to connect the Aqua Enforcer. This flag is not used to configure a new Gateway, as in *aquactl download all* or *aquactl download server*.
+
+To get help on the Aquactl function, enter the following command:
+
+```SHELL
+aquactl download enforcer -h
+```
+
+After the manifests are created, follow the instructions that appear on the console to perform the actual deployment.
