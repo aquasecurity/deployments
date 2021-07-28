@@ -28,7 +28,7 @@ Consider the following options for deploying Aqua Scanner:
 
 - **Mutual Auth / Custom SSL certs**: 
   - **To use private CA**: Prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files at **/etc/ssl/certs**
-  - To use Aqua generated certs: Populate root CA to the scanner deployment. To get this cert, connect to aqua instance and copy it from **/opt/aquasec/cert.pem**. 
+  - **To use Aqua generated certs**: Populate root CA to the scanner deployment. To get this cert, connect to aqua instance and copy it from **/opt/aquasec/cert.pem**. 
 
 ## Deploy Scanner using manifests
 
