@@ -1,10 +1,10 @@
 ## Overview
 
-The Kube Enforcer runs as single replica deployment and provides runtime security for your Kubernetes workloads and infrastructure. Kube enforcer can be deployed in combination with co-requisite Starboard and/or Advanced deployment for Pod Enforcer injection. Kube Enforcer(s) can be deployed manually with one of the following combinations per your requirement, using manifest yaml files:
+The Kube Enforcer runs as single replica deployment and provides runtime security for your Kubernetes workloads and infrastructure. Kube enforcer can be deployed in combination with co-requisite Starboard and/or advanced deployment for Pod Enforcer injection. Kube Enforcer(s) can be deployed manually with one of the following combinations per your requirement:
 
-* [Kube enforcer](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers/kube_enforcer/manifests/kube-enforcer)
-* [Kube enforcer advanced](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers/kube_enforcer/manifests/kube_enforcer_advanced)
-* [Kube enforcer starboard](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers/kube_enforcer/manifests/kube_enforcer_starboard)
-* [Kube enforcer advanced starboard](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers/kube_enforcer/manifests/kube_enforcer_advanced_starboard)
+* [Kube enforcer](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/kube_enforcer/kubenetes_and_openshift/manifests/kube-enforcer): provides runtime security for your Kubernetes workloads and infrastructure
+* [Kube enforcer advanced](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/kube_enforcer/kubenetes_and_openshift/manifests/kube_enforcer_advanced): Aqua KubeEnforcer Advanced is a method of deploying Aqua KubeEnforcer in a special advanced configuration for Pod Enforcer injection.
+* [Kube enforcer starboard](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/kube_enforcer/kubenetes_and_openshift/manifests/kube_enforcer_starboard): Starboard is an Aqua Security open-source tool that increases the effectiveness of Kubernetes security. Starboard is deployed by default, when you deploy KubeEnforcer to assess workload compliance throughout the lifecycle of the workloads
+* [Kube enforcer advanced starboard](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/kube_enforcer/kubenetes_and_openshift/manifests/kube_enforcer_advanced_starboard): Aqua KubeEnforcer Advanced Starboard is the Aqua KubeEnforcer component with Starboard capability deployed in a special advanced configuration.
 
 Navigate to the respective directory (hyperlinked above) to know more about each Kube enforcer component and its deployment method using manifest yaml files

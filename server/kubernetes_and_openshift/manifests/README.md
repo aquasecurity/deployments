@@ -46,7 +46,7 @@ Perform the following steps to deploy Aqua server manually:
    
 2. Create a docker-registry secret to aqua-registry to download the images.
    
-3. Create a service account and RBAC settings by creating or applying the relevant yaml file from the directory, */aqua_csp_002_RBAC/<PLATFORM>/aqua_sa.yaml*. You should select the required yaml file depends on your platform. Aqua supports many platforms, as mentioned in the [Supported Platforms](#supported-platforms) section.
+3. Create a service account and RBAC settings by creating or applying the relevant yaml file from the directory, *aqua_csp_002_RBAC/< PLATFORM >/aqua_sa.yaml*. You should select the required yaml file depends on your platform. Aqua supports many platforms, as mentioned in the [Supported Platforms](#supported-platforms) section.
    
 4. Create the deployment secrets manually or download, edit, and apply the secrets yaml file from *aqua_csp_003_secrets/aqua_secrets.yaml*. It is strongly recommended to change the database password (aqua-db) before you deploy Aqua Enterprise. Different secrets can be used to provision licenses, passwords, and security keys.
 

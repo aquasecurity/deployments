@@ -2,7 +2,7 @@
 
 The Aqua Enforcer, running as a DaemonSet deployment, provides runtime security for your Kubernetes workloads by blocking unauthorized deployments, monitoring and restricting runtime activities, and generating audit events for your review. For more information, refer the product documentation, [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-aqua-enforcers) and [Aqua Enforcer](https://docs.aquasec.com/docs/aqua-enforcer).
 
-This repository shows all the directories and manifest yaml files required to deploy Aqua Enforcer on the following Kubernetes platforms:
+This repository shows the manifest yaml files required to deploy Aqua Enforcer on the following Kubernetes platforms:
 * Kubernetes 
 * OpenShift 
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
@@ -33,7 +33,7 @@ Consider the following options for deploying the Aqua Enforcer DaemonSet:
 
 ## Deploy Aqua Enforcer using manifests
 
-You can deploy Aqua enforcer manually using the manifest yaml files added in this directory. From the following instructions:
+You can deploy Aqua enforcer manually using the manifest yaml files added in this directory. You should run commands as mentioned in the respective steps. From the following instructions:
 * Perform the steps 1 thru 3 only if you deploy the Enforcer in a cluster that does not have the Aqua namespace and service account
 * Skip to step 4 if the cluster already has Aqua namespace and service account
 
@@ -49,14 +49,14 @@ Perform the following steps to deploy Aqua Enforcer manually:
 
 5. Create secrets manually or download, edit, and apply the secrets yaml file as explained below:
 
-   * The token secret is mandatory and used to authenticate the Aqua Enforcer over the Aqua Server. Pass the following command for authentication:
+   * Pass the following command to create the token secret that authenticates the Aqua Enforcer over the Aqua Server:
 
 
     ```SHELL
     $ kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
     ```
 
-     * Download, edit, and apply secrets manually, using the yaml file, *003_aqua_enforcer_secrets.yaml* to create the token and SSL cert secrets.
+     * Download, edit, and apply secrets yaml file, *003_aqua_enforcer_secrets.yaml* manually to create the token secret.
 
 6. Deploy Aqua Enforcer as daemonset using the yaml file, *004_aqua_enforcer_daemonset.yaml*.
 
