@@ -63,7 +63,7 @@ Perform the following steps to deploy Aqua Enforcer manually:
 ### Specific OpenShift notes
 The deployment commands shown above use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platofrms including OpenShift.
 
-## Use Aquactl to prepare the deployment files
+## Automate Aqua Enforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Aqua Enforcer using Manifests](#deploy-aqua-enforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the Aqua Enforcer deployment.
 
 ### Command Syntax

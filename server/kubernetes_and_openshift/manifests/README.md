@@ -94,7 +94,7 @@ Perform the following steps to deploy Aqua server manually:
 ### Specific OpenShift notes
 The deployment commands shown above use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platofrms including OpenShift.
 
-## Deploy Aqua server using Aquactl
+## Automate Server deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Aqua server using Manifests](#deploy-aqua-server-using-manifests). Command shown in this section creates (downloads) manifests (yaml files) quickly and prepares them for the Aqua Server deployment.
 
 ### Command Syntax

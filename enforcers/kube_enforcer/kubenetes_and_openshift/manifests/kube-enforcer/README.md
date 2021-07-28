@@ -81,7 +81,7 @@ Perform the following steps to deploy KubeEnforcer manually:
 ### Specific OpenShift notes
 The deployment commands shown above use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platofrms including OpenShift.
 
-## Deploy KubeEnforcer using Aquactl
+## Automate KubeEnforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy KubeEnforcer using manifests](#deploy-kubeenforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the KubeEnforcer deployment.
 
 ### Command Syntax

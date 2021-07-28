@@ -29,7 +29,7 @@ It is recommended that you complete the sizing and capacity assessment for the d
 
 Consider the following options for deploying the KubeEnforcer:
 
-- **PEM-encoded CA bundle and SSL certs**: Use the *gen_ke_certs.sh* script to generate the required CA bundle, SSL certificates, and deploy the KubeEnforcer config. Refer to [KubeEnforcer SSL considerations](#kubeenforcer-ssl-considerations) section to generate CA bundle and SSl certificates manually.
+- **PEM-encoded CA bundle and SSL certs**: Use the *gen_ke_certs.sh* script to generate the required CA bundle, SSL certificates, and deploy the KubeEnforcer config. Refer to [KubeEnforcer SSL considerations](#kubeenforcer-ssl-considerations) section to generate CA bundle and SSL certificates manually.
 
 - **Mutual Auth / Custom SSL certs**: Prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files.
 
@@ -80,7 +80,7 @@ Perform the following steps to deploy KubeEnforcer manually:
 ### Specific OpenShift notes
 The deployment commands shown above use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platofrms including OpenShift.
 
-## Deploy KubeEnforcer using Aquactl
+## Automate KubeEnforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy KubeEnforcer using manifests](#deploy-kubeenforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the KubeEnforcer deployment. To deploy Aqua KubeEnforcer with starboard, include the **--starboard** flag in the aquactl download command syntax, in addition to the required flags for KubeEnforcer.
 
 ### Command Syntax
