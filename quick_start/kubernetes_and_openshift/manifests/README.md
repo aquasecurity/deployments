@@ -45,11 +45,15 @@ Through the quick-start deployment method, Aqua Enforcer is deployed to provide 
 2. Create a docker-registry secret to aqua-registry to download the images.
 
 3. Deploy Aqua Enterprise through quick-start method as explained below:
+
    a. As per your Enforcer and storage requirements, download the required yaml file mentioned in the current directory. For more information on selecting the yaml file that you need, refer to the [Configuration of Enforcers and storage](#configuration-of-enforcers-and-storage) section.
+
    b. *(Optional)* Edit the downloaded yaml file as required. 
+
    c. *(Optional)* To use yaml file for deploying Aqua Enterprise with KubeEnforcer, If you want to use private SSL certs, update the following resources in the yaml file:
       - **caBundle** property of the *ValidatingWebhookConfiguration* and *MutatingWebhookConfiguration*
-      - The **aqua_ke.key** and **aqua_ke.crt** literals of the kube-enforcer-ssl secret.
+      - **aqua_ke.key** and **aqua_ke.crt** of the kube-enforcer-ssl secrets.
+  
    d. Apply the edited yaml file.
 
 4. To access the Aqua Enterprise console on your Kubernetes platform, run the following command to get the external IP of the console:
