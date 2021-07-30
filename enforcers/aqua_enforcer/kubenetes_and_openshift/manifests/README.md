@@ -9,6 +9,9 @@ This repository shows the manifest yaml files required to deploy Aqua Enforcer o
 
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers) for detailed information.
 
+### Specific OpenShift notes
+The deployment commands shown below, use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platforms including OpenShift.
+
 ## Prerequisites for manifest deployment
 
 - Your Aqua credentials: username and password
@@ -45,9 +48,7 @@ Perform the following steps to deploy Aqua Enforcer manually:
 
 3. Create a service account by creating or applying the yaml file, *001_aqua_enforcer_serviceAccount.yaml*. 
 
-4. Download, edit, and apply ConfigMap as required, using the yaml file, *002_aqua_enforcer_configMaps.yaml*.
-
-5. Create secrets manually or download, edit, and apply the secrets yaml file as explained below:
+4. Create secrets manually or download, edit, and apply the secrets yaml file as explained below:
 
    * Pass the following command to create the token secret that authenticates the Aqua Enforcer over the Aqua Server:
 
@@ -58,10 +59,9 @@ Perform the following steps to deploy Aqua Enforcer manually:
 
      * Download, edit, and apply secrets yaml file, *003_aqua_enforcer_secrets.yaml* manually to create the token secret.
 
-6. Deploy Aqua Enforcer as daemonset using the yaml file, *004_aqua_enforcer_daemonset.yaml*.
+5. Download, edit, and apply ConfigMap as required, using the yaml file, *002_aqua_enforcer_configMaps.yaml*.
 
-### Specific OpenShift notes
-The deployment commands shown above use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platofrms including OpenShift.
+6. Deploy Aqua Enforcer as daemonset using the yaml file, *004_aqua_enforcer_daemonset.yaml*.
 
 ## Automate Aqua Enforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Aqua Enforcer using Manifests](#deploy-aqua-enforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the Aqua Enforcer deployment.

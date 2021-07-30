@@ -13,6 +13,9 @@ This repository shows the manifest yaml files required to deploy Aqua KubeEnforc
 
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua KubeEnforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers) for detailed information.
 
+## Specific OpenShift notes
+The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platforms including OpenShift.
+
 ## Prerequisites
 
 - Your Aqua credentials: username and password
@@ -34,7 +37,6 @@ Consider the following options for deploying the KubeEnforcer:
 
 - **Gateway**: To connect with an external Gateway in a multi-cluster deployment, update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the Gateway endpoint address in the *001_kube_enforcer_config.yaml* manifest file.
 
-
 ## Deploy KubeEnforcer using manifests
 
 You can deploy KubeEnforcer manually using the commands and manifests yaml files added in this directory. You should run commands as mentioned in the respective steps. From the following instructions:
@@ -43,12 +45,12 @@ You can deploy KubeEnforcer manually using the commands and manifests yaml files
 
 Perform the following steps to deploy KubeEnforcer manually:
 
-1. Create a namespace (or an OpenShif project) by name **aqua**.
+1. Create a namespace (or an OpenShift project) by name **aqua**.
 
 2. Create a docker-registry secret to aqua-registry for downloading images.
 
 3. Deploy the KubeEnforcer config using one of the following options:
-   - **Option A (Automatic)**: Use the shell script *gen_ke_certs.sh* provided by Aqua to generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key, aqua_ke.crt), and deploy the KubeEnforcer config (use the config file from directory without any changes). Run the shell script *gen_ke_certs.sh* to deploy the KubeEnforcer configuration automatically:
+   - **Option A (Automatic)**: Use the shell script *gen_ke_certs.sh* provided by Aqua to generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key, aqua_ke.crt), and deploy the KubeEnforcer config (use the config file from directory without any changes). Run the shell script *gen_ke_certs.sh* to deploy the KubeEnforcer configuration automatically.
 
    - **Option B (Manual)**: Perform the following steps to deploy the KubeEnforcer config manually:
   
@@ -77,9 +79,6 @@ Perform the following steps to deploy KubeEnforcer manually:
     * Download, edit, and apply secrets yaml file, *002_kube_enforcer_secrets.yaml* manually to create the token and SSL cert secrets.
 
 5. Deploy KubeEnforcer using the yaml file, *003_kube_enforcer_deploy.yaml*.
-
-### Specific OpenShift notes
-The deployment commands shown above use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platofrms including OpenShift.
 
 ## Automate KubeEnforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy KubeEnforcer using manifests](#deploy-kubeenforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the KubeEnforcer deployment.

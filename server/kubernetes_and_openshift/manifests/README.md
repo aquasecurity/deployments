@@ -7,6 +7,10 @@ This repository shows all the directories and manifest yaml files required to de
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Server Components](https://docs.aquasec.com/docs/deploy-k8s-server-components).
+
+## Specific OpenShift notes
+The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platforms including OpenShift.
+
 ## Prerequisites
 * Your Aqua credentials: username and password
 * Your Aqua Enterprise License Token
@@ -90,9 +94,6 @@ Perform the following steps to deploy Aqua server manually:
    * Option C: Use an OpenShift route. To deploy Aqua Enterprise in an OpenShift environment, expose both the console and the Gateway with a route by running the commands using the following yaml files from the directory, *aqua_csp_007_networking/openshift_route*:
       - *aqua-gateway-route.yaml*
       - *aqua-web-route.yaml*
-
-### Specific OpenShift notes
-The deployment commands shown above use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platofrms including OpenShift.
 
 ## Automate Server deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Aqua server using Manifests](#deploy-aqua-server-using-manifests). Command shown in this section creates (downloads) manifests (yaml files) quickly and prepares them for the Aqua Server deployment.

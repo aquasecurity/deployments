@@ -16,6 +16,9 @@ To deploy KubeEnforcer with starboard in the advanced configuration:
 
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua KubeEnforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers).
 
+## Specific OpenShift notes
+The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platforms including OpenShift.
+
 ## Prerequisites
 
 - Your Aqua credentials: username and password
@@ -45,7 +48,7 @@ You can deploy KubeEnforcer with starboard manually using the commands and manif
 
 Perform the following steps to deploy KubeEnforcer manually:
 
-1. Create a namespace (or an OpenShif project) by name **aqua**.
+1. Create a namespace (or an OpenShift project) by name **aqua**.
 
 2. Create a docker-registry secret to aqua-registry for downloading images.
 
@@ -79,9 +82,6 @@ Perform the following steps to deploy KubeEnforcer manually:
     * Download, edit, and apply secrets yaml file, *002_kube_enforcer_secrets.yaml* manually to create the token and SSL cert secrets.
 
 5. Deploy KubeEnforcer using the yaml file, *003_kube_enforcer_deploy.yaml*.
-
-### Specific OpenShift notes
-The deployment commands shown above use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platofrms including OpenShift.
 
 ## Automate KubeEnforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy KubeEnforcer using manifests](#deploy-kubeenforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the KubeEnforcer deployment. To deploy Aqua KubeEnforcer with starboard in the advanced configuration, include the **--starboard** and **--advanced-configuration** flags in the aquactl download command syntax, in addition to the required flags for KubeEnforcer.

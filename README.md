@@ -33,7 +33,7 @@ Users that require a Self-Hosted Enterprise edition should first use the followi
 
 A Quick Start option is avilable for small non-production deployments and quick evaluations. It is a one-click tool to deploy all of Aqua components, server and enforcers, in a single cluster for non-production usage.
 
-Before you start using the deployment methods documented in this reposiory, Aqua strongly recommends you to refer the [product documentation on Deployments](https://docs.aquasec.com/docs/deployment-overview).
+## Deployment methods
 
 You can deploy the mentioned Aqua components using one of the following methods:
 * manifests
@@ -45,3 +45,5 @@ You can deploy the mentioned Aqua components using one of the following methods:
 * Scripts
 
 Different deployment methods that are appliable to each Aqua component are organized in different directories in this repository.
+
+Before you start using the deployment methods documented in this repository, Aqua strongly recommends you to refer the [product documentation on Deployments](https://docs.aquasec.com/docs/deployment-overview).

@@ -9,6 +9,9 @@ This repository shows the manifest yaml files required to deploy Aqua Scanner on
 
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Aqua Scanner](https://docs.aquasec.com/docs/deploy-k8s-scanners) for detailed information.
 
+## Specific OpenShift notes
+Similar to deployment of Aqua Scanner using **kubectl** cli, you can also deploy using the **oc** or **podman** cli commands, to work on all platforms including OpenShift.
+
 ## Prerequisites
 
 - Your Aqua credentials: username and password
@@ -27,8 +30,9 @@ Consider the following options for deploying Aqua Scanner:
 - It is recommended to deploy scanners close to your registry to decrease the network latency and improve scanning performance.
 
 - **Mutual Auth / Custom SSL certs**: 
-  - **To use private CA**: Prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files at **/etc/ssl/certs**
-  - **To use Aqua generated certs**: Populate root CA to the scanner deployment. To get this cert, connect to aqua instance and copy it from **/opt/aquasec/cert.pem**. 
+  - **To use private CA:** Prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files at **/etc/ssl/certs**
+  
+  - **To use Aqua generated certs:** Populate root CA to the scanner deployment. To get this cert, connect to aqua instance and copy it from **/opt/aquasec/cert.pem**. 
 
 ## Deploy Scanner using manifests
 
@@ -47,9 +51,6 @@ Perform the following steps to deploy Aqua Scanner manually:
 4. Create secrets manually or download, edit, and apply the secrets yaml file, *002_scanner_secrets.yaml*.
 
 5. Deploy Aqua Scanner using the yaml file, *003_scanner_deploy.yaml*.
-
-## Specific OpenShift notes
-Similar to deployment of Aqua Scanner using **kubectl** cli, you can also deploy using the **oc** or **podman** cli commands, to work on all platforms including OpenShift.
 
 ## Automate Scanner deployment using Aquactl
 
