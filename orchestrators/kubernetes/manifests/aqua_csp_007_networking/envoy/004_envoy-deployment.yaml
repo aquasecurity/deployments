@@ -33,9 +33,10 @@ spec:
       labels:
         app: envoy
     spec:
+      serviceAccount: aqua-sa
       containers:
       - name: envoy
-        image: envoyproxy/envoy-alpine:v1.15.0
+        image: registry.aquasec.com/envoy:6.2
         env:
         - name: ENVOY_UID
           value: "0"
@@ -48,8 +49,8 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/envoy
-        - name: certs
-          mountPath: /etc/ssl/envoy
+#        - name: certs
+#          mountPath: /etc/ssl/envoy
         readinessProbe:
           httpGet:
             scheme: HTTPS
@@ -79,7 +80,7 @@ spec:
         configMap:
           defaultMode: 420
           name: envoy-conf
-      - name: certs
-        secret:
-          defaultMode: 420
-          secretName: aqua-lb-certs
+#      - name: certs
+#        secret:
+#          defaultMode: 420
+#          secretName: aqua-lb-certs
