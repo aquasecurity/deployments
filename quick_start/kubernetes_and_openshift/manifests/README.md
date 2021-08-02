@@ -50,7 +50,7 @@ Through the quick-start deployment method, Aqua Enforcer is deployed to provide 
 
    b. *(Optional)* Edit the downloaded yaml file as required. 
 
-   c. *(Optional)* To use yaml file for deploying Aqua Enterprise with KubeEnforcer, If you want to use private SSL certs, update the following resources in the yaml file:
+   c. *(Optional)* The quick start YAML files include a preconfigured key to deploy the KubeEnforcer component. If you want to use private SSL certs, update the following resources in the yaml file:
       - **caBundle** property of the *ValidatingWebhookConfiguration* and *MutatingWebhookConfiguration*
       - **aqua_ke.key** and **aqua_ke.crt** of the kube-enforcer-ssl secrets.
   
