@@ -51,7 +51,7 @@ You can skip any of the steps if you have already performed.
 **Step 1. Create a namespace (or an OpenShift  project) by name aqua (if not already done).**
 
    ```SHELL
-   $ kubectl kubectl create namespace aqua
+   $ kubectl create namespace aqua
    ```
 
 **Step 2. Create a docker-registry secret (if not already done).**
@@ -71,7 +71,7 @@ You can skip any of the steps if you have already performed.
    $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_002_RBAC/< PLATFORM >/aqua_sa.yaml
    ```
 
-## Deploy Aqua server
+## Deploy Aqua server using manifests
    
 **Step 1. Create the secrets manually or download, edit, and apply the secrets.** It is strongly recommended to change the database password (aqua-db).
 

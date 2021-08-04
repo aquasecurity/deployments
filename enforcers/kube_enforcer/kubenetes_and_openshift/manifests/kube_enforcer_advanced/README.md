@@ -1,15 +1,15 @@
 ## Aqua KubeEnforcer Advanced Overview
 
-Aqua KubeEnforcer Advanced is a method of deploying Aqua KubeEnforcer in a special Advanced configuration for Pod Enforcer injection. This causes Pod Enforcer traffic to be routed to the KubeEnforcers through a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways. For more information on the KubeEnforcer and its deployment, refer to [kube-enforcer](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers/kube_enforcer/manifests/kube-enforcer).
+Aqua KubeEnforcer Advanced is a method of deploying Aqua KubeEnforcer in a special Advanced configuration for Pod Enforcer injection. This causes Pod Enforcer traffic to be routed to the KubeEnforcers through a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways. For more information on the KubeEnforcer and its deployment, refer to [kube-enforcer](./manifests/kube-enforcer/../../../kube-enforcer/README.md).
 
 To deploy KubeEnforcer with Advanced configuration:
 - While performing the manual deployment, use the manifest yaml files specified in this directory.
-- While deploying KubeEnforcer using Aquactl, add the relevant flag as specified in the section, [Deploy KubeEnforcer using Aquactl](#deploy-kubeenforcer-using-aquactl).
+- While deploying KubeEnforcer using Aquactl, add the relevant flag as specified in the section, [Automate KubeEnforcer deployment using Aquactl](#automate-kubeenforcer-deployment-using-aquactl).
 
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Advanced Deployment for Aqua KubeEnforcer](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers#section-advanced-deployment-for-pod-enforcer-injection).
 
 ## Specific OpenShift notes
-The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
 
 ## Prerequisites
 

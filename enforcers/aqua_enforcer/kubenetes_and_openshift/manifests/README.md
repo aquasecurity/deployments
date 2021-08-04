@@ -1,6 +1,6 @@
 ## Aqua Enforcer Overview
 
-The Aqua Enforcer, running as a DaemonSet deployment, provides runtime security for your Kubernetes workloads by blocking unauthorized deployments, monitoring and restricting runtime activities, and generating audit events for your review. For more information, refer the product documentation, [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-aqua-enforcers) and [Aqua Enforcer](https://docs.aquasec.com/docs/aqua-enforcer).
+The Aqua Enforcer, running as a DaemonSet deployment, provides runtime security for your Kubernetes workloads by blocking unauthorized deployments, monitoring and restricting runtime activities, and generating audit events for your review. For more information, refer to the product documentation, [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-aqua-enforcers) and [Aqua Enforcer](https://docs.aquasec.com/docs/aqua-enforcer).
 
 This repository shows the manifest yaml files required to deploy Aqua Enforcer on the following Kubernetes platforms:
 * Kubernetes 
@@ -10,7 +10,7 @@ This repository shows the manifest yaml files required to deploy Aqua Enforcer o
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers) for detailed information.
 
 ### Specific OpenShift notes
-The deployment commands shown below, use the **kubectl** cli, however they can be easliy replaced with the **oc** or **podman** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below, use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
 
 ## Prerequisites for manifest deployment
 
@@ -23,7 +23,7 @@ It is recommended that you complete the sizing and capacity assessment for the d
 
 ## Considerations
 
-Consider the following options for deploying the Aqua Enforcer DaemonSet:
+You may consider the following options for deploying the Aqua Enforcer:
 
 - Mutual Auth / Custom SSL certs
 
@@ -33,35 +33,61 @@ Consider the following options for deploying the Aqua Enforcer DaemonSet:
   
   - To connect with an exteranl Gateway, update the **AQUA_SERVER** value with the gateway endpoint address in the *002_aqua_enforcer_configMaps.yaml* configMap manifest file.
 
+## Pre-deployment
+You can skip any of the steps if you have already performed.
+
+**Step 1. Create a namespace (or an OpenShift project) by name aqua (if not already done).**
+
+   ```SHELL
+   $ kubectl create namespace aqua
+   ```
+
+**Step 2. Create a docker-registry secret (if not already done).**
+
+   ```SHELL
+   $ kubectl create secret docker-registry aqua-registry \
+--docker-server=registry.aquasec.com \
+--docker-username=<your-name> \
+--docker-password=<your-pword> \
+--docker-email=<your-email> \
+-n aqua
+   ```
+
+**Step 3. Create a service account (if not already done).**
+
+   ```SHELL
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/001_aqua_enforcer_serviceAccount.yaml
+   ```
 
 ## Deploy Aqua Enforcer using manifests
 
-You can deploy Aqua enforcer manually using the manifest yaml files added in this directory. You should run commands as mentioned in the respective steps. From the following instructions:
-* Perform the steps 1 thru 3 only if you deploy the Enforcer in a cluster that does not have the Aqua namespace and service account
-* Skip to step 4 if the cluster already has Aqua namespace and service account
+**Step 1. Create secrets for deployment**
 
-Perform the following steps to deploy Aqua Enforcer manually:
+   * Create the token secret that authenticates the Aqua Enforcer over the Aqua Server.
 
-1. Create a namespace (or an OpenShif project) by name **aqua**.
+      ```SHELL
+      $ kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
+      ```
 
-2. Create a docker-registry secret to aqua-registry for downloading images.
+                                        (or)
 
-3. Create a service account by creating or applying the yaml file, *001_aqua_enforcer_serviceAccount.yaml*. 
+     * Download, edit, and apply the secrets.
 
-4. Create secrets manually or download, edit, and apply the secrets yaml file as explained below:
+      ```SHELL
+      $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/003_aqua_enforcer_secrets.yaml
+      ```    
 
-   * Pass the following command to create the token secret that authenticates the Aqua Enforcer over the Aqua Server:
+**Step 2. Deploy directly or download, edit, and apply ConfigMap as required.**
 
+   ```SHELL
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/002_aqua_enforcer_configMaps.yaml
+   ```
 
-    ```SHELL
-    $ kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
-    ```
+**Step 3. Deploy Aqua Enforcer as daemonset.**
 
-     * Download, edit, and apply secrets yaml file, *003_aqua_enforcer_secrets.yaml* manually to create the token secret.
-
-5. Download, edit, and apply ConfigMap as required, using the yaml file, *002_aqua_enforcer_configMaps.yaml*.
-
-6. Deploy Aqua Enforcer as daemonset using the yaml file, *004_aqua_enforcer_daemonset.yaml*.
+   ```SHELL
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
+   ```
 
 ## Automate Aqua Enforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Aqua Enforcer using Manifests](#deploy-aqua-enforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the Aqua Enforcer deployment.
@@ -96,12 +122,6 @@ Flag and type              | Values                                             
 | --token (string) | Deployment token for the Aqua Enforcer group, it defaults to **enforcer-token**|
 
 The **--gateway-url** flag identifies an existing Aqua Gateway used to connect the Aqua Enforcer. This flag is not used to configure a new Gateway, as in *aquactl download all* or *aquactl download server*.
-
-To get help on the Aquactl function, enter the following command:
-
-```SHELL
-aquactl download enforcer -h
-```
 
 After the manifests are created, follow the instructions that appear on the console to perform the actual deployment.
 
