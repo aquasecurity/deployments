@@ -10,18 +10,16 @@ This repository shows the manifest yaml files required to deploy Aqua Scanner on
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Aqua Scanner](https://docs.aquasec.com/docs/deploy-k8s-scanners) for detailed information.
 
 ## Specific OpenShift notes
-Similar to deployment of Aqua Scanner using **kubectl** cli, you can also deploy using the **oc** or **podman** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below use the **kubectl** cli, you can also deploy using the **oc** cli commands, to work on all platforms including OpenShift.
 
 ## Prerequisites
 
 - Your Aqua credentials: username and password
 - *Scanner* role permissions to authenicate over the Aqua server
-- Define the following secrets in base64 encoding:
+- Update the following secrets in base64 encoding in the *002_scanner_secrets.yaml* file:
   - AQUA_SCANNER_USERNAME
   - AQUA_SCANNER_PASSWORD
   - AQUA_SERVER (Aqua Server URL or IP followed by the HTTPS port number)
-
-It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide).
 
 ## Deployment considerations
 
@@ -34,23 +32,46 @@ Consider the following options for deploying Aqua Scanner:
   
   - **To use Aqua generated certs:** Populate root CA to the scanner deployment. To get this cert, connect to aqua instance and copy it from **/opt/aquasec/cert.pem**. 
 
+## Pre-deployment
+
+You can skip any of the steps if you have already performed.
+
+**Step 1. Create a namespace (or an OpenShift  project) by name aqua (if not already done).**
+
+```SHELL
+$ kubectl create namespace aqua
+```
+
+**Step 2. Create a docker-registry secret (if not already done).**
+
+```SHELL
+$ kubectl create secret docker-registry aqua-registry \
+--docker-server=registry.aquasec.com \
+--docker-username=<your-name> \
+--docker-password=<your-pword> \
+--docker-email=<your-email> \
+-n aqua
+```
+
+**Step 3. Create a service account (if not already done).**
+
+```SHELL
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/001_scanner_serviceAccount.yaml
+```
+
 ## Deploy Scanner using manifests
 
-You can deploy Aqua Scanner manually using the manifest yaml files added in this directory. You should run commands as mentioned in the respective steps. From the following instructions:
-* Perform the steps 1 thru 3 only if you deploy the Scanner in a cluster that does not have the Aqua namespace and service account
-* Skip to step 4 if the cluster already has Aqua namespace and service account
+**Step 1. Create secrets manually or download, edit, and apply the secrets.**
 
-Perform the following steps to deploy Aqua Scanner manually:
+```SHELL
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/002_scanner_secrets.yaml
+```
 
-1. Create a namespace (or an OpenShif project) by name aqua.
+**Step 2. Deploy Aqua Scanner.**
 
-2. Create a docker-registry secret to aqua-registry for downloading images.
-
-3. Create a service account by creating or applying the yaml file, *001_scanner_serviceAccount.yaml*.
-
-4. Create secrets manually or download, edit, and apply the secrets yaml file, *002_scanner_secrets.yaml*.
-
-5. Deploy Aqua Scanner using the yaml file, *003_scanner_deploy.yaml*.
+```SHELL
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/003_scanner_deploy.yaml
+```
 
 ## Automate Scanner deployment using Aquactl
 
@@ -85,12 +106,6 @@ Flag and type              | Values                                             
 | --server-url (string) | Aqua Server URL (IP, domain, or service name) followed by an HTTPS port. It defaults to **aqua-web:443**|
 | --username (string) | Username of an Aqua user with the Scanner role|
 | --password (string) | Password for the username with the Scanner role|
-
-To get help on the Aquactl function, enter the following command:
-
-```SHELL
-aquactl download scanner -h
-```
 
 After the manifests are created, follow the instructions that appear on the console to perform the actual deployment.
 

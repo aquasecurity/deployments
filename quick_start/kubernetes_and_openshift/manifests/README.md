@@ -2,7 +2,7 @@
 
 The quick-start deployment can be used to deploy Aqua Self-Hosted Enterprise on your Kubernetes cluster quickly and easily. It is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test.
 
-For production usage, enterprise-grade deployments, advanced use cases, and deployment on other Kubernetes platforms, deploy Aqua Enterprise with the required Aqua components (such as server, enforcers, scanner, so on.) on your orchestration platform. For more information, refer to the product documentation [Deploy Aqua Enterprise](https://docs.aquasec.com/v6.2/docs/deployment-overview).
+For production usage, enterprise-grade deployments, advanced use cases, and deployment on other Kubernetes platforms, deploy Aqua Enterprise with the required Aqua components (such as server, enforcers, scanner, so on.) on your orchestration platform. For more information, refer to the product documentation, [Deploy Aqua Enterprise](https://docs.aquasec.com/v6.2/docs/deployment-overview).
 
 The quick-start deployment supports the following Kubernetes platforms:
 * Kubernetes
