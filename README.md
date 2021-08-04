@@ -8,26 +8,26 @@
 
  Aqua components can be deployed on multiple platforms such as Kuberneters, ECS, OpenShift, no-orchestrator, and more, using different deployment methods such as manifests, helm, operator, proprietary cli tools, RPM, and scripts.
 
- This is the repository for Aqua product deployments. This repository explains different methods to deploy Aqua components as mentioned above. It also explains quick-start deployment method which is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test. For this deployment method, refer the [quick_start](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/6_quick_start) directory.
+ This is the repository for Aqua product deployments. This repository explains different methods to deploy Aqua components as mentioned above. It also explains quick-start deployment method which is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test. For this deployment method, refer the [quick_start](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/quick_start) directory.
 
 ## Aqua SaaS edition deployment
 
 Most users use Aqua SaaS edition, which relieve the user from building and operating an Aqua server in their datacenter. Aqua SaaS users need to deploy Enforcers in their environments to enable runtime protection of various workloads. However, there are a few more components that are available for Aqua SaaS users.
 Following are the different Aqua components that you should deploy as required, to start using Aqua SaaS edition:
-* [Enforcers](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers):  
+* [Enforcers](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers):  
   * Aqua Enforcer: Used for containers and host protection
   * Kube Enforcer: Used for full stack Kubernetes cluster protection 
   * VM Enforcer: Used for VM workloads protection
   * Micro Enforcer: Used for contrarians’ protection when there is no access to the host
   * Nano Enforcer: Used for Functions protection
-* [Scanner](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/3_scanner): Used to scan local repositories with no access to the SaaS instance
+* [Scanner](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/scanner): Used to scan local repositories with no access to the SaaS instance
 
 ## Aqua Self-Hosted edition deployment
 
 Users that require a Self-Hosted Enterprise edition should first use the following server components to build the local server:
-*  [Server](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/1_server): Includes the core server components – database, console, and gateway
-*  [Tenant Manager](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/4_tenant_manager) *(Optional)*: Component to manage multiple Aqua deployments from a single console
-*  [CyberCenter](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/5_CyberCenter): Component for air-gap environments 
+*  [Server](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/server): Includes the core server components – database, console, and gateway
+*  [Tenant Manager](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/tenant_manager) *(Optional)*: Component to manage multiple Aqua deployments from a single console
+*  [CyberCenter](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/cyber_center): Component for air-gap environments 
 
 ## Quick Start
 

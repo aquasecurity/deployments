@@ -1,6 +1,6 @@
 ## Overview
 
-The KubeEnforcer runs as single replica deployment and provides runtime security for your Kubernetes workloads and infrastructure. KubeEnforcers are supported on Linux platforms (with exception of VMware Tanzu TKGI). A single KubeEnforcer can be deployed on each Kubernetes cluster. As the name implies, KubeEnforcers support Kubernetes-specific functionality to perform its functions, without the need for an Aqua Enforcer. For more information, refer to [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-kube-enforcers)
+The KubeEnforcer runs as single replica deployment and provides runtime security for your Kubernetes workloads and infrastructure. KubeEnforcers are supported on Linux platforms (with exception of VMware Tanzu TKGI). A single KubeEnforcer can be deployed on each Kubernetes cluster. As the name implies, KubeEnforcers support Kubernetes-specific functionality to perform its functions, without the need for an Aqua Enforcer. For more information, refer to [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-kube-enforcers).
 
 It uses native Kubernetes Admission Controller APIs:
 * [MutatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#mutatingadmissionwebhook) seamlessly applies security controls to the applications in the cluster.

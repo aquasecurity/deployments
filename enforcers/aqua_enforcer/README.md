@@ -6,6 +6,6 @@ You can deploy the Aqua enforcer component using one of the following methods:
 * [manifests and Aquactl](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests)
 * [operator](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/kubenetes_and_openshift/operator)
 * [Helm](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/kubenetes_and_openshift/helm)
-* [AWS CloudFormation](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/2_enforcers/aqua_enforcer/cloudformation) on the ECS and EC2 clusters 
+* [AWS CloudFormation](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/ecs/cloudformation) on the ECS and EC2 clusters 
 
 Details of each deployment method is explained in the respective directory shown above. Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends you to refer the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers), [Kubernetes with Helm Charts](https://docs.aquasec.com/docs/kubernetes-with-helm#section-step-4-deploy-the-aqua-enforcer), and [Deploy Aqua on Amazon Elastic Container Service (ECS)](https://docs.aquasec.com/docs/amazon-elastic-container-service-ecs#section-step-2-deploy-aqua-enforcers).
