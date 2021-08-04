@@ -71,25 +71,25 @@ $ kubectl create secret docker-registry aqua-registry \
 
 **Step 2.  Create token and SSL secrets**
 
-    * Create the token secret that authenticates the KubeEnforcer over the Aqua Server
+* Create the token secret.
 
-      ```shell
-      $ kubectl create secret generic aqua-kube-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
-      ```
+  ```shell
+  $ kubectl create secret generic aqua-kube-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
+  ```
 
-    * Create the SSL cert secret using SSL certificates
+* Create the SSL cert secret using SSL certificates.
     
-      ```shell
-      $ kubectl create secret generic kube-enforcer-ssl --from-file aqua_ke.key --from-file aqua_ke.crt -n aqua
-      ```
+  ```shell
+  $ kubectl create secret generic kube-enforcer-ssl --from-file aqua_ke.key --from-file aqua_ke.crt -n aqua
+  ```
 
                                         (or)
 
-     * Download, edit, and apply the secrets manifest file to create the token and SSL cert secrets.
+* Download, edit, and apply the secrets manifest file to create the token and SSL cert secrets.
 
-      ```SHELL
-      $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubenetes_and_openshift/manifests/kube-enforcer/002_kube_enforcer_secrets.yaml
-      ```    
+  ```SHELL
+  $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubenetes_and_openshift/manifests/kube-enforcer/002_kube_enforcer_secrets.yaml
+  ```    
 
 **Step 3. Deploy KubeEnforcer.**
 
