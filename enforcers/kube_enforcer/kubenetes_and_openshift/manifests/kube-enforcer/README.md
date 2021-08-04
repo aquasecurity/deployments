@@ -31,7 +31,7 @@ It is recommended that you complete the sizing and capacity assessment for the d
 
 Consider the following options for deploying the KubeEnforcer:
 
-- **PEM-encoded CA bundle and SSL certs**: Use the *gen_ke_certs.sh* script to generate the required CA bundle, SSL certificates, and deploy the KubeEnforcer config. To generate CA bundle and SSl certificates manually, refer to the product documentation, [Configure mTLS](https://docs.aquasec.com/docs/configure-mtls).
+- **PEM-encoded CA bundle and SSL certs**: Use the *gen_ke_certs.sh* script to generate the required CA bundle, SSL certificates, and deploy the KubeEnforcer config. To generate CA bundle and SSL certificates manually, refer to the product documentation, [Configure mTLS](https://docs.aquasec.com/docs/configure-mtls).
 
 - **Mutual Auth / Custom SSL certs**: Prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files.
 
@@ -59,7 +59,7 @@ $ kubectl create secret docker-registry aqua-registry \
 
 ## Deploy KubeEnforcer using manifests
 
-**Step 1. Deploy the KubeEnforcer Config**
+**Step 1. Deploy the KubeEnforcer Config.**
 
    - **Option A (Automatic)**: Generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key, aqua_ke.crt), and deploy the KubeEnforcer config.
 
@@ -69,7 +69,7 @@ $ kubectl create secret docker-registry aqua-registry \
 
    - **Option B (Manual)**: Perform the steps mentioned in the [Deploy the KubeEnforcer Config manually](#deploy-the-kubeenforcer-config-manually) section.
 
-**Step 2.  Create token and SSL secrets**
+**Step 2.  Create token and SSL secrets.**
 
 * Create the token secret.
 
@@ -106,6 +106,10 @@ Step 2. Generate a CA bundle and SSL certs.
 Step 3. Modify the config yaml file to include the PEM-encoded CA bundle (caBundle).
 
 Step 4. Apply the modified manifest file config.
+
+```shell
+$ kubectl apply -f 001_kube_enforcer_config.yaml
+```
 
 ## Automate KubeEnforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy KubeEnforcer using manifests](#deploy-kubeenforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the KubeEnforcer deployment.
