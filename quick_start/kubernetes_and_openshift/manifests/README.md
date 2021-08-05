@@ -1,8 +1,8 @@
 ## Overview
 
-The quick-start deployment can be used to deploy Aqua Self-Hosted Enterprise on your Kubernetes cluster quickly and easily. It is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test.
+The quick-start deployment can be used to deploy Aqua Self-Hosted Enterprise on your Kubernetes cluster quickly and easily. It is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test but not for production environments.
 
-For production usage, enterprise-grade deployments, advanced use cases, and deployment on other Kubernetes platforms, deploy Aqua Enterprise with the required Aqua components (such as server, enforcers, scanner, so on.) on your orchestration platform. For more information, refer to the product documentation, [Deploy Aqua Enterprise](https://docs.aquasec.com/v6.2/docs/deployment-overview).
+For production usage, enterprise-grade deployments, advanced use cases, and deployment on other Kubernetes platforms, deploy Aqua Enterprise with the required Aqua components (such as server, enforcers, scanner, so on.) on your orchestration platform. For more information, refer to the product documentation, [Deploy Aqua Enterprise](https://docs.aquasec.com/docs/deployment-overview).
 
 The quick-start deployment supports the following Kubernetes platforms:
 * Kubernetes
@@ -10,26 +10,20 @@ The quick-start deployment supports the following Kubernetes platforms:
 * EKS (Amazon Elastic Kubernetes Service)
 * GKE (Google Kubernetes Engine)
 
-Deployment commands shown in this file uses **kubectl** cli, however they can easliy be replaced with the **oc** cli command.
+Deployment commands shown in this file uses **kubectl** cli, however they can easliy be replaced with the **oc** cli commands.
 
-Before you start using the quick-start deployment method documented in this reposiory, Aqua strongly recommends you to refer the product documentation, [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/v6.2/docs/quick-start-guide-for-kubernetes).
+Before you start using the quick-start deployment method documented in this reposiory, Aqua strongly recommends you to refer the product documentation, [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/docs/quick-start-guide-for-kubernetes).
 
 ## Prerequisites
 * Your Aqua credentials: username and password
 * Your Aqua Enterprise License Token
 * Access to the target Kubernetes cluster
 
-## Security considerations
-
-Consider the following options for deployment:
-
-* **PEM-encoded CA bundle and SSL certs:** The quick start yaml files include a preconfigured key to deploy the KubeEnforcer component. If you want to generate private CA and the public and private keys (SSL keys) signed by the private CA, refer to the KubeEnforcer [SSL considerations](#kubeenforcer-ssl-considerations) section.
-
-* **Mutual Auth / Custom SSL certs:** Prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the yaml file with the mounts to the SSL secrets files.
-
 ## Configuration of Enforcers and storage
 
-Through the quick-start deployment method, Aqua Enforcer is deployed to provide runtime security for your Kubernetes workloads. KubeEnforcer can also be deployed as required, in addition to Aqua Enforcer. If your Kubernetes cluster has shared storage, Aqua can be deployed to use the same. If you use Minikube or your cluster does not have shared storage, Aqua can be deployed using the host path for persistent storage. The following table shows different manifest yaml files that can be used to deploy Aqua through quick-start method:
+Through the quick-start deployment method, Aqua Enforcer is deployed to provide runtime security for your Kubernetes workloads. In addition to Aqua Enforcer, KubeEnforcer can also be deployed. If your Kubernetes cluster has shared storage, Aqua can be deployed to use the same. If you use Minikube or your cluster does not have shared storage, Aqua can be deployed using the host path for persistent storage. 
+
+The following table shows different manifest yaml files that can be used to deploy Aqua through quick-start method:
 
 | File                                   | Purpose                                                                                             |
 |----------------------------------------|---------------------------------------------------------------------------------------------------|
@@ -38,38 +32,52 @@ Through the quick-start deployment method, Aqua Enforcer is deployed to provide 
 | aqua-csp-quick-default-storage.yaml    | Deploy Aqua Enterprise with the Aqua Enforcer and KubeEnforcer, and use default-storage           |
 | aqua-csp-quick-hostpath.yaml           | Deploy Aqua Enterprise with the Aqua Enforcer and KubeEnforcer, and use the host-path for storage |
 
-## Deploy Aqua Enterprise using quick-start method
+## Pre-deployment
 
-1. Create a namespace (or an OpenShift project) by name **aqua**.
+You can skip any of the steps if you have already performed.
 
-2. Create a docker-registry secret to aqua-registry to download the images.
+**Step 1. Create a namespace by name aqua (if not already done).**
 
-3. Deploy Aqua Enterprise through quick-start method as explained below:
+```SHELL
+$ kubectl create namespace aqua
+```
 
-   a. As per your Enforcer and storage requirements, download the required yaml file mentioned in the current directory. For more information on selecting the yaml file that you need, refer to the [Configuration of Enforcers and storage](#configuration-of-enforcers-and-storage) section.
+**Step 2. Create a docker-registry secret (if not already done).**
 
-   b. *(Optional)* Edit the downloaded yaml file as required. 
+   ```SHELL
+   $ kubectl create secret docker-registry aqua-registry \
+--docker-server=registry.aquasec.com \
+--docker-username=<your-name> \
+--docker-password=<your-pword> \
+-n aqua
+   ```
 
-   c. *(Optional)* The quick start YAML files include a preconfigured key to deploy the KubeEnforcer component. If you want to use private SSL certs, update the following resources in the yaml file:
-      - **caBundle** property of the *ValidatingWebhookConfiguration* and *MutatingWebhookConfiguration*
-      - **aqua_ke.key** and **aqua_ke.crt** of the kube-enforcer-ssl secrets.
-  
-   d. Apply the edited yaml file.
+## Deploy Aqua Enterprise in your cluster
 
-4. To access the Aqua Enterprise console on your Kubernetes platform, run the following command to get the external IP of the console:
+Deploy Aqua Enterprise using the required yaml file mentioned in the current directory as per your use case. For example:
+
+```SHELL
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/quick_start/kubernetes_and_openshift/manifests/aqua-csp-quick-DaemonSet-hostPath.yaml
+```
+
+For more information on selecting the yaml file that you need, refer to the [Configuration of Enforcers and storage](#configuration-of-enforcers-and-storage) section.
+
+## Access Aqua Enterprise console
+
+**Step 1. Get the external IP of the console.**
 
     ```SHELL
     $ kubectl get svc -n aqua
     ```
 
-5. If you have deployed Aqua Enterprise on Minikube, run the following commands to get the external IP of the console:
+**Step 2. Get the external IP of the console, if Aqua Enterprise is deployed on Minikube.**
 
     ```SHELL
     $ minikube tunnel
     $ kubectl get svc -n aqua
     ```
 
-When the **aqua-web** service is ready, you can access it from your browser through the following url:
+**Step 3. Access aqua-web service from your browser using the url:**
 
     ```SHELL
     http://<aqua-web service>:<aqua-web port>
