@@ -7,7 +7,7 @@ Aqua scanner scans the following types of objects for security issues:
 
 Scanner registers container images with Aqua and imports results of scans already performed. You can deploy Aqua Scanner on both the Aqua SaaS and Self-Hosted Enterprise editions using one of the following methods:
 
-* [manifests and Aquactl](./kubernetes_and_openshift/manifests/README.md)
+* [manifests and Aquactl](./kubernetes_and_openshift/manifests/)
 * oprator
 * Helm
 * AWS CloudFormation on the EC2 clusters
