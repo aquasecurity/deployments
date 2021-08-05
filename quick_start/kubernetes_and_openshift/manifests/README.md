@@ -52,7 +52,7 @@ $ kubectl create namespace aqua
 -n aqua
    ```
 
-## Deploy Aqua Enterprise
+## Deploy Aqua Enterprise in your cluster
 
 Deploy Aqua Enterprise using the required yaml file mentioned in the current directory as per your use case. For example:
 
@@ -62,21 +62,22 @@ $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.
 
 For more information on selecting the yaml file that you need, refer to the [Configuration of Enforcers and storage](#configuration-of-enforcers-and-storage) section.
 
+## Access Aqua Enterprise console
 
-1. To access the Aqua Enterprise console on your Kubernetes platform, run the following command to get the external IP of the console:
+**Step 1. Get the external IP of the console.**
 
     ```SHELL
     $ kubectl get svc -n aqua
     ```
 
-2. If you have deployed Aqua Enterprise on Minikube, run the following commands to get the external IP of the console:
+**Step 2. Get the external IP of the console, if Aqua Enterprise is deployed on Minikube.**
 
     ```SHELL
     $ minikube tunnel
     $ kubectl get svc -n aqua
     ```
 
-When the **aqua-web** service is ready, you can access it from your browser through the following url:
+**Step 3. Access aqua-web service from your browser using the url:**
 
     ```SHELL
     http://<aqua-web service>:<aqua-web port>
