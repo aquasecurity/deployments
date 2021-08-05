@@ -34,7 +34,7 @@ The following table shows different manifest yaml files that can be used to depl
 
 ## Pre-deployment
 
-You can skip any of the steps if you have already performed.
+You can skip any step if you have already performed.
 
 **Step 1. Create a namespace by name aqua (if not already done).**
 
@@ -44,13 +44,13 @@ $ kubectl create namespace aqua
 
 **Step 2. Create a docker-registry secret (if not already done).**
 
-   ```SHELL
-   $ kubectl create secret docker-registry aqua-registry \
+```SHELL
+$ kubectl create secret docker-registry aqua-registry \
 --docker-server=registry.aquasec.com \
 --docker-username=<your-name> \
 --docker-password=<your-pword> \
 -n aqua
-   ```
+```
 
 ## Deploy Aqua Enterprise in your cluster
 
@@ -66,100 +66,43 @@ For more information on selecting the yaml file that you need, refer to the [Con
 
 **Step 1. Get the external IP of the console.**
 
-    ```SHELL
-    $ kubectl get svc -n aqua
-    ```
+```SHELL
+$ kubectl get svc -n aqua
+```
 
 **Step 2. Get the external IP of the console, if Aqua Enterprise is deployed on Minikube.**
 
-    ```SHELL
-    $ minikube tunnel
-    $ kubectl get svc -n aqua
-    ```
+```SHELL
+$ minikube tunnel
+$ kubectl get svc -n aqua
+```
 
 **Step 3. Access aqua-web service from your browser using the url:**
 
-    ```SHELL
-    http://<aqua-web service>:<aqua-web port>
-    ```
+```SHELL
+http://<aqua-web service>:<aqua-web port>
+```
 
 ## Troubleshooting to access Aqua Enterprise
 
-If you did not define a default load-balancer for your Kubernetes cluster, aqua-web's public service IP status will remain frozen as "pending", after deploying through quick-start method. In this case, you can access Aqua Enterprise using a client-side kubectl tunnel. To access Aqua Enterprise:
+If you did not define a default load-balancer for your Kubernetes cluster, aqua-web's public service IP status will remain frozen as "pending", after deploying through quick-start method. In this case, you can access Aqua Enterprise using a client-side kubectl tunnel. 
 
-1. Run the following commands to get aqua-web’s cluster IP and use the kubectl port-forward command in a separate window to open the tunnel.
+If load-balancer is not defined, to access Aqua Enterprise:
 
-    ```SHELL
-    $ kubectl get pods -n aqua
-    $ kubectl port-forward -n aqua aqua-web <LOCAL_TUNNEL_PORT>:<AQUA_POD_CLUSTER_IP>
-    ```
+**Step 1. Use kubectl to get aqua-web’s cluster IP.**
 
-2. In your browser, run the following url to access Aqua Enterprise:
+```SHELL
+$ kubectl get pods -n aqua
+```
 
-    ```SHELL
-    http://localhost:<LOCAL_TUNNEL_PORT>
-    ```
+**Step 2. Use the kubectl port-forward command in a separate window to open the tunnel.**
 
-## KubeEnforcer SSL considerations
-Following are the SSL considerations supporting deployment of Aqua Enterprise with KubeEnforcer through quick-start method:
+```SHELL
+$ kubectl port-forward -n aqua aqua-web <LOCAL_TUNNEL_PORT>:<AQUA_POD_CLUSTER_IP>
+```
 
-1. Create root CA: Perform the following steps to create a root CA.
+**Step 3. Access Aqua Enterprise from your browser using the url:**
 
-    a. Create root key:
-
-     ```shell
-     openssl genrsa -des3 -out rootCA.key 4096
-     ```
-
-    b. Create and self-sign the root certificate:
-
-     ```shell
-     openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt -subj "/CN=admission_ca"
-     ```
-
-2. Create the KubeEnforcer certificate: Perform the following steps to create a certificate.
-
-    a. Create the KubeEnforcer certificate key:
-
-     ```shell
-     openssl genrsa -out aqua_ke.key 2048
-     ```
-
-    b. Create the signing (csr):
-
-     ```shell
-     cat >server.conf <<EOF
-     [req]
-     req_extensions = v3_req
-     distinguished_name = req_distinguished_name
-     [req_distinguished_name]
-     [alt_names ]
-     DNS.1 = aqua-kube-enforcer.aqua.svc
-     DNS.2 = aqua-kube-enforcer.aqua.svc.cluster.local
-     [ v3_req ]
-     basicConstraints = CA:FALSE
-     keyUsage = nonRepudiation, digitalSignature, keyEncipherment
-     extendedKeyUsage = clientAuth, serverAuth
-     subjectAltName = @alt_names
-     EOF
-     ```
-
-     ```shell
-     openssl req -new -sha256 \
-     -key aqua_ke.key \
-     -subj "/CN=aqua-kube-enforcer.aqua.svc" \
-     -config server.conf \
-     -out aqua_ke.csr
-     ```
-
-3. Generate the certificate using the aqua_ke.csr, root certificate, and the CA root key:
-
-   ```shell
-   openssl x509 -req -in aqua_ke.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out aqua_ke.crt -days 1024 -sha256 -extensions v3_req -extfile server.conf 
-   ``` 
-
-4. Verify the certificate's content:
-
-   ```shell
-   openssl x509 -in aqua_ke.crt -text -noout
-   ```
+```SHELL
+http://localhost:<LOCAL_TUNNEL_PORT>
+```
