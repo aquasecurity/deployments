@@ -1,6 +1,6 @@
 ## Aqua Scanner Overview
 
-Aqua scanner scans container images, VMware Tanzu applications, and serverless functions for security issues such as vulnerabilities, sensitive data, and malware. Scanner registers container images with Aqua and imports results of scans already performed. For more information, refer to the product documentation, [Aqua Scanner Overview](https://docs.aquasec.com/docs/aqua-scanner). Aqua Scanner should be deployed on both the Aqua SaaS and Self-Hosted Enterprise editions.
+Aqua scanner scans container images, VMware Tanzu applications, and serverless functions for security issues such as vulnerabilities, sensitive data, and malware. Scanner registers container images with Aqua and imports results of scans already performed. For more information, refer to the product documentation, [Aqua Scanner Overview](https://docs.aquasec.com/docs/aqua-scanner). Aqua Scanner can be deployed on both the Aqua SaaS and Self-Hosted Enterprise editions.
 
 This repository shows the manifest yaml files required to deploy Aqua Scanner on the following Kubernetes platforms:
 * Kubernetes

@@ -1,1 +1,5 @@
-### WIP
+## Deploy KubeEnforcer using Helm
+
+Aqua KubeEnforcer can be deployed for both the Aqua SaaS and Self-Hosted Enterprise editions on your Kubernetes cluster, using the [Helm package manager](https://helm.sh/). KubeEnforcer can be deployed on the same cluster as the Aqua Server or on a different cluster, as per configuration. KubeEnforcer can be deployed with Starboard and/or advanced configuration by passing the required parameters through Helm commands. For more information on the KubeEnforcer, refer to the Production documentation, [Aqua KubeEnforcer](https://scalock.readme.io/docs/kubeenforcer).
+
+To deploy KubeEnforcer using Helm charts, use artifacts and refer deployment instructions from the [Aqua Security Helm repository on GitHub](https://github.com/aquasecurity/aqua-helm/). Ensure that you use the latest branch of the Aqua Security Helm repository.
