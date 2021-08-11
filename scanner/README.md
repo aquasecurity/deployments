@@ -1,4 +1,6 @@
-### Aqua Scanner Overview
+# Aqua Scanner
+
+### Overview
 Aqua scanner performs scanning of the following objects for security issues:
 * Container images
 * VMware Tanzu applications

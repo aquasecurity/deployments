@@ -1,4 +1,6 @@
-### Aqua Enforcer Overview
+# Aqua Enforcer 
+
+### Overview
 
 Aqua Enforcers provide full runtime protection and other functionality for containers and selected host-related functionality.
 

@@ -1,4 +1,6 @@
-### Aqua Server Overview
+# Aqua Server
+
+### Overview
 This components includes the following deployments:
 * Console (Aqua UI)
 * Gateway
