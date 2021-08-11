@@ -1,11 +1,21 @@
-## Overview
+### Aqua Enforcer Overview
 
-Aqua enforcer provides full runtime protection and other functionality for containers, as well as selected host-related functionality. The Aqua enforcer, running as a DaemonSet deployment, provides runtime security for your Kubernetes workloads by blocking unauthorized deployments, monitoring and restricting runtime activities, and generating audit events for your review. Aqua enforcer is supported on the Linux and Windows platforms. Deployment of Aqua enforcer is optional. A single Aqua Enforcer can be deployed per Kubernetes node (or non-Kubernetes host). For more information, refer the product documentation, [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-aqua-enforcers) and [Aqua Enforcer](https://docs.aquasec.com/docs/aqua-enforcer).
+Aqua Enforcers provide full runtime protection and other functionality for containers and selected host-related functionality.
 
-You can deploy the Aqua enforcer component using one of the following methods:
-* [manifests and Aquactl](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests)
-* [operator](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/kubenetes_and_openshift/operator)
+In Kubernetes, the enforcer runs as a DaemonSet deployment for workload runtime security, blocking unauthorized deployments, monitoring and restricting runtime activities and generating audit events.
+
+### Deployment Methods
+* [Manifests and Aquactl](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests)
 * [Helm](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/kubenetes_and_openshift/helm)
-* [AWS CloudFormation](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/ecs/cloudformation) on the ECS and EC2 clusters 
+* [Operator](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/kubenetes_and_openshift/operator)
+* [AWS CloudFormation](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/aqua_enforcer/ecs/cloudformation) for ECS and EC2 clusters 
 
-Details of each deployment method is explained in the respective directory shown above. Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends you to refer the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers), [Kubernetes with Helm Charts](https://docs.aquasec.com/docs/kubernetes-with-helm#section-step-4-deploy-the-aqua-enforcer), and [Deploy Aqua on Amazon Elastic Container Service (ECS)](https://docs.aquasec.com/docs/amazon-elastic-container-service-ecs#section-step-2-deploy-aqua-enforcers).
+### Supported Platforms
+* Docker
+* ECS
+* Kubernetes and Openshift
+
+### References
+Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends you to refer the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers), [Kubernetes with Helm Charts](https://docs.aquasec.com/docs/kubernetes-with-helm#section-step-4-deploy-the-aqua-enforcer), and [Deploy Aqua on Amazon Elastic Container Service (ECS)](https://docs.aquasec.com/docs/amazon-elastic-container-service-ecs#section-step-2-deploy-aqua-enforcers).
+
+For the product documentation, [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-aqua-enforcers) and [Aqua Enforcer](https://docs.aquasec.com/docs/aqua-enforcer).
