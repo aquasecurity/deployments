@@ -1,10 +1,10 @@
 ## Deploy Aqua Server using Operator
 
-The aqua-operator is a group of controllers that runs within your OpenShift cluster. It supports to deploy and manage an Aqua Security cluster and components, including Server. Operator is designed for OpenShift clusters of version later than 4.0.
+Server can be deployed on your Kubernetes cluster for the Aqua Self-Hosted Enterprise edition. To deploy Aqua server using aqua-operator, use the following resources from the respective directories:
 
-You can use the aqua-operator to:
-* Deploy Aqua Enterprise components in the OpenShift clusters
-* Scale up Aqua Enterprise components with extra replicas
-* Assign metadata tags to Aqua Enterprise components
+* Deploy Aqua Operator
+* [Deploy Aqua server using Custom Resources (CRDs)](https://github.com/aquasecurity/aqua-operator/tree/6.2.0/deploy/crds)
+* Refer CR examples
+* [For detailed deployment instructions and CR examples, refer to Operator repo](https://github.com/aquasecurity/aqua-operator/blob/6.2.0/docs/DeployOpenShiftOperator.md)
 
-Server can be deployed for the Aqua Self-Hosted Enterprise edition on your Kubernetes cluster. To deploy Aqua server using the aqua-operator, use artifacts and refer deployment instructions from the [Aqua Security Operator repository on GitHub](https://github.com/aquasecurity/aqua-operator). Ensure that you use the latest branch of the Aqua Security Operator repository.
+Ensure that you use the latest branch of the Aqua Security Operator repository.
