@@ -1,103 +1,118 @@
 <img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" height="100" width="100" />
 
-# Deploying the VM Enforcer using RPM
+# Aqua VM Enforcer
 
-## Description
-The RPM Package Manager (RPM) is a powerful package management system used by Red Hat Linux and its derivatives such as CentOS and Fedora. RPM also refers to the `rpm` command and `.rpm` file format. 
+## RPM Deployment
+
+### Overview
+Red Hat Linux and its derivatives such as CentOS and Fedora use RPM Package Manager to manage and install software. RPM also refers to the `rpm`, `yum` and `dnf` commands and `.rpm` file format. 
 
 You can use RPM to deploy a VM Enforcer on one or more VMs (hosts).
-## Prerequisites
+### Prerequisites
 Following packages are required for installing VM Enforcer `.rpm` package
 * wget
 * tar
 * jq
 * runc
 
-## Deploy the VM Enforcer
+### Deploy the VM Enforcer
 
-1. Download the RPM package from Aqua Security, using an authorized user and password:
-   1. For x86_64/amd64 systems:
-    ```shell
-    wget -v https://download.aquasec.com/host-enforcer/6.2.0/aqua-vm-enforcer-6.2.21166.x86_64.rpm --user=<Username> --ask-password
-    ```
-   2. For arm64 systems:
-    ```shell
-    wget -v https://download.aquasec.com/host-enforcer/6.2.0/aqua-vm-enforcer-6.2.21166.aarch64.rpm --user=<Username> --ask-password
-    ```
+1. Download the RPM package for your architecture, using an authorized user and password:
+   * x86_64/amd64
+       ```shell
+       wget -v https://download.aquasec.com/host-enforcer/<release-number>/aqua-vm-enforcer-<build-number>.x86_64.rpm \
+        --user=<Username> \
+        --ask-password
+       ```
+   * arm64
+     ```shell
+     wget -v https://download.aquasec.com/host-enforcer/<release-number>/aqua-vm-enforcer-<build-number>.aarch64.rpm \
+      --user=<Username> \
+      --ask-password
+     ```
+   Make sure to replace the `<release-number>` and `<build-number>` with the relevant versions (e.g. 6.2.0 and 6.2.21215).
 
-2. Copy the downloaded RPM package to the VM(s) on which you want to deploy a VM Enforcer.
 
-3. To configure the Gateway address and Enforcer group token, start by creating the `aquavmenforcer.json` configuration file:
-    ```shell
-    sudo mkdir -p /etc/conf/ && sudo touch /etc/conf/aquavmenforcer.json
-    ```
+2. Copy the downloaded RPM package onto the target VM(s)
 
-4. In the command that follows, change the `<GATEWAY_HOSTENAME>:<PORT>` to the Aqua Gateway host/IP address and port, and change `<TOKEN VALUE>` to the Enforcer group token.
-Then execute the command.
-```shell
-sudo tee /etc/conf/aquavmenforcer.json << EOF
-{
-    "AQUA_GATEWAY": "{GATEWAY_HOSTENAME}:{PORT}",
-    "AQUA_TOKEN": "{TOKEN VALUE}"
-}
-EOF
-```
 
-5. Deploy the RPM: Once the configuration completes, deploy the RPM package using this command:
+3. Write the `aquavmenforcer.json` configuration file with:
+   * Gateway address
+   * Enforcer group token
+     ```shell
+     sudo mkdir -p /etc/conf/
+     sudo touch /etc/conf/aquavmenforcer.json
+     ```
+
+4. Run the following command with the relevant values for:
+
+   * `GATEWAY_HOSTENAME` and `PORT`: Aqua Gateway host/IP address and port
+   * `TOKEN VALUE`: Enforcer group token.
+   
+   ```shell
+   sudo tee /etc/conf/aquavmenforcer.json << EOF
+   {
+       "AQUA_GATEWAY": "{GATEWAY_HOSTENAME}:{PORT}",
+       "AQUA_TOKEN": "{TOKEN VALUE}"
+   }
+   EOF
+   ```
+
+5. Deploy the RPM
 
     ```shell
     sudo rpm -ivh /path/to/aqua-vm-enforcer-{version}.{arch}.rpm
     ```
 
-## Upgrade the VM Enforcer using the RPM package
+## Upgrade
 
-1. Download the (updated) RPM package from Aqua Security, using an authorized user and password:
-   1. For x86_64/amd64 systems:
-    ```shell
-    wget -v https://download.aquasec.com/internal/host-enforcer/6.2.0/aqua-vm-enforcer-{version}.x86_64.rpm --user=<Username> --ask-password
-    ```
-   2. For arm64 systems:
-    ```shell
-    wget -v https://download.aquasec.com/internal/host-enforcer/6.2.0/aqua-vm-enforcer-{version}.aarch64.rpm --user=<Username> --ask-password
-    ```
+These instructions are to upgrade the VM Enforcer using the RPM package
 
-    `version : change {version} to latest available vm-enforcer version and download`
+1. Download the (updated) RPM package following the step above
 
-2. Once the package has been downloaded, upgrade the VM Enforcer using this command:
 
-```shell
-    sudo rpm -U /path/to/aqua-vm-enforcer-{version}.{arch}.rpm
-```
+2. Upgrade the VM Enforcer using this command:
 
-## Check the VM Enforcer application logs
+   ```shell
+   sudo rpm -U /path/to/aqua-vm-enforcer-<version>.<arch>.rpm
+   ```
+## Troubleshooting
 
-To check the VM Enforcer logs:
+### Check the logs
+
+To check the VM Enforcer application logs:
   ```shell
   cat /var/log/aquasec.log
   ```
 
-## Troubleshooting the VM Enforcer RPM deployment or upgrade
+### Check the Journal
 
-1. After the VM Enforcer RPM has been deployed, you can check the service status using this command:
-    ```shell
-    sudo systemctl status aqua-enforcer
-    ```
+1. Check the service status
+   ```shell
+   sudo systemctl status aqua-enforcer
+   ```
 
-2. If the service status is inactive, you can check the journalctl logs for more details:
-    ```shell
-    sudo journalctl -u aqua-enforcer.service
-    ```
-## Uninstalling VM Enforcer
-For uninstall the VM Enforcer `.rpm` package:
+2. Check the journal logs 
+
+   If the service status is inactive or shows any errors, you can check the journalctl logs for more details:
+
+   ```shell
+   sudo journalctl -u aqua-enforcer.service
+   ```
+   
+## Uninstall
+To uninstall the VM Enforcer `rpm` package:
 ```shell
-    sudo rpm -e aqua-vm-enforcer
+sudo rpm -e aqua-vm-enforcer
 ```
-## Building a VM Enforcer RPM package (optional: not required for deploying the VM Enforcer)
+
+## Building an RPM package (optional)
+
 The below instructions helps to build a rpm package for VM-Enforcer
 1. Update the RPM scripts as required.
 2. Update the RPM version in `nfpm.yaml`.
 3. Upload the VM-Enforcer archive to `archives` folder.
-4.  create environment variables of `RPM_ARCH` and `RPM_VERSION`
+4. Create environment variables of `RPM_ARCH` and `RPM_VERSION`
     ```shell
     export RPM_ARCH=amd64 #change to arm64 for arm based systems
     export RPM_VERSION=6.0.0 #mention version for VM Enforcer
