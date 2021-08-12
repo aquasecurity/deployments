@@ -1,5 +1,9 @@
 ## Deploy Aqua Server using Helm
 
-Server can be deployed for Aqua Self-Hosted Enterprise on your Kubernetes cluster, using the [Helm package manager](https://helm.sh/). To deploy Aqua server using Helm charts, use artifacts and refer deployment instructions from the [Aqua Security Helm repository on GitHub](https://github.com/aquasecurity/aqua-helm/). Ensure that you use the latest branch of the Aqua Security Helm repository.
+You can deploy Server for the Aqua Self-Hosted Enterprise edition in your Kubernetes cluster, using the [Helm charts](https://helm.sh/). Use the following resources from the aqua-helm repository:
 
-For detailed information, Aqua recommends you read the Product documentation, [Kubernetes with Helm Charts](https://docs.aquasec.com/docs/kubernetes-with-helm).
+* Clone the aqua-helm git repo or add [Aqua Helm private repository](https://helm.aquasec.com)
+* [Install Aqua Server using helm charts](https://github.com/aquasecurity/aqua-helm/tree/6.2/server#installing-the-chart)
+* *(Optional)* [Advanced configuration](https://github.com/aquasecurity/aqua-helm/tree/6.2/server#advanced-configuration)
+
+Ensure that you use the latest branch of the Aqua Security Helm repository.

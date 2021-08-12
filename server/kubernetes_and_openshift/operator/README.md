@@ -1,10 +1,9 @@
 ## Deploy Aqua Server using Operator
 
-Server can be deployed on your Kubernetes cluster for the Aqua Self-Hosted Enterprise edition. To deploy Aqua server using aqua-operator, use the following resources from the respective directories:
+You can deploy Server for the Aqua Self-Hosted Enterprise edition in your OpenShift cluster using a Kubernetes Operator. Use the following resources from the aqua-operator repository:
 
-* Deploy Aqua Operator
-* [Deploy Aqua server using Custom Resources (CRDs)](https://github.com/aquasecurity/aqua-operator/tree/6.2.0/deploy/crds)
-* Refer CR examples
-* [For detailed deployment instructions and CR examples, refer to Operator repo](https://github.com/aquasecurity/aqua-operator/blob/6.2.0/docs/DeployOpenShiftOperator.md)
+* [Deploy Aqua Operator in your OpenShift cluster](https://github.com/aquasecurity/aqua-operator/blob/6.2.0/docs/DeployOpenShiftOperator.md#deploying-the-aqua-operator)
+* Deploy Aqua server using [Custom Resources (CRDs)](https://github.com/aquasecurity/aqua-operator/tree/6.2.0/deploy/crds) and by following the deployment instructions from the Operator repository
+* Refer CR usage examples from the [Operator repository](https://github.com/aquasecurity/aqua-operator/blob/6.2.0/docs/DeployOpenShiftOperator.md#cr-examples)
 
 Ensure that you use the latest branch of the Aqua Security Operator repository.

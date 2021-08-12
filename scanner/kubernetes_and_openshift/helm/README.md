@@ -1,7 +1,8 @@
 ## Deploy Aqua Scanner using Helm
 
-Aqua scanner scans container images, VMware Tanzu applications, and serverless functions for security issues such as vulnerabilities, sensitive data, and malware. Scanner registers container images with Aqua and imports results of scans already performed. For more information, refer to the product documentation, [Aqua Scanner Overview](https://docs.aquasec.com/docs/aqua-scanner). 
+You can deploy Scanner for both the Aqua SaaS and Self-Hosted Enterprise editions in your Kubernetes cluster, using the [Helm charts](https://helm.sh/). Use the following resources from the aqua-helm repository:
 
-Aqua Scanner can be deployed on both the Aqua SaaS and Self-Hosted Enterprise editions on your Kubernetes cluster, using the [Helm package manager](https://helm.sh/). To deploy Aqua Scanner using Helm charts, use artifacts and refer deployment instructions from the [Aqua Security Helm repository on GitHub](https://github.com/aquasecurity/aqua-helm/). Ensure that you use the latest branch of the Aqua Security Helm repository.
+* Clone the aqua-helm git repo or add [Aqua Helm private repository](https://helm.aquasec.com)
+* [Install Aqua Scanner using helm charts](https://github.com/aquasecurity/aqua-helm/tree/6.2/scanner#Installing-the-Chart)
 
-For detailed information, Aqua recommends you read the Product documentation, [Kubernetes with Helm Charts](https://docs.aquasec.com/docs/kubernetes-with-helm).
+Ensure that you use the latest branch of the Aqua Security Helm repository.
