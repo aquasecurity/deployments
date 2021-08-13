@@ -9,4 +9,4 @@ Following are the enforcers that can be deployed as part of Aqua product deploym
 * [Kube Enforcer](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/kube_enforcer): provides runtime security for your Kubernetes workloads and infrastructure. It can be deployed with advanced configuration and/or co-requisite Starboard.
 * [VM Enforcer](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers/vm_enforcer): provides Host enforcement and assurance functionality for hosts (VMs). A single VM Enforcer can be deployed per Kubernetes node (or non-Kubernetes host / VM).
 
-You can deploy the required enforcers from the list, for both the Aqua SaaS and Self-Hosted Enterprise editions. For the procedures on deployment methods for each enforcer, navigate to the respective directory above.
+You can deploy the required enforcers from the list, for both the Aqua Enterprise SaaS and Self-Hosted editions. For the procedures on deployment methods for each enforcer, navigate to the respective directory above.

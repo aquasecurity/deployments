@@ -1,18 +1,18 @@
 <img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" height="100" width="100" />
 
-# Aqua Product Deployment
+# Aqua Enterprise Product Deployment
 
 ## Overview
 
-[Aqua Platform](https://www.aquasec.com/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native security platform that secures containerized, serverless, and VM-based applications, from application build, infrastructure through production runtime environments. Aqua runs either in SaaS or Self-Hosted Enterprise edition, at any scale.
+[Aqua Enterprise](https://www.aquasec.com/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native security platform that secures containerized, serverless, and VM-based applications, from application build, infrastructure through production runtime environments. Aqua Enterprise runs either in SaaS or Self-Hosted edition, at any scale.
 
- This is the repository for Aqua product deployment and explains different methods to deploy each Aqua components. It also explains quick-start deployment method which is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test. For this deployment method, refer to the [quick_start](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/quick_start) directory.
+ This is the repository for Aqua Enterprise product deployment and explains different methods to deploy each Aqua components. It also explains quick-start deployment method which is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test. For this deployment method, refer to the [quick_start](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/quick_start) directory.
 
  Aqua components can be deployed on multiple platforms such as Kubernetes, AWS ECS, OpenShift, no-orchestrator, and more, using different deployment methods such as manifests, Helm, Operator, proprietary CLI tools, RPM, and scripts. Supporting deployment methods for each Aqua component is listed in the respective directory of the Aqua component.
 
-## Aqua SaaS edition deployment
+## Aqua Enterprise SaaS edition deployment
 
-Most users use Aqua SaaS edition, which does not require building and operating an Aqua server in their datacenter. Aqua SaaS users should deploy Enforcers in their environments to enable runtime protection of various workloads. Following are the components that are available for Aqua SaaS users:
+Aqua Enterprise SaaS edition does not require building and operating an Aqua server in their datacenter. Aqua SaaS users should deploy Enforcers in their environments to enable runtime protection of various workloads. Following are the components that are available for Aqua SaaS users:
 * [Enforcers](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers):  
   * Aqua Enforcer: Used for containers and host protection
   * KubeEnforcer: Used for full stack Kubernetes cluster protection 

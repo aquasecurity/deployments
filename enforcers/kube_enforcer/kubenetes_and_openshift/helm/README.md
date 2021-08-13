@@ -7,7 +7,3 @@ You can deploy KubeEnforcer in your Kubernetes cluster, using the Helm charts. K
 * [Pass the required parameters for KubeEnforcer Advanced configuration](https://github.com/aquasecurity/aqua-helm/tree/6.2/kube-enforcer#configurable-parameters)
 
 Ensure that you use the latest branch of the Aqua Security Helm repository.
-
-## Applicability
-* Aqua Enterprise SaaS
-* Aqua Enterprise Self-Hosted

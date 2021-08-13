@@ -7,7 +7,3 @@ You can deploy Scanner in your OpenShift cluster using a Kubernetes Operator. Us
 * You can refer CR usage examples from the [Operator repository](https://github.com/aquasecurity/aqua-operator/blob/6.2.0/docs/DeployOpenShiftOperator.md#cr-examples)
 
 Ensure that you use the latest branch of the Aqua Security Operator repository.
-
-## Applicability
-* Aqua Enterprise SaaS
-* Aqua Enterprise Self-Hosted

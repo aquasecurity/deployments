@@ -7,6 +7,3 @@ You can deploy Server for the Aqua Enterprise Self-Hosted edition in your OpenSh
 * You can refer CR usage examples from the [Operator repository](https://github.com/aquasecurity/aqua-operator/blob/6.2.0/docs/DeployOpenShiftOperator.md#cr-examples)
 
 Ensure that you use the latest branch of the Aqua Security Operator repository.
-
-## Applicability
-* Aqua Enterprise Self-Hosted
