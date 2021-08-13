@@ -1,12 +1,12 @@
-## KubeEnforcer Starboard Overview
+# Deploy KubeEnforcer Starboard using manifests
+
+## Overview
 
 Starboard is an Aqua Security open-source tool that increases the effectiveness of Kubernetes security. Starboard is deployed by default, when you deploy KubeEnforcer.
 
 When Starboard is deployed, it assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
 * Re-evaluate workload compliance during workload runtime, taking any workload and policy changes into account
 * Reflect the results of compliance evaluation in the Aqua UI at all times, not only when workloads are created.
-
-**Note:** When Starboard is not deployed, KubeEnforcer checks workloads for compliance only when the workloads are started.
 
 To deploy KubeEnforcer with starboard:
 - While performing the manual deployment, use the manifest yaml files specified in this directory.

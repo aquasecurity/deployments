@@ -1,4 +1,6 @@
-## KubeEnforcer Advanced Starboard Overview
+# Deploy KubeEnforcer Starboard Advanced using manifests
+
+## Overview
 
 Aqua KubeEnforcer Advanced Starboard is the Aqua KubeEnforcer component with Starboard capability deployed in a special Advanced configuration.
 

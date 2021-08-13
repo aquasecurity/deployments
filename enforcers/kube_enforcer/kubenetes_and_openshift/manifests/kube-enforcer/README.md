@@ -1,10 +1,6 @@
-## Aqua KubeEnforcer Overview
+# Deploy KubeEnforcer using manifests
 
-The Aqua KubeEnforcer is an admission controller that provides runtime security for your Kubernetes workloads and infrastructure. It uses the following Kubernetes native Admission Controller APIs:
-  - [MutatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#mutatingadmissionwebhook) is invoked first, and can modify objects sent to the API server to enforce custom defaults like Pod Enforcer injection into the pods.
-  - [ValidatingAdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#validatingadmissionwebhook) is invoked next. It can reject requests to enforce custom policies.
-
-The KubeEnforcer can automatically discover the cluster infrastructure and will assist in static risk analysis by running Kube-hunter scans. The KubeEnforcer generates audit events for your review. For more information, refer to the product documentation, [Aqua KubeEnforcer](https://docs.aquasec.com/docs/kubeenforcer).
+## Overview
 
 This repository shows the manifest yaml files required to deploy Aqua KubeEnforcer on the following Kubernetes platforms:
 * Kubernetes 
