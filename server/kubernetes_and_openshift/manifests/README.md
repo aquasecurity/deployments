@@ -1,3 +1,5 @@
+# Deploy Aqua Server using manifests
+
 ## Overview
 Aqua self-hosted Enterprise product deployment in a Kubernetes cluster begins with deployment of the server, by using multiple manifest yaml files. This component includes the server itself, its UI (console), the Aqua Gateway, and database (DB). You can optionally deploy one or multiple other Aqua components later, as required.
 
@@ -39,6 +41,7 @@ For large environments with more than 500 nodes, you should define a gRPC-suppor
 | eks | Amazon Elastic Kubernetes Service (EKS) |
 | gke | Google Kubernetes Engine (GKE) |
 | ibm | IBM Cloud Private (ICP) |
+| k3s | fully CNCF certified Kubernetes |
 | native_k8s | Kubernetes |
 | openshift | OpenShift (Red Hat) |
 | rancher | Rancher / Kubernetes |
@@ -65,7 +68,7 @@ You can skip any of the steps if you have already performed.
 -n aqua
    ```
 
-**Step 3. Create a service account and RBAC settings (if not already done).** Replace the platform name from [Supported platforms](#supported-platforms).
+**Step 3. Create a service account and RBAC for your deployment platform (if not already done).** Replace the platform name from [Supported platforms](#supported-platforms).
 
    ```SHELL
    $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_002_RBAC/< PLATFORM >/aqua_sa.yaml

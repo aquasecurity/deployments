@@ -1,17 +1,27 @@
 <img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" height="100" width="100" />
 
-# Aqua VM Enforcers
+# VM Enforcer
 
-### Overview
-Deploy this component for enforcement and assurance functionality for hosts (VMs) and Kubernetes nodes.
+## Overview
+VM Enforcers provide the enforcement and assurance for your hosts (VMs). It is required that you deploy a VM Enforcer on each host that you want to protect.
 
-This deployment leverages standard configuration management tools, Linux packaging formats and scripted installations.
+## Prerequisites
 
-### Deployment Methods
-* [**Ansible Playbook**](./ansible/): deployment on a wide range of linux operating systems and hosts at a time, as defined in your Ansible inventory, using configuration management.
-* [**RPM Package**](./rpm/): for Red Hat based operating systems which support `rpm` packages.
-* [**Shell Script**](./shell/): scripted deployment.
+* **Linux:** [runC](https://www.docker.com/blog/runc/) container runtime environment
+* **Windows:** No specific prerequisites required. It is available as a Windows service.
 
-### Suitable for
-* Aqua SaaS edition
-* Aqua Self-Hosted Enterprise edition
+## Deployment methods
+
+* [**Ansible Playbook**](./ansible/): for deploying VM Enforcer on a set of wide range of linux operating system VMs at a time
+* [**RPM Package**](./rpm/): for deploying VM Enforcer on Red Hat based operating system which supports `.rpm` packages
+* [**Shell Script**](./shell/): for depoying VM Enforcer using script
+
+## Suited for
+
+* Aqua Enterprise SaaS
+* Aqua Enterprise Self-Hosted
+
+## Additional Resources
+
+* [VM Enforcer Overview](https://docs.aquasec.com/docs/enforcers-overview#section-vm-enforcers)
+* [Create a VM Enforcer Group and VM Enforcer](https://docs.aquasec.com/docs/create-a-vm-enforcer-group-and-vm-enforcer)

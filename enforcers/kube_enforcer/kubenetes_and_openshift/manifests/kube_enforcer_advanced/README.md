@@ -1,4 +1,6 @@
-## Aqua KubeEnforcer Advanced Overview
+# Deploy KubeEnforcer Advanced using manifests
+
+## Overview
 
 Aqua KubeEnforcer Advanced is a method of deploying Aqua KubeEnforcer in a special Advanced configuration for Pod Enforcer injection. This causes Pod Enforcer traffic to be routed to the KubeEnforcers through a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways. For more information on the KubeEnforcer and its deployment, refer to [kube-enforcer](./manifests/kube-enforcer/../../../kube-enforcer/README.md).
 

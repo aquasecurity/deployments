@@ -1,8 +1,24 @@
-# Description
+# Deploy Tenant Manager using manifests
 
-Like many enterprises, you may have separate Aqua Enterprise instances deployed in different groups or departments. The Aqua Tenant Manager is an optional application that allows you to create security policies and distribute them to multiple domains (groups) of these instances (tenants). This ensures uniformity in the application of all security policies, or those that you select, across your organization. 
+## Overview
 
-The Tenant Manager is a web-based application with a simple, intuitive user interface (UI). This enables a single administrator to maintain your enterprise's security policies quite easily.
+The Aqua Tenant Manager is an optional application that allows creating security policies and distribute them to multiple domains (groups) of these instances (tenants). This ensures uniformity in the application of all security policies, or those that are selected, across the organization. 
+
+The Tenant Manager is a web-based application with a simple, intuitive user interface (UI). This enables a single administrator to maintain enterprise's security policies quite easily.
+
+## Supported platforms
+| < PLATFORM >              | Description                                                  |
+| ---------------------- | ------------------------------------------------------------ |
+| aks | Microsoft Azure Kubernetes Service (AKS)    |
+| eks | Amazon Elastic Kubernetes Service (EKS) |
+| gke | Google Kubernetes Engine (GKE) |
+| ibm | IBM Cloud Private (ICP) |
+| k3s | fully CNCF certified Kubernetes |
+| native_k8s | Kubernetes |
+| openshift | OpenShift (Red Hat) |
+| rancher | Rancher / Kubernetes |
+| tkg | VMware Tanzu Kubernetes Grid (TKG) |
+| tkgi | VMware Tanzu Kubernetes Grid Integrated Edition (TKGI) |
 
 ## Pre-deployment
 
@@ -10,42 +26,34 @@ The Tenant Manager is a web-based application with a simple, intuitive user inte
 
 **Step 1. Create the aqua namespace (if not already done)**
    
-   ```SHELL
-   $ kubectl create namespace aqua
-   ```
+```SHELL
+$ kubectl create namespace aqua
+```
 
 **Step 2. Create the docker-registry secret (if not already done)**
 
-   ```SHELL
-   $ kubectl create secret docker-registry aqua-registry \
-   --docker-server=registry.aquasec.com \
-   --docker-username=<your-name> \
-   --docker-password=<your-pword> \
-   --docker-email=<your-email> \
-   -n aqua
-   ```
+```SHELL
+$ kubectl create secret docker-registry aqua-registry \
+--docker-server=registry.aquasec.com \
+--docker-username=<your-name> \
+--docker-password=<your-pword> \
+--docker-email=<your-email> \
+-n aqua
+```
 
-**Step 3. Create the RBAC for your deployment platform (if not already done)**
+**Step 3. Create a service account and RBAC for your deployment platform (if not already done).** Replace the platform name from [Supported platforms](#supported-platforms).
 
-| Platform            | Command                                                                                                                                                      |
-|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Kubernetes (native) | $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/kubernetes/aqua_sa.yaml |
-| AKS                 | $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/aks/aqua_sa.yaml        |
-| EKS                 | $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/eks/aqua_sa.yaml        |
-| GKE                 | $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/gke/aqua_sa.yaml        |
-| ICP                 | $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/icp/aqua_sa.yaml        |
-| OpenShift           | $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/openshift/aqua_sa.yaml  |
-| Rancher             | $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/rancher/aqua_sa.yaml    |
-| TKG                 | $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/tkg/aqua_sa.yaml        |
-| TKGI                | $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/tkgi/aqua_sa.yaml       |
+```SHELL
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/tenant_manager/kubernetes_and_openshift/manifests/002_tm_RBAC/< PLATFORM >/aqua_sa.yaml
+```
 
-# Deployment
+## Deployment
 
 The Tenant Manager supports both the Aqua packaged DB and an external DB installation. Follow the appropriate set of instructions:
    - [Deploy the Tenant Manager with the Aqua packaged DB](#Deploy-the-Tenant-Manager-with-the-Aqua-packaged-DB)
    - [Deploy the Tenant Manager with an external DB](#Deploy-the-Tenant-Manager-with-an-external-DB)
 
-## Deploy the Tenant Manager with the Aqua packaged DB 
+### Deploy the Tenant Manager with the Aqua packaged DB 
 
 **Step 1. Create the Tenant Manager database password secret**
 
@@ -83,7 +91,7 @@ The Tenant Manager supports both the Aqua packaged DB and an external DB install
    $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/tenant_manager/006-tm-deploy.yaml
    ```
 
-## Deploy the Tenant Manager with an external DB 
+### Deploy the Tenant Manager with an external DB 
 
 **Step 1. Configure and deploy the Tenant Manager ConfigMap**
 

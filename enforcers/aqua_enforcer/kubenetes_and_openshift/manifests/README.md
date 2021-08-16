@@ -1,6 +1,6 @@
-## Aqua Enforcer Overview
 
-The Aqua Enforcer, running as a DaemonSet deployment, provides runtime security for your Kubernetes workloads by blocking unauthorized deployments, monitoring and restricting runtime activities, and generating audit events for your review. For more information, refer to the product documentation, [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-aqua-enforcers) and [Aqua Enforcer](https://docs.aquasec.com/docs/aqua-enforcer).
+# Deploy Aqua Enforcer using manifests
+## Overview
 
 This repository shows the manifest yaml files required to deploy Aqua Enforcer on the following Kubernetes platforms:
 * Kubernetes 
@@ -44,8 +44,8 @@ You can skip any of the steps if you have already performed.
 
 **Step 2. Create a docker-registry secret (if not already done).**
 
-   ```SHELL
-   $ kubectl create secret docker-registry aqua-registry \
+```SHELL
+$ kubectl create secret docker-registry aqua-registry \
 --docker-server=registry.aquasec.com \
 --docker-username=<your-name> \
 --docker-password=<your-pword> \
@@ -55,9 +55,9 @@ You can skip any of the steps if you have already performed.
 
 **Step 3. Create a service account (if not already done).**
 
-   ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/001_aqua_enforcer_serviceAccount.yaml
-   ```
+```SHELL
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/001_aqua_enforcer_serviceAccount.yaml
+```
 
 ## Deploy Aqua Enforcer using manifests
 
@@ -79,15 +79,15 @@ You can skip any of the steps if you have already performed.
 
 **Step 2. Deploy directly or download, edit, and apply ConfigMap as required.**
 
-   ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/002_aqua_enforcer_configMaps.yaml
-   ```
+```SHELL
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/002_aqua_enforcer_configMaps.yaml
+```
 
 **Step 3. Deploy Aqua Enforcer as daemonset.**
 
-   ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
-   ```
+```SHELL
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubenetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
+```
 
 ## Automate Aqua Enforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Aqua Enforcer using Manifests](#deploy-aqua-enforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the Aqua Enforcer deployment.

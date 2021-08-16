@@ -1,10 +1,9 @@
-## Deploy Aqua Enforcer using Operator
+# Deploy Aqua Enforcer using Operator
 
-The aqua-operator is a group of controllers that runs within your OpenShift cluster. It supports to deploy and manage an Aqua Security cluster and components, including Aqua Enforcer.
+You can deploy Aqua Enforcer in your OpenShift cluster using a Kubernetes Operator. Use the following resources from the aqua-operator repository:
 
-You can use the aqua-operator to:
-* Deploy Aqua Enterprise components in the OpenShift clusters
-* Scale up Aqua Enterprise components with extra replicas
-* Assign metadata tags to Aqua Enterprise components
+* [Deploy Aqua Operator in your OpenShift cluster](https://github.com/aquasecurity/aqua-operator/blob/6.2.0/docs/DeployOpenShiftOperator.md#deploying-the-aqua-operator)
+* Deploy Aqua Enforcer using [AquaEnforcer CRD](https://github.com/aquasecurity/aqua-operator/blob/master/deploy/crds/operator_v1alpha1_aquaenforcer_cr.yaml) and by following the [deployment instructions](https://github.com/aquasecurity/aqua-operator/blob/6.2.0/docs/DeployOpenShiftOperator.md#deploying-aqua-enterprise-using-custom-resources)
+* You can refer CR usage examples from the [Operator repository](https://github.com/aquasecurity/aqua-operator/blob/6.2.0/docs/DeployOpenShiftOperator.md#cr-examples)
 
-Aqua Enforcer can be deployed for both the Aqua SaaS and Self-Hosted Enterprise editions on your Kubernetes cluster. To deploy Aqua Enforcer using the aqua-operator, use artifacts and refer deployment instructions from the [Aqua Security Operator repository on GitHub](https://github.com/aquasecurity/aqua-operator).
+Ensure that you use the latest branch of the Aqua Security Operator repository.
