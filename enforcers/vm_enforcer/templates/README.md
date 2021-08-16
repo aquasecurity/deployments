@@ -2,4 +2,4 @@
 
 # VM Enforcer Deployment Templates
 
-*work in progress*
+These are the template files used in scripts deploying VM Enforcer in various methods

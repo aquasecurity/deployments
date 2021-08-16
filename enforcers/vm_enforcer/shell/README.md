@@ -1,22 +1,25 @@
+<img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" height="100" width="100" />
+
 # Deploy VM Enforcer Using Shell Scripts
 
 ## Overview
 
 You can deploy VM Enforcer on your VM using the shell script provided by Aqua.
 
-## Prerequisites
-- Create and deploy the golden image on the VM
-- Deploy a VM containing a VM Enforcer
-
-For detailed instructions on these, refer to product documentation, [VM Enforcer Golden Image](https://docs.aquasec.com/docs/vm-enforcer-golden-image).
-
 ## Deploy VM Enforcer Deployment Using Shell Script
 
-Execute the following shell script [Install_vme.sh](./Install_vme.sh) to deploy VM Enforcer on the execution VM.
+1. Clone Aqua VM Enforcer shell repo
 
-```shell
-sudo ./install_vme.sh [flags]
-```
+    ```shell
+    git clone https://github.com/aquasecurity/deployments.git
+    cd deployments/VM-Enforcer/shell/
+    ```
+
+2. Execute the following shell script [Install_vme.sh](./Install_vme.sh) to deploy VM Enforcer on the execution VM.
+
+    ```shell
+    sudo ./install_vme.sh [flags]
+    ```
 
 ### Deployment modes
 

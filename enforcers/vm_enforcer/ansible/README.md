@@ -39,21 +39,17 @@ test.aqua.com
 Deploy VM Enforcer using one of the following procedures.
 
 ### Deployment using environment variables
+1. Clone Aqua VM Enforcer Anisble repo
 
-In the following command, add the [mandatory variables](#mandatory-variables) with the `--extra-vars` flag and run it.
+```shell
+git clone https://github.com/aquasecurity/deployments.git
+cd deployments/VM-Enforcer/ansible/
+```
+
+2. In the following command, add the [mandatory variables](#mandatory-variables) with the `--extra-vars` flag and run it.
 
 ```shell
 ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_install=true --extra-vars "USERNAME=<username> PASSWORD=<password> ENFORCER_VERSION=<version> TOKEN=<token> GATEWAY_ENDPOINT=<endpoint>:<port>"
-```
-
-### Deployment using your custom yaml file
-
-1. Download the default `main.yml` file from [this repository](./roles/vm-enforcer-deploy/defaults/main.yml).
-2. Add the [mandatory variables](#mandatory-variables) in the `main.yml` file.
-3. Run the following command using the edited file.
-
-```shell
-ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_install=true 
 ```
 
 ## Mandatory variables
