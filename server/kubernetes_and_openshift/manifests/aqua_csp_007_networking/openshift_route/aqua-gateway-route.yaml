@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-gateway
+  namespace: aqua
+  labels:
+    app: aqua-gateway
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8443
+      protocol: TCP
+      targetPort: 8443
+      name: aqua-gateway-ssl
+    - port: 3622
+      protocol: TCP
+      targetPort: 3622
+      name: aqua-gateway
+  selector:
+    app: aqua-gateway
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: aqua-gateway
+  namespace: aqua
+  labels:
+    app: aqua-gateway
+spec:
+  to:
+    kind: Service
+    name: aqua-gateway
+    weight: 100
+  port:
+    targetPort: aqua-gateway-ssl
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None

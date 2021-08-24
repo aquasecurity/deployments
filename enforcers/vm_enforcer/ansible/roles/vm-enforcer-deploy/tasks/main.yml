@@ -1,0 +1,19 @@
+---
+- include_tasks: vme-install.yml
+  when: vme_install is defined | bool and ansible_os_family != "RedHat"
+
+- include_tasks: vme-uninstall.yml
+  when: vme_uninstall is defined | bool and ansible_os_family != "RedHat"
+
+- include_tasks: vme-rpm-install.yml
+  when: vme_install is defined | bool and ansible_os_family == "RedHat"
+
+- name: checking vm-enfrocer installed with rpm and uninstalling using rpm
+  block:
+    - name: checking vm-enfrocer installed with rpm
+      package_facts:
+        manager: auto
+
+    - name: including rpm uninstall task
+      include_tasks: vme-rpm-uninstall.yml
+      when: vme_uninstall is defined | bool and "'aqua-vm-enforcer*' in ansible_facts.packages"

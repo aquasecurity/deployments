@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-server-config
+  namespace: aqua
+data:  
+  # The name of the HTTP header used by the Aqua Server for authentication. Defaults to the standard Authorization header. Can be used when running behind reverse proxies that override this header.
+  #AUTHORIZATION_HEADER: "aqua-auth"
+  
+  # DNS name or IP address of the host of the Postgres Audit database.
+  SCALOCK_AUDIT_DBHOST: "aqua-audit-db" 
+  
+  # Name of the Postgres Audit database; all letters must be lower-case
+  SCALOCK_AUDIT_DBNAME: "slk_audit"
+  
+  # Port of the Postgres Audit database.
+  SCALOCK_AUDIT_DBPORT: "5432"
+  
+  # Set the value of this variable to require to strictly require an SSL encrypted connection to the Postgres Audit database.
+  SCALOCK_AUDIT_DBSSL: "require"
+  
+  # Username for connection to the Postgres Audit database.
+  SCALOCK_AUDIT_DBUSER: "postgres"
+  
+  # DNS name or IP address of the host of the Postgres configuration database.
+  SCALOCK_DBHOST: "aqua-db"
+  
+  # Name of the Postgres configuration database name; all letters must be lower-case.
+  SCALOCK_DBNAME: "scalock"
+  
+  # Port of the Postgres configuration database.
+  SCALOCK_DBPORT: "5432"
+  
+  # Set the value of this variable to require to strictly require an SSL-encrypted connection to the Postgres configuration database.
+  SCALOCK_DBSSL: "require"
+  
+  # Username for connection to the Postgres configuration database
+  SCALOCK_DBUSER: "postgres"
+  
+  # Setting this might be helpful for problem determination. Acceptable values are DEBUG, INFO, WARN, and ERROR
+  SCALOCK_LOG_LEVEL: "INFO"
+  
+  # Configure this variable with the IP address or DNS name of the Aqua Server, including the port number (8443 by default).
+  AQUA_CONSOLE_SECURE_ADDRESS: "aqua-web:443"
+  
+  # Specify the desired public IP address of the Aqua Gateway. Used to make the Enforcer connect to the Gateway through this IP address.
+  SCALOCK_GATEWAY_PUBLIC_IP: "aqua-gateway"
+  
+  # Specify 0.0.0.0:80 to bring up an HTTP responder on port 80, for use with active load balancers. The port can be changed as needed.
+  HEALTH_MONITOR: "0.0.0.0:8082"
+  
+  # Server's private key for HTTPS and Mutual Auth
+  #AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/key.pem"
+  
+  # Server's public key for HTTPS and Mutual Auth
+  #AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/cert.pem"
+  
+  # Server's root CA cert for HTTPS and Mutual Auth. The root CA certificate file should be mutual for both Gateway and Server certificates
+  #AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
+
+  # Setting this to 1 configures the gateway to verify the certificate sent by the Enforcer. This is required if you configure mutual authentication between the Enforcer and gateway.
+  #AQUA_VERIFY_ENFORCER: 1
+  
+  #AQUA_CLUSTER_MODE: "active-active"
+  
+  # DNS name or IP address of the host of the Postgres pubsub database
+  #AQUA_PUBSUB_DBHOST: "aqua-db"
+  
+  # Database schema name; set this to the name of your choice. All letters must be lower-case.
+  #AQUA_PUBSUB_DBNAME: "aqua_pubsub"
+  
+  # Username for connection to the Postgres pubsub database
+  #AQUA_PUBSUB_DBUSER: "postgres"
+  #AQUA_PUBSUB_DBPORT: "5432"
+  
+  # DNS name or IP address of an Aqua Gateway that the Aqua Enforcer will first connect to.
+  #BATCH_INSTALL_GATEWAY: "aqua-gateway"
+  
+  # Orchestrator type to be configured on enforcers.
+  #BATCH_INSTALL_ORCHESTRATOR: "Kubernetes"
+  
+  # Name of the Batch Install object used to connect Aqua Enforcers to the environment.
+  #BATCH_INSTALL_NAME: "aquayaml-default"
+  
+  AQUA_GATEWAY_TOKEN: "1234"
+  AQUA_DEFAULT_GATEWAY_TOKEN: "1234"
+
+  # URL of HTTPS proxy, if used.
+  #https_proxy: ""
+  
+  # URL of HTTP proxy, if used.
+  #http_proxy: ""
+  
+  # List of addresses that bypass the proxy. Specify the URLs of internal private registries, if used.
+  #no_proxy: ""
+  
+  # Batch installation to token to authenticate enforcer with server
+  #BATCH_INSTALL_TOKEN: ""
+  
+  # Batch installation group name for KubeEnforcer
+  #AQUA_KE_GROUP_NAME: ""
+  
+  # Batch installation token to authenticate KubeEnforcer with server
+  #AQUA_KE_GROUP_TOKEN: ""

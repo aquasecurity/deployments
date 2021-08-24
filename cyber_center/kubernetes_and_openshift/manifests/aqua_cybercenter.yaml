@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-cc
+  labels:
+    app: aqua-cc
+spec:
+  ports:
+    - port: 5000
+  selector:
+    app: aqua-cc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aqua-cc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: aqua-cc
+  template:
+    metadata:
+      labels:
+        app: aqua-cc
+      name: aqua-cc
+    spec:
+      serviceAccount: aqua
+      containers:
+      - name: aqua-cc
+        image: "registry.aquasec.com/cybercenter-standard:cc4"
+        args:
+          ['--offline-key=pleaseopen']
+        ports:
+        - containerPort: 5000
+

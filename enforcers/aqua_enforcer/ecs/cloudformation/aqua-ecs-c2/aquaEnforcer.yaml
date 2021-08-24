@@ -1,0 +1,218 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+    This Cloudformation Template Installs Aqua Enforcer on ECS Cluster with EC2 compatibilities.
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Aqua Component Configurations
+        Parameters:
+          - AquaGatewayAddress
+          - AquaToken
+          - Taskprivileged
+          - AquaEnforcerImage
+          - ECSClusterName
+          #- SSLCert
+    ParameterLabels:
+        AquaGatewayAddress:
+            default: Existing Aqua Gateway DNS/IP
+        AquaToken:
+            default: Aqua Token
+        Taskprivileged:
+            default: Task Privileged    
+        AquaEnforcerImage:
+            default: Aqua Enforcer Image
+        ECSClusterName:
+            default: ECS Cluster Name 
+Parameters:
+    AquaGatewayAddress:
+        Type: String
+        Description: The Aqua gateway DNS/IP.
+    AquaToken:
+        Description: Aqua Enforcer installation token retrieved from Aqua Management Console.
+        Type: String
+    Taskprivileged:
+        Description: Select false to run enforcer in non-privileged mode. defualt is privileged mode. 
+        Type: String 
+        Default: 'true'
+        AllowedValues:  
+          - 'true'
+          - 'false'
+    AquaEnforcerImage:
+        Type: String
+        Description: Enter Enforcer image URI from ECR
+    ECSClusterName:
+        Type: String
+        Description: Enter the existing ECS Cluster name.
+Resources:
+    LambdaExecutionRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Principal:
+                  Service:
+                    - lambda.amazonaws.com
+                Action:
+                  - sts:AssumeRole
+          Policies:
+            - PolicyName: allowLambdaLogging
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: "Allow"
+                    Action:
+                      - "logs:*"
+                    Resource: "*"              
+                        
+    RandomStringLambdaFunction:
+        Type: AWS::Lambda::Function
+        Properties:
+          Handler: index.lambda_handler
+          Timeout: 10
+          Role: !GetAtt "LambdaExecutionRole.Arn"
+          Runtime: python3.6
+          Code:
+            ZipFile: |
+              import cfnresponse
+              from random import choice
+              from string import ascii_lowercase, digits
+              def random_string(length=8, chars=ascii_lowercase + digits):
+                return "".join(choice(chars) for x in range(length))
+              def lambda_handler(event, context):
+                print(f"Data in event: {event}")
+                response_data = {}
+                if event["RequestType"] == "Create":
+                  string_length = int(event["ResourceProperties"]["Length"])
+                  physicalResourceId = random_string(string_length)
+                  response_data = { "RandomString": physicalResourceId }
+                
+                else: # if event["RequestType"] == "Update" or event["RequestType"] == "Delete":
+                  physicalResourceId = event["PhysicalResourceId"]
+                cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, physicalResourceId)
+    RandomString:
+        Type: AWS::CloudFormation::CustomResource
+        Properties:
+          Length: 5
+          ServiceToken: !GetAtt RandomStringLambdaFunction.Arn
+    AquaEnforcerTaskDefinition:
+        Type: 'AWS::ECS::TaskDefinition'
+        Properties:
+          PidMode: 'host'
+          ContainerDefinitions:
+            - Memory: '1024'
+              Essential: 'true'
+              MountPoints:
+                - ContainerPath: /var/run
+                  SourceVolume: var-run
+                - ContainerPath: /dev
+                  SourceVolume: dev
+                - ContainerPath: /host/opt/aquasec
+                  SourceVolume: aquasec
+                  ReadOnly: true
+                - ContainerPath: /opt/aquasec/tmp
+                  SourceVolume: aquasec-tmp
+                - ContainerPath: /opt/aquasec/audit
+                  SourceVolume: aquasec-audit
+                - ContainerPath: /data
+                  SourceVolume: data
+                - ContainerPath: /host/proc
+                  SourceVolume: proc
+                  ReadOnly: true
+                - ContainerPath: /host/sys
+                  SourceVolume: sys
+                  ReadOnly: true
+                - ContainerPath: /host/etc
+                  SourceVolume: etc
+                  ReadOnly: true
+              Name: aqua-enforcer
+              Privileged: !Ref Taskprivileged
+              Privileged: !Ref Taskprivileged
+              LinuxParameters:
+                Capabilities:
+                  ADD:
+                    - SYS_ADMIN
+                    - NET_ADMIN
+                    - NET_RAW
+                    - SYS_PTRACE
+                    - KILL
+                    - MKNOD
+                    - SETGID
+                    - SETUID
+                    - SYS_MODULE
+                    - AUDIT_CONTROL
+                    - SYSLOG
+                    - SYS_CHROOT
+              LogConfiguration:
+                LogDriver: awslogs
+                Options:
+                  awslogs-group: !Join ['-', ['/aqua/enforcer', !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
+                  awslogs-region: !Ref "AWS::Region"
+                  awslogs-stream-prefix: aquaEnforcer
+              Environment:
+                - Name: AQUA_SERVER
+                  Value: !Ref AquaGatewayAddress
+                - Name: AQUA_TOKEN
+                  Value: !Ref AquaToken
+                - Name: SILENT
+                  Value: 'yes'
+                - Name: RESTART_CONTAINERS
+                  Value: 'no'
+                - Name: AQUA_LOGICAL_NAME
+                  Value: !Join 
+                    - '-'
+                    - - ECS
+                      - !Join ["-", ["aqua-enf-td", !GetAtt RandomString.RandomString]]
+              Image: !Ref AquaEnforcerImage
+              Cpu: '512'
+          Volumes:
+            - Host:
+                SourcePath: /var/run
+              Name: var-run
+            - Host:
+                SourcePath: /dev
+              Name: dev
+            - Host:
+                SourcePath: /opt/aquasec
+              Name: aquasec
+            - Host:
+                SourcePath: /opt/aquasec/tmp
+              Name: aquasec-tmp
+            - Host:
+                SourcePath: /opt/aquasec/audit
+              Name: aquasec-audit
+            - Host:
+                SourcePath: /opt/aquasec/data
+              Name: data
+            - Host:
+                SourcePath: /proc
+              Name: proc
+            - Host:
+                SourcePath: /sys
+              Name: sys
+            - Host:
+                SourcePath: /etc
+              Name: etc
+          Family: !Join 
+            - '-'
+            - - aqua-enforcer
+              - !Join ["-", ["td", !GetAtt RandomString.RandomString]]
+    AquaEnforcerDaemon:
+        DependsOn:
+          - AquaEnforcerTaskDefinition
+        Type: 'AWS::ECS::Service'
+        Properties:
+          Cluster: !Ref ECSClusterName
+          SchedulingStrategy: DAEMON
+          ServiceName: !Join 
+            - '-'
+            - - aqua-enforcer
+              - !Join ["-", ["td", !GetAtt RandomString.RandomString]]
+          TaskDefinition: !Ref AquaEnforcerTaskDefinition
+    AquaEnforcerLogs:
+        Type: 'AWS::Logs::LogGroup'
+        Properties:
+          LogGroupName: !Join ['-', ['/aqua/enforcer', !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
+          RetentionInDays: 30      

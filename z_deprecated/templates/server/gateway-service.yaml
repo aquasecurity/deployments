@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-gateway
+  labels:
+    app: aqua-gateway
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8443
+      protocol: TCP
+      targetPort: 8443
+      name: aqua-gateway-ssl
+    - port: 3622
+      protocol: TCP
+      targetPort: 3622
+      name: aqua-gateway
+  selector:
+    app: aqua-gateway

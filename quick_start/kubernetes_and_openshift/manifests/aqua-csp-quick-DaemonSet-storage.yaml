@@ -1,0 +1,721 @@
+apiVersion: v1
+data:
+  ### Aqua database password. Defaults to "password". Please change the same if needed.
+  password: cGFzc3dvcmQK
+kind: Secret
+metadata:
+  annotations:
+    description: Aqua database password secret
+  labels:
+    deployedby: aqua-yaml
+  name: aqua-db
+  namespace: aqua
+type: Opaque
+---
+apiVersion: v1
+data:
+  ### Aqua database password. Defaults to "password". Please change the same if needed.
+  password: cGFzc3dvcmQK
+kind: Secret
+metadata:
+  annotations:
+    description: Aqua database password secret
+  labels:
+    deployedby: aqua-yaml
+  name: aqua-audit-db
+  namespace: aqua
+type: Opaque
+---
+apiVersion: v1
+data:
+  ### Aqua enforcer token input needed - Base64 encoded ###
+  token: "dG9rZW4="
+kind: Secret
+metadata:
+  annotations:
+    description: Aqua Enforcer token secret
+  labels:
+    deployedby: aqua-yaml
+  name: enforcer-token
+  namespace: aqua
+type: Opaque
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-db-config
+  namespace: aqua
+data:
+  AQUA_ENV_SIZE: "S" # Possible values: “S”, “M”, “L”, defaults to “S”.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-server-config
+  namespace: aqua
+data:  
+  # The name of the HTTP header used by the Aqua Server for authentication. Defaults to the standard Authorization header. Can be used when running behind reverse proxies that override this header.
+  #AUTHORIZATION_HEADER: "aqua-auth"
+  # DNS name or IP address of the host of the Postgres Audit database.
+  SCALOCK_AUDIT_DBHOST: "aqua-audit-db" 
+  # Name of the Postgres Audit database; all letters must be lower-case
+  SCALOCK_AUDIT_DBNAME: "slk_audit"
+  # Port of the Postgres Audit database.
+  SCALOCK_AUDIT_DBPORT: "5432"
+  # Set the value of this variable to require to strictly require an SSL encrypted connection to the Postgres Audit database.
+  SCALOCK_AUDIT_DBSSL: "require"
+  # Username for connection to the Postgres Audit database.
+  SCALOCK_AUDIT_DBUSER: "postgres"
+  # DNS name or IP address of the host of the Postgres configuration database.
+  SCALOCK_DBHOST: "aqua-db"
+  # Name of the Postgres configuration database name; all letters must be lower-case.
+  SCALOCK_DBNAME: "scalock"
+  # Port of the Postgres configuration database.
+  SCALOCK_DBPORT: "5432"
+  # Set the value of this variable to require to strictly require an SSL-encrypted connection to the Postgres configuration database.
+  SCALOCK_DBSSL: "require"
+  # Username for connection to the Postgres configuration database
+  SCALOCK_DBUSER: "postgres"
+  # Setting this might be helpful for problem determination. Acceptable values are DEBUG, INFO, WARN, and ERROR
+  SCALOCK_LOG_LEVEL: "DEBUG"
+  # Configure this variable with the IP address or DNS name of the Aqua Server, including the port number (8443 by default).
+  AQUA_CONSOLE_SECURE_ADDRESS: "aqua-web:443"
+  # Specify the desired public IP address of the Aqua Gateway. Used to make the Enforcer connect to the Gateway through this IP address.
+  SCALOCK_GATEWAY_PUBLIC_IP: "aqua-gateway"
+  # Specify 0.0.0.0:80 to bring up an HTTP responder on port 80, for use with active load balancers. The port can be changed as needed.
+  HEALTH_MONITOR: "0.0.0.0:8082"
+  # Server's private key for HTTPS and Mutual Auth
+  #AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/key.pem"
+  # Server's public key for HTTPS and Mutual Auth
+  #AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/cert.pem"
+  # Server's root CA cert for HTTPS and Mutual Auth. The root CA certificate file should be mutual for both Gateway and Server certificates
+  #AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
+  AQUA_CLUSTER_MODE: "active-active"
+  # DNS name or IP address of the host of the Postgres pubsub database
+  AQUA_PUBSUB_DBHOST: "aqua-db"
+  # Database schema name; set this to the name of your choice. All letters must be lower-case.
+  AQUA_PUBSUB_DBNAME: "aqua_pubsub"
+  # Username for connection to the Postgres pubsub database
+  AQUA_PUBSUB_DBUSER: "postgres"
+  AQUA_PUBSUB_DBPORT: "5432"
+  # DNS name or IP address of an Aqua Gateway that the Aqua Enforcer will first connect to.
+  BATCH_INSTALL_GATEWAY: "aqua-gateway"
+  # Orchestrator type to be configured on enforcers.
+  BATCH_INSTALL_ORCHESTRATOR: "Kubernetes"
+  # Name of the Batch Install object used to connect Aqua Enforcers to the environment.
+  BATCH_INSTALL_NAME: "aquayaml-default" 
+  AQUA_GATEWAY_TOKEN: "1234"
+  AQUA_DEFAULT_GATEWAY_TOKEN: "1234"
+  BATCH_INSTALL_TOKEN: "token"
+  # Automatic connection KE Batch Install (Enforcer Group) name + token
+  #AQUA_KE_GROUP_NAME: "aquayaml-default-ke"
+  #AQUA_KE_GROUP_TOKEN: "token-ke"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-enforcer
+  namespace: aqua
+data:
+  AQUA_HEALTH_MONITOR_ENABLED: "true"
+  AQUA_INSTALL_PATH: "/var/lib/aquasec"
+  AQUA_SERVER: "aqua-gateway:8443"
+  RESTART_CONTAINERS: "no"
+  AQUA_LOGICAL_NAME: ""
+---
+apiVersion: v1
+imagePullSecrets:
+- name: aqua-registry
+kind: ServiceAccount
+metadata:
+  annotations:
+    description: Service account for pulling Aqua images and for Aqua privileged
+  labels:
+    deployedby: aqua-yaml
+  name: aqua-sa
+  namespace: aqua
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: aqua-discovery-cr
+  labels:
+    rbac.example.com/aggregate-to-monitoring: "true"
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "services", "endpoints", "pods", "deployments", "namespaces","componentstatuses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["imagestreams", "imagestreams/layers"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aqua-discovery-crb
+roleRef:
+  name: aqua-discovery-cr
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+subjects:
+  - kind: ServiceAccount
+    name: aqua-sa
+    namespace: aqua
+# ---
+# # Create PV for the Aqua Database
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: aqua-db-pv
+#   namespace: aqua
+#   labels:
+#     for_pod: aqua-db
+# spec:
+#   persistentVolumeReclaimPolicy: Retain
+#   capacity:
+#     storage: 50Gi
+#   accessModes:
+#     - ReadWriteOnce
+# ---
+# # Create a PVC for the Aqua Database
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: aqua-db-pvc
+#   namespace: aqua
+# spec:
+#   selector:
+#     matchLabels:
+#       for_pod: aqua-db
+#   accessModes:
+#   - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 50Gi
+#   volumeName: aqua-db-pv
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: aqua-audit-db
+    deployedby: aqua-yaml
+  name: aqua-audit-db
+  namespace: aqua
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: aqua-audit-db
+  type: ClusterIP 
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: aqua-audit-db
+  namespace: aqua
+  labels:
+    app: aqua-audit-db
+    deployedby: aqua-yaml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-audit-db
+  template:
+    metadata:
+      labels:
+        app: aqua-audit-db
+      name: aqua-audit-db
+      namespace: aqua
+    spec:
+      containers:
+        - name: aqua-audit-db
+          image: registry.aquasec.com/database:6.2
+          ports:
+            - name: aqua-audit-db
+              containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - name: postgres-audit-db
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+          envFrom:
+            - configMapRef:
+                name: aqua-csp-db-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: aqua-db
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: aqua-sa
+      serviceAccount: aqua-sa
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-audit-db
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50G
+  serviceName: aqua-audit-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: aqua-db
+    deployedby: aqua-yaml
+  name: aqua-db
+  namespace: aqua
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: aqua-db
+  type: ClusterIP 
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: aqua-db
+  namespace: aqua
+  labels:
+    app: aqua-db
+    deployedby: aqua-yaml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-db
+  template:
+    metadata:
+      labels:
+        app: aqua-db
+      name: aqua-db
+      namespace: aqua
+    spec:
+      containers:
+        - name: aqua-db
+          image: registry.aquasec.com/database:6.2
+          ports:
+            - name: aqua-db
+              containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - name: postgres-db
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+          envFrom:
+            - configMapRef:
+                name: aqua-csp-db-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: aqua-db
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: aqua-sa
+      serviceAccount: aqua-sa
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-db
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50G
+  serviceName: aqua-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-web
+  namespace: aqua
+  labels:
+    app: aqua-web
+spec:      
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 8443
+      name: aqua-web-ssl
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+      name: aqua-web
+  selector:
+    app: aqua-web
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aqua-web
+  namespace: aqua
+  labels:
+    app: aqua-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-web
+  template:
+    metadata:
+      labels:
+        app: aqua-web
+      name: aqua-web
+    spec:
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
+      serviceAccount: aqua-sa
+      restartPolicy: Always
+      containers:
+      - name: aqua-web
+        image: registry.aquasec.com/console:6.2
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-server-config
+        # - secretRef:
+        #     name: aqua-csp-server-secret
+        env:
+        - name: AQUA_PUBSUB_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+        - name: SCALOCK_AUDIT_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-audit-db
+        - name: SCALOCK_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+      #   volumeMounts:
+      #   - mountPath: /opt/aquasec/ssl
+      #     name: aquasec-ssl
+      #     readOnly: true
+      # volumes:
+      # - name: aquasec-ssl
+      #   secret:
+      #     secretName: aqua-ssl
+      #     items:
+      #     - key: aqua.crt
+      #       path: cert.pem
+      #     - key: aqua.key
+      #       path: key.pem
+      #     - key: ca.crt
+      #       path: ca.pem
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-gateway
+  namespace: aqua
+  labels:
+    app: aqua-gateway
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8443
+      protocol: TCP
+      targetPort: 8443
+      name: aqua-gateway-ssl
+    - port: 3622
+      protocol: TCP
+      targetPort: 3622
+      name: aqua-gateway
+  selector:
+    app: aqua-gateway
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aqua-gateway
+  name: aqua-gateway
+  namespace: aqua
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-gateway
+  template:
+    metadata:
+      labels:
+        app: aqua-gateway
+      name: aqua-gateway
+    spec:
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
+      serviceAccount: aqua-sa
+      restartPolicy: Always
+      containers:
+      - name: aqua-gateway
+        image: registry.aquasec.com/gateway:6.2
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8082
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 8443
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        ports:
+        - containerPort: 3622
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-server-config
+        env:
+        - name: SCALOCK_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+        - name: SCALOCK_AUDIT_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-audit-db
+      #   volumeMounts:
+      #   - mountPath: /opt/aquasec/ssl
+      #     name: aquasec-ssl
+      #     readOnly: true
+      # volumes:
+      # - name: aquasec-ssl
+      #   secret:
+      #     secretName: aqua-ssl
+      #     items:
+      #     - key: aqua.crt
+      #       path: cert.pem
+      #     - key: aqua.key
+      #       path: key.pem
+      #     - key: ca.crt
+      #       path: ca.pem
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: aqua-agent
+  name: aqua-agent
+  namespace: aqua
+spec:
+  selector:
+    matchLabels:
+      app: aqua-agent
+  template:
+    metadata:
+      labels:
+        app: aqua-agent
+      name: aqua-agent
+      namespace: aqua
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/aqua-agent: unconfined
+    spec:
+      containers:
+      - env:
+        - name: AQUA_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: AQUA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: enforcer-token
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-enforcer
+        image: registry.aquasec.com/enforcer:6.2
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8096
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /readinessz
+            port: 8096
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        ports:
+        - containerPort: 8096
+          protocol: TCP
+        name: aqua-agent
+        resources: {}
+        securityContext:
+          privileged: false
+          capabilities:
+              add:
+                - SYS_ADMIN
+                - NET_ADMIN
+                - NET_RAW
+                - SYS_PTRACE
+                - KILL
+                - MKNOD
+                - SETGID
+                - SETUID
+                - SYS_MODULE
+                - AUDIT_CONTROL
+                - SYSLOG
+                - SYS_CHROOT
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/run
+          name: var-run
+        - mountPath: /dev
+          name: dev
+        - mountPath: /host/sys
+          name: sys
+          readOnly: true
+        - mountPath: /host/proc
+          name: proc
+          readOnly: true
+        - mountPath: /host/etc
+          name: etc
+          readOnly: true
+        - mountPath: /host/opt/aquasec
+          name: aquasec
+          readOnly: true
+        - mountPath: /opt/aquasec/tmp
+          name: aquasec-tmp
+        - mountPath: /opt/aquasec/audit
+          name: aquasec-audit
+        - mountPath: /data
+          name: aquasec-data
+      dnsPolicy: ClusterFirst
+      hostPID: true
+      imagePullSecrets:
+      - name: aqua-registry
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: aqua-sa
+      serviceAccountName: aqua-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /var/run
+          type: ""
+        name: var-run
+      - hostPath:
+          path: /dev
+          type: ""
+        name: dev
+      - hostPath:
+          path: /sys
+          type: ""
+        name: sys
+      - hostPath:
+          path: /proc
+          type: ""
+        name: proc
+      - hostPath:
+          path: /etc
+          type: ""
+        name: etc
+      - hostPath:
+          path: /var/lib/aquasec
+          type: ""
+        name: aquasec
+      - hostPath:
+          path: /var/lib/aquasec/tmp
+          type: ""
+        name: aquasec-tmp
+      - hostPath:
+          path: /var/lib/aquasec/audit
+          type: ""
+        name: aquasec-audit
+      - hostPath:
+          path: /var/lib/aquasec/data
+          type: ""
+        name: aquasec-data
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
