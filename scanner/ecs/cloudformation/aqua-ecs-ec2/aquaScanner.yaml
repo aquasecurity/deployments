@@ -1,0 +1,167 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+    This Cloudformation Template Installs Aqua Enforcer on ECS Cluster with EC2 compatibilities.
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Aqua Component Configurations
+        Parameters:
+          - AquaServerAddress
+          - AquaScannerUserName
+          - AquaScannerPassword
+          - AquaScannerImage
+          - ECSClusterName
+          #- SSLCert
+    ParameterLabels:
+        AquaGatewayAddress:
+            default: Existing Aqua Server DNS/IP
+        AquaScannerUserName:
+            default: Aqua Scanner User Name
+        AquaScannerPassword:
+            default: Aqua Scanner Password
+        AquaScannerImage:
+            default: Aqua Scanner Image
+        ECSClusterName:
+            default: ECS Cluster Name 
+Parameters:
+    AquaServerAddress:
+        Type: String
+        Description: The Aqua Server DNS/IP.
+    AquaScannerUserName:
+        Description: Aqua User Name to authenticate scanner with Aqua server.
+        Type: String
+    AquaScannerPassword:
+        Description: Aqua Password to authenticate scanner with Aqua server.
+        Type: String
+    AquaScannerImage:
+        Type: String
+        Description: Enter Scanner image URI from ECR
+    ECSClusterName:
+        Type: String
+        Description: Enter the existing ECS Cluster name.
+Resources:
+    AquaScannerTaskDefinition:
+        Type: 'AWS::ECS::TaskDefinition'
+        DependsOn:
+          - AquaEcsTaskRole
+          - AquaScannerLogs
+        Properties:
+          Family: !Join 
+            - '-'
+            - - !Ref ECSClusterName
+              - aqua-scanner
+          RequiresCompatibilities:
+            - EC2
+          Volumes:
+            - Host:
+                SourcePath: /var/run/docker.sock
+              Name: docker-socket
+          ContainerDefinitions:
+            - Name: !Join 
+                - '-'
+                - - !Ref ECSClusterName
+                  - aqua-scanner
+              Image: !Ref AquaScannerImage
+              EntryPoint: 
+                -  "/bin/sh"
+              Command: 
+                -  "-c" 
+                -  "/opt/aquasec/scannercli daemon --host ${AQUA_SERVER} --user ${AQUA_SCANNER_USERNAME} --password ${AQUA_SCANNER_PASSWORD} --no-verify"
+              Cpu: '512'
+              Memory: '1024'
+              MountPoints:
+                - ContainerPath: /var/run/docker.sock
+                  SourceVolume: docker-socket
+              LogConfiguration:
+                LogDriver: awslogs
+                Options:
+                  awslogs-group: !Join ['-', ['/aqua/scanner', !Ref ECSClusterName]]
+                  awslogs-region: !Ref "AWS::Region"
+                  awslogs-stream-prefix: aquaScanner
+              Essential: 'true'
+              Name: aqua-scanner
+              Environment:
+                - Name: AQUA_SERVER
+                  Value: !Ref AquaServerAddress
+                - Name: AQUA_SCANNER_USERNAME
+                  Value: !Ref AquaScannerUserName
+                - Name: AQUA_SCANNER_PASSWORD
+                  Value: !Ref AquaScannerPassword
+                - Name: AQUA_LOGICAL_NAME
+                  Value: !Join 
+                    - '-'
+                    - - ECS
+                      - !Ref ECSClusterName
+          NetworkMode: bridge
+          TaskRoleArn: !Ref AquaEcsTaskRole
+          ExecutionRoleArn: !Ref AquaEcsTaskRole
+    AquaScannerService:
+        Type: 'AWS::ECS::Service'
+        DependsOn:
+          - AquaScannerTaskDefinition
+        Properties:
+          Cluster: !Ref ECSClusterName
+          ServiceName: !Join 
+            - '-'
+            - - !Ref ECSClusterName
+              - aqua-scanner
+          DesiredCount: '1'
+          PlacementStrategies:
+            - Type: spread
+              Field: 'attribute:ecs.availability-zone'
+            - Type: spread
+              Field: instanceId
+          DeploymentConfiguration:
+            MaximumPercent: '200'
+            MinimumHealthyPercent: '100'
+          TaskDefinition: !Ref AquaScannerTaskDefinition
+    AquaEcsTaskRole:
+        Type: 'AWS::IAM::Role'
+        Properties:
+          RoleName: !Join 
+            - '-'
+            - - !Ref ECSClusterName
+              - AquaEcsTaskRole
+          AssumeRolePolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Principal:
+                  Service:
+                    - ecs-tasks.amazonaws.com
+                Action:
+                  - 'sts:AssumeRole'
+          Path: /
+          Policies:
+            - PolicyName: !Join 
+                - '-'
+                - - !Ref ECSClusterName
+                  - AquaScannerPolicy
+              PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'ecr:GetDownloadUrlForLayer'
+                      - 'ecr:BatchGetImage'
+                      - 'ecr:DescribeImages'
+                      - 'ecr:GetAuthorizationToken'
+                      - 'ecr:DescribeRepositories'
+                      - 'ecr:ListImages'
+                      - 'ecr:BatchCheckLayerAvailability'
+                      - 'ecr:GetRepositoryPolicy'
+                      - 'logs:CreateLogStream'
+                      - 'logs:PutLogEvents'
+                      - 'logs:CreateLogGroup'
+                      - 'logs:PutLogEvents'
+                      - 'logs:CreateLogDelivery'
+                      - 'logs:CreateLogStream'
+                      - 'logs:TagLogGroup'
+                    Resource: '*'
+                  - !Ref 'AWS::NoValue'
+    AquaScannerLogs:
+        Type: 'AWS::Logs::LogGroup'
+        Properties:
+          LogGroupName: !Join ['-', ['/aqua/scanner', !Ref ECSClusterName]]
+          RetentionInDays: 30

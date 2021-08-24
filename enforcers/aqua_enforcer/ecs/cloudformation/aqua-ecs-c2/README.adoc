@@ -1,0 +1,78 @@
+:version: 6.5
+:imageVersion: 6.5
+
+= Deploy Aqua Enforcer on AWS ECS Cluster
+
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaEnforcer.yaml]
+
+== Overview
+
+The Aqua Server and Gateway are deployed on a ECS EC2 cluster. In multi-cluster environments, you can deploy Aqua Enforcers on different clusters.
+
+This page contains instructions for deploying Aqua Enforcer on any Amazon ECS EC2 cluster.
+
+For high availability, you must deploy Aqua on 2 availability Zones (AZs).
+
+Your deployment creates the Aqua Enforcer service, on the specific ECS instance. A CloudFormation template is used to deploy Aqua Enforcer. This can be done either with the AWS CloudFormation Management Console or the AWS Command Line interface (CLI), as explained below.
+
+== Prerequisites
+
+- One or more ECS clusters
+- Aqua Gateway (existing) service DNS/IP
+- From Aqua Security: your Aqua credentials (username and password) and Aqua Enterprise License Token
+- Aqua Enforcer Group Token
+
+== Pre-deployment
+
+*Step 1. Login to the Aqua Registry with your credentials.*
+
+----
+ docker login registry.aquasec.com -u <AQUA_USERNAME> -p <AQUA_PASSWORD>
+----
+
+*Step 2. Pull the Aqua Enforcer image.*
+
+----
+ docker pull registry.aquasec.com/enforcer:{imageVersion}
+----
+
+*Step 3. Push the enforcer image to ECR.*
+
+== Deployment method 1: CloudFormation Management Console
+
+*Step 1. Click the Launch Stack icon at the top of this page.* This will take you to the *Create stack* function of the AWS CloudFormation Management Console.
+
+*Step 2. Ensure that your AWS region is set to where you want to deploy Aqua Enforcer.*
+
+*Step 3. Click Next.*
+
+*Step 4. Set or modify any of the parameters as explained below.*
+
+*Step 5. Click Next to create the stack.*
+
+== Deployment method 2: CLI
+
+*Step 1. Copy the following command.*
+
+----
+aws –region us-east-1 cloudformation create-stack –capabilities CAPABILITY_NAMED_IAM –stack-name aqua-ec2 –template-body file://aquaEnforcer.yaml \
+–parameters ParameterKey=AquaGatewayAddress,ParameterValue=xxxxx \
+ParameterKey=AquaToken,ParameterValue=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx \
+ParameterKey=AquaEnforcerImage,ParameterValue=xxxx.dkr.ecr.us-east-1.amazonaws.com/aqua:enforcer-x.x\
+ParameterKey=ECSClusterName,ParameterValue=xxxxx \
+ParameterKey=TaskPrivileged,ParameterValue=false
+----
+
+*Step 2. Set the parameters as explained below.*
+
+----
+AquaGatewayAddress = The Gateway Service DNS name or IP address (IP address with port number)
+AquaToken = Token from existing Aqua Enforcer group of the Aqua Server
+TaskPrivileged = Select Yes to run the Enforcer in priviliged mode or false to run in non-privilged mode
+AquaEnforcerImage = The ECR path for the Aqua Enforcer product image
+ECSClusterName = The existing ECS cluster name
+----
+
+*Step 3. Run the AWS create-stack CLI command.*
+
+This procedure will deploy Aqua Enforcer in your desired cluster and the newly deployed Aqua enforcer will get added to the existing Aqua server.

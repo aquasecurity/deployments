@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-enforcer
+  namespace: aqua
+data:
+  AQUA_HEALTH_MONITOR_ENABLED: "true"
+  AQUA_INSTALL_PATH: "/var/lib/aquasec"
+  AQUA_SERVER: "aqua-gateway:8443"
+  RESTART_CONTAINERS: "no"
+  AQUA_LOGICAL_NAME: ""
+  # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_enforcer.crt"
+  # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_enforcer.key"
+  # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"

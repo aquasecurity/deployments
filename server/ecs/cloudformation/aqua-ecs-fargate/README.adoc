@@ -1,0 +1,138 @@
+:version: 6.5
+:imageVersion: 6.5
+
+= Deploy Server on AWS ECS Fargate Cluster
+
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaFargate.yaml]
+
+== Overview
+
+This page contains instructions for deploying Aqua Enterprise Self-Hosted edition on an Amazon ECS Fargate cluster. Using the deployment instructions in this page, you can deploy Aqua Server in one ECS Fargate cluster with advanced configurations. These configurations include: 
+
+- A separate DB (Database) for Audit
+- External DB
+- Deployment without SSL certificate for the Aqua console, 
+- Active-active Server mode
+
+For high availability, you must deploy Aqua on 2 availability Zones (AZs).
+
+Your deployment creates the following services:
+
+- Aqua Server, deployed with an Amazon Application Load Balancer
+- Aqua Database, created on a new Amazon RDS instance, which includes 7 days of rolling backups 
+- Aqua Audit Database, created on a new Amazon RDS instance, which includes 7 days of rolling backups 
+- Aqua Gateways (2), each on a separate subnet, deployed with a Network Load Balancer
+
+In addition, it creates an IAM role for granting Aqua Server, the access to ECR (Elastic Container Registry).
+
+A CloudFormation template is used to deploy Aqua Enterprise. This can be done either with the AWS CloudFormation Management Console or the AWS Command Line interface (CLI), as explained below.
+
+== Prerequisites
+
+- A VPC with at least 2 subnets
+- A Certificate through AWS Certificate Manager
+- From Aqua Security: your Aqua credentials (username and password) and Enterprise License Token
+
+== Pre-deployment
+
+*Step 1. Login to the Aqua Registry with your credentials.*
+
+----
+ docker login registry.aquasec.com -u <AQUA_USERNAME> -p <AQUA_PASSWORD>
+----
+
+*Step 2. Pull the Aqua product images for the Server (Console) and Gateway.*
+
+----
+docker pull registry.aquasec.com/console:{imageVersion}
+docker pull registry.aquasec.com/gateway:{imageVersion}
+----
+
+*Step 3. Push both of the images to ECR.*
+
+== Deployment method 1: CloudFormation Management Console
+
+*Step 1. Click the Launch Stack icon at the top of this page.* This will take you to the *Create stack* function of the AWS CloudFormation Management Console.
+
+*Step 2. Ensure that your AWS region is set to where you want to deploy Aqua Enterprise.*
+
+*Step 3. Click Next.*
+
+*Step 4. Set or modify any of the parameters* as explained in the <<Advanced configurations>> section.
+
+*Step 5. Click Next to create the stack.*
+
+It will typically require up to 20 minutes for Aqua Enterprise to be deployed. When completed, you can obtain the DNS name of the Aqua Server UI from the console output, under key name `AquaConsole`.
+
+== Deployment method 2: CLI
+
+*Step 1. Copy the following command.*
+
+----
+aws --region us-east-1 cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name aqua-fargate --template-body file://aquaFargate.yaml \
+--parameters ParameterKey=AquaConsoleAccess,ParameterValue=x.x.x.x/x \
+ParameterKey=AquaServerImage,ParameterValue=xxxx.dkr.ecr.us-east-1.amazonaws.com/aqua:server-x.x \
+ParameterKey=AquaGatewayImage,ParameterValue=xxxx.dkr.ecr.us-east-1.amazonaws.com/aqua:gateway-x.x \
+ParameterKey=ClusterName,ParameterValue=xxxx \
+ParameterKey=EcsInstanceSubnets,ParameterValue=\"subnet-xxxx,subnet-xxxx\" \
+ParameterKey=AuditRdsInstanceClass,ParameterValue=db.t3.medium \
+ParameterKey=MultiAzDatabase,ParameterValue=false \
+ParameterKey=RdsInstanceClass,ParameterValue=db.t3.medium \
+ParameterKey=RdsStorage,ParameterValue=50 \
+ParameterKey=VpcCidr,ParameterValue=x.x.x.x/x \
+ParameterKey=VpcId,ParameterValue=vpc-xxxx \
+ParameterKey=LbSubnets,ParameterValue=\"subnet-xxxx,subnet-xxxx\" \
+ParameterKey=LBScheme,ParameterValue=\"internet-facing\"
+ParameterKey=SSLCert,ParameterValue=\"arn:aws:acm:us-east-1:1234567890:certificate/xxxxxxxxxxxx\"
+ParameterKey=ActiveActive,ParameterValue=\"fasle\"
+----
+
+*Step 2. Set the parameters as explained in the <<Advanced configurations>> section.*
+
+*Step 3. Run the AWS create-stack CLI command.*
+
+It will typically require up to 20 minutes for your stack to be created and deployed. When completed, you can obtain the DNS name of the Aqua Server UI from the console output, under key name `AquaConsole`.
+
+== Advanced configurations
+
+=== Active-Active Server deployment
+
+For an Active-Active Server configuration, select the ActiveActive parameter value as `true` while creating the stack.
+
+=== Split DB deployment
+
+Having a seprate DB for audit events is an optional parameter. Following are the values for this parameter:
+
+- Select `Yes` for AuditRDS parameter if you would like to create a separate RDS instance 
+- Select `No` to use single RDS instance for both the Aqua DB and Audit DB
+- Default value for AuditRDS (or split DB) is `No`
+
+=== External DB (Managed DB)
+
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaFargate-external.yaml]
+
+If you have an existing PostgreSQL database and want to use the same for aqua deployment, use the CloudFormation template `aquaFargate-external.yaml` from this directory, in the CLI shown above.
+
+=== Non SSL deployment
+
+==== Deployment
+
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaFargate-noneSSL.yaml]
+
+If you want to deploy Aqua Enterprise without SSL certificate, use the CloudFormation template `aquaFargate-nonSSL.yaml` from this directory, in the CLI shown above.
+
+==== External DB
+
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaFargate-noneSSL-external.yaml]
+
+If you have an existing PostgreSQL database and want to use the same for Aqua Enterprise deployment without SSL certificate, use the CloudFormation template `aquaFargate-nonSSL-external.yaml` from this directory, in the CLI shown above.
+
+= MicroEnforcer deployment
+
+AWS Fargate is a Container as a Service (CaaS) enviornment and you can deploy Aqua MicroEnforcer to provide runtime security to the containers deployed in AWS Fargate. 
+
+For deployment options and instructions, refer to the Product documentation, https://docs.aquasec.com/{version}/docs/microenforcer-technical-description#section-microenforcer-deployment-options[Micro Enforcer].
+
+= Version upgrade
+
+To upgrade your Aqua Enterprise version, modify the existing stack with the new Aqua product images.

@@ -1,0 +1,86 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-lb
+  namespace: aqua
+spec:
+  type: LoadBalancer
+  selector:
+    app: envoy
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+  - name: healthserver
+    port: 8082
+    protocol: TCP
+    targetPort: 8082
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy
+  namespace: aqua
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: envoy
+  template:
+    metadata:
+      labels:
+        app: envoy
+    spec:
+      serviceAccount: aqua-sa
+      containers:
+      - name: envoy
+        image: registry.aquasec.com/envoy:6.2
+        env:
+        - name: ENVOY_UID
+          value: "0"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: https
+          containerPort: 8443
+        - name: healthserver
+          containerPort: 8082
+        volumeMounts:
+        - name: config
+          mountPath: /etc/envoy
+#        - name: certs
+#          mountPath: /etc/ssl/envoy
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /healthz
+            httpHeaders:
+            - name: x-envoy-livenessprobe
+              value: healthz
+            port: 8443
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        livenessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /healthz
+            httpHeaders:
+            - name: x-envoy-livenessprobe
+              value: healthz
+            port: 8443
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      volumes:
+      - name: config
+        configMap:
+          defaultMode: 420
+          name: envoy-conf
+#      - name: certs
+#        secret:
+#          defaultMode: 420
+#          secretName: aqua-lb-certs

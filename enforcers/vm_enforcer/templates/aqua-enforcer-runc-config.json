@@ -1,0 +1,234 @@
+{
+  "ociVersion": "1.0.1-dev",
+  "process": {
+    "terminal": false,
+    "user": {
+      "uid": 0,
+      "gid": 0
+    },
+    "args": [
+      "sh",
+      "-c",
+      "/autorun.sh"
+    ],
+    "env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "HOSTNAME=840815ccdce1",
+      "TERM=xterm",
+      "AQUA_PRODUCT_PATH=/opt/aquasec",
+      "AQUA_INSTALL_PATH=/opt/aquasec",
+      "AQUA_MODE=SERVICE",
+      "RESTART_CONTAINERS=no",
+      "AQUA_LOGICAL_NAME=Default",
+      "AQUA_SERVER=",
+      "AQUA_TOKEN=",
+      "LD_LIBRARY_PATH=/opt/aquasec"
+    ],
+    "cwd": "/opt/aquasec",
+    "capabilities": {
+      "bounding":["CAP_LINUX_IMMUTABLE", "CAP_CHOWN","CAP_DAC_OVERRIDE","CAP_FSETID","CAP_FOWNER","CAP_MKNOD","CAP_NET_RAW","CAP_SETGID","CAP_SETUID","CAP_SETFCAP","CAP_SETPCAP","CAP_NET_BIND_SERVICE","CAP_SYS_CHROOT","CAP_KILL","CAP_AUDIT_WRITE","CAP_SYS_ADMIN","CAP_NET_ADMIN","CAP_SYS_PTRACE","CAP_SYS_MODULE","CAP_AUDIT_CONTROL","CAP_SYSLOG","CAP_SYS_RESOURCE"],"effective":["CAP_LINUX_IMMUTABLE","CAP_CHOWN","CAP_DAC_OVERRIDE","CAP_FSETID","CAP_FOWNER","CAP_MKNOD","CAP_NET_RAW","CAP_SETGID","CAP_SETUID","CAP_SETFCAP","CAP_SETPCAP","CAP_NET_BIND_SERVICE","CAP_SYS_CHROOT","CAP_KILL","CAP_AUDIT_WRITE","CAP_SYS_ADMIN","CAP_NET_ADMIN","CAP_SYS_PTRACE","CAP_SYS_MODULE","CAP_AUDIT_CONTROL","CAP_SYSLOG","CAP_SYS_RESOURCE"],"inheritable":["CAP_LINUX_IMMUTABLE", "CAP_CHOWN","CAP_DAC_OVERRIDE","CAP_FSETID","CAP_FOWNER","CAP_MKNOD","CAP_NET_RAW","CAP_SETGID","CAP_SETUID","CAP_SETFCAP","CAP_SETPCAP","CAP_NET_BIND_SERVICE","CAP_SYS_CHROOT","CAP_KILL","CAP_AUDIT_WRITE","CAP_SYS_ADMIN","CAP_NET_ADMIN","CAP_SYS_PTRACE","CAP_SYS_MODULE","CAP_AUDIT_CONTROL","CAP_SYSLOG","CAP_SYS_RESOURCE"],"permitted":["CAP_LINUX_IMMUTABLE","CAP_CHOWN","CAP_DAC_OVERRIDE","CAP_FSETID","CAP_FOWNER","CAP_MKNOD","CAP_NET_RAW","CAP_SETGID","CAP_SETUID","CAP_SETFCAP","CAP_SETPCAP","CAP_NET_BIND_SERVICE","CAP_SYS_CHROOT","CAP_KILL","CAP_AUDIT_WRITE","CAP_SYS_ADMIN","CAP_NET_ADMIN","CAP_SYS_PTRACE","CAP_SYS_MODULE","CAP_AUDIT_CONTROL","CAP_SYSLOG","CAP_SYS_RESOURCE"]
+    },
+    "rlimits": [
+      {
+        "type": "RLIMIT_NOFILE",
+        "hard": 250000,
+        "soft": 250000
+      }
+    ]
+  },
+  "root": {
+    "path": "aqua-enforcer",
+    "readonly": false
+
+  },
+  "hostname": "runc",
+  "mounts": [
+    {
+      "destination": "/host/opt/aquasec",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/opt/aquasec",
+      "type": "bind"
+    },
+    {
+      "destination": "/host/etc",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/etc",
+      "type": "bind"
+    },
+    {
+      "destination": "/opt/aquasec/tmp",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/opt/aquasec/tmp",
+      "type": "bind"
+    },
+    {
+      "destination": "/opt/aquasec/audit",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/opt/aquasec/audit",
+      "type": "bind"
+    },
+    {
+      "destination": "/data",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/opt/aquasec/data",
+      "type": "bind"
+    },
+    {
+      "destination": "/var/run",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/var/run",
+      "type": "bind"
+    },
+    {
+      "destination": "/proc",
+      "type": "proc",
+      "source": "proc"
+    },
+    {
+      "destination": "/host/proc",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/proc",
+      "type": "bind"
+    },
+    {
+      "destination": "/dev",
+      "type": "tmpfs",
+      "source": "tmpfs",
+      "options": [
+        "nosuid",
+        "strictatime",
+        "mode=755",
+        "size=65536k"
+      ]
+    },
+    {
+      "destination": "/dev/pts",
+      "type": "devpts",
+      "source": "devpts",
+      "options": [
+        "nosuid",
+        "noexec",
+        "newinstance",
+        "ptmxmode=0666",
+        "mode=0620",
+        "gid=5"
+      ]
+    },
+    {
+      "destination": "/dev/shm",
+      "type": "tmpfs",
+      "source": "shm",
+      "options": [
+        "nosuid",
+        "noexec",
+        "nodev",
+        "mode=1777",
+        "size=65536k"
+      ]
+    },
+    {
+      "destination": "/dev/mqueue",
+      "type": "mqueue",
+      "source": "mqueue",
+      "options": [
+        "nosuid",
+        "noexec",
+        "nodev"
+      ]
+    },
+    {
+      "destination": "/sys",
+      "type": "sysfs",
+      "source": "sysfs",
+      "options": [
+        "nosuid",
+        "noexec",
+        "nodev",
+        "ro"
+      ]
+    },
+    {
+      "destination": "/sys/fs/cgroup",
+      "type": "cgroup",
+      "source": "cgroup",
+      "options": [
+        "nosuid",
+        "noexec",
+        "nodev",
+        "relatime",
+        "ro"
+      ]
+    },
+    {
+      "destination": "/etc/resolv.conf",
+      "type": "bind",
+      "source": "/etc/resolv.conf",
+      "options": [
+        "ro",
+        "rbind",
+        "rprivate",
+        "nosuid",
+        "noexec",
+        "nodev"
+      ]
+    }
+  ],
+  "linux": {
+    "resources": {
+      "devices": [
+        {
+          "allow": true,
+          "access": "rwm"
+        }
+      ]
+    },
+    "namespaces": [
+      {
+        "type": "ipc"
+      },
+      {
+        "type": "uts"
+      },
+      {
+        "type": "mount"
+      }
+    ],
+    "maskedPaths": [
+      "/proc/kcore",
+      "/proc/latency_stats",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/proc/sched_debug",
+      "/proc/scsi"
+    ],
+    "readonlyPaths": [
+      "/proc/asound",
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ]
+  }
+}

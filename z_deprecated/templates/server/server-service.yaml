@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-web
+  labels:
+    app: aqua-web
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 8443
+      name: aqua-web-ssl
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+      name: aqua-web
+  selector:
+    app: aqua-web
+  type: LoadBalancer

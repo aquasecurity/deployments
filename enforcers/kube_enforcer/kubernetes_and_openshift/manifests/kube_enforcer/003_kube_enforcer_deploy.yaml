@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+spec:
+  ports:
+    - port: 443
+      targetPort: 8443
+  selector:
+    app: aqua-kube-enforcer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+  labels:
+    app: aqua-kube-enforcer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: aqua-kube-enforcer
+    spec:
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
+      serviceAccountName: aqua-kube-enforcer-sa
+      containers:
+        - name: kube-enforcer
+          image: registry.aquasec.com/kube-enforcer:6.2
+          imagePullPolicy: Always
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          ports:
+            - containerPort: 8443
+              protocol: TCP
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: AQUA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aqua-kube-enforcer-token
+                  key: token
+                  optional: true
+          envFrom:
+          - configMapRef:
+              name: aqua-csp-kube-enforcer
+          volumeMounts:
+            - name: "kube-enforcer-ssl"
+              mountPath: "/certs"
+          # - mountPath: /opt/aquasec/ssl
+          #   name: aqua-grpc-kube-enforcer
+      volumes:
+        - name: "kube-enforcer-ssl"
+          secret:
+            secretName: "kube-enforcer-ssl"
+            items:
+            - key: aqua_ke.crt
+              path: aqua_ke.crt
+            - key: aqua_ke.key
+              path: aqua_ke.key 
+      # - name: aqua-grpc-enforcer
+      #   secret:
+      #     secretName: aqua-grpc-kube-enforcer
+      imagePullSecrets:
+        - name: aqua-registry
+  selector:
+    matchLabels:
+      app: aqua-kube-enforcer

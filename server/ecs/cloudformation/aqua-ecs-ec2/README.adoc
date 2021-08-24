@@ -1,0 +1,125 @@
+:version: 6.5
+:imageVersion: 6.5
+
+= Deploy Server on AWS ECS Cluster
+
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaEcs.yaml]
+
+== Overview
+
+This page contains instructions for deploying Aqua Enterprise Self-Hosted edition on an Amazon ECS EC2 cluster. Using the deployment instructions in this page, you can deploy Server and Aqua Enforcer in one ECS cluster with advanced configurations. These configurations include:
+
+- A separate DB (Database) for Audit
+- External DB
+- SSL enablement for the Aqua console 
+- Active-active Server mode
+
+For high availability, you must deploy Aqua on 2 availability Zones (AZs).
+
+Your deployment creates the following services:
+
+- Amazon Application Load Balancer
+- Aqua Server (Console)
+- Aqua Database, created on a new Amazon RDS instance, which includes 7 days of rolling backups
+- Aqua Audit Database, created on a new Amazon RDS instance, which includes 7 days of rolling backups
+- Aqua Gateway
+- Aqua Enforcer, each on an ECS instance
+
+In addition, it creates an IAM role for granting Aqua Server, the access to ECR (Elastic Container Registry).
+
+A CloudFormation template is used to deploy Aqua Enterprise. This can be done either with the AWS CloudFormation Management Console or the AWS Command Line interface (CLI), as explained below.
+
+== Prerequisites
+
+- An ECS cluster with at least 2 instances registered
+- A VPC with at least 2 subnets
+- A certificate through AWS Certificate Manager
+- From Aqua Security: your Aqua credentials (username and password) and Enterprise License Token
+
+== Pre-deployment
+
+*Step 1. Login to the Aqua Registry with your credentials.*
+
+----
+ docker login registry.aquasec.com -u <AQUA_USERNAME> -p <AQUA_PASSWORD>
+----
+
+*Step 2. Pull the Aqua product images for the Server (Console), Gateway, and Aqua Enforcer.*
+
+----
+docker pull registry.aquasec.com/console:{imageVersion}
+docker pull registry.aquasec.com/gateway:{imageVersion}
+docker pull registry.aquasec.com/enforcer:{imageVersion}
+----
+
+*Step 3. Push all the images to ECR.*
+
+== Deployment method 1: CloudFormation Management Console
+
+*Step 1. Click the Launch Stack icon at the top of this page.* This will take you to the *Create stack* function of the AWS CloudFormation Management Console.
+
+*Step 2. Ensure that your AWS region is set to where you want to deploy Aqua Enterprise.*
+
+*Step 3. Click Next.*
+
+*Step 4. Set or modify any of the parameters* as explained in the <<Advanced configurations>> section.
+
+*Step 5. Click Next to create the stack.*
+
+It will typically require up to 20 minutes for Aqua Enterprise to be deployed. When completed, you can obtain the DNS name of the Aqua Server UI from the console output, under key name `AquaConsole`.
+
+== Deployment method 2: CLI
+
+*Step 1. Copy the following command.*
+
+----
+aws --region us-east-1 cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name aqua-ec2 --template-body file://aquaEcs.yaml \
+--parameters ParameterKey=ECSClusterName,ParameterValue=xxxxx \
+ParameterKey=VpcId,ParameterValue=vpc-xxxx \
+ParameterKey=VpcCidr,ParameterValue=x.x.x.x/x \
+ParameterKey=EcsInstanceSubnets,ParameterValue=\"subnet-xxxx,subnet-xxxx\" \
+ParameterKey=LbSubnets,ParameterValue=\"subnet-xxxx,subnet-xxxx\" \
+ParameterKey=SSLCert,ParameterValue=\"arn:aws:acm:us-east-1:1234567890:certificate/xxxxxxxxxxxx\"
+ParameterKey=LBScheme,ParameterValue=\"internet-facing\"
+ParameterKey=AquaConsoleAccess,ParameterValue=x.x.x.x/x \
+ParameterKey=AquaServerImage,ParameterValue=xxxx.dkr.ecr.us-east-1.amazonaws.com/aqua:server-x.x \
+ParameterKey=AquaGatewayImage,ParameterValue=xxxx.dkr.ecr.us-east-1.amazonaws.com/aqua:gateway-x.x \
+ParameterKey=AquaEnforcerImage,ParameterValue=xxxx.dkr.ecr.us-east-1.amazonaws.com/aqua:enforcer-x.x \
+ParameterKey=BatchinstallToken,ParameterValue=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx \
+ParameterKey=RdsInstanceClass,ParameterValue=db.t3.medium \
+ParameterKey=RdsStorage,ParameterValue=50 \
+ParameterKey=MultiAzDatabase,ParameterValue=false \
+ParameterKey=AuditRdsInstanceClass,ParameterValue=db.t3.medium \
+ParameterKey=EcsSecurityGroupId,ParameterValue=XXXXX \
+ParameterKey=ActiveActive,ParameterValue=XXXXX \
+----
+
+*Step 2. Set the parameters as explained in the <<Advanced configurations>> section.*
+
+*Step 3. Run the AWS create-stack CLI command.*
+
+It will typically require up to 20 minutes for your stack to be created and deployed. When completed, you can obtain the DNS name of the Aqua Server UI from the console output, under key name `AquaConsole`.
+
+== Advanced configurations
+
+=== Active-Active Server deployment
+
+For an Active-active Server configuration, select the ActiveActive parameter value as `true` while creating the stack.
+
+=== Split DB deployment
+
+Having a seprate DB for audit events is an optional parameter. Following are the values for this parameter:
+
+- Select `Yes` for AuditRDS parameter if you would like to create a separate RDS instance 
+- Select `No` to use single RDS instance for both the Aqua DB and Audit DB
+- Default value for AuditRDS (or split DB) is `No`
+
+=== External DB (Managed DB)
+
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaEcs-external.yaml]
+
+If you have an existing PostgreSQL database and want to use the same for aqua deployment, use the cloudformation template `aquaEcs-external.yaml` from this directory, in the CLI shown above.
+
+== Version upgrade
+
+To upgrade your Aqua Enterprise version, modify the existing stack with the new Aqua product images.

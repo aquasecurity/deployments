@@ -1,0 +1,14 @@
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: aqua-discovery-cr
+  labels:
+    rbac.example.com/aggregate-to-monitoring: "true"
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "services", "endpoints", "pods", "deployments", "namespaces","componentstatuses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
