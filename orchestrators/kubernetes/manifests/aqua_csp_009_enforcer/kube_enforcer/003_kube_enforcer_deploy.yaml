@@ -72,7 +72,7 @@ spec:
               path: aqua_ke.crt
             - key: aqua_ke.key
               path: aqua_ke.key 
-      #  - name: aqua-grpc-enforcer
+      #  - name: aqua-grpc-kube-enforcer
       #    secret:
       #      secretName: aqua-grpc-kube-enforcer
       imagePullSecrets:
