@@ -61,8 +61,8 @@ spec:
           volumeMounts:
             - name: "kube-enforcer-ssl"
               mountPath: "/certs"
-          # - mountPath: /opt/aquasec/ssl
-          #   name: aqua-grpc-kube-enforcer
+          #  - mountPath: /opt/aquasec/ssl
+          #    name: aqua-grpc-kube-enforcer
       volumes:
         - name: "kube-enforcer-ssl"
           secret:
@@ -72,9 +72,9 @@ spec:
               path: aqua_ke.crt
             - key: aqua_ke.key
               path: aqua_ke.key 
-      # - name: aqua-grpc-enforcer
-      #   secret:
-      #     secretName: aqua-grpc-kube-enforcer
+      #  - name: aqua-grpc-enforcer
+      #    secret:
+      #      secretName: aqua-grpc-kube-enforcer
       imagePullSecrets:
         - name: aqua-registry
   selector:
