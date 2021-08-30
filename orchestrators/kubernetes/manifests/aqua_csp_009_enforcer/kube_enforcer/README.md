@@ -57,10 +57,10 @@ Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluste
         - gen_ke_certs.sh script can be used to generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key,aqua_ke.crt) and to deploy the KubeEnforcer config
         
         ```shell
-        $ curl -s https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/gen_ke_certs.sh | bash
+        $ curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/gen_ke_certs.sh | bash
         ```
    - Option B: Manual
-        - Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/001_kube_enforcer_config.yaml).
+        - Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/001_kube_enforcer_config.yaml).
         - Follow the "SSL considerations" section below to generate a CA bundle and SSL certs.
         - Modify the manifest file to include a PEM-encoded CA bundle (caBundle).
         - Use kubectl to apply the modified manifest file config.
@@ -85,13 +85,13 @@ Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluste
     * You can also manually modify the secret manifest file and use kubectl apply command to create the token and SSL cert secrets:
 
     ```shell
-    https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/002_kube_enforcer_secrets.yaml
+    https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/002_kube_enforcer_secrets.yaml
     ```
 
 5. **Create the KubeEnforcer deployment**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/003_kube_enforcer_deploy.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer/003_kube_enforcer_deploy.yaml
    ```
 
 ## KubeEnforcer SSL considerations
