@@ -47,13 +47,13 @@ Steps 1-3 are required only if you are deploying the Enforcer in a cluster that 
    * RBAC definitions can vary between platforms. Please choose the right aqua_sa.yaml for your platform
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/<<platform>>/aqua_sa.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/<<platform>>/aqua_sa.yaml
    ```
 
 4. **Define the ConfigMap for the deployment.**
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/001_aqua_enforcer_configMaps.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/001_aqua_enforcer_configMaps.yaml
    ```
    
 5. **Create secrets for the Enforcer deployment.**
@@ -72,5 +72,5 @@ Steps 1-3 are required only if you are deploying the Enforcer in a cluster that 
 6. **Create the Aqua Enforcer DaemonSet**
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/003_aqua_enforcer_daemonset.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/003_aqua_enforcer_daemonset.yaml
    ```
