@@ -141,7 +141,7 @@ Flag and parameter type              | Values                                   
 | -n, --namespace (string) | Kubernetes namespace name, it defaults to **aqua** |
 | --output-dir (string) | Output directory for the manifests (YAML files), it defaults to **aqua-deploy**, the directory aquactl was launched in |
 
-#### configuration of KubeEnforcer advanced with starboard
+#### configuration of KubeEnforcer advanced
 
 Flag and type              | Values                                                |
 | ---------------------- | ------------------------------------------------------------ |
