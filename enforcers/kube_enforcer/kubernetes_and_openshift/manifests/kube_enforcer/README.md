@@ -49,6 +49,7 @@ You can skip any step in this section, if you have already performed.
    $ kubectl create namespace aqua
    ```
 
+
 **Step 2. Create a docker-registry secret (if not already done).**
 
    ```shell
