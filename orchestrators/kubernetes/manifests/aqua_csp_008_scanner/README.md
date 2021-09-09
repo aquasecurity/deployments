@@ -37,22 +37,33 @@ Steps 1-3 are required only if you are deploying the scanner in a cluster that d
 
 3. **Create platform-specific RBAC**
 
-   RBAC definitions can vary between platforms. Please choose the right aqua_sa.yaml for your platform
-
+   RBAC definitions can vary between platforms. Please choose the right aqua_sa.yaml for your platform e.g. _native_k8s_
+   
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/<<platform>>/aqua_sa.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/<version>/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/<platform>/aqua_sa.yaml
    ```
+   Replace _version_ with the desired Aqua release (e.g 6.2)
+
 
 4. **Create Scanner secrets**
 
    As specified in the prerequisites above, please update the scanner secrets manifest file with appropriate values before applying it.
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_008_scanner/001_scanner_secrets.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/<version>/orchestrators/kubernetes/manifests/aqua_csp_008_scanner/001_scanner_secrets.yaml
    ```
+   Replace _version_ with the desired Aqua release (e.g 6.2)
+
 
 5. **Deploy the Scanner**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_008_scanner/002_scanner_deploy.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/<version>/orchestrators/kubernetes/manifests/aqua_csp_008_scanner/002_scanner_deploy.yaml
    ```
+   Replace _version_ with the desired Aqua release (e.g 6.2)
+
+   ### (Optional) External storage for image scans data (PVC)
+   The scanner doesn't need any persistent storage to work. The image data is automatically cleared after every scan, but in case you require to use an external volume where to host data scans, you can uncomment the following sections in the deployment file:
+   * PVC object
+   * Volume block
+   * VolumeMount block

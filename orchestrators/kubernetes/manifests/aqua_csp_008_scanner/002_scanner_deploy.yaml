@@ -1,3 +1,16 @@
+#---
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: aqua-scanner-pvc
+#  namespace: aqua
+#spec:
+#  accessModes:
+#    - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 20Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,6 +50,8 @@ spec:
             - name: "ssl-certs"
               mountPath: "/etc/ssl/certs"
               readOnly: true
+#            - mountPath: /opt/aquascans
+#              name: aquascans
       volumes:
         #- name: "docker-socket-mount"
         #  hostPath:
@@ -47,9 +62,11 @@ spec:
             items:
             - key: aqua-web-root-cert
               path: aqua-ssl.crt
+#        - name: aquascans
+#          persistentVolumeClaim:
+#            claimName: aqua-scanner-pvc
       imagePullSecrets:
         - name: aqua-registry
   selector:
     matchLabels:
       app: aqua-scanner
-      
