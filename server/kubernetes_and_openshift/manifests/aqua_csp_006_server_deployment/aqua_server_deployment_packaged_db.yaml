@@ -50,7 +50,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
-        image: registry.aquasec.com/database:6.2
+        image: registry.aquasec.com/database:6.5.preview7
         command: [ "sh", "-c", "[ -f $PGDATA/server.key ] && chmod 600 $PGDATA/server.key || echo 'OK' " ]
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
@@ -59,7 +59,7 @@ spec:
       - name: aqua-db
         securityContext:
           privileged: false
-        image: registry.aquasec.com/database:6.2
+        image: registry.aquasec.com/database:6.5.preview7
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
@@ -133,7 +133,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-db-config
-        image: registry.aquasec.com/database:6.2
+        image: registry.aquasec.com/database:6.5.preview7
         command: [ "sh", "-c", "[ -f $PGDATA/server.key ] && chmod 600 $PGDATA/server.key || echo 'OK' " ]
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
@@ -142,7 +142,7 @@ spec:
       - name: aqua-audit-db
         securityContext:
           privileged: false
-        image: registry.aquasec.com/database:6.2
+        image: registry.aquasec.com/database:6.5.preview7
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
@@ -190,7 +190,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.2
+        image: registry.aquasec.com/console:6.5.preview7
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -272,7 +272,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.2
+        image: registry.aquasec.com/gateway:6.5.preview7
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
