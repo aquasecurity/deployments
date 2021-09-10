@@ -27,7 +27,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:5.3
+        image: registry.aquasec.com/gateway:6.5.preview7
         imagePullPolicy: IfNotPresent
         # To run Aqua components as a privileged account, uncomment
         # spec.template.spec.containers.securityContext field as applicable,

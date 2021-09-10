@@ -80,7 +80,7 @@ $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.
 **Step 2. Deploy directly or download, edit, and apply ConfigMap as required.**
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/002_aqua_enforcer_configMaps.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/002_aqua_enforcer_configMap.yaml
 ```
 
 **Step 3. Deploy Aqua Enforcer as daemonset.**

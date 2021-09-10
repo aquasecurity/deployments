@@ -30,7 +30,7 @@ Following packages are required for installing VM Enforcer `.rpm` package:
       --ask-password
      ```
 
-Make sure to replace the `<release-number>` and `<build-number>` with the relevant versions (example: 6.2.0 and 6.2.21215).
+Make sure to replace the `<release-number>` and `<build-number>` with the relevant versions (example: 6.5.0 and 6.5.21215).
 
 
 **Step 2. Copy the downloaded RPM package onto the target VM(s).**
@@ -117,7 +117,7 @@ To Build an RPM package for VM-Enforcer:
 
 ```shell
 export RPM_ARCH=amd64 #change to arm64 for arm based systems
-export RPM_VERSION=6.0.0 #mention version for VM Enforcer
+export RPM_VERSION=6.5.0 #mention version for VM Enforcer
 ```
 
 5. Download NFPM (RPM Package Creator).
