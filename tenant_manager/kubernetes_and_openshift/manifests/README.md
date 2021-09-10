@@ -58,52 +58,43 @@ The Tenant Manager supports both the Aqua packaged DB and an external DB install
 **Step 1. Create the Tenant Manager database password secret**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/tenant_manager/001-tm-secret.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/tenant_manager/kubernetes_and_openshift/manifests/003_tm_secrets/aqua_tm_secret.yaml
    ```
 
-**Step 2. Deploy the Tenant Manager database ConfigMap**
+**Step 2. Deploy the Tenant Manager database && tenant manager ConfigMap**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/tenant_manager/002-tm-db-config-map.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/tenant_manager/kubernetes_and_openshift/manifests/004_tm_configMaps/aqua_tm_db.yaml
+   ```
+   ```shell
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/tenant_manager/kubernetes_and_openshift/manifests/004_tm_configMaps/aqua_tm_config.yaml
    ```
    
 **Step 3. Deploy the Tenant Manager database PVC**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/tenant_manager/003-tm-db-pvc.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/tenant_manager/kubernetes_and_openshift/manifests/005_tm_storage/aqua_tm_db_pvc.yaml
    ```   
    
-**Step 4. Deploy the Tenant Manager DB**
+**Step 4. Deploy the Tenant Manager with packaged DB**
    
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/tenant_manager/004-tm-db.yaml
-   ```
-   
-**Step 5. Deploy the Tenant Manager ConfigMap**
-
-   ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/tenant_manager/005-tm-config-map.yaml
-   ```
-
-**Step 6. Deploy the Tenant Manager service**
-   
-   ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/tenant_manager/006-tm-deploy.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/tenant_manager/kubernetes_and_openshift/manifests/006_tm_deployment/aqua_tm_deployment_packaged_db.yaml
    ```
 
 ### Deploy the Tenant Manager with an external DB 
 
 **Step 1. Configure and deploy the Tenant Manager ConfigMap**
 
-Download and update the ConfigMap [005-tm-config-map.yaml](./005-tm-config-map.yaml) with the relevant DB host, username, and password.
+Download and update the ConfigMap [aqua_tm_config.yaml](./004_tm_configMaps/aqua_tm_config.yaml) with the relevant DB host, username, and password.
 Then apply the ConfigMap:
 
    ```shell
-   $ kubectl apply -f 005-tm-config-map.yaml
+   $ kubectl apply -f aqua_tm_config.yaml
    ```
    
 **Step 2. Deploy the Tenant Manager service**
    
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/tenant_manager/006-tm-deploy.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/tenant_manager/kubernetes_and_openshift/manifests/006_tm_deployment/aqua_tm_deployment_managed_db.yaml.yaml
    ```
