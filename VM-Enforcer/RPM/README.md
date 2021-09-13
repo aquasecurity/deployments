@@ -18,11 +18,11 @@ Following packages are required for installing VM Enforcer `.rpm` package
 1. Download the RPM package from Aqua Security, using an authorized user and password:
    1. For x86_64/amd64 systems:
     ```shell
-    wget -v https://download.aquasec.com/host-enforcer/6.0.0/aqua-vm-enforcer-6.0.21164.x86_64.rpm --user=<Username> --ask-password
+    wget -v https://download.aquasec.com/host-enforcer/6.0.0/aqua-vm-enforcer-6.0.21175.x86_64.rpm --user=<Username> --ask-password
     ```
    2. For arm64 systems:
     ```shell
-    wget -v https://download.aquasec.com/host-enforcer/6.0.0/aqua-vm-enforcer-6.0.21164.aarch64.rpm --user=<Username> --ask-password
+    wget -v https://download.aquasec.com/host-enforcer/6.0.0/aqua-vm-enforcer-6.0.21175.aarch64.rpm --user=<Username> --ask-password
     ```
 
 2. Copy the downloaded RPM package to the VM(s) on which you want to deploy a VM Enforcer.
