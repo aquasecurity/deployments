@@ -73,6 +73,12 @@ $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.
 $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/003_scanner_deploy.yaml
 ```
 
+### (Optional) External storage for image scans data (PVC)
+The scanner doesn't need any persistent storage to work since scanned data is automatically cleared after every scan, but in case you require to use an external volume to host data scans, you can uncomment these sections in the deployment file before running the kubectl commands:
+* PVC object
+* Volume block
+* VolumeMount block
+
 ## Automate Scanner deployment using Aquactl
 
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Scanner using manifests](#deploy-scanner-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the Scanner deployment.
