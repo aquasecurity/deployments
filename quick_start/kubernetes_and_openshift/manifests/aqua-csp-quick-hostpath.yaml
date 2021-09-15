@@ -640,7 +640,22 @@ webhooks:
       - operations: ["CREATE", "UPDATE"]
         apiGroups: ["*"]
         apiVersions: ["*"]
-        resources: ["pods", "deployments", "replicasets", "replicationcontrollers", "statefulsets", "daemonsets", "jobs", "cronjobs"]
+        resources:
+          - pods
+          - deployments
+          - replicasets
+          - replicationcontrollers
+          - statefulsets
+          - daemonsets
+          - jobs
+          - cronjobs
+          - configmaps
+          - services
+          - roles
+          - rolebindings
+          - clusterroles
+          - clusterrolebindings
+          - customresourcedefinitions
     clientConfig:
       # Please follow instruction in document to generate new CA cert
       caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFVENDQWZtZ0F3SUJBZ0lVTkljWmkzL2xqbEtObFZ0WXBwVyttN2xWZnNVd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUNBWERUSXdNRGd5TnpBNU5EZ3dNMW9ZRHpJeQpPVFF3TmpFeU1EazBPREF6V2pBWE1SVXdFd1lEVlFRRERBeGhaRzFwYzNOcGIyNWZZMkV3Z2dFaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURZSlovRmRjVUtDdmdqSHlVVnhxWitRTTBRLzNGYzQyTzkKUGlXTllGS2l3L1FJTUIxTHZpQklXSFQyVEZLRkVYYUtZcmdzTHE0MElFZWMyN2Jvd2RTbXJVZEV3bEdtNkQrMQpIaGROQWI4WEllWTNteEpUUlR2cVhzYitrUnptYjJCL2xRVVlLNFJxaW8vN2RyZjFEYjBwWEFYVmxzRFNvQUhoCkxUWUxXbmhldGNLTUEvT3FCQXBoaWM4VzZZN1VJY2FtWnVZZUMxOVBlMlZKSHFxZ3o5MDNybjFGTnNMWnA4Q00Kb0dXeENEU0RFSWRuTmMxVis1WUg4VmxLRk9wb2IxYWtIZFFPeVlROFVPR2hnMHh3YXNGMnRRc2RCQ3BTUFBNYwo3K01kWnF0c2dtVGJQaUN6bWRra25uWWZ4cmxsWVVmOGFCelBrMzhyQ2ZiMnF5ZHJLTGZSQWdNQkFBR2pVekJSCk1CMEdBMVVkRGdRV0JCVDlDWlVURzRtQThrYzBISEJsamhRZUxKWjZoekFmQmdOVkhTTUVHREFXZ0JUOUNaVVQKRzRtQThrYzBISEJsamhRZUxKWjZoekFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFDUE5Ick5rcTBpN2tpMnNGcUtWa3l0RGpRWTFzaVNRcjNsbXVweDlVL1FuaytBQ2huYUhjNDVqSFVTCi9JdmNWMnljQVZ1aUQ3eFJXWkdYVzRuRE14QjdBZ0RKWmhJd3hGTVl1bVpGZEtCUlBLKy9WY3ZFTFFoZ3Z6T0QKNWhvNHZ0RzlHTzBDUzhqNUtGZ3pWaDgxcmsyU2c1RDN6TGVISjVVNDVRK2xlRGtldXJmMzFqQWJsMU1vai9JWgpndVUyd1Y5RkJJaFZONTMwd1Y4b01oWnVZRWZvUmZhOEpIbXhTMmNNbHUxQWZ5YmZkcFB2cCtpUHZKc0t2UTgzCmdueEd4K1k5NldzL0pmWDlXSFpBT1kyQXVVYS9hUjZLSnVraG9KVTk2Z3p5VXd0eFV5aWExdDg5M0hZNmQ3bG0KU1BmaVEzWm40dXdxaEczMUhGSmZMMG5iSmlxZQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
@@ -658,7 +673,6 @@ metadata:
   namespace: aqua
 webhooks:
   - name: microenforcer.aquasec.com
-    failurePolicy: Ignore
     clientConfig:
       service:
         name: aqua-kube-enforcer
@@ -671,6 +685,7 @@ webhooks:
         apiVersions: ["v1"]
         resources: ["pods"]
     timeoutSeconds: 5
+    failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
 ---
@@ -686,8 +701,36 @@ metadata:
   name: aqua-kube-enforcer
 rules:
   - apiGroups: ["*"]
-    resources: ["pods", "secrets", "nodes", "namespaces", "deployments", "statefulsets", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers"]
+    resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
     verbs: ["get", "list", "watch"]
+  - apiGroups: [ "*" ]
+    resources: [ "secrets" ]
+    verbs: [ "get", "list", "watch", "update", "create" ]
+  - apiGroups: ["aquasecurity.github.io"]
+    resources: ["configauditreports", "clusterconfigauditreports"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["*"]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch", "update", "create"]
+  - apiGroups:
+      - "*"
+    resources:
+      - roles
+      - rolebindings
+      - clusterroles
+      - clusterrolebindings
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "*"
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - get
+      - list
+      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -702,6 +745,34 @@ subjects:
   - kind: ServiceAccount
     name: aqua-kube-enforcer-sa
     namespace: aqua
+---
+# This role specific to kube-bench scans permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+rules:
+  - apiGroups: ["*"]
+    resources: ["pods/log"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["*"]
+    resources: ["jobs"]
+    verbs: ["create", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: aqua-kube-enforcer
+  namespace: aqua
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: aqua-kube-enforcer
+subjects:
+- kind: ServiceAccount
+  name: aqua-kube-enforcer-sa
+  namespace: aqua
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -723,6 +794,360 @@ data:
   AQUA_LOGICAL_NAME: ""
   # Cluster display name in aqua enterprise.
   CLUSTER_NAME: "aqua-secure"
+  # Enable KA policy scanning via starboard
+  AQUA_KAP_ADD_ALL_CONTROL: "true"
+  AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
+  # Enable the below Env for mTLS between kube-enforcer and gateway
+  # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
+  # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
+  # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"
+---
+# Starboard resource yamls################
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: configauditreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/managed-by: starboard
+spec:
+  group: aquasecurity.github.io
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      additionalPrinterColumns:
+        - jsonPath: .report.scanner.name
+          type: string
+          name: Scanner
+          description: The name of the config audit scanner
+        - jsonPath: .metadata.creationTimestamp
+          type: date
+          name: Age
+          description: The age of the report
+        - jsonPath: .report.summary.dangerCount
+          type: integer
+          name: Danger
+          priority: 1
+          description: The number of checks that failed with Danger status
+        - jsonPath: .report.summary.warningCount
+          type: integer
+          name: Warning
+          priority: 1
+          description: The number of checks that failed with Warning status
+        - jsonPath: .report.summary.passCount
+          type: integer
+          name: Pass
+          priority: 1
+          description: The number of checks that passed
+      schema:
+        openAPIV3Schema:
+          x-kubernetes-preserve-unknown-fields: true
+          type: object
+  scope: Namespaced
+  names:
+    singular: configauditreport
+    plural: configauditreports
+    kind: ConfigAuditReport
+    listKind: ConfigAuditReportList
+    categories:
+      - all
+    shortNames:
+      - configaudit
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: clusterconfigauditreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/managed-by: starboard
+spec:
+  group: aquasecurity.github.io
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      additionalPrinterColumns:
+        - jsonPath: .report.scanner.name
+          type: string
+          name: Scanner
+          description: The name of the config audit scanner
+        - jsonPath: .metadata.creationTimestamp
+          type: date
+          name: Age
+          description: The age of the report
+        - jsonPath: .report.summary.dangerCount
+          type: integer
+          name: Danger
+          priority: 1
+          description: The number of checks that failed with Danger status
+        - jsonPath: .report.summary.warningCount
+          type: integer
+          name: Warning
+          priority: 1
+          description: The number of checks that failed with Warning status
+        - jsonPath: .report.summary.passCount
+          type: integer
+          name: Pass
+          priority: 1
+          description: The number of checks that passed
+      schema:
+        openAPIV3Schema:
+          x-kubernetes-preserve-unknown-fields: true
+          type: object
+  scope: Cluster
+  names:
+    singular: clusterconfigauditreport
+    plural: clusterconfigauditreports
+    kind: ClusterConfigAuditReport
+    listKind: ClusterConfigAuditReportList
+    categories:
+      - all
+    shortNames:
+      - clusterconfigaudit
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: starboard-operator
+  namespace: aqua
+imagePullSecrets:
+  - name: aqua-registry
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: starboard
+  namespace: aqua
+data:
+  configAuditReports.scanner: Conftest
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: starboard
+  namespace: aqua
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: starboard-conftest-config
+  namespace: aqua
+data:
+  conftest.imageRef: registry.aquasec.com/kube-enforcer:6.5.preview7
+  conftest.resources.requests.cpu: 50m
+  conftest.resources.requests.memory: 50M
+  conftest.resources.limits.cpu: 300m
+  conftest.resources.limits.memory: 300M
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: starboard-operator
+  namespace: aqua
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - replicationcontrollers
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - secrets
+      - serviceaccounts
+    verbs:
+      - list
+      - watch
+      - get
+      - create
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+  - apiGroups:
+      - apps
+    resources:
+      - replicasets
+      - statefulsets
+      - daemonsets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+      - cronjobs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - roles
+      - rolebindings
+      - clusterroles
+      - clusterrolebindings
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - create
+      - delete
+  - apiGroups:
+      - aquasecurity.github.io
+    resources:
+      - vulnerabilityreports
+      - configauditreports
+      - clusterconfigauditreports
+      - ciskubebenchreports
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - delete
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - create
+      - get
+      - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: starboard-operator
+  namespace: aqua
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: starboard-operator
+subjects:
+  - kind: ServiceAccount
+    name: starboard-operator
+    namespace: aqua
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starboard-operator
+  namespace: aqua
+  labels:
+    app: starboard-operator
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: starboard-operator
+  template:
+    metadata:
+      labels:
+        app: starboard-operator
+    spec:
+      serviceAccountName: starboard-operator
+      automountServiceAccountToken: true
+      securityContext: {}
+      containers:
+        - name: operator
+          image: docker.io/aquasec/starboard-operator:0.12.0-rc3
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: OPERATOR_NAMESPACE
+              value: aqua
+            - name: OPERATOR_TARGET_NAMESPACES
+              value: ""
+            - name: OPERATOR_LOG_DEV_MODE
+              value: "false"
+            - name: OPERATOR_CONCURRENT_SCAN_JOBS_LIMIT
+              value: "10"
+            - name: OPERATOR_SCAN_JOB_RETRY_AFTER
+              value: 30s
+            - name: OPERATOR_METRICS_BIND_ADDRESS
+              value: :8080
+            - name: OPERATOR_HEALTH_PROBE_BIND_ADDRESS
+              value: :9090
+            - name: OPERATOR_CIS_KUBERNETES_BENCHMARK_ENABLED
+              value: "false"
+            - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
+              value: "false"
+            - name: OPERATOR_BATCH_DELETE_LIMIT
+              value: "10"
+            - name: OPERATOR_BATCH_DELETE_DELAY
+              value: "10s"
+          ports:
+            - name: metrics
+              containerPort: 8080
+            - name: probes
+              containerPort: 9090
+          readinessProbe:
+            httpGet:
+              path: /readyz/
+              port: probes
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz/
+              port: probes
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
 ---
 apiVersion: v1
 kind: Service
@@ -750,6 +1175,10 @@ spec:
       labels:
         app: aqua-kube-enforcer
     spec:
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
