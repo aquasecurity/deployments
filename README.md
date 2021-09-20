@@ -6,7 +6,7 @@
 
 [Aqua Platform](https://www.aquasec.com/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native security platform that secures containerized, serverless, and VM-based applications, from application build, infrastructure through production runtime environments. Aqua Enterprise runs either in SaaS or Self-Hosted edition, at any scale.
 
- This repository explains different methods to deploy each Aqua component. It also provides a [quick_start](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/quick_start) deployment suited for proofs-of-concept (POCs), training, and test environemnts.
+ This repository explains different methods to deploy each Aqua component. It also provides a [quick_start](./quick_start) deployment suited for proofs-of-concept (POCs), training, and test environemnts.
 
  Aqua components can be deployed on multiple platforms such as Kubernetes, AWS ECS, OpenShift, no-orchestrator, and more, using different deployment methods such as manifests, Helm, Operator, proprietary CLI tools, RPM, and scripts. Deployment resources for each Aqua component is listed in the respective directory.
 
