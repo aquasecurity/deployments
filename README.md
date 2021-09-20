@@ -13,20 +13,20 @@
 ### Aqua Enterprise SaaS edition deployment
 
 Users working with Aqua Enterprise SaaS edition do not need to deploy Aqua server in their datacenter but only the relevant Enforcers to enable runtime protection. Following are the components that are available for Aqua SaaS users:
-* [Enforcers](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/enforcers):  
+* [Enforcers](./enforcers):  
   * **Aqua Enforcer**: containers and host protection
   * **KubeEnforcer**: full stack Kubernetes cluster protection 
   * **VM Enforcer**: VM workloads protection
   * **MicroEnforcer**: runtime security for containers running in Containers-as-a-Service (CaaS) environments
   * **NanoEnforcer**: runtime protection of serverless functions
-* [Scanner](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/scanner): Used to scan images, VMWare Tanzu applications, and serverless functions locally or stored in a registry
+* [Scanner](./scanner): Used to scan images, VMWare Tanzu applications, and serverless functions locally or stored in a registry
 
 ### Aqua Enterprise Self-Hosted edition deployment
 
 Aqua Enterprise Self-Hosted edition requires deploying Aqua server and other components in your datacenter. Following are the server components available for deployment:
-*  [Server](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/server): core server components – Console, Gateway, and Database. This deployment is mandatory for Aqua Self-Hosted edition. 
-*  [Tenant Manager](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/tenant_manager) *(Optional)*: manage multiple segregated Aqua deployments from a single console
-*  [CyberCenter](https://github.com/KoppulaRajender/deployments/tree/6.5_dev/cyber_center): required for air-gap environments
+*  [Server](./server): core server components – Console, Gateway, and Database. This deployment is mandatory for Aqua Self-Hosted edition. 
+*  [Tenant Manager](./tenant_manager) *(Optional)*: manage multiple segregated Aqua deployments from a single console
+*  [CyberCenter](./cyber_center): required for air-gap environments
 
 After deploying Server components, you can deploy Enforcers and Scanners similar to SaaS users.
 
