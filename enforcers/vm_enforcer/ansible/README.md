@@ -42,5 +42,5 @@ ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_install=true --extra
 
 ## References
 * Getting started with [Ansible](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html) and [Run your first Playbook](https://docs.ansible.com/ansible/latest/network/getting_started/first_playbook.html) guides.
-* [Aqua VM Enforcers Overview](../README.md) and all other [Aqua Enforcers types](../../README.md) overview
+* [Aqua VM Enforcer Overview](../README.md) and all other [Aqua Enforcers types](../../README.md) overview
 * Aqua VM Enforcers [official documentation](https://docs.aquasec.com/docs/vm-enforcer)

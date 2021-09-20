@@ -14,9 +14,7 @@ Aqua’s CyberCenter is a cloud-based cyber-intelligence knowledge base, maintai
 *The deployment procedure for each method will be added soon.*
 
 ## Supported platforms
-* Kubernetes and Openshift
-* AWS ECS
-* Docker
+* [Kubernetes and Openshift](./kubernetes_and_openshift)
 
 ## Suited for
 * Aqua Enterprise Self-Hosted edition
