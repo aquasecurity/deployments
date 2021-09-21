@@ -13,7 +13,6 @@ Aqua scanner performs scanning of the following objects for security issues:
 * [Helm](./kubernetes_and_openshift/helm/)
 * [Operator](./kubernetes_and_openshift/operator/)
 * [AWS CloudFormation on EC2 clusters](./ecs/cloudformation/aqua-ecs-ec2)
-* [Docker Swarm](./docker/swarm)
 
 ## Suited for
 * Aqua Enterprise SaaS
