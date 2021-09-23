@@ -1,21 +1,26 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: aqua-cc
   labels:
     app: aqua-cc
+  name: aqua-cc
+  namespace: aqua
 spec:
   ports:
     - port: 5000
   selector:
     app: aqua-cc
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: aqua-cc
   name: aqua-cc
+  namespace: aqua
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: aqua-cc
@@ -24,13 +29,14 @@ spec:
       labels:
         app: aqua-cc
       name: aqua-cc
+      namespace: aqua
     spec:
-      serviceAccount: aqua
+      serviceAccount: aqua-sa
       containers:
       - name: aqua-cc
-        image: "registry.aquasec.com/cybercenter-standard:cc4"
+        image: "registry.aquasec.com/cc-standard:latest"
+        imagePullPolicy: IfNotPresent
         args:
           ['--offline-key=pleaseopen']
         ports:
         - containerPort: 5000
-
