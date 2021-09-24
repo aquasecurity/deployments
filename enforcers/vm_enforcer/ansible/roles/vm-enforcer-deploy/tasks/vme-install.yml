@@ -118,14 +118,14 @@
 
     - name: Download App
       get_url:
-        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_TAR_FILE_NAME }}"
+        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_MAJOR_VERSION }}/{{ ENFORCER_RUNC_TAR_FILE_NAME }}"
         dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
         username: "{{ USERNAME }}"
         password: "{{ PASSWORD }}"
 
     - name: Download config templates
       get_url:
-        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }}"
+        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_MAJOR_VERSION }}/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }}"
         dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
         username: "{{ USERNAME }}"
         password: "{{ PASSWORD }}"
