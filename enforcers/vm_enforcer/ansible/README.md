@@ -9,9 +9,7 @@ You can deploy VM Enforcers, using an Ansible playbook, on the desired VM Enforc
 * VM Enforcer Group token. Refer to [Create a VM Enforcer Group and VM Enforcer](https://docs.aquasec.com/docs/create-a-vm-enforcer-group-and-vm-enforcer) to create this token.
 * Aqua username and password
 * Following packages are required on the VM to install VM Enforcer:
-   * jq
    * runc
-   * tar
    * wget
 
 ## Preparation
@@ -27,9 +25,9 @@ cd ./deployments/enforcers/vm_enforcer/ansible/
 
 ```bash
 [all]     # list the IP/DNS addresses of the VMs to deploy VM Enforcer
-10.0.0.1 
-10.0.0.x
-test.aqua.com
+10.0.0.1       ansible_ssh_private_key_file=~/.ssh/test-key    ansible_user=test-user
+10.0.0.x       ansible_ssh_private_key_file=~/.ssh/test-key
+test.aqua.com  ansible_user=test-user
 ```
 
 ## Deploy VM Enforcer

@@ -23,7 +23,7 @@
   block:
     - name: Download x86_64 App
       get_url:
-        url: "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_AMD64_RPM_FILE_NAME }}"
+        url: "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_MAJOR_VERSION }}/{{ ENFORCER_RUNC_AMD64_RPM_FILE_NAME }}"
         dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
         username: "{{ USERNAME }}"
         password: "{{ PASSWORD }}"
@@ -31,7 +31,7 @@
 
     - name: Download aarch64 App
       get_url:
-        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_ARM64_RPM_FILE_NAME }}"
+        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_MAJOR_VERSION }}/{{ ENFORCER_RUNC_ARM64_RPM_FILE_NAME }}"
         dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
         username: "{{ USERNAME }}"
         password: "{{ PASSWORD }}"
@@ -43,10 +43,12 @@
       yum:
         name: "{{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_AMD64_RPM_FILE_NAME }}"
         state: latest
+        disable_gpg_check: yes
       when: ansible_architecture == "x86_64"
 
     - name: Installing VM-Enforcer rpm aarch64 package
       yum:
         name: "{{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_ARM64_RPM_FILE_NAME }}"
         state: latest
+        disable_gpg_check: yes
       when: ansible_architecture == "aarch64"
