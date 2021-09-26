@@ -9,8 +9,6 @@ Aqua’s CyberCenter is a cloud-based cyber-intelligence knowledge base, maintai
 ## Deployment methods
 * [manifests](./kubernetes_and_openshift/manifests)
 
-*The deployment procedure for each method will be added soon.*
-
 ## Supported platforms
 * [Kubernetes and Openshift](./kubernetes_and_openshift)
 
