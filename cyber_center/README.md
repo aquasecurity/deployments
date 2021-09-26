@@ -4,12 +4,10 @@
 
 ## Overview
 
-Aqua’s CyberCenter is a cloud-based cyber-intelligence knowledge base, maintained and operated by Aqua Security. 
+Aqua’s CyberCenter is a cloud-based cyber-intelligence knowledge base, maintained and operated by Aqua Security. The CyberCenter can be deployed in your air-gap environments. This offline CyberCenter is used for communication with server and scanner to share data on security issues such as vulnerabilities, sensitive data, malware, etc. This data can be used to identify security issues in the workloads and artifacts.
 
 ## Deployment methods
-* manifests
-* AWS CloudFormation ECS
-* docker
+* [manifests](./kubernetes_and_openshift/manifests)
 
 *The deployment procedure for each method will be added soon.*
 

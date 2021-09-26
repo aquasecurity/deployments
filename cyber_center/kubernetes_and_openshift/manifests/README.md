@@ -7,10 +7,25 @@ This repository shows the manifest yaml files required to deploy Aqua CyberCente
 * OpenShift
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Aqua CyberCenter](https://docs.aquasec.com/docs/cybercenter-description) for detailed information.
+Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Offline CyberCenter](https://docs.aquasec.com/v6.5/docs/deploy-offline-cybercenter) for detailed information.
 
 ## Specific OpenShift notes
-The deployment commands shown below use the **kubectl** cli, you can also deploy using the **oc** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below use the **kubectl** cli. You can also deploy using the **oc** cli commands, to work on all platforms including OpenShift.
+
+## Prerequisites
+* Your Aqua credentials: username and password
+* Your Aqua Enterprise License Token
+
+It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide).
+
+## Considerations
+
+### CyberCenter image for deployment
+
+The CyberCenter image, **cc-standard:latest** is considered for its deployment in this procedure. It is added in the [CyberCenter deploy yaml file](./002_cybercenter_deploy.yaml) at the line 40. This image can be used for support on vulnerabilities related to all the operating systems. If you want to get support on vulnerabilities related to all the programming languages also, add the **cc-premium:latest** image in the mentioned yaml file.
+
+### mTLS
+To configure CyberCenter with mTLS (mutual TLS) to have secure communication with server, refer to the product documentation, [Configure mTLS for the Offline CyberCenter](https://docs.aquasec.com/docs/configure-mtls-for-the-offline-cybercenter).
 
 ## Pre-deployment
 
@@ -40,8 +55,6 @@ $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.
 ```
 
 ## Deploy CyberCenter using manifests
-
-**Step 1. Deploy Aqua CyberCenter.**
 
 ```SHELL
 $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cyber_center/kubernetes_and_openshift/manifests/002_cybercenter_deploy.yaml
