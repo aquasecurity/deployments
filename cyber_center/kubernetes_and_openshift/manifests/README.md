@@ -64,4 +64,4 @@ $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.
 ```
 
 ## Post-deployment
-After the offline CyberCenter is deployed successfully, you must disable **Fast Scanning** from Aqua UI to scan artifacts successfully. For more information on disabling this option, refer to [Configure Scan Options](https://docs.aquasec.com/v6.5/docs/configure-scan-options#section-configure-scan-options)
+After the offline CyberCenter is deployed successfully, you must disable **Fast Scanning** from Aqua UI to scan artifacts successfully. For more information on disabling this option, refer to [Configure Scan Options](https://docs.aquasec.com/v6.5/docs/configure-scan-options#section-configure-scan-options).
