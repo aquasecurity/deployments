@@ -22,7 +22,10 @@ It is recommended that you complete the sizing and capacity assessment for the d
 
 ### CyberCenter image for deployment
 
-The CyberCenter image, **cc-standard:latest** is added in the [CyberCenter deploy yaml file](./002_cybercenter_deploy.yaml) at the line 40, for support on vulnerabilities related to all the operating systems. Use the **cc-premium:latest** image to get support on vulnerabilities related to all the programming languages also.
+The CyberCenter image is added in the [CyberCenter deploy yaml file](./002_cybercenter_deploy.yaml#L40) at the line 40. You can use one of the two following CyberCenter images:
+
+* **cc-standard:latest**: is used for support on vulnerabilities related to all the operating systems. This image is used in the deployment yaml file.
+* **cc-premium:latest**: is used to get support on vulnerabilities related to all the programming languages including the operating systems.
 
 ### mTLS
 To configure the CyberCenter with mTLS (mutual TLS) to have secure communication with server, refer to the product documentation, [Configure mTLS for the Offline CyberCenter](https://docs.aquasec.com/docs/configure-mtls-for-the-offline-cybercenter).
@@ -59,3 +62,6 @@ $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.
 ```SHELL
 $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cyber_center/kubernetes_and_openshift/manifests/002_cybercenter_deploy.yaml
 ```
+
+## Post-deployment
+After the offline CyberCenter is deployed successfully, you must disable **Fast Scanning** from Aqua UI to scan artifacts successfully. For more information on disabling this option, refer to [Configure Scan Options](https://docs.aquasec.com/v6.5/docs/configure-scan-options#section-configure-scan-options)
