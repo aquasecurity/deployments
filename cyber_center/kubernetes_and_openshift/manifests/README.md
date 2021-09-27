@@ -22,7 +22,7 @@ It is recommended that you complete the sizing and capacity assessment for the d
 
 ### CyberCenter image for deployment
 
-The CyberCenter image, **cc-standard:latest** is considered for its deployment in this procedure. It is added in the [CyberCenter deploy yaml file](./002_cybercenter_deploy.yaml) at the line 40. This image can be used for support on vulnerabilities related to all the operating systems. If you want to get support on vulnerabilities related to all the programming languages also, add the **cc-premium:latest** image in the mentioned yaml file.
+The CyberCenter image, **cc-standard:latest** is added in the [CyberCenter deploy yaml file](./002_cybercenter_deploy.yaml) at the line 40, for support on vulnerabilities related to all the operating systems. Use the **cc-premium:latest** image to get support on vulnerabilities related to all the programming languages also.
 
 ### mTLS
 To configure the CyberCenter with mTLS (mutual TLS) to have secure communication with server, refer to the product documentation, [Configure mTLS for the Offline CyberCenter](https://docs.aquasec.com/docs/configure-mtls-for-the-offline-cybercenter).
