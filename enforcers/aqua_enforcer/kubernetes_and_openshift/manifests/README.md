@@ -33,6 +33,20 @@ You may consider the following options for deploying the Aqua Enforcer:
   
   - To connect with an exteranl Gateway, update the **AQUA_SERVER** value with the gateway endpoint address in the *002_aqua_enforcer_configMaps.yaml* configMap manifest file.
 
+## Supported platforms
+| < PLATFORM >              | Description                                                  |
+| ---------------------- | ------------------------------------------------------------ |
+| aks | Microsoft Azure Kubernetes Service (AKS)    |
+| eks | Amazon Elastic Kubernetes Service (EKS) |
+| gke | Google Kubernetes Engine (GKE) |
+| ibm | IBM Cloud Private (ICP) |
+| k3s | fully CNCF certified Kubernetes |
+| native_k8s | Kubernetes |
+| openshift | OpenShift (Red Hat) |
+| rancher | Rancher / Kubernetes |
+| tkg | VMware Tanzu Kubernetes Grid (TKG) |
+| tkgi | VMware Tanzu Kubernetes Grid Integrated Edition (TKGI) |
+
 ## Pre-deployment
 You can skip any of the steps if you have already performed.
 
@@ -53,11 +67,11 @@ $ kubectl create secret docker-registry aqua-registry \
 -n aqua
    ```
 
-**Step 3. Create a service account (if not already done).**
+**Step 3. Create a service account and RBAC for your deployment platform (if not already done).** Replace the platform name from [Supported platforms](#supported-platforms).
 
-```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/001_aqua_enforcer_serviceAccount.yaml
-```
+   ```SHELL
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/tree/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/001_aqua_enforcer_rbac/< PLATFORM >/aqua_sa.yaml
+   ```
 
 ## Deploy Aqua Enforcer using manifests
 
