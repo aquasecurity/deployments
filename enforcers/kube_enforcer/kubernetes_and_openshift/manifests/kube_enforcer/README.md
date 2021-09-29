@@ -67,7 +67,7 @@ You can skip any step in this section, if you have already performed.
    - **Option A (Automatic)**: Generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key, aqua_ke.crt), and deploy the KubeEnforcer config.
         
         ```shell
-        $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube-enforcer/gen_ke_certs.sh
+        $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh
         ```
 
    - **Option B (Manual)**: Perform the steps mentioned in the [Deploy the KubeEnforcer Config manually](#deploy-the-kubeenforcer-config-manually) section.
@@ -91,13 +91,13 @@ You can skip any step in this section, if you have already performed.
 * Download, edit, and apply the secrets manifest file to create the token and SSL cert secrets.
 
   ```SHELL
-  $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube-enforcer/002_kube_enforcer_secrets.yaml
+  $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/002_kube_enforcer_secrets.yaml
   ```  
 
 **Step 3. Deploy KubeEnforcer.**
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube-enforcer/003_kube_enforcer_deploy.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
 ```
 
 ### Deploy the KubeEnforcer Config manually
