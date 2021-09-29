@@ -70,7 +70,7 @@ $ kubectl create secret docker-registry aqua-registry \
 **Step 3. Create a service account and RBAC for your deployment platform (if not already done).** Replace the platform name from [Supported platforms](#supported-platforms).
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/tree/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/001_aqua_enforcer_rbac/< PLATFORM >/aqua_sa.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/001_aqua_enforcer_rbac/< PLATFORM >/aqua_sa.yaml
    ```
 
 ## Deploy Aqua Enforcer using manifests
