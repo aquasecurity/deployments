@@ -15,7 +15,7 @@ spec:
       - name: aqua-registry
       containers:
       - name: test-upgrade
-        image: registry.aquasec.com/console:6.5.preview7
+        image: registry.aquasec.com/console:6.5.preview9
         command: ["/opt/aquasec/sedockweb"]
         args: ["test-upgrade"]
         envFrom:

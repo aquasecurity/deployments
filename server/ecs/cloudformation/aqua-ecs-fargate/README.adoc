@@ -1,5 +1,5 @@
 :version: 6.5
-:imageVersion: 6.5
+:imageVersion: 6.5.preview9
 
 = Deploy Server on AWS ECS Fargate Cluster
 
@@ -37,12 +37,14 @@ A CloudFormation template is used to deploy Aqua Enterprise. This can be done ei
 
 *Step 1. Login to the Aqua Registry with your credentials.*
 
+[source,options="nowrap",subs="attributes"]
 ----
  docker login registry.aquasec.com -u <AQUA_USERNAME> -p <AQUA_PASSWORD>
 ----
 
 *Step 2. Pull the Aqua product images for the Server (Console) and Gateway.*
 
+[source,options="nowrap",subs="attributes"]
 ----
 docker pull registry.aquasec.com/console:{imageVersion}
 docker pull registry.aquasec.com/gateway:{imageVersion}
@@ -68,6 +70,7 @@ It will typically require up to 20 minutes for Aqua Enterprise to be deployed. W
 
 *Step 1. Copy the following command.*
 
+[source,options="nowrap",subs="attributes"]
 ----
 aws --region us-east-1 cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name aqua-fargate --template-body file://aquaFargate.yaml \
 --parameters ParameterKey=AquaConsoleAccess,ParameterValue=x.x.x.x/x \
