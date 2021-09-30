@@ -23,7 +23,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-agent
-        image: registry.aquasec.com/enforcer:6.5.preview7
+        image: registry.aquasec.com/enforcer:6.5.preview9
         imagePullPolicy: IfNotPresent
         securityContext:
           privileged: true
