@@ -43,12 +43,12 @@ Consider the following options for deploying the KubeEnforcer:
 
 You can skip any step in this section, if you have already performed.
 
-**Step 1. Create a namespace (or an OpenShift  project) by name aqua (if not already done).**
+**Step 1. Create a namespace (or an OpenShift  project) by name aqua.**
 
    ```SHELL
    $ kubectl create namespace aqua
    ```
-
+   Note: (Optional) Instead of Aqua Namespace, You can also use your custom Namespace to deploy KubeEnforcer.
 
 **Step 2. Create a docker-registry secret (if not already done).**
 

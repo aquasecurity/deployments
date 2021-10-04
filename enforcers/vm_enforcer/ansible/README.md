@@ -37,9 +37,7 @@ Add the [mandatory variables](#mandatory-variables) with the `--extra-vars` flag
 ```shell
 ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_install=true --extra-vars "USERNAME=<username> PASSWORD=<password> ENFORCER_VERSION=<version> TOKEN=<token> GATEWAY_ENDPOINT=<endpoint>:<port>"
 ```
-##  Uninstall VM ENforcer on all VMs using ansible-playbook
-
-Run the below command to uninstall VM Enforcer from all hosts defined in hostsfile.
+##  Uninstall VM Enforcer from all VMs using ansible-playbook
 
 ```shell
 ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_uninstall=true
