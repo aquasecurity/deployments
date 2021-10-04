@@ -30,12 +30,19 @@ cd ./deployments/enforcers/vm_enforcer/ansible/
 test.aqua.com  ansible_user=test-user
 ```
 
-## Deploy VM Enforcer
+## Deploy VM Enforcer on all VMs using ansible-playbook
 
 Add the [mandatory variables](#mandatory-variables) with the `--extra-vars` flag in the deployment command as shown below, and run the command.
 
 ```shell
 ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_install=true --extra-vars "USERNAME=<username> PASSWORD=<password> ENFORCER_VERSION=<version> TOKEN=<token> GATEWAY_ENDPOINT=<endpoint>:<port>"
+```
+##  Uninstall VM ENforcer on all VMs using ansible-playbook
+
+Run the below command to uninstall VM Enforcer from all hosts defined in hostsfile.
+
+```shell
+ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_uninstall=true
 ```
 
 ## References
