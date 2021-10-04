@@ -13,8 +13,13 @@ Following packages are required for installing VM Enforcer `.rpm` package:
 * runc
 
 ## Deploy VM Enforcer
+| Build Number        | Release Number          |
+| ------------------- | ------------------------|
+| 6.5.preview9 | 6.5.preview9   |
 
 **Step 1. Download the RPM package for your architecture, using an authorized username and password.**
+
+
    * **x86_64/amd64:**
   
         ```shell

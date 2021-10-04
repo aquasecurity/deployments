@@ -104,7 +104,7 @@
   block:
     - name: Download templates
       get_url:
-        url: https://raw.githubusercontent.com/aquasecurity/deployments/{{ (ENFORCER_VERSION)[:3] }}/VM-Enforcer/templates/{{ item }}
+        url: https://raw.githubusercontent.com/aquasecurity/deployments/{{ (ENFORCER_VERSION)[:3] }}/enforcers/vm_enforcer/templates/{{ item }}
         dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
       with_items:
         - aqua-enforcer.template.service
@@ -112,7 +112,7 @@
         - run.template.sh
     - name: Download aquavme.pp binary
       get_url:
-        url: https://raw.githubusercontent.com/aquasecurity/deployments/{{ (ENFORCER_VERSION)[:3] }}/VM-Enforcer/RPM/selinux/aquavme/aquavme.pp
+        url: https://raw.githubusercontent.com/aquasecurity/deployments/{{ (ENFORCER_VERSION)[:3] }}/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.pp
         dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
 
 

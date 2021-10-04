@@ -1,6 +1,13 @@
 #!/bin/bash
 # Simple shell script to generate required SSL certificates to be used with Aqua KubeEnforcer
-
+_namespace() {
+    if [[ -z "$1" ]]
+    then
+        ns="aqua"
+    else
+        ns=$1
+    fi
+}
 _banner() {
     echo
     echo "In this script you will configure and deploy Aqua KubeEnforcer config to your kubernetes cluster"
@@ -53,7 +60,7 @@ _generate_ca() {
 }
 
 _generate_ssl() {
-    printf "\nInfo: Generating kubeEnforcer SSL private key\n"
+    printf "\nInfo: Generating kubeEnforcer SSL private key for %s namespace \n", $ns
     if `openssl genrsa -out aqua_ke.key 2048`; then
         printf "\nInfo: Successfully generated aqua_ke.key\n"
         # CSR config file to generate kubeEnforcer CSR
@@ -63,8 +70,8 @@ _generate_ssl() {
         distinguished_name = req_distinguished_name
         [req_distinguished_name]
         [ alt_names ]
-        DNS.1 = aqua-kube-enforcer.aqua.svc
-        DNS.2 = aqua-kube-enforcer.aqua.svc.cluster.local
+        DNS.1 = aqua-kube-enforcer.$ns.svc
+        DNS.2 = aqua-kube-enforcer.$ns.svc.cluster.local
         [ v3_req ]
         basicConstraints = CA:FALSE
         keyUsage = nonRepudiation, digitalSignature, keyEncipherment
@@ -72,7 +79,7 @@ _generate_ssl() {
         subjectAltName = @alt_names
 EOF
         printf "\nInfo: Generating kubeEnforcer CSR\n"
-        if `openssl req -new -sha256 -key aqua_ke.key -subj "/CN=aqua-kube-enforcer.aqua.svc" -config server.conf -out aqua_ke.csr`; then
+        if `openssl req -new -sha256 -key aqua_ke.key -subj "/CN=aqua-kube-enforcer.$ns.svc" -config server.conf -out aqua_ke.csr`; then
             printf "\nInfo: Successfully generated aqua_ke.csr\n"
             printf "\nInfo: Generating kubeEnforcer certificate\n"
             if `openssl x509 -req -in aqua_ke.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out aqua_ke.crt -days 365 -sha256 -extensions v3_req -extfile server.conf`; then
@@ -126,4 +133,5 @@ _deploy_ke_admin() {
     fi
 }
 
+_namespace "$@"
 _banner
