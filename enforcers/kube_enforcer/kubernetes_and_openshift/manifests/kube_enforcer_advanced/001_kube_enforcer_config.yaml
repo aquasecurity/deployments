@@ -424,8 +424,7 @@ spec:
     plural: clusterconfigauditreports
     kind: ClusterConfigAuditReport
     listKind: ClusterConfigAuditReportList
-    categories:
-      - all
+    categories: []
     shortNames:
       - clusterconfigaudit
 
@@ -459,10 +458,10 @@ metadata:
   namespace: aqua
 data:
   conftest.imageRef: registry.aquasec.com/kube-enforcer:6.5.preview9
-  conftest.resources.requests.cpu: 50m
-  conftest.resources.requests.memory: 50M
-  conftest.resources.limits.cpu: 300m
-  conftest.resources.limits.memory: 300M
+  conftest.resources.requests.cpu: 1m
+  conftest.resources.requests.memory: 10M
+  conftest.resources.limits.cpu: 15m
+  conftest.resources.limits.memory: 40M
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
