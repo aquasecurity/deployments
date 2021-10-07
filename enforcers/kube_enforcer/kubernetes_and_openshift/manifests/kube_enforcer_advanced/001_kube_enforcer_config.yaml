@@ -425,7 +425,6 @@ spec:
     kind: ClusterConfigAuditReport
     listKind: ClusterConfigAuditReportList
     categories:
-      - all
     shortNames:
       - clusterconfigaudit
 
