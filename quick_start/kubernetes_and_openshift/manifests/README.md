@@ -39,13 +39,13 @@ You can skip any step if you have already performed.
 **Step 1. Create a namespace by name aqua (if not already done).**
 
 ```SHELL
-$ kubectl create namespace aqua
+kubectl create namespace aqua
 ```
 
 **Step 2. Create a docker-registry secret (if not already done).**
 
 ```SHELL
-$ kubectl create secret docker-registry aqua-registry \
+kubectl create secret docker-registry aqua-registry \
 --docker-server=registry.aquasec.com \
 --docker-username=<your-name> \
 --docker-password=<your-pword> \
@@ -57,7 +57,7 @@ $ kubectl create secret docker-registry aqua-registry \
 Deploy Aqua Enterprise using the required yaml file mentioned in the current directory as per your use case. For example:
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/quick_start/kubernetes_and_openshift/manifests/aqua-csp-quick-DaemonSet-hostPath.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/quick_start/kubernetes_and_openshift/manifests/aqua-csp-quick-DaemonSet-hostPath.yaml
 ```
 
 For more information on selecting the yaml file that you need, refer to the [Configuration of Enforcers and storage](#configuration-of-enforcers-and-storage) section.
@@ -67,14 +67,14 @@ For more information on selecting the yaml file that you need, refer to the [Con
 **Step 1. Get the external IP of the console.**
 
 ```SHELL
-$ kubectl get svc -n aqua
+kubectl get svc -n aqua
 ```
 
 **Step 2. Get the external IP of the console, if Aqua Enterprise is deployed on Minikube.**
 
 ```SHELL
-$ minikube tunnel
-$ kubectl get svc -n aqua
+minikube tunnel
+kubectl get svc -n aqua
 ```
 
 **Step 3. Access aqua-web service from your browser using the url:**
@@ -92,13 +92,13 @@ If load-balancer is not defined, to access Aqua Enterprise:
 **Step 1. Use kubectl to get aqua-web’s cluster IP.**
 
 ```SHELL
-$ kubectl get pods -n aqua
+kubectl get pods -n aqua
 ```
 
 **Step 2. Use the kubectl port-forward command in a separate window to open the tunnel.**
 
 ```SHELL
-$ kubectl port-forward -n aqua aqua-web <LOCAL_TUNNEL_PORT>:<AQUA_POD_CLUSTER_IP>
+kubectl port-forward -n aqua aqua-web <LOCAL_TUNNEL_PORT>:<AQUA_POD_CLUSTER_IP>
 ```
 
 **Step 3. Access Aqua Enterprise from your browser using the url:**
