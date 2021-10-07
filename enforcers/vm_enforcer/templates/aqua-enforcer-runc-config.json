@@ -22,7 +22,8 @@
       "AQUA_LOGICAL_NAME=Default",
       "AQUA_SERVER=",
       "AQUA_TOKEN=",
-      "LD_LIBRARY_PATH=/opt/aquasec"
+      "LD_LIBRARY_PATH=/opt/aquasec",
+      "AQUA_TLS_VERIFY=false"
     ],
     "cwd": "/opt/aquasec",
     "capabilities": {
