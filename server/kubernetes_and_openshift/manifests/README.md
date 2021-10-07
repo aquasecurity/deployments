@@ -60,13 +60,13 @@ You can skip any of the steps if you have already performed.
 **Step 1. Create a namespace (or an OpenShift  project) by name aqua (if not already done).**
 
    ```SHELL
-   $ kubectl create namespace aqua
+   kubectl create namespace aqua
    ```
 
 **Step 2. Create a docker-registry secret (if not already done).**
 
    ```SHELL
-   $ kubectl create secret docker-registry aqua-registry \
+   kubectl create secret docker-registry aqua-registry \
 --docker-server=registry.aquasec.com \
 --docker-username=<your-name> \
 --docker-password=<your-pword> \
@@ -77,7 +77,7 @@ You can skip any of the steps if you have already performed.
 **Step 3. Create a service account and RBAC for your deployment platform (if not already done).** Replace the platform name from [Supported platforms](#supported-platforms).
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_002_RBAC/< PLATFORM >/aqua_sa.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_002_RBAC/< PLATFORM >/aqua_sa.yaml
    ```
 
 ## Deploy Aqua server using manifests
@@ -85,21 +85,21 @@ You can skip any of the steps if you have already performed.
 **Step 1. Create the secrets manually or download, edit, and apply the secrets.** It is strongly recommended to change the database password (aqua-db).
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_003_secrets/aqua_secrets.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_003_secrets/aqua_secrets.yaml
    ```
 
 **Step 2. Deploy directly or download, edit, and run the deployment configMaps**
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_004_configMaps/aqua_server.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_004_configMaps/aqua_server.yaml
    ```
 
 **Step 3. *(Optional)* Configure the packaged database** (If you use Aqua’s packaged PostgreSQL DB container). 
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_004_configMaps/aqua_db.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_004_configMaps/aqua_db.yaml
 
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_005_storage/aqua_db_pvc.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_005_storage/aqua_db_pvc.yaml
    ```
 
 For large and complex deployments, refer to the product documentation, [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide) and [Aqua Packaged DB Operational Guide](https://docs.aquasec.com/docs/aqua-packaged-db-operational-guide#section-configure-the-db-environment-size-recommended).
@@ -109,13 +109,13 @@ For large and complex deployments, refer to the product documentation, [Sizing G
 - With Aqua’s packaged DB
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_006_server_deployment/aqua_server_deployment_packaged_db.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_006_server_deployment/aqua_server_deployment_packaged_db.yaml
    ```
 
 - With external managed DB
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_006_server_deployment/aqua_server_deployment_managed_db.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_006_server_deployment/aqua_server_deployment_managed_db.yaml
    ```
 
 ## Expose the Server and Gateway services
@@ -131,7 +131,7 @@ You can expose Server and Gateway through one of the three following use cases:
 It is a default option. It uses single Gateway service and supports upto 500 hosts. 
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/loadbalancer/aqua_server_gateway_service-lb.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/loadbalancer/aqua_server_gateway_service-lb.yaml
 ```      
 
 ### Use an Ingress (Envoy)
@@ -139,45 +139,45 @@ $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.
 **Step 1. Generate certificates for the Envoy service.**
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/envoy/002_envoy-secrets.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/envoy/002_envoy-secrets.yaml
 ```        
    
 **Step 2. Scale the number of Gateways.** Replace *N* with the number of Gateways required.
 
 ```SHELL
-$ kubectl -n aqua scale --replicas=<N> deployment.apps/aqua-gateway
+kubectl -n aqua scale --replicas=<N> deployment.apps/aqua-gateway
 ```
 
 **Step 3. Load the TLS keys and certs as secrets.**
 
 ```SHELL
-$ kubectl create secret tls aqua-lb-certs --key <<tls-key.key>> --cert <<tls.crt>> -n aqua
+kubectl create secret tls aqua-lb-certs --key <<tls-key.key>> --cert <<tls.crt>> -n aqua
 ```      
 
 **Step 4. Deploy Envoy service.**
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/envoy/001_server_gateway_service-envoy.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/envoy/001_server_gateway_service-envoy.yaml
 ```  
 
 **Step 5. Deploy Envoy Configmap.**
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/envoy/003_envoy-configmap.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/envoy/003_envoy-configmap.yaml
 ``` 
 
 **Step 6. Deploy Envoy.**
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/envoy/004_envoy-deployment.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/envoy/004_envoy-deployment.yaml
 ```
 
 ### Use an OpenShift route
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/openshift_route/aqua-gateway-route.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/openshift_route/aqua-gateway-route.yaml
 
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/openshift_route/aqua-web-route.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_007_networking/openshift_route/aqua-web-route.yaml
 ```
 
 ## Automate Server deployment using Aquactl

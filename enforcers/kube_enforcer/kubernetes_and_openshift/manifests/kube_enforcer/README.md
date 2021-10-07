@@ -46,14 +46,14 @@ You can skip any step in this section, if you have already performed.
 **Step 1. Create a namespace (or an OpenShift  project) by name aqua.**
 
    ```SHELL
-   $ kubectl create namespace aqua
+   kubectl create namespace aqua
    ```
    Note: (Optional) Instead of Aqua Namespace, You can also use your custom Namespace to deploy KubeEnforcer.
 
 **Step 2. Create a docker-registry secret (if not already done).**
 
    ```shell
-   $ kubectl create secret docker-registry aqua-registry \
+   kubectl create secret docker-registry aqua-registry \
    --docker-server=registry.aquasec.com \
    --docker-username=<your-name> \
    --docker-password=<your-password> \
@@ -68,11 +68,11 @@ You can skip any step in this section, if you have already performed.
         
       1. Generate certs for aqua namespace.
         ```shell
-        $ curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh | bash
+        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh | bash
         ```
       2. Generate certs for custom namespace, Replace the `<namespace name>` in the below command with the namespace where KE is going to be deployed, and run the command.
         ```shell
-        $ curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh <namespace name> | bash
+        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh <namespace name> | bash
         ```
 
    - **Option B (Manual)**: Perform the steps mentioned in the [Deploy the KubeEnforcer Config manually](#deploy-the-kubeenforcer-config-manually) section.
@@ -82,13 +82,13 @@ You can skip any step in this section, if you have already performed.
 * Create the token secret.
 
   ```shell
-  $ kubectl create secret generic aqua-kube-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
+  kubectl create secret generic aqua-kube-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
   ```
 
 * Create the SSL cert secret using SSL certificates.
     
   ```shell
-  $ kubectl create secret generic kube-enforcer-ssl --from-file aqua_ke.key --from-file aqua_ke.crt -n aqua
+  kubectl create secret generic kube-enforcer-ssl --from-file aqua_ke.key --from-file aqua_ke.crt -n aqua
   ```
 
                                         (or)
@@ -96,13 +96,13 @@ You can skip any step in this section, if you have already performed.
 * Download, edit, and apply the secrets manifest file to create the token and SSL cert secrets.
 
   ```SHELL
-  $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/002_kube_enforcer_secrets.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/002_kube_enforcer_secrets.yaml
   ```  
 
 **Step 3. Deploy KubeEnforcer.**
 
 ```SHELL
-$ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
 ```
 
 ### Deploy the KubeEnforcer Config manually
@@ -116,7 +116,7 @@ Step 3. Modify the config yaml file to include the PEM-encoded CA bundle (caBund
 Step 4. Apply the modified manifest file config.
 
 ```shell
-$ kubectl apply -f 001_kube_enforcer_config.yaml
+kubectl apply -f 001_kube_enforcer_config.yaml
 ```
 
 ## Automate KubeEnforcer deployment using Aquactl
