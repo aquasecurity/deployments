@@ -37,7 +37,7 @@ remove_dirs() {
 }
 
 remove_logs() {
-    rm -f /var/log/aquasec.log
+    rm -f /opt/aquasec/tmp/aquasec.log
 }
 
 remove() {

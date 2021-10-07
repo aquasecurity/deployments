@@ -8,8 +8,8 @@ ExecStopPost={{ .Values.RuncPath }} delete -f enforcer
 WorkingDirectory={{ .Values.WorkingDirectory }}
 PIDFile=/run/aqua-enforcer.pid
 Restart=always
-StandardOutput=file:/var/log/aquasec.log
-StandardError=file:/var/log/aquasec.log
+StandardOutput=file:/opt/aquasec/tmp/aquasec.log
+StandardError=file:/opt/aquasec/tmp/aquasec.log
 
 [Install]
 WantedBy=multi-user.target
