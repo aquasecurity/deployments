@@ -11,8 +11,9 @@ You can deploy VM Enforcer on your execution VM using the shell script provided 
 **Step 1. Clone Aqua VM Enforcer shell repo.**
 
 ```shell
-git clone https://github.com/aquasecurity/deployments.git
-cd deployments/VM-Enforcer/shell/
+git clone --branch 6.5 https://github.com/aquasecurity/deployments.git
+cd deployments/enforcers/vm_enforcer/shell/
+chmod +x ./install_vme.sh
 ```
 
 **Step 2. Execute the following shell script to deploy VM Enforcer.**
@@ -38,14 +39,18 @@ Flags:
 -g, --gateway  string         Aqua Gateway address
 -t, --token    string         Aqua Enforcer token
 
--d, --download	     boolean  download artifacts from aquasec
+-d, --download	              download artifacts from aquasec
 -u, --aqua-username  string	  Aqua username
 -p, --aqua-password  string	  Aqua password
+
+TLS verify Flag (Optional):
+
+-tls, --aqua-tls-verify aqua_tls_verify
 ```
 
 #### Offline mode
 
-**Prerequisite:** You should download archive file from aqua repository manually and store in the current directory. 
+**Prerequisite:** You should download archive file and aqua templates from aqua repository manually and store in the current directory. 
 
 Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in the offline mode.
 
@@ -56,4 +61,15 @@ Flags:
 -v, --version  string         Aqua Enforcer version
 -g, --gateway  string         Aqua Gateway address
 -t, --token    string         Aqua Enforcer token
+
+TLS verify Flag (Optional):
+-tls, --aqua-tls-verify aqua_tls_verify
+```
+
+## Uninstall
+
+```
+cd deployments/enforcers/vm_enforcer/shell/
+chmod +x ./install_vme.sh
+sudo ./uninstall_vme.sh
 ```
