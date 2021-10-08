@@ -7,7 +7,7 @@ This repository shows the manifest yaml files required to deploy Aqua KubeEnforc
 * OpenShift 
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Starboard is deployed with KubeEnforcer, by default which increases the effectiveness of Kubernetes security.
+Starboard is deployed with the KubeEnforcer to increase the effectiveness of Kubernetes security.
 
 Starboard assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
 * Re-evaluate workload compliance during workload runtime, taking any workload and policy changes into account
