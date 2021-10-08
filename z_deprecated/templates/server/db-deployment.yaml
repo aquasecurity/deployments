@@ -21,7 +21,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:6.5.preview9
+        image: registry.aquasec.com/database:6.5.RC1
         imagePullPolicy: IfNotPresent
         securityContext:
           privileged: true
