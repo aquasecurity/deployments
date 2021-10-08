@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   aqua-enforcer-deployment:
-    image:  registry.aquasec.com/enforcer:6.5.preview9
+    image:  registry.aquasec.com/enforcer:6.5.RC1
     container_name: aqua-enforcer
     env_file:
       - aqua-enforcer.env

@@ -51,7 +51,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: aqua-csp-tm-db-config
-          image: registry.aquasec.com/database:6.5.preview9
+          image: registry.aquasec.com/database:6.5.RC1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -93,7 +93,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: aqua-csp-tm-db-config
-          image: registry.aquasec.com/database:6.5.preview9
+          image: registry.aquasec.com/database:6.5.RC1
           name: aqua-tm-db-init
           resources: {}
           volumeMounts:
@@ -155,7 +155,7 @@ spec:
         fsGroup: 11433
       containers:
       - name: aqua-tenantmanager
-        image: registry.aquasec.com/tenantmanager:6.5.preview9
+        image: registry.aquasec.com/tenantmanager:6.5.RC1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

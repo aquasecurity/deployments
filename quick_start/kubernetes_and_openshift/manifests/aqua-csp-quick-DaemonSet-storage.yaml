@@ -234,7 +234,7 @@ spec:
     spec:
       containers:
         - name: aqua-audit-db
-          image: registry.aquasec.com/database:6.5.preview9
+          image: registry.aquasec.com/database:6.5.RC1
           ports:
             - name: aqua-audit-db
               containerPort: 5432
@@ -324,7 +324,7 @@ spec:
     spec:
       containers:
         - name: aqua-db
-          image: registry.aquasec.com/database:6.5.preview9
+          image: registry.aquasec.com/database:6.5.RC1
           ports:
             - name: aqua-db
               containerPort: 5432
@@ -424,7 +424,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.5.preview9
+        image: registry.aquasec.com/console:6.5.RC1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -527,7 +527,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.5.preview9
+        image: registry.aquasec.com/gateway:6.5.RC1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -609,7 +609,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:6.5.preview9
+        image: registry.aquasec.com/enforcer:6.5.RC1
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
