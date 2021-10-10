@@ -32,10 +32,23 @@ test.aqua.com  ansible_user=test-user
 
 ## Deploy VM Enforcer on all VMs using ansible-playbook
 
-Add the [mandatory variables](#mandatory-variables) with the `--extra-vars` flag in the deployment command as shown below, and run the command.
+Add the [mandatory\optional variables](#mandatory-variables) with the `--extra-vars` flag in the deployment command as shown below, and run the command.
+
+
+Mandatory:
+ * USERNAME
+ * PASSWORD
+ * ENFORCER_VERSION
+ * TOKEN
+ * GATEWAY_ENDPOINT
+
+Optional (**MANDATORY** for aqua **cloud** users with value `true`)
+ * AQUA_TLS_VERIFY_VALUE
 
 ```shell
-ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_install=true --extra-vars "USERNAME=<username> PASSWORD=<password> ENFORCER_VERSION=<version> TOKEN=<token> GATEWAY_ENDPOINT=<endpoint>:<port>"
+ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_install=true --extra-vars "USERNAME=<username> PASSWORD=<password> ENFORCER_VERSION=<version> TOKEN=<token> GATEWAY_ENDPOINT=<endpoint>:<port>
+AQUA_TLS_VERIFY=<AQUA_TLS_VERIFY_VALUE>"
+ 
 ```
 ##  Uninstall VM Enforcer from all VMs using ansible-playbook
 

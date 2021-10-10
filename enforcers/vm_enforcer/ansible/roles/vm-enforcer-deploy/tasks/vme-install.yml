@@ -85,14 +85,13 @@
 
     - name: Deleting existing aqua enforcer log file
       file:
-        path: "/var/log/aquasec.log"
+        path: "/opt/aquasec/tmp/aquasec.log"
         state: absent
 
     - name: Create aqua enforcer log file
       file:
-        path: "/var/log/aquasec.log"
+        path: "/opt/aquasec/tmp/aquasec.log"
         state: touch
-
 - name: Installing tar and jq
   ansible.builtin.package:
     name:
@@ -134,7 +133,7 @@
   block:
     - name: Creating enforcer runc config file
       shell: |
-        jq ".process.env = [\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"HOSTNAME={{ ansible_hostname }}\",\"TERM=xterm\",\"AQUA_PRODUCT_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_INSTALL_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_MODE=SERVICE\",\"RESTART_CONTAINERS=no\",\"AQUA_LOGICAL_NAME=Default\",\"AQUA_SERVER={{ GATEWAY_ENDPOINT }}\",\"AQUA_TOKEN={{ TOKEN }}\",\"LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"]" {{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }} > {{ ENFORCER_RUNC_DIRECTORY }}/{{ ENFORCER_RUNC_CONFIG_FILE_NAME }}
+        jq ".process.env = [\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"HOSTNAME={{ ansible_hostname }}\",\"TERM=xterm\",\"AQUA_PRODUCT_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_INSTALL_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_MODE=SERVICE\",\"RESTART_CONTAINERS=no\",\"AQUA_LOGICAL_NAME=Default\",\"AQUA_SERVER={{ GATEWAY_ENDPOINT }}\",\"AQUA_TOKEN={{ TOKEN }}\",\"AQUA_TLS_VERIFY={{ AQUA_TLS_VERIFY }}\",\"LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"]" {{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }} > {{ ENFORCER_RUNC_DIRECTORY }}/{{ ENFORCER_RUNC_CONFIG_FILE_NAME }}
 
     - name: templating runc script and enforcer systemd
       replace:
