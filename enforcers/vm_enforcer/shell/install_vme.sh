@@ -114,9 +114,9 @@ is_flag_value_valid() {
 
 get_templates_online() {
 
-  curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/tree/6.5/enforcers/vm_enforcer/templates/aqua-enforcer.template.service
-  curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/tree/6.5/enforcers/vm_enforcer/templates/aqua-enforcer.template.old.service
-  curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/tree/6.5/enforcers/vm_enforcer/templates/run.template.sh
+  curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/templates/aqua-enforcer.template.service
+  curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/templates/aqua-enforcer.template.old.service
+  curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/templates/run.template.sh
 
 }
 
