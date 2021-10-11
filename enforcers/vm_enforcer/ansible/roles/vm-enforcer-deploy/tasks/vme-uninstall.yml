@@ -22,7 +22,7 @@
     - "/etc/init.d/{{ ENFORCER_SERVICE_FILE_NAME }}"
     - "{{ INSTALL_PATH }}/aquasec"
     - "{{ INSTALL_PATH }}/aqua-runc"
-    - "/var/log/aquasec.log"
+    - "/opt/aquasec/tmp/aquasec.log"
 
 - name: Diabling aquavme policy from selinux if enabled
   shell: semodule -X 300 -r {{ ENFORCER_SELINUX_POLICY_FILE_NAME }}
