@@ -1,0 +1,70 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  labels: 
+    app: aqua-cloud-connector 
+  name: aqua-cloud-connector 
+  namespace: aqua 
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels: 
+      app: aqua-cloud-connector 
+  template: 
+    metadata: 
+      labels: 
+        app: aqua-cloud-connector 
+      name: aqua-cloud-connector 
+      namespace: aqua 
+    spec: 
+      containers: 
+      - env: 
+        - name: AQUA_SERVER 
+          value: "<gw_url>:443" 
+        - name: AQUA_CLOUD_CONNECTOR_CONFIG_FILE_PATH 
+          value: /etc/config/connector.yaml 
+        - name: AQUA_CLOUD_CONNECTOR_USERNAME 
+          valueFrom: 
+            secretKeyRef: 
+              key: username 
+              name: user-secret 
+        - name: AQUA_CLOUD_CONNECTOR_PASSWORD 
+          valueFrom: 
+            secretKeyRef: 
+              key: password 
+              name: user-secret 
+        - name: AQUA_CLOUD_CONNECTOR_HEALTH_PORT # Default port is 8080 
+          value: ""
+        - name: AQUA_TLS_VERIFY
+          value: "1"       
+        image: registry.aquasec.com/aqua-cloud-connector:<version> 
+        imagePullPolicy: Always 
+        name: aqua-cloud-connector 
+        terminationMessagePath: /dev/termination-log 
+        terminationMessagePolicy: File 
+        livenessProbe: 
+          httpGet: 
+            path: /health 
+            port: 8080 
+        volumeMounts: 
+          - name: config 
+            mountPath: /etc/config 
+      volumes: 
+        - name: config 
+          configMap: 
+            name: aqua-cloud-connector-conf 
+            items: 
+              - path: connector.yaml 
+                key: aqua-cloud-connector-config 
+      dnsPolicy: ClusterFirst 
+      imagePullSecrets: 
+      - name: aqua-registry 
+      restartPolicy: Always 
+      schedulerName: default-scheduler 
+      securityContext: 
+        runAsUser: 11431 
+        runAsGroup: 11433 
+        fsGroup: 11433 
+      serviceAccount: aqua-sa 
+      serviceAccountName: aqua-sa 
+      terminationGracePeriodSeconds: 30
