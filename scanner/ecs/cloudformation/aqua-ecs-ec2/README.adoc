@@ -1,5 +1,5 @@
 :version: 6.5
-:imageVersion: 6.5.RC1
+:imageVersion: 6.5
 
 = Deploy Aqua Scanner on AWS ECS Cluster
 

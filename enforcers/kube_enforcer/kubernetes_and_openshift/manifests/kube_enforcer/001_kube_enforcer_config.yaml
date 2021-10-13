@@ -5,7 +5,6 @@ metadata:
   namespace: aqua
 webhooks:
   - name: imageassurance.aquasec.com
-    failurePolicy: Ignore
     rules:
       - operations: ["CREATE", "UPDATE"]
         apiGroups: ["*"]
@@ -44,7 +43,6 @@ metadata:
   namespace: aqua
 webhooks:
   - name: microenforcer.aquasec.com
-    failurePolicy: Ignore
     clientConfig:
       service:
         name: aqua-kube-enforcer
@@ -305,7 +303,7 @@ metadata:
   name: starboard-conftest-config
   namespace: aqua
 data:
-  conftest.imageRef: registry.aquasec.com/kube-enforcer:6.5.RC1
+  conftest.imageRef: registry.aquasec.com/kube-enforcer:6.5
   conftest.resources.requests.cpu: 1m
   conftest.resources.requests.memory: 10M
   conftest.resources.limits.cpu: 15m
