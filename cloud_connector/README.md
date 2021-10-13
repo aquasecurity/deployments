@@ -4,13 +4,12 @@
 
 ### Overview
 
-The Aqua Cloud Connector is used in conjunction with Aqua Platform SaaS Edition (Enterprise Plan) deployments. When deployed on local clusters, i.e., clusters on which Aqua Platform is not deployed, the Aqua Cloud Connector establishes a secure connection to the Aqua Platform console, giving Aqua Platform remote access to resources on the local clusters.
+The Aqua Cloud Connector is used in conjunction with Aqua Platform SaaS Edition (Enterprise Plan) deployments.
 
 ### Aqua Cloud Connector Deployment Types
 Following are the Deployment types that can be deployed in local cluster:
-* [Helm](./helm): 
-* [Manifests](./kubernetes_and_openshift/manifests):
+* [Helm](./helm)
+* [Manifests](./kubernetes_and_openshift/manifests)
 
 ### References
-For more information on the Aqua Cloud Connector, refer the product documentation, [Aqua Cloud Connector Overview](https://read.aquasec.com/docs/aqua-cloud-connector) 
-
+For more information on the Aqua Cloud Connector, refer the product documentation, [Aqua Cloud Connector Overview](https://docs.aquasec.com/docs/aqua-cloud-connector)
