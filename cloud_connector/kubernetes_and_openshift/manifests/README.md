@@ -49,17 +49,17 @@ access to resources on the local clusters.
 **Step 1. Create the secrets manually or download, edit, and apply the secrets.** Provide base64 username and password values for consoleI
 
    ```SHELL
-   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cloud_connector/kubernetes_and_openshift/manifests/001_secrets.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cloud_connector/kubernetes_and_openshift/manifests/002_secrets.yaml
    ```
 
 **Step 2. Deploy directly or download, edit, and run the deployment configMaps**
 
    ```SHELL
-   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cloud_connector/kubernetes_and_openshift/manifests/002_configmap.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cloud_connector/kubernetes_and_openshift/manifests/003_configmap.yaml
    ```
 
 **Step 3. Deploy Cloud-Connector Deployment** 
 
    ```SHELL
-   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cloud_connector/kubernetes_and_openshift/manifests/003_deployment.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cloud_connector/kubernetes_and_openshift/manifests/004_deployment.yaml
    ```
