@@ -4,7 +4,7 @@
 
 ### Overview
 
-The Aqua Cloud Connector is used in conjunction with Aqua Platform SaaS Edition (Enterprise Plan) deployments.
+The Aqua Cloud Connector is used in conjunction with Aqua Platform SaaS Edition (Enterprise Plan) deployments. When deployed on local clusters, i.e., clusters on which Aqua Platform is not deployed, the Aqua Cloud Connector establishes a secure connection to the Aqua Platform console, giving Aqua Platform remote access to resources on the local clusters.
 
 ### Aqua Cloud Connector Deployment Types
 Following are the Deployment types that can be deployed in local cluster:
