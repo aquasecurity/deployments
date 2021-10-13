@@ -13,9 +13,9 @@ Following packages are required for installing VM Enforcer `.rpm` package:
 * runc
 
 ## Deploy VM Enforcer
-| Build Number        | Release Number          |
+| Release Number        |  Build Number          |
 | ------------------- | ------------------------|
-| 6.5.RC1 | 6.5.0  |
+| 6.5.0 | 6.5.21285  |
 
 **Step 1. Download the RPM package for your architecture, using an authorized username and password.**
 
@@ -24,8 +24,6 @@ Following packages are required for installing VM Enforcer `.rpm` package:
   
         ```shell
        wget -v https://download.aquasec.com/host-enforcer/<release-number>/aqua-vm-enforcer-<build-number>.x86_64.rpm \
-
-       https://download.aquasec.com/host-enforcer/6.5.0/aqua-vm-enforcer-6.5.RC1.x86_64.rpm
         --user=<Username> \
         --ask-password
        ```

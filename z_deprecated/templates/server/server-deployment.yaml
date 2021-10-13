@@ -60,7 +60,7 @@ spec:
         #  value: "/opt/certs/cert.pem"
         #- name: SEDOCK_KEY_PEM
         #  value: "/opt/certs/key.pem"
-        image: registry.aquasec.com/console:6.5.RC1
+        image: registry.aquasec.com/console:6.5
         imagePullPolicy: IfNotPresent
         # To run Aqua components as a privileged account, uncomment
         # spec.template.spec.containers.securityContext field as applicable,
