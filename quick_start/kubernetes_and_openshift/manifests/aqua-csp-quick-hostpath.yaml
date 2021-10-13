@@ -286,7 +286,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-audit-db
-        image: registry.aquasec.com/database:6.5.RC1
+        image: registry.aquasec.com/database:6.5
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -363,7 +363,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:6.5.RC1
+        image: registry.aquasec.com/database:6.5
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -448,7 +448,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.5.RC1
+        image: registry.aquasec.com/console:6.5
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -551,7 +551,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.5.RC1
+        image: registry.aquasec.com/gateway:6.5
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -933,7 +933,7 @@ metadata:
   name: starboard-conftest-config
   namespace: aqua
 data:
-  conftest.imageRef: registry.aquasec.com/kube-enforcer:6.5.RC1
+  conftest.imageRef: registry.aquasec.com/kube-enforcer:6.5
   conftest.resources.requests.cpu: 1m
   conftest.resources.requests.memory: 10M
   conftest.resources.limits.cpu: 15m
@@ -1181,7 +1181,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:6.5.RC1
+          image: registry.aquasec.com/kube-enforcer:6.5
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -1259,7 +1259,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:6.5.RC1
+        image: registry.aquasec.com/enforcer:6.5
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
