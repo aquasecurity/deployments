@@ -20,6 +20,8 @@ Users working with Aqua Enterprise SaaS edition do not need to deploy Aqua serve
   * **MicroEnforcer**: runtime security for containers running in Containers-as-a-Service (CaaS) environments
   * **NanoEnforcer**: runtime protection of serverless functions
 * [Scanner](./scanner): Used to scan images, VMWare Tanzu applications, and serverless functions locally or stored in a registry
+* [Cloud Connector](./cloud_connector): the Aqua Cloud Connector establishes a secure connection to the Aqua Platform console, giving Aqua Platform remote access to resources on the local clusters.
+
 
 ### Aqua Enterprise Self-Hosted edition deployment
 
