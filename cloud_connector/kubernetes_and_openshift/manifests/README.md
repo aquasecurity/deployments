@@ -24,7 +24,7 @@ access to resources on the local clusters.
 -n aqua
    ```
  
-**Step 3. (Optional) Create a service account and RBAC for your deployment platform (if not already done). **
+**Step 3. (Optional) Create a service account and RBAC for your deployment platform (if not already done).**
 
    ```SHELL
    kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cloud_connector/kubernetes_and_openshift/manifests/001_cloud_connector_aqua_sa.yaml
