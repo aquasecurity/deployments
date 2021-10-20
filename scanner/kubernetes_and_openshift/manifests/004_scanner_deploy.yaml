@@ -55,7 +55,7 @@ spec:
 #            - mountPath: /opt/aquascans
 #              name: aquascans
 #            - mountPath: /opt/aquasec/ssl
-#              name: aqua-grpc-gateway
+#              name: aqua-grpc-scanner
 #              readOnly: true
       volumes:
         #- name: "docker-socket-mount"
