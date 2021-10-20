@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-scanner-config
+  namespace: aqua
+data:  
+  # Aqua Scanner IP/Domain/Servicename followed by HTTPS port.
+  AQUA_Scanner: ""
+
+  # Scanner's private key for HTTPS and Mutual Auth
+  #AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/key.pem"
+
+  # Scanner's public key for HTTPS and Mutual Auth
+  #AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/cert.pem"
+
+  # Scanner's root CA cert for HTTPS and Mutual Auth. The root CA certificate file should be mutual for both CyberCenter and Scanner certificates
+  #AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
+
+  # Set this to 1 to establish mTLS connection with CyberCenter
+  #OFFLINE_CC_MTLS_ENABLE: "1"
