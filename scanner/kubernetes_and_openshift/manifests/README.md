@@ -68,7 +68,7 @@ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/
 kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/002_scanner_secrets.yaml
 ```
 
-**Step 2. Create Configmap manually or download, edit, and apply the configmap by adding `AQUA_Scanner`.**
+**Step 2. Create Configmap manually or download, edit, and apply the configmap by adding `AQUA_SERVER`.**
 
 ```SHELL
 kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/003_scanner_configmap.yaml
