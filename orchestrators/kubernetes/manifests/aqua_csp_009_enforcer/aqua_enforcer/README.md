@@ -29,12 +29,12 @@ Steps 1-3 are required only if you are deploying the Enforcer in a cluster that 
 1. **Create namespace**
    
    ```SHELL
-   $ kubectl create namespace aqua
+   kubectl create namespace aqua
    ```
 2. **Create the docker-registry secret**
 
    ```SHELL
-   $ kubectl create secret docker-registry aqua-registry \
+   kubectl create secret docker-registry aqua-registry \
    --docker-server=registry.aquasec.com \
    --docker-username=<your-name> \
    --docker-password=<your-pword> \
@@ -47,13 +47,13 @@ Steps 1-3 are required only if you are deploying the Enforcer in a cluster that 
    * RBAC definitions can vary between platforms. Please choose the right aqua_sa.yaml for your platform
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/<<platform>>/aqua_sa.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/<<platform>>/aqua_sa.yaml
    ```
 
 4. **Define the ConfigMap for the deployment.**
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/001_aqua_enforcer_configMaps.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/001_aqua_enforcer_configMaps.yaml
    ```
    
 5. **Create secrets for the Enforcer deployment.**
@@ -61,16 +61,16 @@ Steps 1-3 are required only if you are deploying the Enforcer in a cluster that 
    * The only mandatory secret is the **token** that authenticates the Enforcer over the Aqua Server:
 
    ```SHELL
-   $ kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
+   kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
    ```
 
    * You can also manually modify the secret manifest file and use kubectl apply to create the token secret:
    ```SHELL
-   $ https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/002_aqua_enforcer_secrets.yaml
+   https://raw.githubusercontent.com/aquasecurity/deployments/5.3/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/002_aqua_enforcer_secrets.yaml
    ```
 
 6. **Create the Aqua Enforcer DaemonSet**
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/003_aqua_enforcer_daemonset.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/aqua_enforcer/003_aqua_enforcer_daemonset.yaml
    ```

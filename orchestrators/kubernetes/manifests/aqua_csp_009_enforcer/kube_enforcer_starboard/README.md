@@ -51,13 +51,13 @@ Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluste
 1. **Create namespace**
 
    ```SHELL
-   $ kubectl create namespace aqua
+   kubectl create namespace aqua
    ```
 
 2. **Create the docker-registry secret**
 
    ```shell
-   $ kubectl create secret docker-registry aqua-registry \
+   kubectl create secret docker-registry aqua-registry \
    --docker-server=registry.aquasec.com \
    --docker-username=<your-name> \
    --docker-password=<your-password> \
@@ -69,7 +69,7 @@ Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluste
         - gen_ke_certs.sh script can be used to generate CA bundle (rootCA.crt), SSL certs (aqua_ke.key,aqua_ke.crt) and to deploy the KubeEnforcer config
         
         ```shell
-        $ curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_starboard/gen_ke_certs.sh | bash
+        curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_starboard/gen_ke_certs.sh | bash
         ```
    - Option B: Manual
         - Download the [manifest](https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_starboard/001_kube_enforcer_config.yaml).
@@ -78,7 +78,7 @@ Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluste
         - Use kubectl to apply the modified manifest file config.
         
         ```shell
-        $ kubectl apply -f 001_kube_enforcer_config.yaml
+        kubectl apply -f 001_kube_enforcer_config.yaml
         ```
 
 4.  **Create secrets for the KubeEnforcer deployment** 
@@ -86,12 +86,12 @@ Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluste
     * The token secret is mandatory and used to authenticate the KubeEnforcer over the Aqua Server.
 
     ```shell
-    $ kubectl create secret generic aqua-kube-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
+    kubectl create secret generic aqua-kube-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
     ```
     * You can use kubectl command to create the SSL cert secret:
     
     ```shell
-    $ kubectl create secret generic kube-enforcer-ssl --from-file aqua_ke.key --from-file aqua_ke.crt -n aqua
+    kubectl create secret generic kube-enforcer-ssl --from-file aqua_ke.key --from-file aqua_ke.crt -n aqua
     ```
 
     * You can also manually modify the secret manifest file and use kubectl apply command to create the token and SSL cert secrets:
@@ -103,7 +103,7 @@ Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluste
 5. **Create the KubeEnforcer deployment**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_starboard/003_kube_enforcer_deploy.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_starboard/003_kube_enforcer_deploy.yaml
    ```
 
 ## KubeEnforcer SSL considerations
@@ -178,7 +178,7 @@ Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluste
 5. Use the aqua_ke.crt and aqua_ke.key files (generated above) to create secrets for the KubeEnforcer deployment:
 
    ```shell
-   $ kubectl create secret generic kube-enforcer-ssl \
+   kubectl create secret generic kube-enforcer-ssl \
    --from-file aqua_ke.key \
    --from-file aqua_ke.crt \
    -n aqua

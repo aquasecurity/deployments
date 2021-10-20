@@ -22,12 +22,12 @@ Steps 1-3 are required only if you are deploying the scanner in a cluster that d
 1. **Create namespace**
    
    ```SHELL
-   $ kubectl create namespace aqua
+   kubectl create namespace aqua
    ```
 2. **Create the docker-registry secret**
 
    ```SHELL
-   $ kubectl create secret docker-registry aqua-registry \
+   kubectl create secret docker-registry aqua-registry \
    --docker-server=registry.aquasec.com \
    --docker-username=<your-name> \
    --docker-password=<your-pword> \
@@ -40,7 +40,7 @@ Steps 1-3 are required only if you are deploying the scanner in a cluster that d
    RBAC definitions can vary between platforms. Please choose the right aqua_sa.yaml for your platform e.g. _native_k8s_
    
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/<version>/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/<platform>/aqua_sa.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/<version>/orchestrators/kubernetes/manifests/aqua_csp_002_RBAC/<platform>/aqua_sa.yaml
    ```
    Replace _version_ with the desired Aqua release (e.g 6.2)
 
@@ -50,7 +50,7 @@ Steps 1-3 are required only if you are deploying the scanner in a cluster that d
    As specified in the prerequisites above, please update the scanner secrets manifest file with appropriate values before applying it.
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/<version>/orchestrators/kubernetes/manifests/aqua_csp_008_scanner/001_scanner_secrets.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/<version>/orchestrators/kubernetes/manifests/aqua_csp_008_scanner/001_scanner_secrets.yaml
    ```
    Replace _version_ with the desired Aqua release (e.g 6.2)
 
@@ -58,7 +58,7 @@ Steps 1-3 are required only if you are deploying the scanner in a cluster that d
 5. **Deploy the Scanner**
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/<version>/orchestrators/kubernetes/manifests/aqua_csp_008_scanner/002_scanner_deploy.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/<version>/orchestrators/kubernetes/manifests/aqua_csp_008_scanner/002_scanner_deploy.yaml
    ```
    Replace _version_ with the desired Aqua release (e.g 6.2)
 
