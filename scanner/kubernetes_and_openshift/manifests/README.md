@@ -19,6 +19,7 @@ The deployment commands shown below use the **kubectl** cli, you can also deploy
 - Update the following secrets in base64 encoding in the *002_scanner_secrets.yaml* file:
   - AQUA_SCANNER_USERNAME
   - AQUA_SCANNER_PASSWORD
+- Update the following data in *003_scanner_configmap.yaml* file:
   - AQUA_SERVER (Aqua Server URL or IP followed by the HTTPS port number)
 
 ## Deployment considerations
@@ -67,10 +68,16 @@ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/
 kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/002_scanner_secrets.yaml
 ```
 
+**Step 2. Create Configmap manually or download, edit, and apply the configmap by adding `AQUA_SERVER`.**
+
+```SHELL
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/003_scanner_configmap.yaml
+```
+
 **Step 2. Deploy Aqua Scanner.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/003_scanner_deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/004_scanner_deploy.yaml
 ```
 
 ### (Optional) External storage for image scans data (PVC)
@@ -78,6 +85,14 @@ The scanner doesn't need any persistent storage to work since scanned data is au
 * PVC object
 * Volume block
 * VolumeMount block
+
+### (Optional) mTLS with Offline CyberCenter
+1. To establish mTLS with offline cybercenter, create secret using the below command
+```SHELL
+kubectl create secret generic aqua-grpc-scanner --from-file=<rootCA.crt> --from-file=<aqua_scanner.crt> --from-file=<aqua_scanner.key> -n aqua
+```
+
+2. After secret creation uncomment `AQUA_PRIVATE_KEY`, `AQUA_PUBLIC_KEY`, `AQUA_ROOT_CA`(if using self-signed certs), `OFFLINE_CC_MTLS_ENABLE` in [003_scanner_configmap.yaml](./003_scanner_configmap.yaml) and uncomment aqua-grpc-scanner certs vloumemount and volumes block from [004_scanner_deploy.yaml](./004_scanner_deploy.yaml) file before applying the kubectl commands.
 
 ## Automate Scanner deployment using Aquactl
 

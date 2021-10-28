@@ -44,6 +44,8 @@ spec:
           envFrom:
           - secretRef:
               name: aqua-scanner
+          - configMapRef:
+              name: aqua-scanner-config
           volumeMounts:
             #- name: "docker-socket-mount"
             #  mountPath: "/var/run/docker.sock"
@@ -52,6 +54,9 @@ spec:
               readOnly: true
 #            - mountPath: /opt/aquascans
 #              name: aquascans
+#            - mountPath: /opt/aquasec/ssl
+#              name: aqua-grpc-scanner
+#              readOnly: true
       volumes:
         #- name: "docker-socket-mount"
         #  hostPath:
@@ -65,6 +70,16 @@ spec:
 #        - name: aquascans
 #          persistentVolumeClaim:
 #            claimName: aqua-scanner-pvc
+#        - name: aqua-grpc-scanner
+#          secret:
+#            secretName: aqua-grpc-scanner
+#            items:
+#            - key: aqua_scanner.crt
+#              path: cert.pem
+#            - key: aqua_scanner.key
+#              path: key.pem
+#            - key: rootCA.crt
+#              path: ca.pem
       imagePullSecrets:
         - name: aqua-registry
   selector:
