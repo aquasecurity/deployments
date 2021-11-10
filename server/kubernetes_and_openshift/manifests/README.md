@@ -35,7 +35,7 @@ To configure an HTTPS (secure) channel, refer to [Configure HTTPS for the Aqua S
 ### Active-active Server mode
 To configure Active-active Server mode for high availability of Aqua Enterprise, refer to the product documentation, [Deploy Aqua in Active-Active Server Mode](https://docs.aquasec.com/docs/deploy-k8s-aqua-in-active-active-server-mode).
 ### mTLS
-To configure mTLS (mutual TLS) instead of the default TLS, refer to the product documentation, [Configure mTLS](https://docs.aquasec.com/docs/configure-mtls).
+To configure mTLS (mutual TLS) instead of the default TLS between server and other Aqua components, refer to the product documentation, [Configure mTLS](https://docs.aquasec.com/docs/configure-mtls).
 ### Run the Server behind a reverse proxy
 The Aqua Server container (deployed from the image registry.aquasec.com/console) can be run behind a reverse proxy server such as Apache, NGINX, or HAProxy. To configure this, refer to the product documentation, [Run the Server behind a reverse proxy](https://docs.aquasec.com/docs/aqua-server-recommendations#section-run-the-server-behind-a-reverse-proxy).
 ### Ingress resource
