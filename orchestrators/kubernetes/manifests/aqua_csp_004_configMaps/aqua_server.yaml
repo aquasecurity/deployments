@@ -102,3 +102,5 @@ data:
   
   #Batch installation token to authenticate KubeEnforcer with server
   # AQUA_KE_GROUP_TOKEN: ""
+  
+  AQUA_GRPC_MODE=1
