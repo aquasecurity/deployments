@@ -30,7 +30,7 @@ The CyberCenter image is added in the [CyberCenter deploy yaml file](./002_cyber
 ### mTLS
 
 * **mTLS with server:** To configure the CyberCenter with mTLS (mutual TLS) to have secure communication with server, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Server](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-server).
-* **mTLS with scanner:** If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure the offline CyberCenter with mTLS to have secure communication with scanner, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-scanner).
+* ***(Optional)* mTLS with scanner:** If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure the offline CyberCenter with mTLS to have secure communication with scanner, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-scanner).
 
 ## Pre-deployment
 

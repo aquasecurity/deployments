@@ -35,7 +35,7 @@ Consider the following options for deploying Aqua Scanner:
   
   - **To use Aqua generated certs:** Populate root CA to the scanner deployment. To get this cert, connect to aqua instance and copy it from **/opt/aquasec/cert.pem**
   
-  - **mTLS communication between scanner and the offline CyberCenter:**  If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure mTLS (mutual TLS) communication between scanner and the offline CyberCenter, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-scanner)
+  - ***(Optional)* mTLS communication between scanner and the offline CyberCenter:**  If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure mTLS (mutual TLS) communication between scanner and the offline CyberCenter, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-scanner)
 
 ## Pre-deployment
 
