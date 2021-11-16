@@ -16,10 +16,10 @@ The deployment commands shown below use the **kubectl** cli, you can also deploy
 
 - Your Aqua credentials: username and password
 - *Scanner* role permissions to authenicate over the Aqua server
-- Update the following secrets in base64 encoding in the *002_scanner_secrets.yaml* file:
+- Update the following secrets in base64 encoding in the [002_scanner_secrets.yaml](./002_scanner_secrets.yaml) file:
   - AQUA_SCANNER_USERNAME
   - AQUA_SCANNER_PASSWORD
-- Update the following data in *003_scanner_configmap.yaml* file:
+- Update the following data in [003_scanner_configmap.yaml](./003_scanner_configmap.yaml) file:
   - AQUA_SERVER (Aqua Server URL or IP followed by the HTTPS port number)
 
 ## Deployment considerations
@@ -29,9 +29,13 @@ Consider the following options for deploying Aqua Scanner:
 - It is recommended to deploy scanners close to your registry to decrease the network latency and improve scanning performance.
 
 - **Mutual Auth / Custom SSL certs**: 
+  - **To use a globally trusted public CA:** You do not have to modify anything on the scanner side, since the scanner container has all the public CAs pre-installed within
+  
   - **To use private CA:** Prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files at **/etc/ssl/certs**
   
-  - **To use Aqua generated certs:** Populate root CA to the scanner deployment. To get this cert, connect to aqua instance and copy it from **/opt/aquasec/cert.pem**. 
+  - **To use Aqua generated certs:** Populate root CA to the scanner deployment. To get this cert, connect to aqua instance and copy it from **/opt/aquasec/cert.pem**
+  
+  - ***(Optional)* mTLS communication between scanner and the offline CyberCenter:**  If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure mTLS (mutual TLS) communication between scanner and the offline CyberCenter, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-scanner)
 
 ## Pre-deployment
 
@@ -85,14 +89,6 @@ The scanner doesn't need any persistent storage to work since scanned data is au
 * PVC object
 * Volume block
 * VolumeMount block
-
-### (Optional) mTLS with Offline CyberCenter
-1. To establish mTLS with offline cybercenter, create secret using the below command
-```SHELL
-kubectl create secret generic aqua-grpc-scanner --from-file=<rootCA.crt> --from-file=<aqua_scanner.crt> --from-file=<aqua_scanner.key> -n aqua
-```
-
-2. After secret creation uncomment `AQUA_PRIVATE_KEY`, `AQUA_PUBLIC_KEY`, `AQUA_ROOT_CA`(if using self-signed certs), `OFFLINE_CC_MTLS_ENABLE` in [003_scanner_configmap.yaml](./003_scanner_configmap.yaml) and uncomment aqua-grpc-scanner certs vloumemount and volumes block from [004_scanner_deploy.yaml](./004_scanner_deploy.yaml) file before applying the kubectl commands.
 
 ## Automate Scanner deployment using Aquactl
 
