@@ -10,6 +10,7 @@ The Aqua Cloud Connector is used in conjunction with Aqua Platform SaaS Edition 
 Following are the Deployment types that can be deployed in local cluster:
 * [Helm](./kubernetes_and_openshift/helm)
 * [Manifests](./kubernetes_and_openshift/manifests)
+* [CloudFormation](./ecs/cloudformation/aqua-ecs-fargate)
 
 ### References
 For more information on the Aqua Cloud Connector, refer the product documentation, [Aqua Cloud Connector Overview](https://docs.aquasec.com/docs/aqua-cloud-connector)

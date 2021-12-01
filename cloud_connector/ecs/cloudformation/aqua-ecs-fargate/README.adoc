@@ -1,0 +1,84 @@
+:version: 6.2
+:imageVersion: 6.2
+
+= Deploy Aqua Cloud Connector on AWS ECS Cluster
+
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/CloudConnectorFargate.yaml]
+
+== Overview
+
+The Aqua Server and Gateway are deployed on a ECS Fargate cluster. In multi-cluster environments, you can deploy Aqua Cloud Connector on different clusters.
+
+This page contains instructions for deploying Aqua Cloud Connector on any Amazon ECS Fargate cluster.
+
+For high availability, you must deploy Aqua on 2 availability Zones (AZs).
+
+Your deployment creates the Aqua Cloud Connector service, on the Fargate ECS instance. A CloudFormation template is used to deploy Aqua Cloud Connector. This can be done either with the AWS CloudFormation Management Console or the AWS Command Line interface (CLI), as explained below.
+
+== Prerequisites
+
+- One or more ECS clusters
+- Aqua Server DNS/IP
+- From Aqua Security: your Aqua credentials (username and password) and CSP License Token
+- Aqua Gateway URL
+
+== Pre-deployment
+
+*Step 1. Login to the Aqua Registry with your credentials.*
+
+[source,options="nowrap",subs="attributes"]
+----
+ docker login registry.aquasec.com -u <AQUA_USERNAME> -p <AQUA_PASSWORD>
+----
+
+*Step 2. Pull the Aqua Cloud Connector image.*
+
+[source,options="nowrap",subs="attributes"]
+----
+ docker pull registry.aquasec.com/aqua-cloud-connector:{imageVersion}
+----
+
+*Step 3. Push the Cloud Connector image to ECR.*
+
+== Deployment method 1: CloudFormation Management Console
+
+*Step 1. Click the Launch Stack icon at the top of this page.* This will take you to the *Create stack* function of the AWS CloudFormation Management Console.
+
+*Step 2. Ensure that your AWS region is set to where you want to deploy Aqua Cloud Connector.*
+
+*Step 3. Click Next.*
+
+*Step 4. Set or modify any of the parameters as explained below.*
+
+*Step 5. Click Next to create the stack.*
+
+== Deployment method 2: CLI
+
+*Step 1. Copy the following command.*
+
+[source,options="nowrap",subs="attributes"]
+----
+aws –region us-east-1 cloudformation create-stack –capabilities CAPABILITY_NAMED_IAM –stack-name aqua-cloud-connector –template-body file://CloudConnectorFargate.yaml \
+–parameters ParameterKey=AquaServerAddress,ParameterValue=xxxxx \
+ParameterKey=AquaConsoleUsername,ParameterValue=xxxxx \
+ParameterKey=AquaConsolePassword,ParameterValue=xxxxx \
+ParameterKey=AquaCCImage,ParameterValue=xxxx.dkr.ecr.us-east-1.amazonaws.com/aqua:cloud-connector-x.x\
+ParameterKey=ClusterName,ParameterValue=xxxxx \
+ParameterKey=AquaGatewayUrl,ParameterValue=xxxxx
+----
+
+*Step 2. Set the parameters as explained below.*
+
+[source,options="nowrap",subs="attributes"]
+----
+AquaServerAddress = The Server DNS name or IP address (IP address with port number)
+AquaConsoleUsername = The Console user name from Aqua server
+AquaConsolePassword = The Console user Password
+AquaCCImage = The ECR path for the Aqua Cloud Connector product image
+ClusterName = The existing ECS cluster name
+AquaGatewayUrl = Aqua Gateway IP address
+----
+
+*Step 3. Run the AWS create-stack CLI command.*
+
+This procedure will deploy Aqua Cloud Connector in your desired cluster and the newly deployed Cloud Connector will get added to the existing Aqua server.
