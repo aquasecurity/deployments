@@ -50,9 +50,25 @@ TLS verify Flag (Optional):
 
 #### Offline mode
 
-**Prerequisite:** You should download archive file and aqua templates from aqua repository manually and store in the current directory. 
+**Prerequisite:** You should download archive file and aqua templates from aqua repository manually and store in the current directory.
 
-Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in the offline mode.
+##### Step 1: Downloading Archive
+
+
+```shell
+wget https://download.aquasec.com/host-enforcer/6.5.21336/aqua-host-enforcer.6.5.21336.tar --user=<Username> --ask-password
+```
+###### Step 2: Download Templates
+
+```shell
+  curl -s -o aqua-enforcer.template.service https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/templates/aqua-enforcer.template.service
+  curl -s -o aqua-enforcer.template.old.service https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/templates/aqua-enforcer.template.old.service
+  curl -s -o run.template.sh https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/templates/run.template.sh
+```
+
+###### Step 3: Install VM Enforcer
+
+Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in the offline mode(Having templates, archive file and install_vme.sh script on same directory).
 
 ```shell
 sudo ./install_vme.sh [flags]

@@ -15,7 +15,7 @@ Following packages are required for installing VM Enforcer `.rpm` package:
 ## Deploy VM Enforcer
 | Release Number        |  Build Number          |
 | ------------------- | ------------------------|
-| 6.5.0 | 6.5.21285  |
+| 6.5.21326.26.1 | 6.5.21336 |
 
 **Step 1. Download the RPM package for your architecture, using an authorized username and password.**
 
