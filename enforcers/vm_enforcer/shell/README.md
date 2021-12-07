@@ -43,7 +43,7 @@ Deploying VM Enforcer in the online mode can download the archive file from aqua
 
 **Prerequisite:** You should download archive file, aqua templates and aqua config from aqua repository manually and store in the current directory.
 
-**Step 1: Downloading Archive**
+**Step 1: Download Archive**
 
 ```shell
   wget https://download.aquasec.com/host-enforcer/6.5.21336/aqua-host-enforcer.6.5.21336.tar --user=<Username> --ask-password
