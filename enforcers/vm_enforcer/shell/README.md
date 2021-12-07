@@ -64,7 +64,7 @@ Deploying VM Enforcer in the online mode can download the archive file from aqua
 **Download Archive**
 
 ```shell
-  curl -s -o vme_install.sh https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/shell/install_vme.sh
+  curl -s -o install_vme.sh https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/shell/install_vme.sh
   chmod +x ./install_vme.sh
 ```
 
