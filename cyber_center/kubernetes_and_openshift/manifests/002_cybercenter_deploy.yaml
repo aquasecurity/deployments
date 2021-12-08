@@ -38,7 +38,7 @@ spec:
       containers:
       - name: aqua-cc
         image: "registry.aquasec.com/cc-standard:latest"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         args:
         - --address=:5000
         - --offline-key=pleaseopen
