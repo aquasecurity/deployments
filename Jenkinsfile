@@ -17,8 +17,10 @@ pipeline {
     stages {
         stage ("print change set") {
             steps {
-                def CHANGES = currentBuild.changeSets
-                echo "CHANGES: ${CHANGES}"
+                script {
+                    def CHANGES = currentBuild.changeSets
+                    echo "CHANGES: ${CHANGES}"
+                }
             }
         }
         stage("Check diff") {
