@@ -29,11 +29,12 @@ pipeline {
                             }
                         }
                     }
-
+                    sh "ls"
                     GIT_PREVIOUS_COMMIT= sh (script: "git rev-parse --short 'HEAD^'", returnStdout: true)
                     GIT_COMMIT= sh (script: "git rev-parse --short HEAD", returnStdout: true)
                     echo "GIT_PREVIOUS_COMMIT: ${GIT_PREVIOUS_COMMIT}"
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
+
 
 //                    echo "CHANGES: ${CHANGES}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
