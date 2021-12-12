@@ -13,8 +13,14 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('deployment-aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('deployment-aws-secret-access-key')
         AWS_REGION = "us-west-2"
+        CHANGES = currentBuild.changeSets
     }
     stages {
+        stage ("print change set") {
+            steps {
+                echo "CHANGES: ${env.CHANGES}"
+            }
+        }
         stage("Check diff") {
             when {
                 anyOf {
