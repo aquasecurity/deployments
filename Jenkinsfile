@@ -30,8 +30,8 @@ pipeline {
                         }
                     }
 
-                    echo "CHANGES: ${CHANGES}"
-                    echo "GIT_COMMIT: ${GIT_COMMIT}"
+//                    echo "CHANGES: ${CHANGES}"
+//                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 
                 }
             }
