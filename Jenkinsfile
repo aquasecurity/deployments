@@ -18,7 +18,7 @@ pipeline {
         stage ("print change set") {
             steps {
                 script {
-                    CHANGES = currentBuild.rawBuild.changeSets
+                    CHANGES = currentBuild.changeSets
                     echo "CHANGES: ${CHANGES}"
                 }
             }
