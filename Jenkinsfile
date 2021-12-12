@@ -20,6 +20,9 @@ pipeline {
                 script {
                     CHANGES = currentBuild.changeSets
                     echo "CHANGES: ${CHANGES}"
+                    GIT_PREVIOUS_COMMIT= sh (script: "git rev-parse --short 'HEAD^'", returnStdout: true)
+                    GIT_COMMIT= sh (script: "git rev-parse --short HEAD", returnStdout: true)
+                    GIT
                 }
             }
         }
