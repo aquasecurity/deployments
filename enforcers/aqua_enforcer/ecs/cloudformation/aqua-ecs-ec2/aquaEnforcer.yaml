@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-    This Cloudformation Template Installs Aqua Enforcer on ECS Cluster with EC2 compatibilities..
+    This Cloudformation Template Installs Aqua Enforcer on ECS Cluster with EC2 compatibilities.
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
