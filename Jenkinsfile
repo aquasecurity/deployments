@@ -20,6 +20,7 @@ pipeline {
                 script {
                     CHANGES = currentBuild.changeSets
                     echo "CHANGES: ${CHANGES}"
+                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 
                 }
             }
