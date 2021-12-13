@@ -35,6 +35,14 @@ pipeline {
 //                    echo "GIT_PREVIOUS_COMMIT: ${GIT_PREVIOUS_COMMIT}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //
+
+                    checkout([
+                            $class: 'GitSCM',
+                            branches: scm.branches,
+                            extensions: scm.extensions + [[$class: 'CleanCheckout']],
+                            userRemoteConfigs: scm.userRemoteConfigs
+                    ])
+
                     def  FILES_LIST = sh (script: "ls ${pwd()}", returnStdout: true).trim()
                     input ''
                     echo "FILES_LIST : ${FILES_LIST}"
