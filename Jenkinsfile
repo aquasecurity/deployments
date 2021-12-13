@@ -85,9 +85,24 @@ pipeline {
                     }
                     steps {
                         script {
-                            for (file in Global.CHANGED_CF_FILES) {
-                                echo "file: ${file}"
+                            echo "Starting to test Cloudfromation yamls"
+                            deployment.clone branch: "master"
+                            def deploymentImage = docker.build("deployment-image")
+                            deploymentImage.inside("-u root") {
+                                log.info "Installing aqaua-deployment  python package"
+                                sh """
+                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 934027998561
+                                pip install aqua-deployment
+                                """
+                                log.info "Finished to install aqaua-deployment python package"
+
+                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
+                                    ["${it}": generateStage(it)]
+                                }
+                                parallel parallelStagesMap
+
                             }
+
                         }
                     }
                 }
@@ -145,6 +160,15 @@ def sortChangedFiles() {
     for (file in Global.CHANGED_FILES) {
         if (file.contains("ecs")) {
             Global.CHANGED_CF_FILES.add(file)
+        }
+    }
+}
+
+def generateStage(it) {
+    return {
+        stage("stage: ${it.split("/")[-1]}") {
+            echo "This is ${it.split("/")[-1]}."
+            cloudformation.singleValidate("", it)
         }
     }
 }
