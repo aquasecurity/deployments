@@ -1,4 +1,4 @@
-@Library('aqua-pipeline-lib@master')_
+@Library('aqua-pipeline-lib@master') _
 
 class Global {
     static Object CHANGED_FILES = []
@@ -19,20 +19,20 @@ pipeline {
         buildDiscarder(logRotator(daysToKeepStr: '7'))
     }
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('deployment-aws-access-key-id')
+        AWS_ACCESS_KEY_ID = credentials('deployment-aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('deployment-aws-secret-access-key')
         AWS_REGION = "us-west-2"
     }
     stages {
-        stage ("Checkout") {
+        stage("Checkout") {
             steps {
                 script {
                     checkout([
-                            $class: 'GitSCM',
-                            branches: scm.branches,
+                            $class                           : 'GitSCM',
+                            branches                         : scm.branches,
                             doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
-                            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
-                            userRemoteConfigs: scm.userRemoteConfigs
+                            extensions                       : [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
+                            userRemoteConfigs                : scm.userRemoteConfigs
                     ])
 
 //                    CHANGES = currentBuild.changeSets
@@ -58,16 +58,14 @@ pipeline {
 //                    files = sh script: "git --no-pager diff ${CHANGE_TARGET} --name-only", returnStdout: true
 
 
-
-
                 }
             }
         }
-        stage ("generateStages"){
+        stage("generateStages") {
             steps {
                 script {
-                    dir("deployments"){
-                        Global.CHANGED_FILES = sh (script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
+                    dir("deployments") {
+                        Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
                         sortChangedFiles()
                         echo "CHANGE_TARGET: ${CHANGE_TARGET}"
                         echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
@@ -75,21 +73,21 @@ pipeline {
                 }
             }
         }
-        stage ("run parallel stages") {
-            steps {
-                parallel(
-                        stage('Cloudformation') {
-                            when { not { Global.CHANGED_CF_FILES.isEmpty() }}
-                            steps {
-                                script {
-                                    for (file in Global.CHANGED_CF_FILES) {
-                                        echo "file: ${file}"
-                                    }
+        stage("run parallel stages") {
+
+            parallel(
+                    stage('Cloudformation') {
+                        when { not { Global.CHANGED_CF_FILES.isEmpty() } }
+                        steps {
+                            script {
+                                for (file in Global.CHANGED_CF_FILES) {
+                                    echo "file: ${file}"
                                 }
                             }
                         }
-                )
-            }
+                    }
+            )
+
         }
     }
 //    stages {
@@ -138,8 +136,8 @@ pipeline {
 //    }
 }
 
-def sortChangedFiles(){
-    for (file in Global.CHANGED_FILES){
+def sortChangedFiles() {
+    for (file in Global.CHANGED_FILES) {
         if (file.contains("ecs")) {
             Global.CHANGED_CF_FILES.add(file)
         }
