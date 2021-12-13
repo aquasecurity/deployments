@@ -36,6 +36,7 @@ pipeline {
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //
                     def  FILES_LIST = sh (script: "ls ${pwd()}", returnStdout: true).trim()
+                    input ''
                     echo "FILES_LIST : ${FILES_LIST}"
                     for(String ele : FILES_LIST.split("\\r?\\n")){
                         println ">>>${ele}<<<"
