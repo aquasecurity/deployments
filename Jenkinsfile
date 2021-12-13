@@ -38,6 +38,8 @@ pipeline {
 
                     echo "CHANGES: ${CHANGES}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
+                    files = sh script: "ls *.*", returnStdout: true
+                    echo "files: ${files}"
 
                 }
             }
