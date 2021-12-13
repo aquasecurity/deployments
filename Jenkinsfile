@@ -64,6 +64,7 @@ pipeline {
         stage("Check diff") {
             when {
                 anyOf {
+                    changeset pattern: "*/ecs/"
                     changeset "*/ecs/**"
                     changeset "*/cloudformation/**"
                 }
