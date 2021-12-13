@@ -15,10 +15,19 @@ pipeline {
         AWS_REGION = "us-west-2"
     }
     stages {
-        stage ("print change set") {
+        stage ("Checkout") {
             steps {
                 script {
+                    checkout([
+                            $class: 'GitSCM',
+                            branches: scm.branches,
+                            doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
+                            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
+                            userRemoteConfigs: scm.userRemoteConfigs
+                    ])
+
                     CHANGES = currentBuild.changeSets
+                    echo "CHANGES: ${CHANGES}"
 //                    changedFiles = []
 //                    for (changeLogSet in currentBuild.changeSets) {
 //                        for (entry in changeLogSet.getItems()) { // for each commit in the detected changes
@@ -35,30 +44,18 @@ pipeline {
 //                    echo "GIT_PREVIOUS_COMMIT: ${GIT_PREVIOUS_COMMIT}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //
+                    dir("deployments"){
+                        files = sh script: "git diff --cached", returnStdout: true
+//                    files = sh script: "find . -type f", returnStdout: true
 
-                    checkout([
-                            $class: 'GitSCM',
-                            branches: scm.branches,
-                            extensions: scm.extensions + [[$class: 'CleanCheckout']],
-                            userRemoteConfigs: scm.userRemoteConfigs
-                    ])
-
-                    def  FILES_LIST = sh (script: "ls ${pwd()}", returnStdout: true).trim()
-                    input ''
-                    echo "FILES_LIST : ${FILES_LIST}"
-                    for(String ele : FILES_LIST.split("\\r?\\n")){
-                        println ">>>${ele}<<<"
+                        echo "files: ${files}"
+                        echo "CHANGE_TARGET: ${CHANGE_TARGET}"
+                        echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
+                        echo "GIT_COMMIT: ${GIT_COMMIT}"
                     }
-                    echo "CHANGES: ${CHANGES}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //                    files = sh script: "git --no-pager diff ${CHANGE_TARGET} --name-only", returnStdout: true
-//                    files = sh script: "git diff --cached", returnStdout: true
-                    files = sh script: "find . -type f", returnStdout: true
 
-                    echo "files: ${files}"
-                    echo "CHANGE_TARGET: ${CHANGE_TARGET}"
-                    echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 
 
 
