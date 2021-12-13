@@ -40,6 +40,8 @@ pipeline {
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
                     files = sh script: "ls -la ${pwd()}", returnStdout: true
                     echo "files: ${files}"
+                    echo "CHANGE_TARGET: ${CHANGE_TARGET}"
+                    echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
 
                 }
             }
