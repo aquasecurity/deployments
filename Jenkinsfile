@@ -75,18 +75,18 @@ pipeline {
         }
         stage("run parallel stages") {
 
-            parallel(
-                    stage('Cloudformation') {
-                        when { not { Global.CHANGED_CF_FILES.isEmpty() } }
-                        steps {
-                            script {
-                                for (file in Global.CHANGED_CF_FILES) {
-                                    echo "file: ${file}"
-                                }
+            parallel {
+                stage('Cloudformation') {
+                    when { not { Global.CHANGED_CF_FILES.isEmpty() } }
+                    steps {
+                        script {
+                            for (file in Global.CHANGED_CF_FILES) {
+                                echo "file: ${file}"
                             }
                         }
                     }
-            )
+                }
+            }
 
         }
     }
