@@ -45,7 +45,7 @@ pipeline {
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //
                     dir("deployments"){
-                        files = sh script: "git diff --cached", returnStdout: true
+                        files = sh script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true
 //                    files = sh script: "find . -type f", returnStdout: true
 
                         echo "files: ${files}"
