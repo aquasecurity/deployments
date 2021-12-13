@@ -97,7 +97,7 @@ pipeline {
                                 log.info "Finished to install aqaua-deployment python package"
 
                                 def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
-                                    ["${it}": generateStage(it)]
+                                    ["${it.split("/")[-1]}": generateStage(it)]
                                 }
                                 parallel parallelStagesMap
 
@@ -187,7 +187,9 @@ def generateStage(it) {
     return {
         stage("stage: ${it.split("/")[-1]}") {
             echo "This is ${it.split("/")[-1]}."
-            cloudformation.singleValidate("", it)
+            dir("deployments"){
+                cloudformation.singleValidate("", it)
+            }
         }
     }
 }
