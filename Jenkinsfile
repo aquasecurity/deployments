@@ -64,8 +64,8 @@ pipeline {
         stage("Check diff") {
             when {
                 anyOf {
-                    changeset "**/ecs/**"
-                    changeset "**/cloudformation/**"
+                    changeset "*/ecs/**"
+                    changeset "*/cloudformation/**"
                 }
             }
             steps {
