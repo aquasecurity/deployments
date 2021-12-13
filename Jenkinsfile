@@ -77,7 +77,7 @@ pipeline {
 
             parallel {
                 stage('Cloudformation') {
-                    when { not expression { return Global.CHANGED_CF_FILES.isEmpty() } }
+                    when { not { expression { return Global.CHANGED_CF_FILES.isEmpty() } } }
                     steps {
                         script {
                             for (file in Global.CHANGED_CF_FILES) {
