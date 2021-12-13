@@ -2,6 +2,7 @@
 
 class Global {
     static Object CHANGED_FILES = []
+    static Object CHANGED_CF_FILES = []
     static def OPERATOR = [:].asSynchronized()
     static String BASE_VERSION
     static String OPERATOR_BRANCH
@@ -52,17 +53,7 @@ pipeline {
 //                    echo "GIT_PREVIOUS_COMMIT: ${GIT_PREVIOUS_COMMIT}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //
-                    dir("deployments"){
-                        Global.CHANGED_FILES = sh (script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
-                        for (file in Global.CHANGED_FILES){
-                            echo "file: ${file}"
-                        }
-//                    files = sh script: "find . -type f", returnStdout: true
 
-                        echo "files: ${files}"
-                        echo "CHANGE_TARGET: ${CHANGE_TARGET}"
-                        echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    }
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //                    files = sh script: "git --no-pager diff ${CHANGE_TARGET} --name-only", returnStdout: true
 
@@ -72,18 +63,39 @@ pipeline {
                 }
             }
         }
-        stage("Check diff") {
-            when {
-                anyOf {
-                    changeset pattern: "/ecs"
-                    changeset "*/ecs/**"
-                    changeset "*/cloudformation/**"
-                }
-            }
+        stage ("generateStages"){
             steps {
                 script {
-                    echo "Running cloudformation"
+                    dir("deployments"){
+                        Global.CHANGED_FILES = sh (script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
+                        sortChangedFiles()
+                        def parallelStagesMap = images.collectEntries {
+                            ["${it}": generateStage(it)]
+                        }
+                        parallel parallelStagesMap
+//                    files = sh script: "find . -type f", returnStdout: true
+
+                        echo "files: ${files}"
+                        echo "CHANGE_TARGET: ${CHANGE_TARGET}"
+                        echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
+                    }
                 }
+            }
+        }
+        stage ("run parallel stages") {
+            steps {
+                parallel(
+                        stage('Cloudformation') {
+                            when { not { Global.CHANGED_CF_FILES.isEmpty() }}
+                            steps {
+                                script {
+                                    for (file in Global.CHANGED_CF_FILES) {
+                                        echo "file: ${file}"
+                                    }
+                                }
+                            }
+                        }
+                )
             }
         }
     }
@@ -131,4 +143,12 @@ pipeline {
 //            }
 //        }
 //    }
+}
+
+def sortChangedFiles(){
+    for (file in Global.CHANGED_FILES){
+        if (file.contains("ecs")) {
+            Global.CHANGED_CF_FILES.add(file)
+        }
+    }
 }
