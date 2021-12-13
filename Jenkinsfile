@@ -38,7 +38,8 @@ pipeline {
 
                     echo "CHANGES: ${CHANGES}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
-                    files = sh script: "git --no-pager diff ${CHANGE_TARGET} --name-only", returnStdout: true
+//                    files = sh script: "git --no-pager diff ${CHANGE_TARGET} --name-only", returnStdout: true
+                    files = sh script: "git diff --cached", returnStdout: true
                     echo "files: ${files}"
                     echo "CHANGE_TARGET: ${CHANGE_TARGET}"
                     echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
