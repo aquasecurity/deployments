@@ -1,5 +1,13 @@
 @Library('aqua-pipeline-lib@master')_
 
+class Global {
+    static Object CHANGED_FILES = []
+    static def OPERATOR = [:].asSynchronized()
+    static String BASE_VERSION
+    static String OPERATOR_BRANCH
+    static String BUILD_USER_EMAIL
+}
+
 pipeline {
     agent { label 'azure_slaves' }
     options {
@@ -45,7 +53,10 @@ pipeline {
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //
                     dir("deployments"){
-                        files = sh script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true
+                        Global.CHANGED_FILES = sh (script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).split("/n")
+                        for (file in Global.CHANGED_FILES){
+                            echo "file: ${file}"
+                        }
 //                    files = sh script: "find . -type f", returnStdout: true
 
                         echo "files: ${files}"
