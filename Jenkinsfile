@@ -53,7 +53,7 @@ pipeline {
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //
                     dir("deployments"){
-                        Global.CHANGED_FILES = sh (script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("/n")
+                        Global.CHANGED_FILES = sh (script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
                         for (file in Global.CHANGED_FILES){
                             echo "file: ${file}"
                         }
