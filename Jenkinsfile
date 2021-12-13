@@ -38,7 +38,7 @@ pipeline {
 
                     echo "CHANGES: ${CHANGES}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
-                    files = sh script: "ls *.*", returnStdout: true
+                    files = sh script: "ls -la ${pwd()}", returnStdout: true
                     echo "files: ${files}"
 
                 }
