@@ -77,7 +77,12 @@ pipeline {
 
             parallel {
                 stage('Cloudformation') {
-                    when { not { expression { return Global.CHANGED_CF_FILES.isEmpty() } } }
+                    when {
+                        allOf {
+                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
+                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                        }
+                    }
                     steps {
                         script {
                             for (file in Global.CHANGED_CF_FILES) {
