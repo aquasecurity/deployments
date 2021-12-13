@@ -35,7 +35,11 @@ pipeline {
 //                    echo "GIT_PREVIOUS_COMMIT: ${GIT_PREVIOUS_COMMIT}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //
-
+                    def  FILES_LIST = sh (script: "ls   '${WORKSPACE}'", returnStdout: true).trim()
+                    echo "FILES_LIST : ${FILES_LIST}"
+                    for(String ele : FILES_LIST.split("\\r?\\n")){
+                        println ">>>${ele}<<<"
+                    }
                     echo "CHANGES: ${CHANGES}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //                    files = sh script: "git --no-pager diff ${CHANGE_TARGET} --name-only", returnStdout: true
