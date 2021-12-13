@@ -3,6 +3,7 @@
 class Global {
     static Object CHANGED_FILES = []
     static Object CHANGED_CF_FILES = []
+    static Object SORTED_CHANGED_FILES = []
     static def OPERATOR = [:].asSynchronized()
     static String BASE_VERSION
     static String OPERATOR_BRANCH
@@ -74,7 +75,6 @@ pipeline {
             }
         }
         stage("run parallel stages") {
-
             parallel {
                 stage('Cloudformation') {
                     when {
@@ -107,7 +107,23 @@ pipeline {
                     }
                 }
             }
-
+            stage('others') {
+                when {
+                    allOf {
+                        not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
+                        expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                    }
+                }
+                steps {
+                    script {
+                        echo "Starting to test SORTED_CHANGED_FILES"
+                        def deploymentImage = docker.build("deployment-image")
+                        for (file in Global.SORTED_CHANGED_FILES) {
+                            echo "file: ${file}"
+                        }
+                    }
+                }
+            }
         }
     }
 //    stages {
@@ -160,6 +176,9 @@ def sortChangedFiles() {
     for (file in Global.CHANGED_FILES) {
         if (file.contains("ecs")) {
             Global.CHANGED_CF_FILES.add(file)
+        }
+        else {
+            Global.SORTED_CHANGED_FILES.add(file)
         }
     }
 }
