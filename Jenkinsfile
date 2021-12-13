@@ -28,16 +28,16 @@ pipeline {
 
                     CHANGES = currentBuild.changeSets
                     echo "CHANGES: ${CHANGES}"
-//                    changedFiles = []
-//                    for (changeLogSet in currentBuild.changeSets) {
-//                        for (entry in changeLogSet.getItems()) { // for each commit in the detected changes
-//                            for (file in entry.getAffectedFiles()) {
-//                                path = file.getPath()
-//                                echo "file: path"
-//                                changedFiles.add(file.getPath()) // add changed file to list
-//                            }
-//                        }
-//                    }
+                    changedFiles = []
+                    for (changeLogSet in currentBuild.changeSets) {
+                        for (entry in changeLogSet.getItems()) { // for each commit in the detected changes
+                            for (file in entry.getAffectedFiles()) {
+                                path = file.getPath()
+                                echo "file: path"
+                                changedFiles.add(file.getPath()) // add changed file to list
+                            }
+                        }
+                    }
 //                    sh "ls"
 //                    GIT_PREVIOUS_COMMIT= sh (script: "git rev-parse --short 'HEAD^'", returnStdout: true)
 //                    GIT_COMMIT= sh (script: "git rev-parse --short HEAD", returnStdout: true)
