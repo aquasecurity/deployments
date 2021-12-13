@@ -106,20 +106,20 @@ pipeline {
                         }
                     }
                 }
-            }
-            stage('others') {
-                when {
-                    allOf {
-                        not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
-                        expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                stage('others') {
+                    when {
+                        allOf {
+                            not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
+                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                        }
                     }
-                }
-                steps {
-                    script {
-                        echo "Starting to test SORTED_CHANGED_FILES"
-                        def deploymentImage = docker.build("deployment-image")
-                        for (file in Global.SORTED_CHANGED_FILES) {
-                            echo "file: ${file}"
+                    steps {
+                        script {
+                            echo "Starting to test SORTED_CHANGED_FILES"
+                            def deploymentImage = docker.build("deployment-image")
+                            for (file in Global.SORTED_CHANGED_FILES) {
+                                echo "file: ${file}"
+                            }
                         }
                     }
                 }
