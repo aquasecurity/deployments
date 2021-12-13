@@ -39,7 +39,7 @@ pipeline {
                     echo "CHANGES: ${CHANGES}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //                    files = sh script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true
-                    echo "files: ${files}"
+//                    echo "files: ${files}"
                     echo "CHANGE_TARGET: ${CHANGE_TARGET}"
                     echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
