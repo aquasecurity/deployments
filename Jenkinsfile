@@ -35,7 +35,7 @@ pipeline {
 //                    echo "GIT_PREVIOUS_COMMIT: ${GIT_PREVIOUS_COMMIT}"
 //                    echo "GIT_COMMIT: ${GIT_COMMIT}"
 //
-                    def  FILES_LIST = sh (script: "ls   '${WORKSPACE}'", returnStdout: true).trim()
+                    def  FILES_LIST = sh (script: "ls -la ${pwd()}", returnStdout: true).trim()
                     echo "FILES_LIST : ${FILES_LIST}"
                     for(String ele : FILES_LIST.split("\\r?\\n")){
                         println ">>>${ele}<<<"
