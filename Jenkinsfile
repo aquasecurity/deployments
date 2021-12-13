@@ -69,13 +69,6 @@ pipeline {
                     dir("deployments"){
                         Global.CHANGED_FILES = sh (script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
                         sortChangedFiles()
-                        def parallelStagesMap = images.collectEntries {
-                            ["${it}": generateStage(it)]
-                        }
-                        parallel parallelStagesMap
-//                    files = sh script: "find . -type f", returnStdout: true
-
-                        echo "files: ${files}"
                         echo "CHANGE_TARGET: ${CHANGE_TARGET}"
                         echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
                     }
