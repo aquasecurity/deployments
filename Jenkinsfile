@@ -155,6 +155,7 @@ def getChanges() {
             def files = entry.getAffectedFiles()
             echo "files: ${files}"
             files.each {def file ->
+                echo "file: ${file}"
                 Global.CHANGED_FILES.add(fileName = file.getPath())
             }
         }
