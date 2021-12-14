@@ -60,72 +60,72 @@ pipeline {
                 }
             }
         }
-        stage("run parallel stages") {
-            parallel {
-                stage('Cloudformation') {
-                    when {
-                        allOf {
-                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
-                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
-                        }
-                    }
-                    steps {
-                        script {
-                            echo "Starting to test Cloudfromation yamls"
-                            deployment.clone branch: "master"
-                            def deploymentImage = docker.build("deployment-image")
-                            deploymentImage.inside("-u root") {
-                                log.info "Installing aqaua-deployment  python package"
-                                sh """
-                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 934027998561
-                                pip install aqua-deployment
-                                """
-                                log.info "Finished to install aqaua-deployment python package"
-
-                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
-                                    ["${it.split("/")[-1]}": generateStage(it)]
-                                }
-                                parallel parallelStagesMap
-
-                            }
-
-                        }
-                    }
-                }
-                stage('others') {
-                    when {
-                        allOf {
-                            not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
-                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
-                        }
-                    }
-                    steps {
-                        script {
-                            echo "Starting to test SORTED_CHANGED_FILES"
+//        stage("run parallel stages") {
+//            parallel {
+//                stage('Cloudformation') {
+//                    when {
+//                        allOf {
+//                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
+//                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+//                        }
+//                    }
+//                    steps {
+//                        script {
+//                            echo "Starting to test Cloudfromation yamls"
+//                            deployment.clone branch: "master"
 //                            def deploymentImage = docker.build("deployment-image")
-                            for (file in Global.SORTED_CHANGED_FILES) {
-                                echo "file: ${file}"
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//                            deploymentImage.inside("-u root") {
+//                                log.info "Installing aqaua-deployment  python package"
+//                                sh """
+//                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 934027998561
+//                                pip install aqua-deployment
+//                                """
+//                                log.info "Finished to install aqaua-deployment python package"
+//
+//                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
+//                                    ["${it.split("/")[-1]}": generateStage(it)]
+//                                }
+//                                parallel parallelStagesMap
+//
+//                            }
+//
+//                        }
+//                    }
+//                }
+//                stage('others') {
+//                    when {
+//                        allOf {
+//                            not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
+//                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+//                        }
+//                    }
+//                    steps {
+//                        script {
+//                            echo "Starting to test SORTED_CHANGED_FILES"
+////                            def deploymentImage = docker.build("deployment-image")
+//                            for (file in Global.SORTED_CHANGED_FILES) {
+//                                echo "file: ${file}"
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
     post {
         success {
             script {
                 echo "success"
-//                withCredentials([gitHubCreds(credentialsId: 'example-secure', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-//                    def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
-//                    sh """git config user.email aqua-ci@aquasec.com"
-//                       "git config user.name aqua-ci"
-//
-//                       "git add ."
-//                       "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'"
-//                       "git push https://${GIT_USERNAME}:${encodedPassword}@github.com/${GIT_USERNAME}/example.git"
-//                    """
-//                }
+                withCredentials([gitHubCreds(credentialsId: 'example-secure', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
+                    sh """git config user.email aqua-ci@aquasec.com"
+                       git config user.name aqua-ci
+                       cat ./CHANGELOG.md || cat "xxx" > ./CANGELOG.md
+                       git add ./CANGELOG.md
+                       git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'
+                       git push https://${GIT_USERNAME}:${encodedPassword}@github.com/${GIT_USERNAME}/aquasecurity/deployments.git
+                    """
+                }
             }
         }
 //        always {
