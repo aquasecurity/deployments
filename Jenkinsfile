@@ -119,7 +119,8 @@ pipeline {
 
                 def url = "https://api.github.com/repos/aquasecurity/deployments/releases"
                 def httpResponse = httpRequest url
-                echo "httpResponse: ${httpResponse.size()}"
+                def imageData = jsonParse(httpResponse.content).data[0]
+                echo "imageData: ${imageData.size()}"
 
 //                withCredentials([usernamePassword(credentialsId: 'gitHubCreds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 //                    def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
