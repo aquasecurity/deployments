@@ -120,7 +120,7 @@ pipeline {
                     def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
                     sh """git config user.email aqua-ci@aquasec.com"
                        git config user.name aqua-ci
-                       cat ./CHANGELOG.md || cat "xxx" > ./CANGELOG.md
+                       cat ./CHANGELOG.md || echo "xxx" > ./CANGELOG.md
                        git add ./CANGELOG.md
                        git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'
                        git push https://${GIT_USERNAME}:${encodedPassword}@github.com/${GIT_USERNAME}/aquasecurity/deployments.git
