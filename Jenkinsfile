@@ -43,7 +43,7 @@ pipeline {
                 script {
                     dir("deployments") {
                         Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
-                        def gitCommits = sh(script: "git reflog |  awk '{ print \$1 }' | xargs gitk", returnStdout: true).trim().split("\\r?\\n")
+                        def gitCommits = sh(script: "git log --pretty=format:'%h' -n 1", returnStdout: true).trim().split("\\r?\\n")
                         echo "gitCommits: ${gitCommits}"
 //                        def changes = getChanges()
                         echo "changes: ${changes}"
