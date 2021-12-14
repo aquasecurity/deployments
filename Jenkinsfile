@@ -152,7 +152,10 @@ def getChanges() {
         entries.each { def entry ->
             truncated_msg = entry.msg.take(MAX_MSG_LEN)
             changes += " - $truncated_msg [$entry.author]\n"
-            Global.CHANGED_FILES.add(entry.AffectedFile)
+            def files = entry.getAffectedFiles()
+            files.each {def file ->
+                Global.CHANGED_FILES.add(fileName = file.getPath())
+            }
         }
     }
     if (!changes) {
