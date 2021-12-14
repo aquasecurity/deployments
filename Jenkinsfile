@@ -119,7 +119,7 @@ pipeline {
 
                 def url = "https://api.github.com/repos/aquasecurity/deployments/releases"
                 def httpResponse = httpRequest url
-                readJSON text: httpResponse.content
+                def imageData = readJSON text: httpResponse.content
                 echo "imageData: ${imageData.size()}"
 
 //                withCredentials([usernamePassword(credentialsId: 'gitHubCreds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
