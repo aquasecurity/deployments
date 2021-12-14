@@ -115,7 +115,7 @@ pipeline {
     post {
         success {
             script {
-                echo "successs"
+                echo "success"
 //                withCredentials([gitHubCreds(credentialsId: 'example-secure', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 //                    def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
 //                    sh """git config user.email aqua-ci@aquasec.com"
