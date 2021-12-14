@@ -118,7 +118,7 @@ pipeline {
                 echo "success"
                 withCredentials([usernamePassword(credentialsId: 'gitHubCreds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                     def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
-                    sh """git config user.email aqua-ci@aquasec.com"
+                    sh """git config user.email aqua-ci@aquasec.com
                        git config user.name aqua-ci
                        cat ./CHANGELOG.md || echo "xxx" > ./CANGELOG.md
                        git add ./CANGELOG.md
