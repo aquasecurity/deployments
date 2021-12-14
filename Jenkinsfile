@@ -42,9 +42,12 @@ pipeline {
             steps {
                 script {
                     dir("deployments") {
-                        Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
+//                        Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
                         def changes = getChanges()
                         echo "changes: ${changes}"
+                        for (file in Global.CHANGED_FILES){
+                            echo "file: ${file}"
+                        }
                         sortChangedFiles()
                         echo "CHANGE_TARGET: ${CHANGE_TARGET}"
                         echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
@@ -149,6 +152,7 @@ def getChanges() {
         entries.each { def entry ->
             truncated_msg = entry.msg.take(MAX_MSG_LEN)
             changes += " - $truncated_msg [$entry.author]\n"
+            Global.CHANGED_FILES.add(entry.AffectedFile)
         }
     }
     if (!changes) {
