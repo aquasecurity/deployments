@@ -43,6 +43,10 @@ pipeline {
                 script {
                     dir("deployments") {
                         Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
+                        def changes = getChanges()
+                        for (change in changes){
+                            echo "change: ${change}"
+                        }
                         sortChangedFiles()
                         echo "CHANGE_TARGET: ${CHANGE_TARGET}"
                         echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
@@ -102,14 +106,19 @@ pipeline {
             }
         }
     }
-//    post {
-//        always {
-//            script {
-//                cleanWs()
-////                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
-//            }
-//        }
-//    }
+    post {
+        success {
+            script {
+
+            }
+        }
+        always {
+            script {
+                cleanWs()
+//                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
+            }
+        }
+    }
 }
 
 def sortChangedFiles() {
@@ -130,4 +139,22 @@ def generateStage(it) {
             cloudformation.singleValidate("deployments", it)
         }
     }
+}
+
+def getChanges() {
+    MAX_MSG_LEN = 100
+    def changes = ""
+    echo "Gathering SCM changes"
+    def changeLogSets = currentBuild.rawBuild.changeSets
+    changeLogSets.each { def changeLogSet ->
+        def entries = changeLogSet.items
+        entries.each { def entry ->
+            truncated_msg = entry.msg.take(MAX_MSG_LEN)
+            changes += " - $truncated_msg [$entry.author]\n"
+        }
+    }
+    if (!changes) {
+        changes = " - No new changes"
+    }
+    return changes
 }
