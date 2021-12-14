@@ -116,6 +116,16 @@ pipeline {
         success {
             script {
                 echo "success"
+//                withCredentials([gitHubCreds(credentialsId: 'example-secure', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+//                    def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
+//                    sh """git config user.email aqua-ci@aquasec.com"
+//                       "git config user.name aqua-ci"
+//
+//                       "git add ."
+//                       "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'"
+//                       "git push https://${GIT_USERNAME}:${encodedPassword}@github.com/${GIT_USERNAME}/example.git"
+//                    """
+//                }
             }
         }
 //        always {
