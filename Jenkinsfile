@@ -153,6 +153,7 @@ def getChanges() {
             truncated_msg = entry.msg.take(MAX_MSG_LEN)
             changes += " - $truncated_msg [$entry.author]\n"
             def files = entry.getAffectedFiles()
+            echo "files: ${files}"
             files.each {def file ->
                 Global.CHANGED_FILES.add(fileName = file.getPath())
             }
