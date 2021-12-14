@@ -124,7 +124,7 @@ pipeline {
                        cat ./CHANGELOG.md || echo "xxx" > ./CANGELOG.md
                        git add ./CANGELOG.md
                        git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'
-                       git push https://${GIT_USERNAME}:${encodedPassword}@github.com/${GIT_USERNAME}/aquasecurity/deployments.git
+                       git push https://${GIT_USERNAME}:${encodedPassword}@github.com/${GIT_USERNAME}/aquasecurity/deployments.git HEAD/${CHANGE_BRANCH}
                        cd.. 
                     """
                 }
