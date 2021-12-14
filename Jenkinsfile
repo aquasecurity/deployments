@@ -49,7 +49,7 @@ pipeline {
                         }
 
 //                        def changes = getChanges()
-                        echo "changes: ${changes}"
+//                        echo "changes: ${changes}"
                         for (file in Global.CHANGED_FILES){
                             echo "file: ${file}"
                         }
