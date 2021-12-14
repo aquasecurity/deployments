@@ -35,30 +35,6 @@ pipeline {
                             extensions                       : [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
                             userRemoteConfigs                : scm.userRemoteConfigs
                     ])
-
-//                    CHANGES = currentBuild.changeSets
-//                    echo "CHANGES: ${CHANGES}"
-//                    changedFiles = []
-//                    for (changeLogSet in currentBuild.changeSets) {
-//                        for (entry in changeLogSet.getItems()) { // for each commit in the detected changes
-//                            for (file in entry.getAffectedFiles()) {
-//                                path = file.getPath()
-//                                echo "file: ${path}"
-//                                changedFiles.add(file.getPath()) // add changed file to list
-//                            }
-//                        }
-//                    }
-//                    sh "ls"
-//                    GIT_PREVIOUS_COMMIT= sh (script: "git rev-parse --short 'HEAD^'", returnStdout: true)
-//                    GIT_COMMIT= sh (script: "git rev-parse --short HEAD", returnStdout: true)
-//                    echo "GIT_PREVIOUS_COMMIT: ${GIT_PREVIOUS_COMMIT}"
-//                    echo "GIT_COMMIT: ${GIT_COMMIT}"
-//
-
-//                    echo "GIT_COMMIT: ${GIT_COMMIT}"
-//                    files = sh script: "git --no-pager diff ${CHANGE_TARGET} --name-only", returnStdout: true
-
-
                 }
             }
         }
@@ -126,42 +102,6 @@ pipeline {
             }
         }
     }
-//    stages {
-//        stage('Checkout') {
-//            steps {
-//                script {
-//                    deployment.clone branch: "master"
-//                    checkout([
-//                            $class: 'GitSCM',
-//                            branches: scm.branches,
-//                            doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
-//                            extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'cloudformation/']]],
-//                                         [$class: 'RelativeTargetDirectory', relativeTargetDir: 'cloudformation']],
-//                            userRemoteConfigs: scm.userRemoteConfigs
-//                    ])
-//                    dir("cloudformation"){
-//                        sh "mv cloudformation/* . && rm -rf cloudformation"
-//                    }
-//                }
-//            }
-//        }
-//        stage("Create Runs") {
-//            steps {
-//                script {
-//                    def deploymentImage = docker.build("deployment-image")
-//                    deploymentImage.inside("-u root") {
-//                        log.info "Installing aqaua-deployment  python package"
-//                        sh """
-//                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 934027998561
-//                        pip install aqua-deployment
-//                        """
-//                        log.info "Finished to install aqaua-deployment python package"
-//                        cloudformation.run  publish: false
-//                    }
-//                }
-//            }
-//        }
-//    }
 //    post {
 //        always {
 //            script {
@@ -187,9 +127,7 @@ def generateStage(it) {
     return {
         stage("stage: ${it.split("/")[-1]}") {
             echo "This is ${it.split("/")[-1]}."
-            dir("deployments"){
-                cloudformation.singleValidate("", it)
-            }
+            cloudformation.singleValidate("deployments", it)
         }
     }
 }
