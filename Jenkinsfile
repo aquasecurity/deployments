@@ -118,12 +118,14 @@ pipeline {
                 echo "success"
                 withCredentials([usernamePassword(credentialsId: 'gitHubCreds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                     def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
-                    sh """git config user.email aqua-ci@aquasec.com
+                    sh """cd deployments
+                       git config user.email aqua-ci@aquasec.com
                        git config user.name aqua-ci
                        cat ./CHANGELOG.md || echo "xxx" > ./CANGELOG.md
                        git add ./CANGELOG.md
                        git commit -m 'Triggered Build: ${env.BUILD_NUMBER}'
                        git push https://${GIT_USERNAME}:${encodedPassword}@github.com/${GIT_USERNAME}/aquasecurity/deployments.git
+                       cd.. 
                     """
                 }
             }
