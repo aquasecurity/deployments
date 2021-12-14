@@ -44,9 +44,7 @@ pipeline {
                     dir("deployments") {
                         Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
                         def changes = getChanges()
-                        for (change in changes){
-                            echo "change: ${change}"
-                        }
+                        echo "changes: ${changes}"
                         sortChangedFiles()
                         echo "CHANGE_TARGET: ${CHANGE_TARGET}"
                         echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
