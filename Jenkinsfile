@@ -42,8 +42,10 @@ pipeline {
             steps {
                 script {
                     dir("deployments") {
-//                        Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
-                        def changes = getChanges()
+                        Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
+                        def gitCommits = sh(script: "git reflog |  awk '{ print \$1 }' | xargs gitk", returnStdout: true).trim().split("\\r?\\n")
+                        echo "gitCommits: ${gitCommits}"
+//                        def changes = getChanges()
                         echo "changes: ${changes}"
                         for (file in Global.CHANGED_FILES){
                             echo "file: ${file}"
@@ -97,7 +99,7 @@ pipeline {
                     steps {
                         script {
                             echo "Starting to test SORTED_CHANGED_FILES"
-                            def deploymentImage = docker.build("deployment-image")
+//                            def deploymentImage = docker.build("deployment-image")
                             for (file in Global.SORTED_CHANGED_FILES) {
                                 echo "file: ${file}"
                             }
