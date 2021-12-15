@@ -60,57 +60,57 @@ pipeline {
                 }
             }
         }
-//        stage("run parallel stages") {
-//            parallel {
-//                stage('Cloudformation') {
-//                    when {
-//                        allOf {
-//                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
-//                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
-//                        }
-//                    }
-//                    steps {
-//                        script {
-//                            echo "Starting to test Cloudfromation yamls"
-//                            deployment.clone branch: "master"
+        stage("run parallel stages") {
+            parallel {
+                stage('Cloudformation') {
+                    when {
+                        allOf {
+                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
+                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                        }
+                    }
+                    steps {
+                        script {
+                            echo "Starting to test Cloudfromation yamls"
+                            deployment.clone branch: "cloudformation_deploy"
+                            def deploymentImage = docker.build("deployment-image")
+                            deploymentImage.inside("-u root") {
+                                log.info "Installing aqaua-deployment  python package"
+                                sh """
+                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 934027998561
+                                pip install aqua-deployment
+                                """
+                                log.info "Finished to install aqaua-deployment python package"
+
+                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
+                                    ["${it.split("/")[-1]}": generateStage(it)]
+                                }
+                                parallel parallelStagesMap
+
+                            }
+
+                        }
+                    }
+                }
+                stage('others') {
+                    when {
+                        allOf {
+                            not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
+                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                        }
+                    }
+                    steps {
+                        script {
+                            echo "Starting to test SORTED_CHANGED_FILES"
 //                            def deploymentImage = docker.build("deployment-image")
-//                            deploymentImage.inside("-u root") {
-//                                log.info "Installing aqaua-deployment  python package"
-//                                sh """
-//                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 934027998561
-//                                pip install aqua-deployment
-//                                """
-//                                log.info "Finished to install aqaua-deployment python package"
-//
-//                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
-//                                    ["${it.split("/")[-1]}": generateStage(it)]
-//                                }
-//                                parallel parallelStagesMap
-//
-//                            }
-//
-//                        }
-//                    }
-//                }
-//                stage('others') {
-//                    when {
-//                        allOf {
-//                            not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
-//                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
-//                        }
-//                    }
-//                    steps {
-//                        script {
-//                            echo "Starting to test SORTED_CHANGED_FILES"
-////                            def deploymentImage = docker.build("deployment-image")
-//                            for (file in Global.SORTED_CHANGED_FILES) {
-//                                echo "file: ${file}"
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+                            for (file in Global.SORTED_CHANGED_FILES) {
+                                echo "file: ${file}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     post {
         success {
@@ -121,6 +121,13 @@ pipeline {
                 def httpResponse = httpRequest url
                 def imageData = readJSON text: httpResponse.content
                 echo "imageData: ${imageData.size()}"
+//                for (image in imageData){
+//
+//                }
+                dir ("deployments") {
+                    def tag = sh(script: "git describe --tags", returnStdout: true)
+                    echo "tags: ${tag}"
+                }
 
 //                withCredentials([usernamePassword(credentialsId: 'gitHubCreds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 //                    def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
@@ -160,7 +167,7 @@ def generateStage(it) {
     return {
         stage("stage: ${it.split("/")[-1]}") {
             echo "This is ${it.split("/")[-1]}."
-            cloudformation.singleValidate("deployments", it)
+            cloudformation.singleValidateAndDeploy("deployments", it, env.CHANGE_TARGET, "far-${env.BUILD_NUMBER}")
         }
     }
 }
