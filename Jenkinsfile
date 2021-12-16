@@ -71,7 +71,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            echo "Starting to test Cloudfromation yamls"
+                            echo "Starting to test Cloudformation yamls"
                             deployment.clone branch: "master"
                             def deploymentImage = docker.build("deployment-image")
                             deploymentImage.inside("-u root") {
