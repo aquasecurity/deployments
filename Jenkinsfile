@@ -72,7 +72,7 @@ pipeline {
                     steps {
                         script {
                             echo "Starting to test Cloudfromation yamls"
-                            deployment.clone branch: "cloudformation_deploy"
+                            deployment.clone branch: "master"
                             def deploymentImage = docker.build("deployment-image")
                             deploymentImage.inside("-u root") {
                                 log.info "Installing aqaua-deployment  python package"
