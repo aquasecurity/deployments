@@ -165,9 +165,11 @@ def sortChangedFiles() {
 
 def generateStage(it) {
     return {
-        stage("stage: ${it.split("/")[-1]}") {
-            echo "This is ${it.split("/")[-1]}."
-            cloudformation.singleValidateAndDeploy("deployments", it, env.CHANGE_TARGET, "far-${env.BUILD_NUMBER}")
+        withEnv(['AWS_REGION=eu-north-1']) {
+            stage("stage: ${it.split("/")[-1]}") {
+                echo "This is ${it.split("/")[-1]}."
+                cloudformation.singleValidateAndDeploy("deployments", it, env.CHANGE_TARGET, "far-${env.BUILD_NUMBER}")
+            }
         }
     }
 }
