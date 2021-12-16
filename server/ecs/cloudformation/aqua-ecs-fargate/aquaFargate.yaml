@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   This AWS CloudFormation template installs the Aqua Command Center components
-  in ECS FARGATE.
+  in ECS FARGATE..
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
