@@ -1,4 +1,5 @@
 @Library('aqua-pipeline-lib@master') _
+import org.apache.commons.lang.RandomStringUtils
 
 class Global {
     static Object CHANGED_FILES = []
@@ -161,12 +162,18 @@ def sortChangedFiles() {
 
 def generateStage(it) {
     return {
-        stage("verifing ${it.split("/")[-1]}") {
-            cloudformation.singleVerify("deployments", it, env.CHANGE_TARGET, "far-${env.BUILD_NUMBER}")
+        withEnv(["RANDOM_STRING=${generateRandomString()}"]) {
+            stage("verifing ${it.split("/")[-1]}") {
+                cloudformation.singleVerify("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
+            }
+            stage("deploying ${it.split("/")[-1]}") {
+                cloudformation.singleDeploy("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
+            }
         }
-        stage("deploying ${it.split("/")[-1]}") {
-            cloudformation.singleDeploy("deployments", it, env.CHANGE_TARGET, "far-${env.BUILD_NUMBER}")
-        }
+
+
+
+
     }
 }
 
@@ -191,4 +198,10 @@ def getChanges() {
         changes = " - No new changes"
     }
     return changes
+}
+
+def generateRandomString(){
+    String charset = (('A'..'Z') + ('0'..'9')).join()
+    Integer length = 3
+    return RandomStringUtils.random(length, charset.toCharArray())
 }
