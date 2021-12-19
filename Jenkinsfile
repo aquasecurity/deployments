@@ -28,6 +28,8 @@ pipeline {
         stage("Checkout") {
             steps {
                 script {
+                    echo "CHANGE_TARGET: ${CHANGE_TARGET}"
+                    echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
                     checkout([
                             $class                           : 'GitSCM',
                             branches                         : scm.branches,
@@ -51,8 +53,6 @@ pipeline {
                             echo "file: ${file}"
                         }
                         sortChangedFiles()
-                        echo "CHANGE_TARGET: ${CHANGE_TARGET}"
-                        echo "CHANGE_BRANCH: ${CHANGE_BRANCH}"
                     }
                 }
             }
