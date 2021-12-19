@@ -128,7 +128,7 @@ pipeline {
                     def tag = sh(script: "git describe --tags", returnStdout: true)
                     echo "tags: ${tag}"
                 }
-
+//
 //                withCredentials([usernamePassword(credentialsId: 'gitHubCreds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 //                    def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
 //                    sh """cd deployments
