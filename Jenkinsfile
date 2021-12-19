@@ -202,7 +202,7 @@ def getChanges() {
 }
 
 def generateRandomString(){
-    String charset = (('A'..'Z') + ('0'..'9')).join("")
+    String charset = (('a'..'z') + ('0'..'9')).join("")
     Integer length = 3
     return RandomStringUtils.random(length, charset.toCharArray())
 }
