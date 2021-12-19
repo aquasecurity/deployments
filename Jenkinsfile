@@ -20,8 +20,8 @@ pipeline {
         buildDiscarder(logRotator(daysToKeepStr: '7'))
     }
     environment {
-        AWS_ACCESS_KEY_ID = credentials('deployment-aws-access-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('deployment-aws-secret-access-key')
+        AWS_ACCESS_KEY_ID = credentials('svc_team_1_aws_access_key_id')
+        AWS_SECRET_ACCESS_KEY = credentials('svc_team_1_aws_secret_access_key')
         AWS_REGION = "us-west-2"
     }
     stages {
@@ -50,7 +50,7 @@ pipeline {
 
 //                        def changes = getChanges()
 //                        echo "changes: ${changes}"
-                        for (file in Global.CHANGED_FILES){
+                        for (file in Global.CHANGED_FILES) {
                             echo "file: ${file}"
                         }
                         sortChangedFiles()
@@ -77,7 +77,7 @@ pipeline {
                             deploymentImage.inside("-u root") {
                                 log.info "Installing aqaua-deployment  python package"
                                 sh """
-                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 934027998561
+                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
                                 pip install aqua-deployment
                                 """
                                 log.info "Finished to install aqaua-deployment python package"
@@ -124,7 +124,7 @@ pipeline {
 //                for (image in imageData){
 //
 //                }
-                dir ("deployments") {
+                dir("deployments") {
                     def tag = sh(script: "git describe --tags", returnStdout: true)
                     echo "tags: ${tag}"
                 }
@@ -156,8 +156,7 @@ def sortChangedFiles() {
     for (file in Global.CHANGED_FILES) {
         if (file.contains("ecs")) {
             Global.CHANGED_CF_FILES.add(file)
-        }
-        else {
+        } else {
             Global.SORTED_CHANGED_FILES.add(file)
         }
     }
@@ -165,11 +164,9 @@ def sortChangedFiles() {
 
 def generateStage(it) {
     return {
-        withEnv(['AWS_REGION=eu-north-1']) {
-            stage("stage: ${it.split("/")[-1]}") {
-                echo "This is ${it.split("/")[-1]}."
-                cloudformation.singleValidateAndDeploy("deployments", it, env.CHANGE_TARGET, "far-${env.BUILD_NUMBER}")
-            }
+        stage("stage: ${it.split("/")[-1]}") {
+            echo "This is ${it.split("/")[-1]}."
+            cloudformation.singleValidateAndDeploy("deployments", it, env.CHANGE_TARGET, "far-${env.BUILD_NUMBER}")
         }
     }
 }
@@ -186,7 +183,7 @@ def getChanges() {
             changes += " - $truncated_msg [$entry.author]\n"
             def files = entry.getAffectedFiles()
             echo "files: ${files}"
-            files.each {def file ->
+            files.each { def file ->
                 Global.CHANGED_FILES.add(file.getPath())
             }
         }
