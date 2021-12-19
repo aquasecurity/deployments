@@ -164,10 +164,10 @@ def sortChangedFiles() {
 
 def generateStage(it) {
     return {
-        stage("verifing: ${it.split("/")[-1]}") {
+        stage("verifing ${it.split("/")[-1]}") {
             cloudformation.singleVerify("deployments", it, env.CHANGE_TARGET, "far-${env.BUILD_NUMBER}")
         }
-        stage("deploying: ${it.split("/")[-1]}") {
+        stage("deploying ${it.split("/")[-1]}") {
             cloudformation.singleDeploy("deployments", it, env.CHANGE_TARGET, "far-${env.BUILD_NUMBER}")
         }
     }
