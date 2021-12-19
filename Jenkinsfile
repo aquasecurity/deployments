@@ -47,9 +47,6 @@ pipeline {
                         for (commit in gitCommits) {
                             echo "commit: ${commit}"
                         }
-
-//                        def changes = getChanges()
-//                        echo "changes: ${changes}"
                         for (file in Global.CHANGED_FILES) {
                             echo "file: ${file}"
                         }
