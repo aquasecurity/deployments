@@ -102,7 +102,6 @@ pipeline {
                     steps {
                         script {
                             echo "Starting to test SORTED_CHANGED_FILES"
-//                            def deploymentImage = docker.build("deployment-image")
                             for (file in Global.SORTED_CHANGED_FILES) {
                                 echo "file: ${file}"
                             }
