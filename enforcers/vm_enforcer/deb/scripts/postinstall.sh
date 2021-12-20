@@ -177,6 +177,7 @@ cp_files_rpm() {
 }
 
 create_folder_rpm() {
+  echo " creating deb folder"
   mkdir ${INSTALL_PATH}/aquasec 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/audit 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/tmp 2>/dev/null
@@ -233,7 +234,7 @@ main() {
 
 bootstrap_args_rpm() {
   action="$1"
-
+  echo "action = $action"
   case "$action" in
   "1" | "install")
     main "$@"
@@ -244,12 +245,24 @@ bootstrap_args_rpm() {
   esac
 }
 
+# execute_by_env() {
+#   if [ ! -z "${1}" ]; then
+#     if [ -z "${1##*[!0-9]*}" ]; then
+#       echo "Error: Invalid Input, Terminating installation."
+#       exit
+#     fi
+#   fi
+#   echo "Info: Starting Aqua VM Enforcer RPM installation."
+#   bootstrap_args_rpm "$@"
+# }
 execute_by_env() {
+  echo "starting post install @{1}" 
   if [ ! -z "${1}" ]; then
-    if [ -z "${1##*[!0-9]*}" ]; then
-      echo "Error: Invalid Input, Terminating installation."
-      exit
-    fi
+      echo "it is a new install checking ${1##*[!0-9]*}" 
+    #if [ -z "${1##*[!0-9]*}" ]; then
+    #  echo "Error: Invalid Input, Terminating installation."
+    #  exit
+    # fi
   fi
   echo "Info: Starting Aqua VM Enforcer RPM installation."
   bootstrap_args_rpm "$@"
