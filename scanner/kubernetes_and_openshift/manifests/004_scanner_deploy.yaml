@@ -34,6 +34,13 @@ spec:
         - name: kube-scanner
           image: registry.aquasec.com/scanner:6.5
           imagePullPolicy: Always
+#          resources:
+#            limits:
+#              cpu: 2000m
+#              memory: 1Gi
+#            requests:
+#              cpu: 1000m
+#              memory: 512m
           command: ["/bin/sh"]
           args: ["-c", "/opt/aquasec/scannercli daemon --host https://${AQUA_SERVER} --user ${AQUA_SCANNER_USERNAME} --password ${AQUA_SCANNER_PASSWORD} --no-verify"]
           env:
