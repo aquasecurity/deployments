@@ -40,7 +40,7 @@ spec:
 #              memory: 1Gi
 #            requests:
 #              cpu: 1000m
-#              memory: 512m
+#              memory: 512Mi
           command: ["/bin/sh"]
           args: ["-c", "/opt/aquasec/scannercli daemon --host https://${AQUA_SERVER} --user ${AQUA_SCANNER_USERNAME} --password ${AQUA_SCANNER_PASSWORD} --no-verify"]
           env:
