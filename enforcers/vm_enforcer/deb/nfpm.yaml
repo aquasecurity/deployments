@@ -25,8 +25,8 @@ contents:
     dst: /tmp/aqua/templates/
   - src: ./archives/*
     dst: /tmp/aqua/
-  # - src: ./selinux/aquavme/aquavme.pp
-  #   dst: /usr/share/selinux/targeted/aquavme.pp
+  - src: ./selinux/aquavme/aquavme.pp
+    dst: /usr/share/selinux/targeted/aquavme.pp
 scripts:
   postinstall: ./scripts/postinstall.sh
   preremove: ./scripts/preuninstall.sh
