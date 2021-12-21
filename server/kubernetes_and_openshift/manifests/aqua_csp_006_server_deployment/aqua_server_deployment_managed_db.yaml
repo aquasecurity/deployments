@@ -1,8 +1,8 @@
 apiVersion: apps/v1
-kind: Deploymentr
+kind: Deployment
 metadata:
   name: aqua-web
-  namespace: aqua
+  namespace: aqua1
   labels:
     app: aqua-web
 spec:

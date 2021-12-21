@@ -104,7 +104,6 @@ pipeline {
                         script {
                             log.info "Starting to test Manifest yamls"
                             def deploymentImage = docker.build("deployment-manifest-image", "-f Dockerfile-manifest .")
-
                             deploymentImage.inside("-u root") {
                                 def parallelStagesMap = Global.CHANGED_MANIFESTS_FILES.collectEntries {
                                     ["${it.split("/")[-1]}": generateStage(it, "manifest")]
@@ -188,9 +187,7 @@ def sortChangedFiles() {
 }
 
 def generateStage(it, type) {
-    log.info "type: ${type}"
     if (type == "cloudformation") {
-        log.info "returning cloudformation"
         return {
             withEnv(["RANDOM_STRING=${generateRandomString()}"]) {
                 stage("${it.split("/")[-1]}") {
@@ -205,7 +202,6 @@ def generateStage(it, type) {
         }
     }
     else if (type == "manifest") {
-        log.info "returning manifest"
         return {
             stage("${it.split("/")[-1]}") {
                 stage("verifing ${it.split("/")[-1]}") {
