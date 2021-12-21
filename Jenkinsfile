@@ -105,7 +105,7 @@ pipeline {
                             log.info "Starting to test Manifest yamls"
                             docker.image('alpine').inside("-u root") {
                                 sh """
-                                   apk add sudo
+                                   apk add sudo curl
                                    curl -O https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
                                    tar xf kubeval-linux-amd64.tar.gz
                                    sudo cp kubeval /usr/local/bin
