@@ -170,7 +170,7 @@ pipeline {
         }
 //        always {
 //            script {
-//                cleanWs()
+                cleanWs()
 ////                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
 //            }
 //        }
