@@ -40,7 +40,7 @@ pipeline {
                             extensions                       : [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
                             userRemoteConfigs                : scm.userRemoteConfigs
                     ])
-
+                    deployment.clone branch: "master"
                 }
             }
         }
@@ -73,7 +73,7 @@ pipeline {
 //                    steps {
 //                        script {
 //                            log.info "Starting to test Cloudformation yamls"
-//                            deployment.clone branch: "master"
+//
 //                            def deploymentImage = docker.build("deployment-image")
 //                            deploymentImage.inside("-u root") {
 //                                log.info "Installing aqaua-deployment  python package"
