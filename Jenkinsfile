@@ -46,7 +46,7 @@ pipeline {
         stage("generateStages") {
             steps {
                 script {
-                    dir("deployments") {
+                    dir("deploymentss") {
                         Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
                         def gitCommits = sh(script: "git log --pretty=format:'%h' -n 1", returnStdout: true).trim().split("\\r?\\n")
                         for (commit in gitCommits) {
