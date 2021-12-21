@@ -93,7 +93,7 @@ pipeline {
 //                        }
 //                    }
 //                }
-                stage("Manifesta") {
+                stage("Manifest") {
                     when {
                         allOf {
                             not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
@@ -179,10 +179,10 @@ pipeline {
 
 def sortChangedFiles() {
     for (file in Global.CHANGED_FILES) {
-        if (file.contains("ecs") && file.contains(".ymal")) {
+        if (file.contains("ecs") && file.contains(".yaml")) {
             Global.CHANGED_CF_FILES.add(file)
         }
-        else if (file.contains("manifests") && file.contains(".ymal")){
+        else if (file.contains("manifests") && file.contains(".yaml")){
             Global.CHANGED_MANIFESTS_FILES.add(file)
         }
         else {
