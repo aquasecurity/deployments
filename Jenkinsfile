@@ -40,7 +40,6 @@ pipeline {
                             extensions                       : [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
                             userRemoteConfigs                : scm.userRemoteConfigs
                     ])
-                    deployment.clone branch: "master"
                 }
             }
         }
@@ -57,6 +56,7 @@ pipeline {
                             log.info "file: ${file}"
                         }
                         sortChangedFiles()
+                        deployment.clone branch: "master"
                     }
                 }
             }
