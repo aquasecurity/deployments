@@ -142,17 +142,17 @@ pipeline {
             script {
                 log.info "success"
 
-                def url = "https://api.github.com/repos/aquasecurity/deployments/releases"
-                def httpResponse = httpRequest url
-                def imageData = readJSON text: httpResponse.content
-                log.info "imageData: ${imageData.size()}"
-//                for (image in imageData){
-//
+//                def url = "https://api.github.com/repos/aquasecurity/deployments/releases"
+//                def httpResponse = httpRequest url
+//                def imageData = readJSON text: httpResponse.content
+//                log.info "imageData: ${imageData.size()}"
+////                for (image in imageData){
+////
+////                }
+//                dir("deployments") {
+//                    def tag = sh(script: "git describe --tags", returnStdout: true)
+//                    log.info "tags: ${tag}"
 //                }
-                dir("deployments") {
-                    def tag = sh(script: "git describe --tags", returnStdout: true)
-                    log.info "tags: ${tag}"
-                }
 //
 //                withCredentials([usernamePassword(credentialsId: 'gitHubCreds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 //                    def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
