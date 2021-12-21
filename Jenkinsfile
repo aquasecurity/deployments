@@ -103,9 +103,9 @@ pipeline {
                     steps {
                         script {
                             log.info "Starting to test Manifest yamls"
-                            def testImage = docker.build("alpine-image", "-f Dockerfile-manifest .")
+                            def deploymentImage = docker.build("alpine-image", "-f Dockerfile-manifest .")
 
-                            testImage.insideinside("-u root") {
+                            deploymentImage.inside("-u root") {
                                 def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
                                     ["${it.split("/")[-1]}": generateStage(it, "manifest")]
                                 }
