@@ -1,25 +1,34 @@
 #!/bin/bash
 
 is_bin_in_path() {
+  echo "started is_bin_in_path()"
   builtin type -P "${1}" &> /dev/null
+  echo "ended is_bin_in_path()"
 }
 
 is_root() {
+  echo "started is_root()"
   if [ "${EUID}" -ne 0 ]; then
     error_message "This util need to run as root"
   fi
+  echo "ended is_root()"
 }
 
 error_message() {
+  echo "started error_message()"
   echo "Error: ${1}"
   exit 1
+  echo "started error_message()"
 }
 
 warning_message() {
+  echo "started warning_message()"
   echo "Warning: $1"
+  echo "ended warning_message()"
 }
 
 load_config_from_env() {
+  echo "started load_config_from_env()"
   CONFIG_FILE="/etc/conf/aquavmenforcer.json"
   if [ ! -f ${CONFIG_FILE} ]; then
     echo "Info: Config File not found, Setting Default Configuration!"
@@ -41,9 +50,11 @@ load_config_from_env() {
       exit 1
     fi
   fi
+  echo "ended load_config_from_env()"
 }
 
 is_it_rhel() {
+  echo "started is_it_rhel()"
   cat /etc/*release | grep PLATFORM_ID | grep "platform:el8" &>/dev/null
   if [ $? -eq 0 ]; then
     echo "Info: This is RHEL 8 system. Going to apply SELinux policy module"
@@ -64,9 +75,11 @@ is_it_rhel() {
       fi
     fi
   fi
+  echo "ended is_it_rhel()"
 }
 
 prerequisites_check() {
+  echo "started prerequisites_check()"
   load_config_from_env
 
   is_it_rhel "$@"
@@ -98,9 +111,11 @@ prerequisites_check() {
 
   is_bin_in_path awk || error_message "awk is not installed on this host"
   is_bin_in_path tar || error_message "tar is not installed on this host"
+  echo "ended prerequisites_check()"
 }
 
-edit_templates_rpm() {
+edit_templates_deb() {
+  echo "started edit_templates_deb()"
   echo "Info: Creating ${ENFORCER_RUNC_CONFIG_FILE_NAME} file."
   sed "s|HOSTNAME=.*\"|HOSTNAME=$(hostname)\"|;
 		s|AQUA_PRODUCT_PATH=.*\"|AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\"|;
@@ -115,10 +130,11 @@ edit_templates_rpm() {
 
   echo "Info: Creating ${ENFORCER_SERVICE_FILE_NAME} file."
   sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_;s_{{ .Values.WorkingDirectory }}_${ENFORCER_RUNC_DIRECTORY}_" ${TEMPLATE_DIR}/${SYSTEMD_TEMPLATE_TO_USE} >${SYSTEMD_TMP_DIR}/${ENFORCER_SERVICE_FILE_NAME}
-
+  echo "ended edit_templates_deb()"
 }
 
 systemd_type() {
+  echo "started systemd_type()"
   SYSTEMD_IS_OLD=false
 
   SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME}
@@ -126,15 +142,19 @@ systemd_type() {
     SYSTEMD_IS_OLD=true
     SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD}
   fi
+  echo "ended systemd_type()"
 }
 
 untar() {
+  echo "started untar()"
   ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.tar"
   echo "Info: Unpacking enforcer filesystem to ${RUNC_FS_TMP_DIRECTORY}."
   tar -xf ${TMP_DIR}/${ENFORCER_RUNC_TAR_FILE_NAME} -C ${RUNC_FS_TMP_DIRECTORY}
+  echo "ended untar()"
 }
 
 runc_type() {
+  echo "started runc_type()"
   ENFORCER_RUNC_CONFIG_TEMPLATE="aqua-enforcer-runc-config.json"
   if [[ ${RUNC_VERSION} == "1.0.0-rc1" ]] ||
     [[ ${RUNC_VERSION} == "1.0.0-rc2" ]] ||
@@ -148,9 +168,11 @@ runc_type() {
     [[ ${RUNC_VERSION} == 1.0.0-rc1.* ]]; then
     ENFORCER_RUNC_CONFIG_TEMPLATE="aqua-enforcer-v1.0.0-rc2-runc-config.json"
   fi
+  echo "ended runc_type()"
 }
 
-setup_rpm_env() {
+setup_deb_env() {
+  echo "started setup_deb_env()"
   INSTALL_PATH="/opt"
   TMP_DIR="/tmp/aqua"
   TEMPLATE_DIR="${TMP_DIR}/templates"
@@ -168,15 +190,19 @@ setup_rpm_env() {
   ENFORCER_SERVICE_FILE_NAME_PATH="${SYSTEMD_FOLDER}/${ENFORCER_SERVICE_FILE_NAME}"
   ENFORCER_RUNC_CONFIG_FILE_NAME="config.json"
   ENFORCER_SELINUX_POLICY_FILE_NAME="aquavme.pp"
+  echo "ended setup_deb_env()"
 }
 
-cp_files_rpm() {
+cp_files_deb() {
+  echo "started cp_files_deb()"
   cp --remove-destination -r ${RUNC_TMP_DIRECTORY}/. ${ENFORCER_RUNC_DIRECTORY}/
   cp --remove-destination ${SYSTEMD_TMP_DIR}/${ENFORCER_SERVICE_FILE_NAME} ${ENFORCER_SERVICE_FILE_NAME_PATH}
   cp --remove-destination -r ${RUNC_FS_TMP_DIRECTORY}/. ${ENFORCER_RUNC_FS_DIRECTORY}/
+  echo "ended cp_files_deb()"
 }
 
-create_folder_rpm() {
+create_folder_deb() {
+  echo "started create_folder_deb()"
   echo " creating deb folder"
   mkdir ${INSTALL_PATH}/aquasec 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/audit 2>/dev/null
@@ -188,9 +214,11 @@ create_folder_rpm() {
   mkdir -p ${RUNC_TMP_DIRECTORY}
   mkdir -p ${RUNC_FS_TMP_DIRECTORY}
   mkdir -p ${SYSTEMD_TMP_DIR}
+  echo "ended create_folder_deb()"
 }
 
 start_service() {
+  echo "started start_service()"
   echo "Info: Enabling the ${ENFORCER_SERVICE_FILE_NAME} service."
   systemctl enable ${ENFORCER_SERVICE_FILE_NAME}
   echo "Info: Starting the ${ENFORCER_SERVICE_FILE_NAME} service."
@@ -200,39 +228,47 @@ start_service() {
   else
     error_message "Unable to start service. please check the logs."
   fi
+  echo "ended start_service()"
 }
 
 init_common() {
-  setup_rpm_env
+  echo "started init_common()"
+  setup_deb_env
   prerequisites_check "$@"
   systemd_type
   runc_type
-  create_folder_rpm
+  create_folder_deb
+  echo "ended init_common()"
 }
 
-init_rpm() {
+init_deb() {
+  echo "started init_deb()"
   # is_upgrade
   if [ "${1}" == "-u" ]; then
     systemctl stop ${ENFORCER_SERVICE_FILE_NAME} >/dev/null 2>&1
-    cp_files_rpm
+    cp_files_deb
     systemctl start ${ENFORCER_SERVICE_FILE_NAME} >/dev/null 2>&1
     return
   fi
 
   # is_install
-  cp_files_rpm
+  cp_files_deb
   start_service
+  echo "ended init_deb()"
 }
 
 main() {
+  echo "started main()"
   init_common "$@"
-  edit_templates_rpm
+  edit_templates_deb
   untar
 
-  init_rpm "$@"
+  init_deb "$@"
+  echo "ended main()"
 }
 
-bootstrap_args_rpm() {
+bootstrap_args_deb() {
+  echo "started bootstrap_args_deb()"
   action="$1"
   echo "action = $action"
   case "$action" in
@@ -243,6 +279,7 @@ bootstrap_args_rpm() {
     main -u
     ;;
   esac
+  echo "ended bootstrap_args_deb()"
 }
 
 # execute_by_env() {
@@ -252,10 +289,11 @@ bootstrap_args_rpm() {
 #       exit
 #     fi
 #   fi
-#   echo "Info: Starting Aqua VM Enforcer RPM installation."
-#   bootstrap_args_rpm "$@"
+#   echo "Info: Starting Aqua VM Enforcer deb installation."
+#   bootstrap_args_deb "$@"
 # }
 execute_by_env() {
+  echo "started execute_by_env()"
   echo "starting post install @{1}" 
   if [ ! -z "${1}" ]; then
       echo "it is a new install checking ${1##*[!0-9]*}" 
@@ -264,8 +302,9 @@ execute_by_env() {
     #  exit
     # fi
   fi
-  echo "Info: Starting Aqua VM Enforcer RPM installation."
-  bootstrap_args_rpm "$@"
+  echo "Info: Starting Aqua VM Enforcer deb installation."
+  bootstrap_args_deb "$@"
+  echo "ended execute_by_env()"
 }
 
 execute_by_env "$@"
