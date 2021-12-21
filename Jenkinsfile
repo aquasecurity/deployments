@@ -103,13 +103,9 @@ pipeline {
                     steps {
                         script {
                             log.info "Starting to test Manifest yamls"
-                            docker.image('alpine').inside("-u root") {
-                                sh """
-                                   apk add sudo curl
-                                   curl -O https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
-                                   tar xf kubeval-linux-amd64.tar.gz
-                                   sudo cp kubeval /usr/local/bin
-                                   """
+                            def testImage = docker.build("alpine-image", "./DockerfileAlpine")
+
+                            testImage.insideinside("-u root") {
                                 def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
                                     ["${it.split("/")[-1]}": generateStage(it, "manifest")]
                                 }
