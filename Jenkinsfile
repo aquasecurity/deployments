@@ -192,32 +192,33 @@ def sortChangedFiles() {
 }
 
 def generateStage(it, type) {
-    switch (type) {
-        case "cloudformation":
-            return {
-                withEnv(["RANDOM_STRING=${generateRandomString()}"]) {
-                    stage("${it.split("/")[-1]}") {
-                        stage("verifing ${it.split("/")[-1]}") {
-                            cloudformation.singleVerify("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
-                        }
-                        stage("deploying ${it.split("/")[-1]}") {
-                            cloudformation.singleDeploy("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
-                        }
-                    }
-                }
-            }
-        case "manifest":
-            return {
+    if (type == "cloudformation") {
+        return {
+            withEnv(["RANDOM_STRING=${generateRandomString()}"]) {
                 stage("${it.split("/")[-1]}") {
                     stage("verifing ${it.split("/")[-1]}") {
-                        log.info "Starting to verify ${it.split("/")[-1]} file"
-                        sh "kubeval ./${deployments}/${it} --strict"
-                        log.info "Finished to verify ${it.split("/")[-1]} file"
+                        cloudformation.singleVerify("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
+                    }
+                    stage("deploying ${it.split("/")[-1]}") {
+                        cloudformation.singleDeploy("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
                     }
                 }
             }
-        default:
-            throw new Exception("type: ${type} is not supported")
+        }
+    }
+    else if (type == "manifest") {
+        return {
+            stage("${it.split("/")[-1]}") {
+                stage("verifing ${it.split("/")[-1]}") {
+                    log.info "Starting to verify ${it.split("/")[-1]} file"
+                    sh "kubeval ./${deployments}/${it} --strict"
+                    log.info "Finished to verify ${it.split("/")[-1]} file"
+                }
+            }
+        }
+    }
+    else {
+        throw new Exception("type: ${type} is not supported")
     }
 
 }
