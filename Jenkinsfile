@@ -193,6 +193,7 @@ def sortChangedFiles() {
 
 def generateStage(it, type) {
     if (type == "cloudformation") {
+        log.info "returning cloudformation"
         return {
             withEnv(["RANDOM_STRING=${generateRandomString()}"]) {
                 stage("${it.split("/")[-1]}") {
@@ -207,6 +208,7 @@ def generateStage(it, type) {
         }
     }
     else if (type == "manifest") {
+        log.info "returning manifest"
         return {
             stage("${it.split("/")[-1]}") {
                 stage("verifing ${it.split("/")[-1]}") {
