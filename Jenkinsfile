@@ -63,7 +63,7 @@ pipeline {
         }
         stage("run parallel stages") {
             parallel {
-//                stage('Cloudformations') {
+//                stage('Cloudformation') {
 //                    when {
 //                        allOf {
 //                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
