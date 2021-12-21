@@ -63,36 +63,36 @@ pipeline {
         }
         stage("run parallel stages") {
             parallel {
-//                stage('Cloudformation') {
-//                    when {
-//                        allOf {
-//                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
-//                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
-//                        }
-//                    }
-//                    steps {
-//                        script {
-//                            log.info "Starting to test Cloudformation yamls"
-//
-//                            def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation .")
-//                            deploymentImage.inside("-u root") {
-//                                log.info "Installing aqaua-deployment  python package"
-//                                sh """
-//                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
-//                                pip install aqua-deployment
-//                                """
-//                                log.info "Finished to install aqaua-deployment python package"
-//
-//                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
-//                                    ["${it.split("/")[-1]}": generateStage(it, "cloudformation")]
-//                                }
-//                                parallel parallelStagesMap
-//
-//                            }
-//
-//                        }
-//                    }
-//                }
+                stage('Cloudformation') {
+                    when {
+                        allOf {
+                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
+                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                        }
+                    }
+                    steps {
+                        script {
+                            log.info "Starting to test Cloudformation yamls"
+
+                            def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation .")
+                            deploymentImage.inside("-u root") {
+                                log.info "Installing aqaua-deployment  python package"
+                                sh """
+                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
+                                pip install aqua-deployment
+                                """
+                                log.info "Finished to install aqaua-deployment python package"
+
+                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
+                                    ["${it.split("/")[-1]}": generateStage(it, "cloudformation")]
+                                }
+                                parallel parallelStagesMap
+
+                            }
+
+                        }
+                    }
+                }
                 stage("Manifest") {
                     when {
                         allOf {
@@ -163,12 +163,12 @@ pipeline {
 //                }
             }
         }
-//        always {
-//            script {
-//                cleanWs()
-////                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
-//            }
-//        }
+        always {
+            script {
+                cleanWs()
+//                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
+            }
+        }
     }
 }
 
