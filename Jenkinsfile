@@ -106,7 +106,7 @@ pipeline {
                             def deploymentImage = docker.build("deployment-manifest-image", "-f Dockerfile-manifest .")
 
                             deploymentImage.inside("-u root") {
-                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
+                                def parallelStagesMap = Global.CHANGED_MANIFESTS_FILES.collectEntries {
                                     ["${it.split("/")[-1]}": generateStage(it, "manifest")]
                                 }
                                 parallel parallelStagesMap
