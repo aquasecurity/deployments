@@ -106,7 +106,7 @@ pipeline {
                             docker.image('alpine').inside("-u root") {
                                 sh """
                                    apk add sudo
-                                   wget -nc https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+                                   curl -O https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
                                    tar xf kubeval-linux-amd64.tar.gz
                                    sudo cp kubeval /usr/local/bin
                                    """
