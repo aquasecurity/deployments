@@ -56,8 +56,8 @@ pipeline {
                             log.info "file: ${file}"
                         }
                         sortChangedFiles()
-                        deployment.clone branch: "master"
                     }
+                    deployment.clone branch: "master"
                 }
             }
         }
