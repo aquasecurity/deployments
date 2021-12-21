@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   This AWS CloudFormation template installs the Aqua Command Center componants
-  in ECS EC2...
+  in ECS EC2..
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
