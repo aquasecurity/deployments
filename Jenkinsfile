@@ -210,7 +210,7 @@ def generateStage(it, type) {
             stage("${it.split("/")[-1]}") {
                 stage("verifing ${it.split("/")[-1]}") {
                     log.info "Starting to verify ${it.split("/")[-1]} file"
-                    sh "kubeval ./${deployments}/${it} --strict"
+                    sh "kubeval ./deployments/${it} --strict"
                     log.info "Finished to verify ${it.split("/")[-1]} file"
                 }
             }
