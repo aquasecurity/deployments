@@ -74,7 +74,7 @@ pipeline {
 //                        script {
 //                            log.info "Starting to test Cloudformation yamls"
 //
-//                            def deploymentImage = docker.build("deployment-image")
+//                            def deploymentImage = docker.build("deployment-image", "./dockerfiles/cloudformation")
 //                            deploymentImage.inside("-u root") {
 //                                log.info "Installing aqaua-deployment  python package"
 //                                sh """
@@ -103,7 +103,7 @@ pipeline {
                     steps {
                         script {
                             log.info "Starting to test Manifest yamls"
-                            def testImage = docker.build("alpine-image", "./DockerfileAlpine")
+                            def testImage = docker.build("alpine-image", "./dockerfiles/manifest")
 
                             testImage.insideinside("-u root") {
                                 def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
