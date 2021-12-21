@@ -93,7 +93,7 @@ pipeline {
 //                        }
 //                    }
 //                }
-                stage("Manifest") {
+                stage("Manifesta") {
                     when {
                         allOf {
                             not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
