@@ -165,13 +165,11 @@ def generateStage(it) {
     return {
         withEnv(["RANDOM_STRING=${generateRandomString()}"]) {
             stage("${it.split("/")[-1]}") {
-                stages {
-                    stage("verifing ${it.split("/")[-1]}") {
-                        cloudformation.singleVerify("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
-                    }
-                    stage("deploying ${it.split("/")[-1]}") {
-                        cloudformation.singleDeploy("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
-                    }
+                stage("verifing ${it.split("/")[-1]}") {
+                    cloudformation.singleVerify("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
+                }
+                stage("deploying ${it.split("/")[-1]}") {
+                    cloudformation.singleDeploy("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
                 }
             }
         }
