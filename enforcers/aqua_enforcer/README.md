@@ -23,6 +23,11 @@ In Kubernetes, the enforcer runs as a DaemonSet deployment for workload runtime 
 * AWS ECS (Self-Hosted only)
 * Docker (SaaS and Self-Hosted)
 
+### Note:
+* For OpenShift version 3.x use RBAC definition from ./aqua_enforcer/kubernetes_and_openshift/manifests/001_aqua_enforcer_rbac/openshift_ocp3x
+* For OpenShift version 4.x use RBAC definition from ./aqua_enforcer/kubernetes_and_openshift/manifests/001_aqua_enforcer_rbac/openshift
+
+
 ## References
 Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends you to refer the following product documentation:
 * [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers)

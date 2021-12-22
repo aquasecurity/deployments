@@ -73,10 +73,8 @@ allowedCapabilities:
 - AUDIT_CONTROL
 - SYSLOG
 - SYS_CHROOT
-- SYS_RESOURCE
-- IPC_LOCK
 apiVersion: security.openshift.io/v1
-defaultAddCapabilities: null
+defaultAddCapabilities: []
 fsGroup:
   type: RunAsAny
 groups: []
@@ -88,13 +86,13 @@ metadata:
       specify the UID or it must be specified on the by the manifest of the container runtime.
     release.openshift.io/create-only: "true"
   name: aqua-scc
-priority: null
+priority: 2
 readOnlyRootFilesystem: false
-requiredDropCapabilities: null
+requiredDropCapabilities: []
 runAsUser:
   type: RunAsAny
 seLinuxContext:
-  type: MustRunAs
+  type: RunAsAny
 supplementalGroups:
   type: RunAsAny
 users:
