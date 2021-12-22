@@ -1,0 +1,109 @@
+apiVersion: v1
+imagePullSecrets:
+- name: aqua-registry
+kind: ServiceAccount
+metadata:
+  annotations:
+    description: Service account for pulling Aqua images and for Aqua privileged
+  labels:
+    deployedby: aqua-yaml
+  name: aqua-sa
+  namespace: aqua
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: aqua-discovery-cr
+  labels:
+    rbac.example.com/aggregate-to-monitoring: "true"
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "services", "endpoints", "pods", "deployments", "namespaces","componentstatuses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["imagestreams", "imagestreams/layers"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aqua-discovery-crb
+roleRef:
+  name: aqua-discovery-cr
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+subjects:
+  - kind: ServiceAccount
+    name: aqua-sa
+    namespace: aqua
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cluster-reader
+subjects:
+  - kind: ServiceAccount
+    name: aqua-sa
+    namespace: aqua
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-reader
+---
+allowHostDirVolumePlugin: true
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: true
+allowHostPorts: false
+allowPrivilegeEscalation: false
+allowPrivilegedContainer: false
+allowedCapabilities:
+- SYS_ADMIN
+- NET_ADMIN
+- NET_RAW
+- SYS_PTRACE
+- KILL
+- MKNOD
+- SETGID
+- SETUID
+- SYS_MODULE
+- AUDIT_CONTROL
+- SYSLOG
+- SYS_CHROOT
+- SYS_RESOURCE
+- IPC_LOCK
+apiVersion: security.openshift.io/v1
+defaultAddCapabilities: []
+fsGroup:
+  type: RunAsAny
+groups: []
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+    kubernetes.io/description: aqua scc provides all features of the restricted SCC
+      but allows users to run with any non-root UID and access hostPath. The user must
+      specify the UID or it must be specified on the by the manifest of the container runtime.
+    release.openshift.io/create-only: "true"
+  name: aqua-scc
+priority: 2
+readOnlyRootFilesystem: false
+requiredDropCapabilities: []
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:aqua:aqua-sa
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret
+- hostPath
