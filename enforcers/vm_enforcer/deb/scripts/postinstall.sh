@@ -272,7 +272,7 @@ bootstrap_args_deb() {
   action="$1"
   echo "action = $action"
   case "$action" in
-  "1" | "install")
+  "1" | "configure")
     main "$@"
     ;;
   "2" | "upgrade")
