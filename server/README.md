@@ -20,6 +20,10 @@ Server includes the following components:
 * AWS ECS
 * Docker
 
+### Note: 
+* For OpenShift version 3.x use RBAC definition from ./kubernetes_and_openshift/manifests/aqua_csp_002_RBAC/openshift_ocp3x 
+* For OpenShift version 4.x use RBAC definition from ./kubernetes_and_openshift/manifests/aqua_csp_002_RBAC/openshift 
+
 ## Suited for
 * Aqua Enterprise Self-Hosted edition
 
