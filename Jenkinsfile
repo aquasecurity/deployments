@@ -1,5 +1,3 @@
-import org.apache.commons.lang.RandomStringUtils
-
 @Library('aqua-pipeline-lib@master') _
 
 class Global {
@@ -52,8 +50,11 @@ pipeline {
                         for (file in Global.CHANGED_FILES) {
                             log.info "file: ${file}"
                         }
-                        sortChangedFiles()
                     }
+                    def sortChangedFiles = deployments.sortChangedFiles(Global.CHANGED_FILES)
+                    Global.CHANGED_CF_FILES = sortChangedFiles["CHANGED_CF_FILES"]
+                    Global.CHANGED_MANIFESTS_FILES = sortChangedFiles["CHANGED_MANIFESTS_FILES"]
+                    Global.SORTED_CHANGED_FILES = sortChangedFiles["SORTED_CHANGED_FILES"]
                     deployment.clone branch: "master"
                 }
             }
@@ -81,7 +82,7 @@ pipeline {
                                 log.info "Finished to install aqaua-deployment python package"
 
                                 def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
-                                    ["${it.split("/")[-1]}": generateStage(it, "cloudformation")]
+                                    ["${it.split("/")[-1]}": deployments.generateStage(it, "cloudformation")]
                                 }
                                 parallel parallelStagesMap
 
@@ -103,7 +104,7 @@ pipeline {
                             def deploymentImage = docker.build("deployment-manifest-image", "-f Dockerfile-manifest .")
                             deploymentImage.inside("-u root") {
                                 def parallelStagesMap = Global.CHANGED_MANIFESTS_FILES.collectEntries {
-                                    ["${it.split("/")[-1]}": generateStage(it, "manifest")]
+                                    ["${it.split("/")[-1]}": deployments.generateStage(it, "manifest")]
                                 }
                                 parallel parallelStagesMap
                             }
@@ -137,79 +138,4 @@ pipeline {
             }
         }
     }
-}
-
-def sortChangedFiles() {
-    for (file in Global.CHANGED_FILES) {
-        if (file.contains("ecs") && file.contains(".yaml")) {
-            Global.CHANGED_CF_FILES.add(file)
-        }
-        else if (file.contains("manifests") && file.contains(".yaml")){
-            Global.CHANGED_MANIFESTS_FILES.add(file)
-        }
-        else {
-            Global.SORTED_CHANGED_FILES.add(file)
-        }
-    }
-}
-
-def generateStage(it, type) {
-    if (type == "cloudformation") {
-        return {
-            withEnv(["RANDOM_STRING=${generateRandomString()}"]) {
-                stage("${it.split("/")[-1]}") {
-                    stage("verifing ${it.split("/")[-1]}") {
-                        cloudformation.singleVerify("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
-                    }
-                    stage("deploying ${it.split("/")[-1]}") {
-                        cloudformation.singleDeploy("deployments", it, env.CHANGE_TARGET, "${env.BUILD_NUMBER}-${env.RANDOM_STRING}")
-                    }
-                }
-            }
-        }
-    }
-    else if (type == "manifest") {
-        return {
-            stage("${it.split("/")[-1]}") {
-                stage("verifing ${it.split("/")[-1]}") {
-                    log.info "Starting to verify ${it.split("/")[-1]} file"
-                    sh "kubeval ./deployments/${it} --strict"
-                    log.info "Finished to verify ${it.split("/")[-1]} file"
-                }
-            }
-        }
-    }
-    else {
-        throw new Exception("type: ${type} is not supported")
-    }
-
-}
-
-def getChanges() {
-    MAX_MSG_LEN = 100
-    def changes = ""
-    log.info "Gathering SCM changes"
-    def changeLogSets = currentBuild.rawBuild.changeSets
-    changeLogSets.each { def changeLogSet ->
-        def entries = changeLogSet.items
-        entries.each { def entry ->
-            truncated_msg = entry.msg.take(MAX_MSG_LEN)
-            changes += " - $truncated_msg [$entry.author]\n"
-            def files = entry.getAffectedFiles()
-            log.info "files: ${files}"
-            files.each { def file ->
-                Global.CHANGED_FILES.add(file.getPath())
-            }
-        }
-    }
-    if (!changes) {
-        changes = " - No new changes"
-    }
-    return changes
-}
-
-def generateRandomString(){
-    String charset = (('a'..'z') + ('0'..'9')).join("")
-    Integer length = 3
-    return RandomStringUtils.random(length, charset.toCharArray())
 }
