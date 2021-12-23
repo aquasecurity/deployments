@@ -41,6 +41,7 @@ pipeline {
         stage("generateStages") {
             steps {
                 script {
+                    deployment.clone branch: "master"
                     dir("deployments") {
                         Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
                         def gitCommits = sh(script: "git log --pretty=format:'%h' -n 1", returnStdout: true).trim().split("\\r?\\n")
@@ -55,7 +56,6 @@ pipeline {
                     Global.CHANGED_CF_FILES = sortChangedFiles["CHANGED_CF_FILES"]
                     Global.CHANGED_MANIFESTS_FILES = sortChangedFiles["CHANGED_MANIFESTS_FILES"]
                     Global.SORTED_CHANGED_FILES = sortChangedFiles["SORTED_CHANGED_FILES"]
-                    deployment.clone branch: "master"
                 }
             }
         }
