@@ -28,6 +28,7 @@ pipeline {
                 script {
                     log.info "CHANGE_TARGET: ${CHANGE_TARGET}"
                     log.info "CHANGE_BRANCH: ${CHANGE_BRANCH}"
+                    deployment.clone branch: "master"
                     checkout([
                             $class                           : 'GitSCM',
                             branches                         : scm.branches,
@@ -35,7 +36,7 @@ pipeline {
                             extensions                       : [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
                             userRemoteConfigs                : scm.userRemoteConfigs
                     ])
-                    deployment.clone branch: "master"
+
                 }
             }
         }
