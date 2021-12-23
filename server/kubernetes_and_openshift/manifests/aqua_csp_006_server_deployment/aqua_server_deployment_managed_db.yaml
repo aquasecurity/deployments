@@ -26,6 +26,13 @@ spec:
       - name: aqua-web
         image: registry.aquasec.com/console:6.5
         imagePullPolicy: IfNotPresent
+#        resources:
+#          limits:
+#            cpu: 3000m
+#            memory: 2Gi
+#          requests:
+#            cpu: 2000m
+#            memory: 1Gi
         livenessProbe:
           httpGet:
             path: /
@@ -108,6 +115,13 @@ spec:
       - name: aqua-gateway
         image: registry.aquasec.com/gateway:6.5
         imagePullPolicy: IfNotPresent
+#        resources:
+#          limits:
+#            cpu: 1500m
+#            memory: 4Gi
+#          requests:
+#            cpu: 1000m
+#            memory: 1Gi
         livenessProbe:
           httpGet:
             path: /
