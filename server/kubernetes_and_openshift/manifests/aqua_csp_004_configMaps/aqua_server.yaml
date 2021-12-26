@@ -59,7 +59,7 @@ data:
   #AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
 
   # Set this to 1 configures the gateway to verify the certificate sent by the Enforcer. This is required if you configure mutual authentication between the Enforcer and gateway.
-  #AQUA_VERIFY_ENFORCER: 1
+  #AQUA_VERIFY_ENFORCER: "1"
   
   #AQUA_CLUSTER_MODE: "active-active"
   
