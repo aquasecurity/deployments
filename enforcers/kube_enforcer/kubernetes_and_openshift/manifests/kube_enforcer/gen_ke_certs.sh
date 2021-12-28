@@ -101,17 +101,17 @@ EOF
 }
 
 _prepare_ke() {
-    if `curl https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"`; then
+    if `curl https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/002_kube_enforcer_config.yaml -o "002_kube_enforcer_config.yaml"`; then
         _rootCA=`cat rootCA.crt | base64 | tr -d '\n' | tr -d '\r'`
-        if `sed -i'.original' "s/caBundle:/caBundle\:\ $_rootCA/g" 001_kube_enforcer_config.yaml`; then
-            printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
+        if `sed -i'.original' "s/caBundle:/caBundle\:\ $_rootCA/g" 002_kube_enforcer_config.yaml`; then
+            printf "\nInfo: Successfully prepared 002_kube_enforcer_config.yaml manifest file.\n"
             _deploy_ke_admin
         else
             printf "\nError: Failed to prepare KubeEnforcer config file"
             exit 1
         fi
     else
-        printf "\nError: Failed to download 001_kube_enforcer_config.yaml manifest file"
+        printf "\nError: Failed to download 002_kube_enforcer_config.yaml manifest file"
     fi
 }
 
@@ -121,14 +121,14 @@ _deploy_ke_admin() {
     if [ "$_user_input" = "y" ] || [ "$_user_input" = "Y" ]; then
         _check_k8s_connection
         echo
-        if `$(command -v kubectl) apply -f 001_kube_enforcer_config.yaml &> /dev/tty`; then
+        if `$(command -v kubectl) apply -f 002_kube_enforcer_config.yaml &> /dev/tty`; then
             printf "\nInfo: KubeEnforcer config successfully deployed\n"
             printf "Info: Please proceed with secrets and pod deployment\n"
         else
             printf "Error: Failed to apply KubeEnforcer config to the cluster\n"
         fi
     else
-        printf "\nUser abandoned. Please deploy KubeEnforcer config from 001_kube_enforcer_config.yaml manifest using kubectl\n"
+        printf "\nUser abandoned. Please deploy KubeEnforcer config from 002_kube_enforcer_config.yaml manifest using kubectl\n"
         exit 1
     fi
 }

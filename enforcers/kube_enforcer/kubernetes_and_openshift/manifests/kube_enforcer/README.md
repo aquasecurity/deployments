@@ -37,7 +37,21 @@ Consider the following options for deploying the KubeEnforcer:
 
 - **Mutual Auth / Custom SSL certs**: Prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files.
 
-- **Gateway**: To connect with an external Gateway in a multi-cluster deployment, update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the Gateway endpoint address in the *001_kube_enforcer_config.yaml* manifest file.
+- **Gateway**: To connect with an external Gateway in a multi-cluster deployment, update the **AQUA_GATEWAY_SECURE_ADDRESS** value with the Gateway endpoint address in the *002_kube_enforcer_config.yaml* manifest file.
+
+## Supported platforms
+| < PLATFORM >              | Description                                                  |
+| ---------------------- | ------------------------------------------------------------ |
+| aks | Microsoft Azure Kubernetes Service (AKS)    |
+| eks | Amazon Elastic Kubernetes Service (EKS) |
+| gke | Google Kubernetes Engine (GKE) |
+| ibm | IBM Cloud Private (ICP) |
+| k3s | fully CNCF certified Kubernetes |
+| native_k8s | Kubernetes |
+| openshift | OpenShift (Red Hat) |
+| rancher | Rancher / Kubernetes |
+| tkg | VMware Tanzu Kubernetes Grid (TKG) |
+| tkgi | VMware Tanzu Kubernetes Grid Integrated Edition (TKGI) |
 
 ## Pre-deployment
 
@@ -60,6 +74,11 @@ You can skip any step in this section, if you have already performed.
    --docker-email=<your-email> -n aqua
    ```
 
+**Step 3. Create a service account and RBAC for your deployment platform (if not already done).** Replace the platform name from [Supported platforms](#supported-platforms)
+
+   ```SHELL
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/001_kube_enforcer_rbac/< PLATFORM >/aqua_sa.yaml
+   ```
 ## Deploy KubeEnforcer using manifests
 
 **Step 1. Deploy the KubeEnforcer Config.**
@@ -96,18 +115,18 @@ You can skip any step in this section, if you have already performed.
 * Download, edit, and apply the secrets manifest file to create the token and SSL cert secrets.
 
   ```SHELL
-  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/002_kube_enforcer_secrets.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_secrets.yaml
   ```  
 
 **Step 3. Deploy KubeEnforcer.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/004_kube_enforcer_deploy.yaml
 ```
 
 ### Deploy the KubeEnforcer Config manually
 
-Step 1. Download the manifest yaml file, *001_kube_enforcer_config.yaml*.
+Step 1. Download the manifest yaml file, *002_kube_enforcer_config.yaml*.
 
 Step 2. Generate a CA bundle and SSL certs.
 
