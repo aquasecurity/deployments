@@ -75,13 +75,13 @@ spec:
           path: /etc
       - name: aquasec
         hostPath:
-          path: /var/lib/aquasec
+          path: /opt/aquasec
       - name: aquasec-tmp
         hostPath:
-          path: /var/lib/aquasec/tmp
+          path: /opt/aquasec/tmp
       - name: aquasec-audit
         hostPath:
-          path: /var/lib/aquasec/audit
+          path: /opt/aquasec/audit
       - name: aquasec-data
         hostPath:
-          path: /var/lib/aquasec/data
+          path: /opt/aquasec/data
