@@ -13,9 +13,9 @@ Following packages are required for installing VM Enforcer `.deb` package:
 * runc
 
 ## Deploy VM Enforcer
-| Release Number        |  Build Number          |
+| Release Number      |  Build Number          |
 | ------------------- | ------------------------|
-| 6.5.21326.26.1 | 6.5.21336 |
+| 6.5.21326.26.1      | 6.5.21336 |
 
 **Step 1. Download the DEB package for your architecture, using an authorized username and password.**
 
@@ -67,7 +67,7 @@ sudo touch /etc/conf/aquavmenforcer.json
 **Step 5. Deploy the DEB**
 
 ```shell
-sudo dpkg -ivh /path/to/aqua-vm-enforcer-{version}.{arch}.deb
+sudo dpkg -i /path/to/aqua-vm-enforcer-{version}.{arch}.deb
 ```
 
 ## Upgrade
@@ -78,7 +78,7 @@ To upgrade the VM Enforcer using the DEB package:
 2. Upgrade the VM Enforcer using the following command:
 
 ```shell
-sudo dpkg -U /path/to/aqua-vm-enforcer-<version>.<arch>.deb
+sudo dpkg -i /path/to/aqua-vm-enforcer-<version>.<arch>.deb
 ```
 
 ## Troubleshooting
@@ -111,7 +111,7 @@ sudo journalctl -u aqua-enforcer.service
 To uninstall the VM Enforcer `deb` package:
 
 ```shell
-sudo dpkg -e aqua-vm-enforcer
+sudo dpkg -r aqua-vm-enforcer
 ```
 
 ## Build an DEB package (optional)

@@ -129,7 +129,6 @@ Resources:
                   ReadOnly: true
               Name: aqua-enforcer
               Privileged: !Ref Taskprivileged
-              Privileged: !Ref Taskprivileged
               LinuxParameters:
                 Capabilities:
                   ADD:
