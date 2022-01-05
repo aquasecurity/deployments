@@ -78,7 +78,7 @@ spec:
           #  - name: aqua-grpc-kube-enforcer
           #    mountPath: /opt/aquasec/ssl
         - name: envoy
-          image: envoyproxy/envoy-alpine:v1.15.1
+          image: envoyproxy/envoy:v1.16.5
           imagePullPolicy: IfNotPresent
           command: ["/bin/sh", "-c", "cp /etc/envoy/cds.yaml /etc/aquasec/envoy/cds.yaml && touch /etc/aquasec/envoy/ca-certificates.crt && envoy -c /etc/envoy/envoy.yaml"]
           volumeMounts:
