@@ -48,6 +48,14 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            # Optional environment variable, to set the max amount of consecutive attempts before back off. There will be a random interval between connection attempts.
+            # (This and AQUA_CONNECTIVITY_BACKOFF_DURATION should both be set to trigger the backoff mechanism)
+            #- name: AQUA_MAX_CONSECUTIVE_CONNECTION_ATTEMPTS
+            #  value: "5"
+            # Optional environment variable, to set the amount of time (in seconds) in which there is no attempt to connect.
+            # Once this duration passes, the reconnect mechanisim will be triggered again till max attempts.
+            #- name: AQUA_CONNECTIVITY_BACKOFF_DURATION
+            #  value: "120"
           envFrom:
           - secretRef:
               name: aqua-scanner
