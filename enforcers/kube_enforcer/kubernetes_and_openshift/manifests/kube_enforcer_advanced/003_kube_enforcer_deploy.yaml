@@ -78,7 +78,10 @@ spec:
           #  - name: aqua-grpc-kube-enforcer
           #    mountPath: /opt/aquasec/ssl
         - name: envoy
-          image: envoyproxy/envoy-alpine:v1.15.1
+          image: registry.aquasec.com/envoy:6.5
+          env:
+          - name: ENVOY_UID
+            value: "0"
           imagePullPolicy: IfNotPresent
           command: ["/bin/sh", "-c", "cp /etc/envoy/cds.yaml /etc/aquasec/envoy/cds.yaml && touch /etc/aquasec/envoy/ca-certificates.crt && envoy -c /etc/envoy/envoy.yaml"]
           volumeMounts:
@@ -91,6 +94,8 @@ spec:
           ports:
             - containerPort: 8443
               protocol: TCP
+            - name: healthserver
+              containerPort: 8082
           readinessProbe:
             exec:
               command:
