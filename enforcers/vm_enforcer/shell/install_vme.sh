@@ -181,6 +181,9 @@ edit_templates_sh() {
 		s|AQUA_SERVER=.*\"|AQUA_SERVER=${GATEWAY_ENDPOINT}\"|;
 		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${TOKEN}\"|;
 		s|AQUA_TLS_VERIFY=.*\"|AQUA_TLS_VERIFY=${AQUA_TLS_VERIFY}\"|;
+    s|ROOT_CA=.*\"|ROOT_CA=${ROOT_CA}\"|;
+    s|PUBLIC_KEY=.*\"|PUBLIC_KEY=${PUBLIC_KEY}\"|;
+    s|PRIVATE_KEY=.*\"|PRIVATE_KEY=${PRIVATE_KEY}\"|;
 		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"|" ${ENFORCER_RUNC_CONFIG_TEMPLATE} >${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
 
   echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} file."
@@ -331,7 +334,25 @@ bootstrap_args_sh() {
     -tls | --aqua-tls-verify)
       AQUA_TLS_VERIFY=true
       shift
+      ;; 
+    --rootca)
+      is_flag_value_valid "--rootca" "$2"
+      ROOT_CA="$2"
+      shift
+      shift
       ;;
+    --publickey)
+      is_flag_value_valid "--publickey" "$2"
+      PUBLIC_KEY="$2"
+      shift
+      shift
+      ;;
+    --privatekey)
+      is_flag_value_valid "--privatekey" "$2"
+      PRIVATE_KEY="$2"
+      shift
+      shift
+      ;;                   
     -f | --tar-file)
       is_flag_value_valid "-f|--tar-file" "$2"
       TAR_FILE="$2"
