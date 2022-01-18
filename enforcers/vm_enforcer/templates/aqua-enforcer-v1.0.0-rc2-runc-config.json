@@ -26,9 +26,9 @@
       "AQUA_SERVER=",
       "AQUA_TOKEN=",
       "AQUA_TLS_VERIFY=true",
-      "ROOT_CA=/home/mahima/rootCA.crt",
-      "PUBLIC_KEY=/home/mahima/aqua_web.crt",
-      "PRIVATE_KEY=/home/mahima/aqua_web.key",      
+      "AQUA_ROOT_CA=/opt/aquasec/ssl/rootCA.crt",
+      "AQUA_PUBLIC_KEY=/opt/aquasec/ssl/aqua_enforcer.crt",
+      "AQUA_PRIVATE_KEY=/opt/aquasec/ssl/aqua_enforcer.key",      
       "LD_LIBRARY_PATH=/opt/aquasec"
     ],
     "cwd": "/opt/aquasec",
@@ -102,6 +102,15 @@
       "source": "/opt/aquasec",
       "type": "bind"
     },
+    {
+      "destination": "/opt/aquasec/ssl",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/opt/aquasec/ssl",
+      "type": "bind"
+    },     
     {
       "destination": "/host/etc",
       "options": [

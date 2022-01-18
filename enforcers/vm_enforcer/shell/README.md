@@ -37,6 +37,9 @@ Deploying VM Enforcer in the online mode can download the archive file from aqua
   TLS verify Flag (Optional):
 
   -tls, --aqua-tls-verify aqua_tls_verify
+  --rootca                 path to root CA certififate
+  --publickey              path to Client public certififate
+  --privatekey             path to Client private key  
 ```
 
 ### Offline mode
@@ -82,6 +85,16 @@ Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in 
 
   TLS verify Flag (Optional):
   -tls, --aqua-tls-verify aqua_tls_verify
+  --rootca                 path to root CA certififate
+  --publickey              path to Client public certififate
+  --privatekey             path to Client private key   
+```
+
+**Syntax: Deploy VM Enforcer with TLS enabled**
+
+```shell
+  sudo ./install_vme.sh --version <version> -u <username> -p <password> --token <vm_enforcer_token> --gateway <dns/ip:port> --rootca <rootca_path> --publickey <client_cert_path> --privatekey <client_key_path> --aqua-tls-verify true
+
 ```
 
 ## Uninstall
