@@ -13,6 +13,7 @@ VM Enforcers provide the enforcement and assurance for your hosts (VMs). It is r
 ## Deployment methods
 
 * [**Ansible Playbook**](./ansible/): for deploying VM Enforcer on a set of wide range of linux operating system VMs at a time
+* [**Debian Package**](./deb/): for deploying VM Enforcer on one or more VMs using the Debian package
 * [**RPM Package**](./rpm/): for deploying VM Enforcer on Red Hat based operating system which supports `.rpm` packages
 * [**Shell Script**](./shell/): for depoying VM Enforcer using script
 
