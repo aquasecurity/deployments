@@ -50,14 +50,14 @@ sudo touch /etc/conf/aquavmenforcer.json
 
 **Step 4. Run the following command with the relevant values for:**
 
-   * `GATEWAY_HOSTENAME` and `PORT`: Aqua Gateway host/IP address and port
+   * `GATEWAY_HOSTNAME` and `PORT`: Aqua Gateway host/IP address and port
    * `TOKEN_VALUE`: Enforcer group token
    * `AQUA_TLS_VERIFY_VALUE`: false\true, Set up the enforcer with tls-verify. This is optional, but it is **MANDATORY** for aqua **cloud** users with value `true`.
    
    ```shell
    sudo tee /etc/conf/aquavmenforcer.json << EOF
    {
-       "AQUA_GATEWAY": "{GATEWAY_HOSTENAME}:{PORT}",
+       "AQUA_GATEWAY": "{GATEWAY_HOSTNAME}:{PORT}",
        "AQUA_TOKEN": "{TOKEN_VALUE}",
        "AQUA_TLS_VERIFY": {AQUA_TLS_VERIFY_VALUE}
    }

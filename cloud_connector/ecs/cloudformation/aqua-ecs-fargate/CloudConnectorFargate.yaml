@@ -51,7 +51,7 @@ Parameters:
     Type: String
     MinLength: '5'
     MaxLength: '25'
-    AllowedPattern: '[a-z\p{Punct}0-9]*'
+    AllowedPattern: '[a-zA-Z0-9-]*'
   AquaGatewayUrl:
     Type: String
     Description: Enter Aqua Gateway Url

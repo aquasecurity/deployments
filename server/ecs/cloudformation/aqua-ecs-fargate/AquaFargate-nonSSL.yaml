@@ -161,7 +161,7 @@ Parameters:
     Type: String
     MinLength: '5'
     MaxLength: '25'
-    AllowedPattern: '[a-z\p{Punct}0-9]*'
+    AllowedPattern: '[a-zA-Z0-9-]*'
   ActiveActive: 
     Description: Active Active configuration for aqua console 
     Type: String
@@ -712,7 +712,7 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: Private
-      BucketName: !Sub '${ECSCluster}-lb-accesslogs'
+      BucketName: !GetAtt S3BucketName.OutputString
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -723,6 +723,52 @@ Resources:
         - Key: BucketType
           Value: Log
     DeletionPolicy: Delete
+  # Custom resource to transform input to lowercase.                                             
+  LowerCaseLambda:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Description: Returns the lowercase version of a string
+      MemorySize: 256
+      Runtime: python3.8
+      Handler: index.lambda_handler
+      Role: !GetAtt LowerCaseLambdaRole.Arn
+      Timeout: 30
+      Code:
+        ZipFile: |
+          import cfnresponse
+
+          def lambda_handler(event, context):                                                    
+              output = event['ResourceProperties'].get('InputString', '').lower()                
+              responseData = {'OutputString': output}                                            
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)                
+  LowerCaseLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Policies:
+        - PolicyName: "lambda-write-logs"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "arn:aws:logs:*:*"
+  S3BucketName:
+    Type: Custom::Lowercase
+    Properties:
+      ServiceToken: !GetAtt LowerCaseLambda.Arn
+      InputString: !Sub '${ECSCluster}-lb-accesslogs'    
   LogsBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
