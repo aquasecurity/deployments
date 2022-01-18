@@ -20,12 +20,12 @@
       "AQUA_MODE=SERVICE",
       "RESTART_CONTAINERS=no",
       "AQUA_LOGICAL_NAME=Default",
-      "AQUA_SERVER=",
-      "AQUA_TOKEN=",
+      "AQUA_SERVER=20.101.228.2:8443",
+      "AQUA_TOKEN=ZmNjMzg2YzYtOWE0Zi00ZTYxLWEzNzgtNWY5ZmYzYzViYTFh",
       "AQUA_TLS_VERIFY=true",
-      "ROOT_CA=/home/mahima/rootCA.crt",
-      "PUBLIC_KEY=/home/mahima/aqua_web.crt",
-      "PRIVATE_KEY=/home/mahima/aqua_web.key",
+      "AQUA_ROOT_CA=/opt/aquasec/ssl/rootCA.crt",
+      "AQUA_PUBLIC_KEY=/opt/aquasec/ssl/aqua_enforcer.crt",
+      "AQUA_PRIVATE_KEY=/opt/aquasec/ssl/aqua_enforcer.key",
       "LD_LIBRARY_PATH=/opt/aquasec"
     ],
     "cwd": "/opt/aquasec",
@@ -137,7 +137,7 @@
 
   },
   "hostname": "runc",
-  "mounts": [
+  "mounts": [                    
     {
       "destination": "/host/opt/aquasec",
       "options": [
@@ -147,6 +147,15 @@
       "source": "/opt/aquasec",
       "type": "bind"
     },
+    {
+      "destination": "/opt/aquasec/ssl",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/opt/aquasec/ssl",
+      "type": "bind"
+    },       
     {
       "destination": "/host/etc",
       "options": [

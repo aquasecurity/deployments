@@ -16,7 +16,11 @@ Download Mode Flags (Optional):
     -u, --aqua-username string	Aqua username
     -p, --aqua-password string	Aqua password
 TLS verify Flag (Optional):
-    -tls, --aqua-tls-verify aqua_tls_verify
+    -tls, --aqua-tls-verify  aqua_tls_verify
+    --rootca                 path to root CA certififate
+    --publickey              path to server public key
+    --privatekey             path to server private key
+
 EOF
 
 }
@@ -45,10 +49,10 @@ load_config_from_env() {
     usage
     exit 1
   fi
-  if [ -z "${AQUA_TLS_VERIFY}" ]; then
-    echo "Info: AQUA_TLS_VERIFY var is missing, Setting it to 'false'"
-    AQUA_TLS_VERIFY=false
-  fi
+  # if [ -z "${AQUA_TLS_VERIFY}" ]; then
+  #   echo "Info: AQUA_TLS_VERIFY var is missing, Setting it to 'false'"
+  #   AQUA_TLS_VERIFY=false
+  # fi
   if [ "${DOWNLOAD_MODE}" == "true" ]; then
     if [ -z "${AQUA_USERNAME}" ] || [ -z "${AQUA_PWD}" ]; then
       usage
@@ -112,6 +116,16 @@ is_flag_value_valid() {
   done
 }
 
+is_flag_value_valid_tls() {
+  [ -z "$2" ] && error_message "Value is missing. please set $1 [value]"
+
+  flags=("--rootca" "--publickey" "--privatekey" "-tls" "--aqua-tls-verify")
+  for flag in "${flags[@]}"; do
+    if [ "${flag}" == "$2" ]; then
+      error_message "Value is missing. please set $1 [value]"
+    fi
+  done  
+}
 get_templates_online() {
 
   curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/templates/aqua-enforcer.template.service
@@ -181,9 +195,9 @@ edit_templates_sh() {
 		s|AQUA_SERVER=.*\"|AQUA_SERVER=${GATEWAY_ENDPOINT}\"|;
 		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${TOKEN}\"|;
 		s|AQUA_TLS_VERIFY=.*\"|AQUA_TLS_VERIFY=${AQUA_TLS_VERIFY}\"|;
-    s|ROOT_CA=.*\"|ROOT_CA=${ROOT_CA}\"|;
-    s|PUBLIC_KEY=.*\"|PUBLIC_KEY=${PUBLIC_KEY}\"|;
-    s|PRIVATE_KEY=.*\"|PRIVATE_KEY=${PRIVATE_KEY}\"|;
+    s|AQUA_ROOT_CA=.*\"|AQUA_ROOT_CA=${AQUA_ROOT_CA}\"|;
+    s|AQUA_PUBLIC_KEY=.*\"|AQUA_PUBLIC_KEY=${AQUA_PUBLIC_KEY}\"|;
+    s|AQUA_PRIVATE_KEY=.*\"|AQUA_PRIVATE_KEY=${AQUA_PRIVATE_KEY}\"|;    
 		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"|" ${ENFORCER_RUNC_CONFIG_TEMPLATE} >${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
 
   echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} file."
@@ -232,9 +246,9 @@ setup_sh_env() {
   if [ -z "${DOWNLOAD_MODE}" ]; then
     DOWNLOAD_MODE=false
   fi
-  if [ -z "${AQUA_TLS_VERIFY}" ]; then
-    AQUA_TLS_VERIFY=false
-  fi
+  # if [ -z "${TLS_VERIFY}" ]; then
+  #   TLS_VERIFY=false
+  # fi
 
   ENFORCER_RUNC_DIRECTORY="${INSTALL_PATH}/aqua-runc"
   ENFORCER_RUNC_FS_DIRECTORY="${ENFORCER_RUNC_DIRECTORY}/aqua-enforcer"
@@ -260,6 +274,10 @@ create_folder_sh() {
   mkdir ${INSTALL_PATH}/aquasec/audit 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/tmp 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/data 2>/dev/null
+  mkdir ${INSTALL_PATH}/aquasec/ssl
+  cp ${AQUA_ROOT_CA_PATH} /opt/aquasec/ssl
+  cp ${AQUA_PUBLIC_KEY_PATH} /opt/aquasec/ssl
+  cp ${AQUA_PRIVATE_KEY_PATH} /opt/aquasec/ssl
   rm -f /opt/aquasec/tmp/aquasec.log && touch /opt/aquasec/tmp/aquasec.log
   mkdir -p ${ENFORCER_RUNC_FS_DIRECTORY} 2>/dev/null
 }
@@ -327,32 +345,39 @@ bootstrap_args_sh() {
       shift
       shift
       ;;
-    -d | --download)
-      DOWNLOAD_MODE=true
-      shift
-      ;;
     -tls | --aqua-tls-verify)
-      AQUA_TLS_VERIFY=true
+      is_flag_value_valid_tls "-tls|--aqua-tls-verify" "$2"
+      AQUA_TLS_VERIFY="$2"
       shift
-      ;; 
+      ;;       
     --rootca)
-      is_flag_value_valid "--rootca" "$2"
-      ROOT_CA="$2"
+      is_flag_value_valid_tls "--rootca" "$2"
+      AQUA_ROOT_CA_PATH="$2"
+      ROOT_CA_FILENAME=$(basename "$2")
+      AQUA_ROOT_CA="/opt/aquasec/ssl/$ROOT_CA_FILENAME"
       shift
       shift
       ;;
     --publickey)
-      is_flag_value_valid "--publickey" "$2"
-      PUBLIC_KEY="$2"
+      is_flag_value_valid_tls "--publickey" "$2"
+      AQUA_PUBLIC_KEY_PATH="$2"
+      PUBLIC_KEY_FILENAME=$(basename "$2")
+      AQUA_PUBLIC_KEY="/opt/aquasec/ssl/$PUBLIC_KEY_FILENAME"
       shift
       shift
       ;;
     --privatekey)
-      is_flag_value_valid "--privatekey" "$2"
-      PRIVATE_KEY="$2"
+      is_flag_value_valid_tls "--privatekey" "$2"
+      AQUA_PRIVATE_KEY_PATH="$2"
+      PRIVATE_KEY_FILENAME=$(basename "$2")
+      AQUA_PRIVATE_KEY="/opt/aquasec/ssl/$PRIVATE_KEY_FILENAME"
       shift
       shift
-      ;;                   
+      ;;       
+    -d | --download)
+      DOWNLOAD_MODE=true
+      shift
+      ;;                 
     -f | --tar-file)
       is_flag_value_valid "-f|--tar-file" "$2"
       TAR_FILE="$2"
