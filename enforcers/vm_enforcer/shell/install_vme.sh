@@ -16,10 +16,10 @@ Download Mode Flags (Optional):
     -u, --aqua-username string	Aqua username
     -p, --aqua-password string	Aqua password
 TLS verify Flag (Optional):
-    -tls, --aqua-tls-verify  aqua_tls_verify
-    --rootca                 path to root CA certififate
-    --publickey              path to Client public certififate
-    --privatekey             path to Client private key  
+    -tls, --aqua-tls-verify aqua_tls_verify
+    --rootca                path to root CA certififate
+    --publickey             path to Client public certififate
+    --privatekey            path to Client private key  
 
 EOF
 
