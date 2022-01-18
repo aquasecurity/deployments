@@ -49,10 +49,10 @@ load_config_from_env() {
     usage
     exit 1
   fi
-  # if [ -z "${AQUA_TLS_VERIFY}" ]; then
-  #   echo "Info: AQUA_TLS_VERIFY var is missing, Setting it to 'false'"
-  #   AQUA_TLS_VERIFY=false
-  # fi
+  if [ -z "${AQUA_TLS_VERIFY}" ]; then
+    echo "Info: AQUA_TLS_VERIFY var is missing, Setting it to 'false'"
+    AQUA_TLS_VERIFY=false
+  fi
   if [ "${DOWNLOAD_MODE}" == "true" ]; then
     if [ -z "${AQUA_USERNAME}" ] || [ -z "${AQUA_PWD}" ]; then
       usage
@@ -246,9 +246,9 @@ setup_sh_env() {
   if [ -z "${DOWNLOAD_MODE}" ]; then
     DOWNLOAD_MODE=false
   fi
-  # if [ -z "${TLS_VERIFY}" ]; then
-  #   TLS_VERIFY=false
-  # fi
+  if [ -z "${AQUA_TLS_VERIFY}" ]; then
+    AQUA_TLS_VERIFY=false
+  fi
 
   ENFORCER_RUNC_DIRECTORY="${INSTALL_PATH}/aqua-runc"
   ENFORCER_RUNC_FS_DIRECTORY="${ENFORCER_RUNC_DIRECTORY}/aqua-enforcer"
