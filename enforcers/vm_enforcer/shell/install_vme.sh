@@ -17,9 +17,9 @@ Download Mode Flags (Optional):
     -p, --aqua-password string	Aqua password
 TLS verify Flag (Optional):
     -tls, --aqua-tls-verify  aqua_tls_verify
-    --rootca                 path to root CA certififate
-    --publickey              path to Client public certififate
-    --privatekey             path to Client private key  
+    --rootca-file                 path to root CA certififate
+    --publiccert-file             path to Client public certififate
+    --privatekey-file             path to Client private key  
 
 EOF
 
@@ -55,6 +55,7 @@ load_config_from_env() {
   fi
   if [ "${AQUA_TLS_VERIFY}" == "true" ]; then
     if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] || [ -z "${AQUA_PRIVATE_KEY_PATH}" ] || [ -z "${AQUA_ROOT_CA_PATH}" ]; then
+      echo "tls options values missing, required options: --rootca-file <value> --publiccert-file <value> --privatekey-file <value>  --aqua-tls-verify <value> "
       usage
       exit 1
     fi
@@ -114,7 +115,7 @@ prerequisites_check() {
 
 is_flag_value_valid() {
   [ -z "$2" ] && error_message "Value is missing. please set $1 [value]"
-  flags=("-v" "--version" "-u" "--aqua-username" "-p" "--aqua-password" "-t" "--token" "-g" "--gateway" "-tls" "--aqua-tls-verify" "--rootca" "--publickey" "--privatekey" "-f" "--tar-file" "-c" "--config-file" "-i" "--install-path")
+  flags=("-v" "--version" "-u" "--aqua-username" "-p" "--aqua-password" "-t" "--token" "-g" "--gateway" "-tls" "--aqua-tls-verify" "--rootca-file" "--publiccert-file" "--privatekey-file" "-f" "--tar-file" "-c" "--config-file" "-i" "--install-path")
   for flag in "${flags[@]}"; do
     if [ "${flag}" == "$2" ]; then
       error_message "Value is missing. please set $1 [value]"
@@ -349,24 +350,24 @@ bootstrap_args_sh() {
       echo $AQUA_TLS_VERIFY "------------"
       shift
       ;;
-    --rootca)
-      is_flag_value_valid "--rootca" "$2"
+    --rootca-file)
+      is_flag_value_valid "--rootca-file" "$2"
       AQUA_ROOT_CA_PATH="$2"
       ROOT_CA_FILENAME=$(basename "$2")
       AQUA_ROOT_CA="/opt/aquasec/ssl/$ROOT_CA_FILENAME"
       shift
       shift
       ;;
-    --publickey)
-      is_flag_value_valid "--publickey" "$2"
+    --publiccert-file)
+      is_flag_value_valid "--publiccert-file" "$2"
       AQUA_PUBLIC_KEY_PATH="$2"
       PUBLIC_KEY_FILENAME=$(basename "$2")
       AQUA_PUBLIC_KEY="/opt/aquasec/ssl/$PUBLIC_KEY_FILENAME"  
       shift
       shift
       ;;
-    --privatekey)
-      is_flag_value_valid "--privatekey" "$2"
+    --privatekey-file)
+      is_flag_value_valid "--privatekey-file" "$2"
       AQUA_PRIVATE_KEY_PATH="$2"
       PRIVATE_KEY_FILENAME=$(basename "$2")
       AQUA_PRIVATE_KEY="/opt/aquasec/ssl/$PRIVATE_KEY_FILENAME"  
