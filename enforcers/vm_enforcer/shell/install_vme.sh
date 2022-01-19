@@ -17,7 +17,8 @@ Download Mode Flags (Optional):
     -p, --aqua-password string	Aqua password
 TLS verify Flag (Optional):
     -tls, --aqua-tls-verify  aqua_tls_verify
-    --rootca-file                 path to root CA certififate
+    --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+    NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
     --publiccert-file             path to Client public certififate
     --privatekey-file             path to Client private key  
 
@@ -54,8 +55,8 @@ load_config_from_env() {
     AQUA_TLS_VERIFY=false
   fi
   if [ "${AQUA_TLS_VERIFY}" == "true" ]; then
-    if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] || [ -z "${AQUA_PRIVATE_KEY_PATH}" ] || [ -z "${AQUA_ROOT_CA_PATH}" ]; then
-      echo "tls options values missing, required options: --rootca-file <value> --publiccert-file <value> --privatekey-file <value>  --aqua-tls-verify <value> "
+    if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] || [ -z "${AQUA_PRIVATE_KEY_PATH}" ]; then
+      echo "tls options values missing, required options: --publiccert-file <value> --privatekey-file <value>  --aqua-tls-verify <value>, incase of self-signed certificates  --rootca-file <value> is required "
       usage
       exit 1
     fi

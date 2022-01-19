@@ -20,13 +20,13 @@
       "AQUA_MODE=SERVICE",
       "RESTART_CONTAINERS=no",
       "AQUA_LOGICAL_NAME=Default",
-      "AQUA_SERVER=20.101.228.2:8443",
-      "AQUA_TOKEN=ZmNjMzg2YzYtOWE0Zi00ZTYxLWEzNzgtNWY5ZmYzYzViYTFh",
-      "AQUA_TLS_VERIFY=true",
+      "AQUA_SERVER=",
+      "AQUA_TOKEN=",
+      "LD_LIBRARY_PATH=/opt/aquasec",
+      "AQUA_TLS_VERIFY=false",
       "AQUA_ROOT_CA=/opt/aquasec/ssl/rootCA.crt",
       "AQUA_PUBLIC_KEY=/opt/aquasec/ssl/aqua_enforcer.crt",
-      "AQUA_PRIVATE_KEY=/opt/aquasec/ssl/aqua_enforcer.key",
-      "LD_LIBRARY_PATH=/opt/aquasec"
+      "AQUA_PRIVATE_KEY=/opt/aquasec/ssl/aqua_enforcer.key"
     ],
     "cwd": "/opt/aquasec",
     "capabilities": {
