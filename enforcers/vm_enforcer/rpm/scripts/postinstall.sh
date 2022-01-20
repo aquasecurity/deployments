@@ -42,8 +42,8 @@ load_config_from_env() {
       AQUA_ROOT_CA_PATH=$(echo ${AQUA_CONFIG} | jq '.AQUA_ROOT_CA // empty' | sed -e 's/^"//' -e 's/"$//')
       AQUA_PUBLIC_KEY_PATH=$(echo ${AQUA_CONFIG} | jq '.AQUA_PUBLIC_KEY // empty' | sed -e 's/^"//' -e 's/"$//')
       AQUA_PRIVATE_KEY_PATH=$(echo ${AQUA_CONFIG} | jq '.AQUA_PRIVATE_KEY // empty' | sed -e 's/^"//' -e 's/"$//')
-      if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] || [ -z "${AQUA_PRIVATE_KEY_PATH}" ] || [ -z "${AQUA_ROOT_CA_PATH}" ]; then
-        echo "AQUA_ROOT_CA AQUA_PUBLIC_KEY AQUA_PRIVATE_KEY values are missing from ${AQUA_CONFIG}"
+      if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] || [ -z "${AQUA_PRIVATE_KEY_PATH}" ]; then
+        echo "AQUA_PUBLIC_KEY AQUA_PRIVATE_KEY values are missing from ${AQUA_CONFIG}, incase of self-signed certificates AQUA_ROOT_CA is required"
         exit 1
       fi
       ROOT_CA_FILENAME=$(basename "$AQUA_ROOT_CA_PATH")
