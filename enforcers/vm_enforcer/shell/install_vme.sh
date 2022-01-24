@@ -274,7 +274,9 @@ create_folder_sh() {
   mkdir ${INSTALL_PATH}/aquasec/data 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/ssl 2>/dev/null
   if [ "${AQUA_TLS_VERIFY}" == "true" ]; then
-    cp ${AQUA_ROOT_CA_PATH} /opt/aquasec/ssl
+    if [ -n "${AQUA_ROOT_CA_PATH}" ] && [ -e "${AQUA_ROOT_CA_PATH}" ]; then
+      cp ${AQUA_ROOT_CA_PATH} /opt/aquasec/ssl
+    fi  
     cp ${AQUA_PUBLIC_KEY_PATH} /opt/aquasec/ssl
     cp ${AQUA_PRIVATE_KEY_PATH} /opt/aquasec/ssl
   fi  
