@@ -60,11 +60,11 @@ load_config_from_env() {
     AQUA_PUBLIC_KEY=""
     AQUA_PRIVATE_KEY=""
   fi
-  # if ([ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -n "${AQUA_PRIVATE_KEY_PATH}" ]) || ([ -n "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]); then
-  #   echo "tls options values missing, required options: --publiccert-file <value> --privatekey-file <value>  --aqua-tls-verify <value>, incase of self-signed certificates  --rootca-file <value> is required "
-  #   usage
-  #   exit
-  # fi    
+  if ([ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -n "${AQUA_PRIVATE_KEY_PATH}" ]) || ([ -n "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]); then
+    echo "tls options values missing, required options: --publiccert-file <value> --privatekey-file <value>  --aqua-tls-verify <value>, incase of self-signed certificates  --rootca-file <value> is required "
+    usage
+    exit
+  fi    
   if [ "${DOWNLOAD_MODE}" == "true" ]; then
     if [ -z "${AQUA_USERNAME}" ] || [ -z "${AQUA_PWD}" ]; then
       usage
