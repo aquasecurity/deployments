@@ -37,7 +37,8 @@ Deploying VM Enforcer in the online mode can download the archive file from aqua
   TLS verify Flag (Optional):
 
   -tls, --aqua-tls-verify aqua_tls_verify
-  --rootca-file                 path to root CA certififate
+  --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+  NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
   --publiccert-file              path to Client public certififate
   --privatekey-file             path to Client private key  
 ```
@@ -85,7 +86,8 @@ Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in 
 
   TLS verify Flag (Optional):
   -tls, --aqua-tls-verify aqua_tls_verify
-  --rootca-file                 path to root CA certififate
+  --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+  NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
   --publiccert-file             path to Client public certififate
   --privatekey-file             path to Client private key   
 ```
