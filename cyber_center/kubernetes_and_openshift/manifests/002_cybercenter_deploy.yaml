@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: aqua-cc
+  name: aqua-cc
+  namespace: aqua
+spec:
+  ports:
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 5000
+  selector:
+    app: aqua-cc
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aqua-cc
+  name: aqua-cc
+  namespace: aqua
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-cc
+  template:
+    metadata:
+      labels:
+        app: aqua-cc
+      name: aqua-cc
+      namespace: aqua
+    spec:
+      serviceAccount: aqua-sa
+      containers:
+      - name: aqua-cc
+        image: "registry.aquasec.com/cc-standard:latest"
+        imagePullPolicy: Always
+        args:
+        - --address=:5000
+        - --offline-key=pleaseopen
+        ports:
+        - containerPort: 5000
+#        env:
+#        - name: AQUA_PRIVATE_KEY
+#          value: "/opt/aquasec/ssl/cc.key"
+#        - name: AQUA_PUBLIC_KEY
+#          value: "/opt/aquasec/ssl/cc.crt"
+#        - name: AQUA_ROOT_CA
+#          value: "/opt/aquasec/ssl/ca.crt"
+#        volumeMounts:
+#        - mountPath: /opt/aquasec/ssl
+#          name: aqua-grpc-cc
+#          readOnly: true
+#      volumes:
+#      - name: aqua-grpc-cc
+#        secret:
+#          secretName: aqua-grpc-cc
+#          items:
+#          - key: aqua_cc.crt
+#            path: cc.crt
+#          - key: aqua_cc.key
+#            path: cc.key
+#          - key: rootCA.crt
+#            path: ca.crt

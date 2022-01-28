@@ -102,3 +102,6 @@ data:
   
   #Batch installation token to authenticate KubeEnforcer with server
   # AQUA_KE_GROUP_TOKEN: ""
+
+  # Set this to 1 to establish mTLS connection with aqua offline cybercenter
+  #OFFLINE_CC_MTLS_ENABLE: "1"

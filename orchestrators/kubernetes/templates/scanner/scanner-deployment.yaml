@@ -45,6 +45,12 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.name
+        # - name: AQUA_PRIVATE_KEY # Scanner's private key for HTTPS and Mutual Auth with offline CyberCenter
+        #   value: "/opt/aquasec/ssl/key.pem"
+        # - name: AQUA_PUBLIC_KEY # Scanner's root CA cert for HTTPS and Mutual Auth. The root CA certificate file should be mutual for both CyberCenter and Scanner certificates
+        #   value: "/opt/aquasec/ssl/ca.pem"
+        # - name: OFFLINE_CC_MTLS_ENABLE # Set this to 1 to establish mTLS connection with CyberCenter
+        #   value: "1"
         ports:
         - containerPort: 8080
           protocol: TCP
