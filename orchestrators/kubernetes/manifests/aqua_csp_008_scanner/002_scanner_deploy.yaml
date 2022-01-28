@@ -41,14 +41,25 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            # Optional environment variable, to set the max amount of consecutive attempts before back off. There will be a random interval between connection attempts. 
-            # (This and AQUA_CONNECTIVITY_BACKOFF_DURATION should both be set to trigger the backoff mechanism)
-            #- name: AQUA_MAX_CONSECUTIVE_CONNECTION_ATTEMPTS
-            #  value: "5"
-            # Optional environment variable, to set the amount of time (in seconds) in which there is no attempt to connect. 
-            # Once this duration passes, the reconnect mechanisim will be triggered again till max attempts.
-            #- name: AQUA_CONNECTIVITY_BACKOFF_DURATION
-            #  value: "120"             
+            #   #Optional environment variable, to set the max amount of consecutive attempts before back off. There will be a random interval between connection attempts.
+            #   #(This and AQUA_CONNECTIVITY_BACKOFF_DURATION should both be set to trigger the backoff mechanism)
+            # - name: AQUA_MAX_CONSECUTIVE_CONNECTION_ATTEMPTS
+            #   value: "5"
+            #   #Optional environment variable, to set the amount of time (in seconds) in which there is no attempt to connect.
+            #   #Once this duration passes, the reconnect mechanisim will be triggered again till max attempts.
+            # - name: AQUA_CONNECTIVITY_BACKOFF_DURATION
+            #   value: "120"
+            #   # Scanner's private key for HTTPS and Mutual Auth with offline CyberCenter
+            # - name: AQUA_PRIVATE_KEY
+            #   value: "/opt/aquasec/ssl/key.pem"
+            #   # Scanner's public key for HTTPS and Mutual Auth with offline CyberCenter
+            # - name: AQUA_PUBLIC_KEY
+            #   value: "/opt/aquasec/ssl/cert.pem"
+            #   # Scanner's root CA cert for HTTPS and Mutual Auth. The root CA certificate file should be mutual for both CyberCenter and Scanner certificates
+            # - name: AQUA_ROOT_CA
+            #   value: "/opt/aquasec/ssl/ca.pem"
+            # - name: OFFLINE_CC_MTLS_ENABLE # Set this to 1 to establish mTLS connection with CyberCenter
+            #   value: "1"
           envFrom:
           - secretRef:
               name: aqua-scanner
