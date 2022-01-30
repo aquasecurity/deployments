@@ -1,15 +1,23 @@
-@Library('aqua-pipeline-lib@master') _
+@Library('aqua-pipeline-lib@master')_
+import com.aquasec.deployments.orchestrators.*
 
-class Global {
-    static Object CHANGED_FILES = []
-    static Object CHANGED_CF_FILES = []
-    static Object CHANGED_MANIFESTS_FILES = []
-    static Object SORTED_CHANGED_FILES = []
-    static String BUILD_USER_EMAIL
-}
-
+def orchestrator = new K3s(this)
+def namespace = "aqua"
+def registry = "registry.aquasec.com"
+platform = "k3s"
+def charts = [ 'server', 'kube-enforcer', 'enforcer', 'gateway', 'aqua-quickstart', 'cyber-center', 'cloud-connector' ]
 pipeline {
-    agent { label 'azure_slaves' }
+    agent {
+        label 'deployment_slave'
+    }
+
+    environment {
+//        AQUASEC_AZURE_ACR_PASSWORD = credentials('aquasecAzureACRpassword')
+//        AFW_SERVER_LICENSE_TOKEN = credentials('aquaDeploymentLicenseToken')
+        ROOT_CA = credentials('deployment_ke_webook_root_ca')
+        SERVER_CERT = credentials('deployment_ke_webook_crt')
+        SERVER_KEY = credentials('deployment_ke_webook_key')
+    }
     options {
         ansiColor('xterm')
         timestamps()
@@ -17,115 +25,109 @@ pipeline {
         skipDefaultCheckout()
         buildDiscarder(logRotator(daysToKeepStr: '7'))
     }
-    environment {
-        AWS_ACCESS_KEY_ID = credentials('svc_team_1_aws_access_key_id')
-        AWS_SECRET_ACCESS_KEY = credentials('svc_team_1_aws_secret_access_key')
-        AWS_REGION = "us-west-2"
-    }
     stages {
-        stage("Checkout") {
+        stage('Checkout') {
+            steps {
+                checkout([
+                        $class: 'GitSCM',
+                        branches: scm.branches,
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+                        submoduleCfg: [],
+                        userRemoteConfigs: scm.userRemoteConfigs
+                ])
+            }
+        }
+        stage ("Generate parallel stages") {
             steps {
                 script {
-                    log.info "CHANGE_TARGET: ${CHANGE_TARGET}"
-                    log.info "CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    deployment.clone branch: "master"
-                    checkout([
-                            $class                           : 'GitSCM',
-                            branches                         : scm.branches,
-                            doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
-                            extensions                       : [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
-                            userRemoteConfigs                : scm.userRemoteConfigs
-                    ])
-
+                    def deploymentImage = docker.build("helm", "-f Dockerfile .")
+                    deploymentImage.inside("-u root") {
+                        sh "helm dependency update server/"
+                        def parallelStagesMap = [:]
+                        charts.eachWithIndex { item, index ->
+                            parallelStagesMap["${index}"] = helm.generateStage(index, item)
+                        }
+                        parallel parallelStagesMap
+                    }
                 }
             }
         }
-        stage("generateStages") {
+        stage("Creating K3s Cluster") {
             steps {
                 script {
-                    dir("deployments") {
-                        Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
-                        def gitCommits = sh(script: "git log --pretty=format:'%h' -n 1", returnStdout: true).trim().split("\\r?\\n")
-                        for (commit in gitCommits) {
-                            log.info "commit: ${commit}"
-                        }
-                        for (file in Global.CHANGED_FILES) {
-                            log.info "file: ${file}"
-                        }
-                    }
-                    def sortChangedFiles = deployments.sortChangedFiles(Global.CHANGED_FILES)
-                    Global.CHANGED_CF_FILES = sortChangedFiles["CHANGED_CF_FILES"]
-                    Global.CHANGED_MANIFESTS_FILES = sortChangedFiles["CHANGED_MANIFESTS_FILES"]
-                    Global.SORTED_CHANGED_FILES = sortChangedFiles["SORTED_CHANGED_FILES"]
+                    orchestrator.install()
                 }
             }
         }
-        stage("run parallel stages") {
-            parallel {
-                stage('Cloudformation') {
-                    when {
-                        allOf {
-                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
-                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
-                        }
-                    }
-                    steps {
-                        script {
-                            log.info "Starting to test Cloudformation yamls"
-
-                            def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation .")
-                            deploymentImage.inside("-u root") {
-                                log.info "Installing aqaua-deployment  python package"
-                                sh """
-                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
-                                pip install aqua-deployment
-                                """
-                                log.info "Finished to install aqaua-deployment python package"
-
-                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
-                                    ["${it.split("/")[-1]}": deployments.generateStage(it, "cloudformation")]
-                                }
-                                parallel parallelStagesMap
-
-                            }
-
-                        }
-                    }
+        stage("Installing Helm") {
+            steps {
+                script {
+                    helm.installHelm()
+                    helm.settingKubeConfig()
                 }
-                stage("Manifest") {
-                    when {
-                        allOf {
-                            not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
-                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
-                        }
-                    }
-                    steps {
-                        script {
-                            log.info "Starting to test Manifest yamls"
-                            def deploymentImage = docker.build("deployment-manifest-image", "-f Dockerfile-manifest .")
-                            deploymentImage.inside("-u root") {
-                                def parallelStagesMap = Global.CHANGED_MANIFESTS_FILES.collectEntries {
-                                    ["${it.split("/")[-1]}": deployments.generateStage(it, "manifest")]
-                                }
-                                parallel parallelStagesMap
-                            }
-                        }
-                    }
+            }
+        }
+        stage ("preparation") {
+            steps {
+                script {
+                    kubectl.createNamespace(namespace)
+                    kubectl.createDockerRegistrySecret("registry.aquasec.com", namespace)
                 }
-                stage('others') {
-                    when {
-                        allOf {
-                            not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
-                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
-                        }
-                    }
-                    steps {
-                        script {
-                            log.info "Starting to test SORTED_CHANGED_FILES"
-                            for (file in Global.SORTED_CHANGED_FILES) {
-                                log.info "file: ${file} was changed"
+            }
+        }
+        stage("Deploying Aqua Charts") {
+            steps {
+                parallel(
+                        server: {
+                            script {
+                                helm.install("server", namespace, registry, platform)
+                            }
+                        },
+                        enforcer: {
+                            script {
+                                helm.install("enforcer", namespace, registry, platform)
+                            }
+                        },
+                        "kube-enforcer": {
+                            script {
+                                helm.install("kube-enforcer", namespace, registry, platform)
+                            }
+                        },
+                        scanner: {
+                            script {
+                                helm.install("scanner", namespace, registry, platform)
                             }
                         }
+                )
+            }
+        }
+        stage("Validating Aqua Charts") {
+            steps {
+                script {
+                    helm.getPodsState(namespace)
+                    log.info "checking all pods are running or not"
+                    def bs = "kubectl get pods -n aqua  | awk '{print \$3}' |grep -v STATUS | grep -v Running"
+                    def status = sh (returnStatus:true ,script: bs)
+                    log.info "checking Server endpoint"
+                    helm.getScvStatus(namespace)
+                }
+            }
+        }
+        stage("Pushing Helm chart to dev repo") {
+            steps {
+                script {
+                    docker.image('alpine:latest').inside("-u root") {
+                        helm.pushPreparation()
+                        def parallelStagesMap = [:]
+                        charts.each {chart ->
+                            parallelStagesMap[chart] = {
+                                stage(chart) {
+                                    helm.push(chart)
+                                }
+                            }
+                        }
+                        parallel parallelStagesMap
                     }
                 }
             }
@@ -134,6 +136,8 @@ pipeline {
     post {
         always {
             script {
+                orchestrator.uninstall()
+                echo "k3s & server chart uninstalled"
                 cleanWs()
 //                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
             }
