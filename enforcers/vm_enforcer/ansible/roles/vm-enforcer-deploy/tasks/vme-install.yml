@@ -75,7 +75,27 @@
         - audit
         - tmp
         - data
-
+- name: set tls certificates values
+  block:
+    - name: create ssl directory
+      file: 
+        path: "{{ INSTALL_PATH }}/aquasec/ssl"
+        state: directory  
+    - name: copy rootCA to  /opt/aquasec/ssl
+      template:
+        src: "{{ item }}"
+        dest: /opt/aquasec/ssl
+      with_items:
+        - "{{ AQUA_ROOT_CA }}"
+      when: AQUA_ROOT_CA != None 
+    - name: copy certs to  /opt/aquasec/ssl
+      template:
+        src: "{{ item }}"
+        dest: /opt/aquasec/ssl
+      with_items:
+        - "{{ AQUA_PUBLIC_KEY }}"
+        - "{{ AQUA_PRIVATE_KEY }}"
+      when: AQUA_PUBLIC_KEY != None and AQUA_PRIVATE_KEY != None
     - name: Create enforcer runc directory
       file:
         path: "{{ ENFORCER_RUNC_FS_DIRECTORY }}"
@@ -117,14 +137,14 @@
 
     - name: Download App
       get_url:
-        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_MAJOR_VERSION }}/{{ ENFORCER_RUNC_TAR_FILE_NAME }}"
+        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_TAR_FILE_NAME }}"
         dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
         username: "{{ USERNAME }}"
         password: "{{ PASSWORD }}"
 
     - name: Download config templates
       get_url:
-        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_MAJOR_VERSION }}/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }}"
+        url:  "{{ ENFORCER_DOWNLOAD_BASEURL }}/{{ ENFORCER_VERSION }}/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }}"
         dest: "{{ INSTALL_PATH }}/aquasec/tmp/"
         username: "{{ USERNAME }}"
         password: "{{ PASSWORD }}"
@@ -133,7 +153,7 @@
   block:
     - name: Creating enforcer runc config file
       shell: |
-        jq ".process.env = [\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"HOSTNAME={{ ansible_hostname }}\",\"TERM=xterm\",\"AQUA_PRODUCT_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_INSTALL_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_MODE=SERVICE\",\"RESTART_CONTAINERS=no\",\"AQUA_LOGICAL_NAME=Default\",\"AQUA_SERVER={{ GATEWAY_ENDPOINT }}\",\"AQUA_TOKEN={{ TOKEN }}\",\"AQUA_TLS_VERIFY={{ AQUA_TLS_VERIFY }}\",\"LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"]" {{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }} > {{ ENFORCER_RUNC_DIRECTORY }}/{{ ENFORCER_RUNC_CONFIG_FILE_NAME }}
+        jq ".process.env = [\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"HOSTNAME={{ ansible_hostname }}\",\"TERM=xterm\",\"AQUA_PRODUCT_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_INSTALL_PATH={{ INSTALL_PATH }}/aquasec\",\"AQUA_MODE=SERVICE\",\"RESTART_CONTAINERS=no\",\"AQUA_LOGICAL_NAME=Default\",\"AQUA_SERVER={{ GATEWAY_ENDPOINT }}\",\"AQUA_TOKEN={{ TOKEN }}\",\"AQUA_TLS_VERIFY={{ AQUA_TLS_VERIFY }}\",\"AQUA_ROOT_CA={{ AQUA_ROOT_CA_PATH }}\",\"AQUA_PUBLIC_KEY={{ AQUA_PUBLIC_KEY_PATH }}\",\"AQUA_PRIVATE_KEY={{ AQUA_PRIVATE_KEY_PATH }}\",\"LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"]" {{ INSTALL_PATH }}/aquasec/tmp/{{ ENFORCER_RUNC_CONFIG_TEMPLATE }} > {{ ENFORCER_RUNC_DIRECTORY }}/{{ ENFORCER_RUNC_CONFIG_FILE_NAME }}
 
     - name: templating runc script and enforcer systemd
       replace:
