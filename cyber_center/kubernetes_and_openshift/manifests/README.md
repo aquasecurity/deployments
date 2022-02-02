@@ -7,7 +7,7 @@ This repository shows the manifest yaml files required to deploy the Aqua CyberC
 * OpenShift
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Offline CyberCenter](https://docs.aquasec.com/v6.5/docs/deploy-offline-cybercenter) for detailed information.
+Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Offline CyberCenter](https://docs.aquasec.com/v6.2/docs/deploy-offline-cybercenter) for detailed information.
 
 ## Specific OpenShift notes
 The deployment commands shown below use the **kubectl** cli. You can also deploy using the **oc** cli commands, to work on all platforms including OpenShift.
@@ -16,7 +16,7 @@ The deployment commands shown below use the **kubectl** cli. You can also deploy
 * Your Aqua credentials: username and password
 * Your Aqua Enterprise License Token
 
-It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide).
+It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/v6.2/docs/sizing-guide).
 
 ## Considerations
 
@@ -29,8 +29,8 @@ The CyberCenter image is added in the [CyberCenter deploy yaml file](./002_cyber
 
 ### mTLS
 
-* **mTLS with server:** To configure the CyberCenter with mTLS (mutual TLS) to have secure communication with server, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Server](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-server).
-* ***(Optional)* mTLS with scanner:** If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure the offline CyberCenter with mTLS to have secure communication with scanner, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-scanner).
+* **mTLS with Server:** To configure the CyberCenter with mTLS (mutual TLS) to have secure communication with Server, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Server](https://docs.aquasec.com/v6.2/docs/configure-mtls-between-the-offline-cybercenter-and-server).
+* ***(Optional)* mTLS with scanner:** If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure the offline CyberCenter with mTLS to have secure communication with Scanner, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/v6.2/docs/configure-mtls-between-the-offline-cybercenter-and-scanner).
 
 ## Pre-deployment
 
@@ -66,4 +66,4 @@ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.2/
 ```
 
 ## Post-deployment
-After the offline CyberCenter is deployed successfully, you must disable **Fast Scanning** from Aqua UI to scan artifacts successfully. For more information on disabling this option, refer to [Configure Scan Options](https://docs.aquasec.com/v6.5/docs/configure-scan-options#section-configure-scan-options).
+After the offline CyberCenter is deployed successfully, you must disable **Fast Scanning** from Aqua UI to scan artifacts successfully. For more information on disabling this option, refer to [Configure Scan Options](https://docs.aquasec.com/v6.2/docs/configure-scan-options#section-configure-scan-options).
