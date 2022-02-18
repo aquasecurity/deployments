@@ -120,7 +120,7 @@ If you have an existing PostgreSQL database and want to use the same for aqua de
 
 ==== Deployment
 
-image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaFargate-noneSSL.yaml]
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/AquaFargate-nonSSL.yaml]
 
 If you want to deploy Aqua Enterprise without SSL certificate, use the CloudFormation template `aquaFargate-nonSSL.yaml` from this directory, in the CLI shown above.
 
