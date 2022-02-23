@@ -34,12 +34,14 @@ spec:
           image: registry.aquasec.com/kube-enforcer:6.5
           imagePullPolicy: Always
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /healthz
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /readyz
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
