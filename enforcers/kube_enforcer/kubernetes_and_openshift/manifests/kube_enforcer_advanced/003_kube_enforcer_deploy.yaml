@@ -70,6 +70,10 @@ spec:
               value: "true"
             - name: AQUA_LOGICAL_NAME
               value: ""
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name  
           volumeMounts:
             - name: "certs"
               mountPath: "/certs"
