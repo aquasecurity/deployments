@@ -88,6 +88,13 @@ Step 1-2 are required only if you are deploying the KubeEnforcer in a new cluste
     https://raw.githubusercontent.com/aquasecurity/deployments/6.2/orchestrators/kubernetes/manifests/aqua_csp_009_enforcer/kube_enforcer_advanced/002_kube_enforcer_secrets.yaml
     ```
 
+***Note: For KubeEnforcer deployment in OpenShift environments***
+  * Prior to deployment of the KubeEnforcer, copy and run these commands:
+      ```shell
+      oc adm policy add-cluster-role-to-user cluster-reader system:serviceaccount:aqua:aqua-kube-enforcer-sa
+      oc adm policy add-scc-to-user privileged system:serviceaccount:aqua:aqua-kube-enforcer-sa
+      ```
+
 5. **Create the KubeEnforcer deployment**
 
    ```shell
