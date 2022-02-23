@@ -132,6 +132,9 @@ rules:
   - apiGroups: ["*"]
     resources: ["pods"]
     verbs: ["create", "delete"]
+  - apiGroups: ["*"]
+    resources: ["leases"]
+    verbs: ["get", "list", "create", "update"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
