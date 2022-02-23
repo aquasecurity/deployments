@@ -29,7 +29,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:6.5
+          image: registry.aquasec.com/kube-enforcer:master
           imagePullPolicy: Always
           ports:
             - containerPort: 8449
@@ -70,6 +70,10 @@ spec:
               value: "true"
             - name: AQUA_LOGICAL_NAME
               value: ""
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name  
           volumeMounts:
             - name: "certs"
               mountPath: "/certs"
@@ -78,7 +82,7 @@ spec:
           #  - name: aqua-grpc-kube-enforcer
           #    mountPath: /opt/aquasec/ssl
         - name: envoy
-          image: registry.aquasec.com/envoy:6.5
+          image: registry.aquasec.com/envoy:develop
           env:
           - name: ENVOY_UID
             value: "0"
