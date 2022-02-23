@@ -76,6 +76,9 @@ rules:
   - apiGroups: ["*"]
     resources: ["configmaps"]
     verbs: ["get", "list", "watch", "update", "create"]
+  - apiGroups: ["*"]
+    resources: ["leases"]
+    verbs: ["get", "list", "create", "update"]
   - apiGroups:
       - "*"
     resources:
