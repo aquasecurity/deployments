@@ -31,6 +31,16 @@ spec:
         - name: kube-enforcer
           image: registry.aquasec.com/kube-enforcer:master
           imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
           ports:
             - containerPort: 8449
             - containerPort: 8442
