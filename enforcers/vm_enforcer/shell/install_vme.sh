@@ -104,7 +104,7 @@ prerequisites_check() {
 
 is_flag_value_valid() {
   [ -z "$2" ] && error_message "Value is missing. please set $1 [value]"
-  flags=("-v" "--version" "-u" "--aqua-username" "-p" "--aqua-password" "-t" "--token" "-g" "--gateway" "-f" "--tar-file" "-c" "--config-file" "-i" "--install-path")
+  flags=("-v" "--version" "-u" "--aqua-username" "-p" "--aqua-password" "-t" "--token" "-g" "--gateway" "-d" "--download" "-f" "--tar-file" "-c" "--config-file" "-i" "--install-path")
   for flag in "${flags[@]}"; do
     if [ "${flag}" == "$2" ]; then
       error_message "Value is missing. please set $1 [value]"
@@ -227,7 +227,7 @@ setup_sh_env() {
     INSTALL_PATH="/opt"
   fi
   if [ -z "${DOWNLOAD_MODE}" ]; then
-    DOWNLOAD_MODE=false
+    DOWNLOAD_MODE=true
   fi
   if [ -z "${AQUA_TLS_VERIFY}" ]; then
     AQUA_TLS_VERIFY=false
@@ -325,7 +325,9 @@ bootstrap_args_sh() {
       shift
       ;;
     -d | --download)
-      DOWNLOAD_MODE=true
+      is_flag_value_valid "-d|--download" $2
+      DOWNLOAD_MODE=$2
+      shift
       shift
       ;;
     -tls | --aqua-tls-verify)

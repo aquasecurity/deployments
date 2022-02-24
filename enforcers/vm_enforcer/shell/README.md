@@ -15,7 +15,7 @@ Deploying VM Enforcer in the online mode can download the archive file from aqua
 **Execute the following command to run and install VM Enforcer**
 Switch to the root user and run:
 ```shell
-  curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/shell/install_vme.sh | ENFORCER_VERSION=<value> GATEWAY_ENDPOINT=<value> TOKEN=<value> DOWNLOAD_MODE=<value> AQUA_USERNAME=<value> AQUA_PWD=<value> bash
+  curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/shell/install_vme.sh | ENFORCER_VERSION=<value> GATEWAY_ENDPOINT=<value> TOKEN=<value> AQUA_USERNAME=<value> AQUA_PWD=<value> bash
 ```
 
 
@@ -76,6 +76,7 @@ Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in 
   -v, --version  string         Aqua Enforcer version
   -g, --gateway  string         Aqua Gateway address
   -t, --token    string         Aqua Enforcer token
+  -d, --download bool           Download Aqua Host Enforcer ( default value = true)
 
   TLS verify Flag (Optional):
   -tls, --aqua-tls-verify aqua_tls_verify
