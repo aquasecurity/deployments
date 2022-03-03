@@ -70,7 +70,7 @@ spec:
             - name: AQUA_KE_SERVER_PORT
               value: "8442"
             - name: CLUSTER_NAME
-              value: "aqua-secure"   # Cluster display name in aqua enterprise.
+              value: "Default-cluster-name"   # Cluster display name in aqua enterprise.
             - name: AQUA_ENVOY_MODE
               value: "true"
             # Enable KA policy scanning via starboard
