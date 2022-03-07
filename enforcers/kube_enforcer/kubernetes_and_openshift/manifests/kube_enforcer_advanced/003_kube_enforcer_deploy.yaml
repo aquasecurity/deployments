@@ -31,6 +31,16 @@ spec:
         - name: kube-enforcer
           image: registry.aquasec.com/kube-enforcer:master
           imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
           ports:
             - containerPort: 8449
             - containerPort: 8442
@@ -60,7 +70,7 @@ spec:
             - name: AQUA_KE_SERVER_PORT
               value: "8442"
             - name: CLUSTER_NAME
-              value: "aqua-secure"   # Cluster display name in aqua enterprise.
+              value: "Default-cluster-name"   # Cluster display name in aqua enterprise.
             - name: AQUA_ENVOY_MODE
               value: "true"
             # Enable KA policy scanning via starboard

@@ -169,7 +169,7 @@ data:
   AQUA_TLS_PORT: "8443"
   AQUA_LOGICAL_NAME: ""
   # Cluster display name in aqua enterprise.
-  CLUSTER_NAME: "aqua-secure"
+  CLUSTER_NAME: "Default-cluster-name"
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
