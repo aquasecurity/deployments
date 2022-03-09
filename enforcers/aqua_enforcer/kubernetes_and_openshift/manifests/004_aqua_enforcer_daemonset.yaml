@@ -3,6 +3,7 @@ kind: DaemonSet
 metadata:
   labels:
     app: aqua-agent
+    aqua.component: enforcer
   name: aqua-agent
   namespace: aqua
 spec:
@@ -13,6 +14,7 @@ spec:
     metadata:
       labels:
         app: aqua-agent
+        aqua.component: enforcer
       name: aqua-agent
       namespace: aqua
       annotations:

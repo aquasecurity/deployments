@@ -23,6 +23,8 @@ kind: Deployment
 metadata:
   name: envoy
   namespace: aqua
+  labels:
+    aqua.component: envoy
 spec:
   replicas: 1
   selector:
@@ -31,6 +33,7 @@ spec:
   template:
     metadata:
       labels:
+        aqua.component: enהםט
         app: envoy
     spec:
       serviceAccount: aqua-sa
