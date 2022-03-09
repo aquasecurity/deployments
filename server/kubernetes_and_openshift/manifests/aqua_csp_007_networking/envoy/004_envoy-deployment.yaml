@@ -33,7 +33,7 @@ spec:
   template:
     metadata:
       labels:
-        aqua.component: enהםט
+        aqua.component: envoy
         app: envoy
     spec:
       serviceAccount: aqua-sa
