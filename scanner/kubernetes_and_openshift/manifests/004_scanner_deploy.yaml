@@ -18,12 +18,14 @@ metadata:
   namespace: aqua
   labels:
     app: aqua-scanner
+    aqua.component: scanner
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: aqua-scanner
+        aqua.component: scanner
     spec:
       serviceAccountName: aqua-sa
       securityContext:

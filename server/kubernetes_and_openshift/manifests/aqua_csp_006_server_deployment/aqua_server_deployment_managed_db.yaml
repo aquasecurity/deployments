@@ -5,6 +5,7 @@ metadata:
   namespace: aqua
   labels:
     app: aqua-web
+    aqua.component: server
 spec:
   replicas: 1
   selector:
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: aqua-web
+        aqua.component: server
       name: aqua-web
     spec:
       securityContext:
@@ -92,6 +94,7 @@ kind: Deployment
 metadata:
   labels:
     app: aqua-gateway
+    aqua.component: gateway
   name: aqua-gateway
   namespace: aqua
 spec:
@@ -103,6 +106,7 @@ spec:
     metadata:
       labels:
         app: aqua-gateway
+        aqua.component: gateway
       name: aqua-gateway
     spec:
       securityContext:
