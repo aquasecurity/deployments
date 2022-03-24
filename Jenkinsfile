@@ -66,7 +66,7 @@ pipeline {
                     when {
                         allOf {
                             not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
-                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                            expression { return deployments.runCloudFormation(CHANGE_TARGET) }
                         }
                     }
                     steps {
@@ -96,7 +96,7 @@ pipeline {
                     when {
                         allOf {
                             not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
-                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                            expression { return deployments.runCloudFormation(CHANGE_TARGET) }
                         }
                     }
                     steps {
@@ -116,7 +116,7 @@ pipeline {
                     when {
                         allOf {
                             not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
-                            expression { return CHANGE_TARGET.toDouble() >= 6.5 }
+                            expression { return deployments.runCloudFormation(CHANGE_TARGET) }
                         }
                     }
                     steps {
