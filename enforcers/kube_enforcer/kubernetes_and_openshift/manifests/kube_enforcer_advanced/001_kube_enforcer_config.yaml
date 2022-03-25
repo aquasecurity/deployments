@@ -75,7 +75,7 @@ rules:
     verbs: ["get", "list", "watch"]
   - apiGroups: [ "*" ]
     resources: [ "secrets" ]
-    verbs: [ "get", "list", "watch", "update", "create" ]
+    verbs: [ "get", "list", "watch", "update", "create" , "delete" ]
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
@@ -623,7 +623,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.13.0
+          image: docker.io/aquasec/starboard-operator:0.14.1
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
