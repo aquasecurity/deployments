@@ -60,7 +60,6 @@ spec:
         - containerPort: 8096
           protocol: TCP
         name: aqua-agent
-        resources: {}
         securityContext:
           privileged: false
           capabilities:
