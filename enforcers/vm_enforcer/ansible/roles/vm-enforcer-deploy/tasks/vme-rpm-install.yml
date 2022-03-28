@@ -7,6 +7,28 @@
     - "/etc/conf"
     - "{{ INSTALL_PATH }}/aquasec/tmp/"
 
+- name: set tls certificates values
+  block:
+    - name: create ssl directory
+      file: 
+        path: "{{ INSTALL_PATH }}/aquasec/ssl"
+        state: directory  
+    - name: copy rootCA to  /opt/aquasec/ssl
+      template:
+        src: "{{ item }}"
+        dest: /opt/aquasec/ssl
+      with_items:
+        - "{{ AQUA_ROOT_CA }}"
+      when: AQUA_ROOT_CA != None 
+    - name: copy certs to  /opt/aquasec/ssl
+      template:
+        src: "{{ item }}"
+        dest: /opt/aquasec/ssl
+      with_items:
+        - "{{ AQUA_PUBLIC_KEY }}"
+        - "{{ AQUA_PRIVATE_KEY }}"
+      when: AQUA_PUBLIC_KEY != None and AQUA_PRIVATE_KEY != None      
+
 - name: copying config /etc/conf/
   template:
     src: aquasec.j2
