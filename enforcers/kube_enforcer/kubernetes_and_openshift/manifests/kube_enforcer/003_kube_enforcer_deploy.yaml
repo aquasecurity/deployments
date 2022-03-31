@@ -17,12 +17,14 @@ metadata:
   namespace: aqua
   labels:
     app: aqua-kube-enforcer
+    aqua.component: kubeenforcer
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: aqua-kube-enforcer
+        aqua.component: kubeenforcer
     spec:
       securityContext:
         runAsUser: 11431
@@ -34,12 +36,14 @@ spec:
           image: registry.aquasec.com/kube-enforcer:6.5
           imagePullPolicy: Always
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /healthz
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /readyz
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
