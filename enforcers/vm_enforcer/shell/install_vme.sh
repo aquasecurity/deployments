@@ -16,7 +16,12 @@ Download Mode Flags (Optional):
     -u, --aqua-username string	Aqua username
     -p, --aqua-password string	Aqua password
 TLS verify Flag (Optional):
-    -tls, --aqua-tls-verify aqua_tls_verify
+    -tls, --aqua-tls-verify  aqua_tls_verify
+    --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+    NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
+    --publiccert-file             path to Client public certififate
+    --privatekey-file             path to Client private key  
+
 EOF
 
 }
@@ -49,6 +54,17 @@ load_config_from_env() {
     echo "Info: AQUA_TLS_VERIFY var is missing, Setting it to 'false'"
     AQUA_TLS_VERIFY=false
   fi
+  if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]; then
+    echo "Info: AQUA_ROOT_CA, AQUA_PUBLIC_KEY, AQUA_PRIVATE_KEY  var is missing, Setting it to blank "
+    AQUA_ROOT_CA=""
+    AQUA_PUBLIC_KEY=""
+    AQUA_PRIVATE_KEY=""
+  fi
+  if ([ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -n "${AQUA_PRIVATE_KEY_PATH}" ]) || ([ -n "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]); then
+    echo "tls options values missing, required options: --publiccert-file <value> --privatekey-file <value>  --aqua-tls-verify <value>, incase of self-signed certificates  --rootca-file <value> is required "
+    usage
+    exit
+  fi    
   if [ "${DOWNLOAD_MODE}" == "true" ]; then
     if [ -z "${AQUA_USERNAME}" ] || [ -z "${AQUA_PWD}" ]; then
       usage
@@ -104,7 +120,7 @@ prerequisites_check() {
 
 is_flag_value_valid() {
   [ -z "$2" ] && error_message "Value is missing. please set $1 [value]"
-  flags=("-v" "--version" "-u" "--aqua-username" "-p" "--aqua-password" "-t" "--token" "-g" "--gateway" "-d" "--download" "-f" "--tar-file" "-c" "--config-file" "-i" "--install-path")
+  flags=("-v" "--version" "-u" "--aqua-username" "-p" "--aqua-password" "-t" "--token" "-g" "--gateway" "-tls" "--aqua-tls-verify" "--rootca-file" "--publiccert-file" "--privatekey-file" "-f" "--tar-file" "-c" "--config-file" "-i" "--install-path")
   for flag in "${flags[@]}"; do
     if [ "${flag}" == "$2" ]; then
       error_message "Value is missing. please set $1 [value]"
@@ -179,9 +195,12 @@ edit_templates_sh() {
 		s|AQUA_PRODUCT_PATH=.*\"|AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\"|;
 		s|AQUA_INSTALL_PATH=.*\"|AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\"|;
 		s|AQUA_SERVER=.*\"|AQUA_SERVER=${GATEWAY_ENDPOINT}\"|;
-		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${TOKEN}\"|;
-		s|AQUA_TLS_VERIFY=.*\"|AQUA_TLS_VERIFY=${AQUA_TLS_VERIFY}\"|;
-		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"|" ${ENFORCER_RUNC_CONFIG_TEMPLATE} >${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
+		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${TOKEN}\"|;    
+		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\"|;
+  	s|AQUA_TLS_VERIFY=.*\"|AQUA_TLS_VERIFY=${AQUA_TLS_VERIFY}\"|;
+    s|AQUA_ROOT_CA=.*\"|AQUA_ROOT_CA=${AQUA_ROOT_CA}\"|;
+    s|AQUA_PUBLIC_KEY=.*\"|AQUA_PUBLIC_KEY=${AQUA_PUBLIC_KEY}\"|;
+    s|AQUA_PRIVATE_KEY=.*\"|AQUA_PRIVATE_KEY=${AQUA_PRIVATE_KEY}\",\"AQUA_ENFORCER_TYPE=host\"|" ${ENFORCER_RUNC_CONFIG_TEMPLATE} >${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
 
   echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} file."
   sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${RUN_SCRIPT_TEMPLATE_FILE_NAME} >${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} && chmod +x ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME}
@@ -232,6 +251,12 @@ setup_sh_env() {
   if [ -z "${AQUA_TLS_VERIFY}" ]; then
     AQUA_TLS_VERIFY=false
   fi
+  if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]; then
+    echo "Info: AQUA_ROOT_CA, AQUA_PUBLIC_KEY, AQUA_PRIVATE_KEY  var is missing, Setting it to blank "
+    AQUA_ROOT_CA=""
+    AQUA_PUBLIC_KEY=""
+    AQUA_PRIVATE_KEY=""
+  fi  
 
   ENFORCER_RUNC_DIRECTORY="${INSTALL_PATH}/aqua-runc"
   ENFORCER_RUNC_FS_DIRECTORY="${ENFORCER_RUNC_DIRECTORY}/aqua-enforcer"
@@ -257,6 +282,14 @@ create_folder_sh() {
   mkdir ${INSTALL_PATH}/aquasec/audit 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/tmp 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/data 2>/dev/null
+  mkdir ${INSTALL_PATH}/aquasec/ssl 2>/dev/null
+  if [ -n "${AQUA_ROOT_CA_PATH}" ] && [ -e "${AQUA_ROOT_CA_PATH}" ]; then
+    cp ${AQUA_ROOT_CA_PATH} /opt/aquasec/ssl
+  fi  
+  if [ -n "${AQUA_PUBLIC_KEY_PATH}" ] && [ -n "${AQUA_PRIVATE_KEY_PATH}" ]; then
+    cp ${AQUA_PUBLIC_KEY_PATH} /opt/aquasec/ssl
+    cp ${AQUA_PRIVATE_KEY_PATH} /opt/aquasec/ssl
+  fi   
   rm -f /opt/aquasec/tmp/aquasec.log && touch /opt/aquasec/tmp/aquasec.log
   mkdir -p ${ENFORCER_RUNC_FS_DIRECTORY} 2>/dev/null
 }
@@ -324,16 +357,40 @@ bootstrap_args_sh() {
       shift
       shift
       ;;
-    -d | --download)
-      is_flag_value_valid "-d|--download" $2
-      DOWNLOAD_MODE=$2
-      shift
-      shift
-      ;;
     -tls | --aqua-tls-verify)
-      AQUA_TLS_VERIFY=true
+      is_flag_value_valid "-tls|--aqua-tls-verify" "$2"
+      AQUA_TLS_VERIFY=$2
+      echo $AQUA_TLS_VERIFY "------------"
       shift
       ;;
+    --rootca-file)
+      is_flag_value_valid "--rootca-file" "$2"
+      AQUA_ROOT_CA_PATH="$2"
+      ROOT_CA_FILENAME=$(basename "$2")
+      AQUA_ROOT_CA="/opt/aquasec/ssl/$ROOT_CA_FILENAME"
+      shift
+      shift
+      ;;
+    --publiccert-file)
+      is_flag_value_valid "--publiccert-file" "$2"
+      AQUA_PUBLIC_KEY_PATH="$2"
+      PUBLIC_KEY_FILENAME=$(basename "$2")
+      AQUA_PUBLIC_KEY="/opt/aquasec/ssl/$PUBLIC_KEY_FILENAME"  
+      shift
+      shift
+      ;;
+    --privatekey-file)
+      is_flag_value_valid "--privatekey-file" "$2"
+      AQUA_PRIVATE_KEY_PATH="$2"
+      PRIVATE_KEY_FILENAME=$(basename "$2")
+      AQUA_PRIVATE_KEY="/opt/aquasec/ssl/$PRIVATE_KEY_FILENAME"  
+      shift
+      shift
+      ;;            
+    -d | --download)
+      DOWNLOAD_MODE=true
+      shift
+      ;;                 
     -f | --tar-file)
       is_flag_value_valid "-f|--tar-file" "$2"
       TAR_FILE="$2"

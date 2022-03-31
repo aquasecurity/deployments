@@ -34,6 +34,11 @@ Switch to the root user and run:
   AQUA_TLS_VERIFY (Optional):
 
   AQUA_TLS_VERIFY   bool           default value = false
+  -tls, --aqua-tls-verify aqua_tls_verify
+  --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+  NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
+  --publiccert-file              path to Client public certififate
+  --privatekey-file             path to Client private key  
 ```
 
 ### Offline mode
@@ -80,6 +85,17 @@ Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in 
 
   TLS verify Flag (Optional):
   -tls, --aqua-tls-verify aqua_tls_verify
+  --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+  NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
+  --publiccert-file             path to Client public certififate
+  --privatekey-file             path to Client private key   
+```
+
+**Syntax: Deploy VM Enforcer with TLS enabled**
+
+```shell
+  sudo ./install_vme.sh --version <version> -u <username> -p <password> --token <vm_enforcer_token> --gateway <dns/ip:port> --rootca-file <rootca_path> --publiccert-file <client_cert_path> --privatekey-file <client_key_path> --aqua-tls-verify true
+
 ```
 
 ## Uninstall

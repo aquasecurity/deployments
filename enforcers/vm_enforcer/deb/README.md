@@ -53,13 +53,21 @@ sudo touch /etc/conf/aquavmenforcer.json
    * `GATEWAY_HOSTNAME` and `PORT`: Aqua Gateway host/IP address and port
    * `TOKEN_VALUE`: Enforcer group token
    * `AQUA_TLS_VERIFY_VALUE`: *(Optional)* false\true. Set up the enforcer with tls-verify optionally. This configuration is **MANDATORY** for aqua **cloud** users, by setting up with value `true`.
+   * If `AQUA_TLS_VERIFY_VALUE` value is `true` below values are **MANDATORY** :
+   * `ROOT_CA_PATH`: path to root CA certififate (Incase of self-signed certificate otherwise `ROOT_CA_PATH` is **OPTIONAL** )
+   [NOTE]: ROOT_CA_PATH certificate value must be same as that is used to generate Gateway certificates
+   * `PUBLIC_KEY_PATH`: path to Client public certififate
+   * `PRIVATE_KEY_PATH`: path to Client private key   
    
    ```shell
    sudo tee /etc/conf/aquavmenforcer.json << EOF
    {
        "AQUA_GATEWAY": "{GATEWAY_HOSTNAME}:{PORT}",
        "AQUA_TOKEN": "{TOKEN_VALUE}",
-       "AQUA_TLS_VERIFY": {AQUA_TLS_VERIFY_VALUE}
+       "AQUA_TLS_VERIFY": {AQUA_TLS_VERIFY_VALUE},
+       "AQUA_ROOT_CA": "{ROOT_CA_PATH}",
+       "AQUA_PUBLIC_KEY": "{PUBLIC_KEY_PATH}",
+       "AQUA_PRIVATE_KEY": "{PRIVATE_KEY_PATH}"       
    }
    EOF
    ```
@@ -67,7 +75,7 @@ sudo touch /etc/conf/aquavmenforcer.json
 **Step 5. Deploy the DEB package.**
 
 ```shell
-sudo dpkg -i /path/to/aqua-vm-enforcer-{version}.{arch}.deb
+sudo dpkg -i /path/to/aqua-vm-enforcer-{version}.{amd64}.deb
 ```
 
 ## Upgrade
@@ -78,7 +86,7 @@ To upgrade VM Enforcer using the DEB package:
 2. Upgrade VM Enforcer.
 
 ```shell
-sudo dpkg -i /path/to/aqua-vm-enforcer-<version>.<arch>.deb
+sudo dpkg -i /path/to/aqua-vm-enforcer-<version>.<amd64>.deb
 ```
 
 ## Troubleshooting
