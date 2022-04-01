@@ -12,31 +12,33 @@ Deployment of VM Enforcer is supported by two modes as explained below.
 
 Deploying VM Enforcer in the online mode can download the archive file from aqua and stores in the current directory automatically. Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer.
 
-**Step 1. Clone Aqua VM Enforcer shell repo.**
-
+**Execute the following command to run and install VM Enforcer**
+Switch to the root user and run:
 ```shell
-  git clone --branch 6.5 https://github.com/aquasecurity/deployments.git
-  cd deployments/enforcers/vm_enforcer/shell/
-  chmod +x ./install_vme.sh
+  curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/shell/install_vme.sh | ENFORCER_VERSION=<value> GATEWAY_ENDPOINT=<value> TOKEN=<value> AQUA_USERNAME=<value> AQUA_PWD=<value> bash
 ```
 
-**Step 2. Execute the following shell script to deploy VM Enforcer.**
+
+**Variables description**
 
 ```shell
-  sudo ./install_vme.sh [flags]
 
-  Flags:
-  -v, --version  string         Aqua Enforcer version
-  -g, --gateway  string         Aqua Gateway address
-  -t, --token    string         Aqua Enforcer token
+  ENFORCER_VERSION  string         Aqua Enforcer version
+  GATEWAY_ENDPOINT  string         Aqua Gateway address
+  TOKEN             string         Aqua Enforcer token
 
-  -d, --download	              download artifacts from aquasec
-  -u, --aqua-username  string	  Aqua username
-  -p, --aqua-password  string	  Aqua password
+  DOWNLOAD_MODE     bool	         download artifacts from aquasec default value = true
+  AQUA_USERNAME     string	       Aqua username
+  AQUA_PWD          string	       Aqua password
 
-  TLS verify Flag (Optional):
+  AQUA_TLS_VERIFY (Optional):
 
+  AQUA_TLS_VERIFY   bool           default value = false
   -tls, --aqua-tls-verify aqua_tls_verify
+  --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+  NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
+  --publiccert-file              path to Client public certififate
+  --privatekey-file             path to Client private key  
 ```
 
 ### Offline mode
@@ -79,15 +81,25 @@ Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in 
   -v, --version  string         Aqua Enforcer version
   -g, --gateway  string         Aqua Gateway address
   -t, --token    string         Aqua Enforcer token
+  -d, --download bool           Download Aqua Host Enforcer ( default value = true)
 
   TLS verify Flag (Optional):
   -tls, --aqua-tls-verify aqua_tls_verify
+  --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+  NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
+  --publiccert-file             path to Client public certififate
+  --privatekey-file             path to Client private key   
+```
+
+**Syntax: Deploy VM Enforcer with TLS enabled**
+
+```shell
+  sudo ./install_vme.sh --version <version> -u <username> -p <password> --token <vm_enforcer_token> --gateway <dns/ip:port> --rootca-file <rootca_path> --publiccert-file <client_cert_path> --privatekey-file <client_key_path> --aqua-tls-verify true
+
 ```
 
 ## Uninstall
 
 ```
-curl -s -o uninstall_vme.sh https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/shell/uninstall_vme.sh
-chmod +x ./uninstall_vme.sh
-sudo ./uninstall_vme.sh
+curl -s https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/vm_enforcer/shell/uninstall_vme.sh | bash
 ```

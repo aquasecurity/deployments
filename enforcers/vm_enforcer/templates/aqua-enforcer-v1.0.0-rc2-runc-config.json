@@ -25,8 +25,11 @@
       "AQUA_LOGICAL_NAME=Default",
       "AQUA_SERVER=",
       "AQUA_TOKEN=",
-      "LD_LIBRARY_PATH=/opt/aquasec",
-      "AQUA_TLS_VERIFY=false"
+      "AQUA_TLS_VERIFY=true",
+      "AQUA_ROOT_CA=/opt/aquasec/ssl/rootCA.crt",
+      "AQUA_PUBLIC_KEY=/opt/aquasec/ssl/aqua_enforcer.crt",
+      "AQUA_PRIVATE_KEY=/opt/aquasec/ssl/aqua_enforcer.key",      
+      "LD_LIBRARY_PATH=/opt/aquasec"
     ],
     "cwd": "/opt/aquasec",
     "capabilities": ["CAP_LINUX_IMMUTABLE",
@@ -99,6 +102,15 @@
       "source": "/opt/aquasec",
       "type": "bind"
     },
+    {
+      "destination": "/opt/aquasec/ssl",
+      "options": [
+        "rbind",
+        "rprivate"
+      ],
+      "source": "/opt/aquasec/ssl",
+      "type": "bind"
+    },     
     {
       "destination": "/host/etc",
       "options": [
