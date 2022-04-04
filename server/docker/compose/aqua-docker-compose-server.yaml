@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   aqua-db:
-    image: registry.aquasec.com/database:6.5
+    image: registry.aquasec.com/database:2022.4.13
     ports:
       - "5432:5432"
     container_name: aquadb
@@ -11,7 +11,7 @@ services:
       -  /var/lib/aqua-db/data:/var/lib/postgresql/data 
         
   aqua-web:
-    image: registry.aquasec.com/console:6.5
+    image: registry.aquasec.com/console:2022.4.13
     ports:
       - "8080:8080"
       - "443:8443"
@@ -22,7 +22,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock 
     
   aqua-gateway: 
-    image: registry.aquasec.com/gateway:6.5
+    image: registry.aquasec.com/gateway:2022.4.13
     ports: 
       - "3622:3622"
       - "8443:8443"

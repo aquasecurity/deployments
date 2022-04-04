@@ -18,7 +18,7 @@ Flag and parameter type              | Values                                   
 | ---------------------- | ------------------------------------------------------------ |
 | -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, iks, openshift, tkgi, rancher**    |
 | * -v or --version
-(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **6.5** |
+(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **2022.4** |
 | -r or --registry (string) | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com** |
 | --pull-policy (string) | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent** |
 | --service-account (string) | Kubernetes service account name, it defaults to **aqua-sa** |
@@ -59,7 +59,7 @@ Flag and type              | Values                                             
 ### Usage example 
 
 ```SHELL
-aquactl download all --platform eks --version 6.5
+aquactl download all --platform eks --version 2022.4
 ```
 
 After the manifests are created, follow the instructions that appear on the console to perform the actual deployment.

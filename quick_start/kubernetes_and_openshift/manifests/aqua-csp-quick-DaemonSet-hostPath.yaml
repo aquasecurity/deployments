@@ -267,6 +267,7 @@ kind: Deployment
 metadata:
   labels:
     app: aqua-db
+    aqua.component: database
     deployedby: aqua-yaml
   name: aqua-db
   namespace: aqua
@@ -286,7 +287,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-db
-        image: registry.aquasec.com/database:6.5
+        image: registry.aquasec.com/database:2022.4.13
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -344,6 +345,7 @@ kind: Deployment
 metadata:
   labels:
     app: aqua-audit-db
+    aqua.component: database-audit
     deployedby: aqua-yaml
   name: aqua-audit-db
   namespace: aqua
@@ -363,7 +365,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-audit-db
-        image: registry.aquasec.com/database:6.5
+        image: registry.aquasec.com/database:2022.4.13
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
@@ -429,6 +431,7 @@ metadata:
   namespace: aqua
   labels:
     app: aqua-web
+    aqua.component: server
 spec:
   replicas: 1
   selector:
@@ -448,7 +451,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.5
+        image: registry.aquasec.com/console:2022.4.13
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -530,6 +533,7 @@ kind: Deployment
 metadata:
   labels:
     app: aqua-gateway
+    aqua.component: gateway
   name: aqua-gateway
   namespace: aqua
 spec:
@@ -551,7 +555,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.5
+        image: registry.aquasec.com/gateway:2022.4.13
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -604,6 +608,7 @@ kind: DaemonSet
 metadata:
   labels:
     app: aqua-agent
+    aqua.component: enforcer
   name: aqua-agent
   namespace: aqua
 spec:
@@ -633,7 +638,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:6.5
+        image: registry.aquasec.com/enforcer:2022.4.13
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

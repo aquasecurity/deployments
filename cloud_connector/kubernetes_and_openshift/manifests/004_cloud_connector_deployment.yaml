@@ -37,7 +37,7 @@ spec:
           value: ""
         - name: AQUA_TLS_VERIFY
           value: "1"       
-        image: registry.aquasec.com/aqua-cloud-connector:6.5.RC1 
+        image: registry.aquasec.com/aqua-cloud-connector:2022.4.13
         imagePullPolicy: Always 
         name: aqua-cloud-connector 
         terminationMessagePath: /dev/termination-log 
