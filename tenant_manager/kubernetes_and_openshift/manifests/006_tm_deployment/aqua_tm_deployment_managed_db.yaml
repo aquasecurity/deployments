@@ -41,7 +41,7 @@ spec:
         fsGroup: 11433
       containers:
       - name: aqua-tenantmanager
-        image: registry.aquasec.com/tenantmanager:6.5
+        image: registry.aquasec.com/tenantmanager:2022.4.13
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

@@ -225,6 +225,7 @@ metadata:
   namespace: aqua
   labels:
     app: aqua-audit-db
+    aqua.component: database-audit
     deployedby: aqua-yaml
 spec:
   replicas: 1
@@ -240,7 +241,7 @@ spec:
     spec:
       containers:
         - name: aqua-audit-db
-          image: registry.aquasec.com/database:6.5
+          image: registry.aquasec.com/database:2022.4.13
           ports:
             - name: aqua-audit-db
               containerPort: 5432
@@ -298,6 +299,7 @@ kind: Service
 metadata:
   labels:
     app: aqua-db
+    aqua.component: database
     deployedby: aqua-yaml
   name: aqua-db
   namespace: aqua
@@ -330,7 +332,7 @@ spec:
     spec:
       containers:
         - name: aqua-db
-          image: registry.aquasec.com/database:6.5
+          image: registry.aquasec.com/database:2022.4.13
           ports:
             - name: aqua-db
               containerPort: 5432
@@ -411,6 +413,7 @@ metadata:
   namespace: aqua
   labels:
     app: aqua-web
+    aqua.component: server
 spec:
   replicas: 1
   selector:
@@ -430,7 +433,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:6.5
+        image: registry.aquasec.com/console:2022.4.13
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -512,6 +515,7 @@ kind: Deployment
 metadata:
   labels:
     app: aqua-gateway
+    aqua.component: gateway
   name: aqua-gateway
   namespace: aqua
 spec:
@@ -533,7 +537,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:6.5
+        image: registry.aquasec.com/gateway:2022.4.13
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -687,7 +691,7 @@ rules:
     verbs: ["get", "list", "watch"]
   - apiGroups: [ "*" ]
     resources: [ "secrets" ]
-    verbs: [ "get", "list", "watch", "update", "create" ]
+    verbs: [ "get", "list", "watch", "update", "create", "delete" ]
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
@@ -740,7 +744,12 @@ rules:
     verbs: ["get", "list", "watch"]
   - apiGroups: ["*"]
     resources: ["jobs"]
+  - apiGroups: ["*"]
+    resources: ["pods"]
     verbs: ["create", "delete"]
+  - apiGroups: ["*"]
+    resources: ["leases"]
+    verbs: ["get", "list", "create", "update"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -775,7 +784,7 @@ data:
   AQUA_TLS_PORT: "8443"
   AQUA_LOGICAL_NAME: ""
   # Cluster display name in aqua enterprise.
-  CLUSTER_NAME: "aqua-secure"
+  CLUSTER_NAME: "Default-cluster-name"
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
@@ -915,7 +924,7 @@ metadata:
   name: starboard-conftest-config
   namespace: aqua
 data:
-  conftest.imageRef: registry.aquasec.com/kube-enforcer:6.5
+  conftest.imageRef: registry.aquasec.com/kube-enforcer:2022.4.13
   conftest.resources.requests.cpu: 1m
   conftest.resources.requests.memory: 10M
   conftest.resources.limits.cpu: 15m
@@ -1076,7 +1085,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.13.0
+          image: docker.io/aquasec/starboard-operator:0.14.1
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -1149,6 +1158,7 @@ metadata:
   namespace: aqua
   labels:
     app: aqua-kube-enforcer
+    aqua.component: kubeenforcer
 spec:
   replicas: 1
   template:
@@ -1163,15 +1173,17 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:6.5
+          image: registry.aquasec.com/kube-enforcer:2022.4.13
           imagePullPolicy: Always
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /healthz
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /readyz
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
@@ -1186,6 +1198,10 @@ spec:
                 secretKeyRef:
                   name: aqua-kube-enforcer-token
                   key: token
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           envFrom:
           - configMapRef:
               name: aqua-csp-kube-enforcer
@@ -1212,6 +1228,7 @@ kind: DaemonSet
 metadata:
   labels:
     app: aqua-agent
+    aqua.component: enforcer
   name: aqua-agent
   namespace: aqua
 spec:
@@ -1241,7 +1258,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:6.5
+        image: registry.aquasec.com/enforcer:2022.4.13
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

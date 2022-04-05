@@ -61,7 +61,7 @@ kubectl create secret docker-registry aqua-registry \
 **Step 3. Create a service account (if not already done).**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/001_scanner_serviceAccount.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/scanner/kubernetes_and_openshift/manifests/001_scanner_serviceAccount.yaml
 ```
 
 ## Deploy Scanner using manifests
@@ -69,19 +69,19 @@ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/
 **Step 1. Create secrets manually or download, edit, and apply the secrets.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/002_scanner_secrets.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/scanner/kubernetes_and_openshift/manifests/002_scanner_secrets.yaml
 ```
 
 **Step 2. Create Configmap manually or download, edit, and apply the configmap by adding `AQUA_SERVER`.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/003_scanner_configmap.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/scanner/kubernetes_and_openshift/manifests/003_scanner_configmap.yaml
 ```
 
 **Step 2. Deploy Aqua Scanner.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/scanner/kubernetes_and_openshift/manifests/004_scanner_deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/scanner/kubernetes_and_openshift/manifests/004_scanner_deploy.yaml
 ```
 
 ### (Optional) External storage for image scans data (PVC)
@@ -109,7 +109,7 @@ Flag and parameter type              | Values                                   
 | ---------------------- | ------------------------------------------------------------ |
 | -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, icp, openshift, tkg, tkgi**    |
 | * -v or --version
-(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **6.5** |
+(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **2022.4** |
 | -r or --registry (string) | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com** |
 | --pull-policy (string) | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent** |
 | --service-account (string) | Kubernetes service account name, it defaults to **aqua-sa** |
@@ -129,6 +129,6 @@ After the manifests are created, follow the instructions that appear on the cons
 ### Usage example 
 
 ```SHELL
-aquactl download scanner --platform gke --version 6.5 \
+aquactl download scanner --platform gke --version 2022.4 \
 --server-url 215.150.97.228:443 --output-dir aqua-scan-files
 ```

@@ -56,13 +56,13 @@ kubectl create secret docker-registry aqua-registry \
 **Step 3. Create a service account (if not already done).**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cyber_center/kubernetes_and_openshift/manifests/001_cybercenter_serviceAccount.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/cyber_center/kubernetes_and_openshift/manifests/001_cybercenter_serviceAccount.yaml
 ```
 
 ## Deploy the CyberCenter using manifests
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/cyber_center/kubernetes_and_openshift/manifests/002_cybercenter_deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/cyber_center/kubernetes_and_openshift/manifests/002_cybercenter_deploy.yaml
 ```
 
 ## Post-deployment

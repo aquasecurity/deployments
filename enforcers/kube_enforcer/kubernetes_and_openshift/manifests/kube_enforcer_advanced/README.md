@@ -70,11 +70,11 @@ You can skip any step in this section, if you have already performed.
         
       1. Generate certs for aqua namespace.
         ```shell
-        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash
+        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash
         ```
       2. Generate certs for custom namespace, Replace the `<namespace name>` in the below command with the namespace where KE is going to be deployed, and run the command.
         ```shell
-        curl https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash -s -- <namespace name>
+        curl https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash -s -- <namespace name>
         ```
 
    - **Option B (Manual)**: Perform the steps mentioned in the [Deploy the KubeEnforcer Config manually](#deploy-the-kubeenforcer-config-manually) section.
@@ -98,7 +98,7 @@ kubectl create secret generic aqua-kube-enforcer-certs --from-file server.key --
 * Download, edit, and apply the secrets manifest file to create the token and SSL cert secrets.
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/002_kube_enforcer_secrets.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/002_kube_enforcer_secrets.yaml
 ```
 
 ***Note: For KubeEnforcer deployment in OpenShift environments***
@@ -111,7 +111,7 @@ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/
 **Step 3. Deploy KubeEnforcer advanced**
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/003_kube_enforcer_deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/003_kube_enforcer_deploy.yaml
 ```
 
 ### Deploy the KubeEnforcer Config manually
@@ -146,7 +146,7 @@ Flag and parameter type              | Values                                   
 | ---------------------- | ------------------------------------------------------------ |
 | -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, icp, openshift, tkg, tkgi**    |
 | -v or --version
-(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **6.5** |
+(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **2022.4** |
 | -r or --registry (string) | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com** |
 | --pull-policy (string) | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent** |
 | --service-account (string) | Kubernetes service account name, it defaults to **aqua-sa** |
@@ -169,7 +169,7 @@ After the manifests are created, follow the instructions that appear on the cons
 ### Usage example 
 
 ```SHELL
-aquactl download kube-enforcer --advanced-configuration --platform gke --version 6.5 \
+aquactl download kube-enforcer --advanced-configuration --platform gke --version 2022.4 \
 --token <KUBE_ENFORCER_GROUP_TOKEN> \
 --gateway-url 221.252.82.95:8443 --output-dir aqua-kube-enforcer-files
 ```

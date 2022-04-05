@@ -101,7 +101,7 @@ EOF
 }
 
 _prepare_ke() {
-    if `curl https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"`; then
+    if `curl https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"`; then
         _rootCA=`cat rootCA.crt | base64 | tr -d '\n' | tr -d '\r'`
         if `sed -i'.original' "s/caBundle:/caBundle\:\ $_rootCA/g" 001_kube_enforcer_config.yaml`; then
             printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
