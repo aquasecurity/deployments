@@ -246,7 +246,7 @@ setup_sh_env() {
     INSTALL_PATH="/opt"
   fi
   if [ -z "${DOWNLOAD_MODE}" ]; then
-    DOWNLOAD_MODE=false
+    DOWNLOAD_MODE=true
   fi
   if [ -z "${AQUA_TLS_VERIFY}" ]; then
     AQUA_TLS_VERIFY=false
