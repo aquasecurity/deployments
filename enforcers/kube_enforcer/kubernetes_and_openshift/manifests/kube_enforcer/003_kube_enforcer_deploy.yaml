@@ -33,7 +33,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:2022.4.13
+          image: registry.aquasec.com/kube-enforcer:2022.4.23preview
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
