@@ -2,7 +2,7 @@
 
 The quick-start deployment can be used to deploy Aqua Self-Hosted Enterprise on your Kubernetes cluster quickly and easily. It is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test but not for production environments.
 
-For production usage, enterprise-grade deployments, advanced use cases, and deployment on other Kubernetes platforms, deploy Aqua Enterprise with the required Aqua components (such as server, enforcers, scanner, so on.) on your orchestration platform. For more information, refer to the Product documentation, [Deploy Aqua Enterprise](https://docs.aquasec.com/docs/deployment-overview).
+For production usage, enterprise-grade deployments, advanced use cases, and deployment on other Kubernetes platforms, deploy Aqua Enterprise with the required Aqua components (such as server, enforcers, scanner, so on.) on your orchestration platform. For more information, refer to the Product documentation, [Deploy Aqua Enterprise](https://docs.aquasec.com/v6.5/docs/deployment-overview).
 
 The quick-start deployment supports the following Kubernetes platforms:
 * Kubernetes
@@ -12,7 +12,7 @@ The quick-start deployment supports the following Kubernetes platforms:
 
 Deployment commands shown in this file uses **kubectl** cli, however they can easliy be replaced with the **oc** cli commands.
 
-Before you start using the quick-start deployment method documented in this reposiory, Aqua strongly recommends you to refer the product documentation, [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/docs/quick-start-guide-for-kubernetes).
+Before you start using the quick-start deployment method documented in this reposiory, Aqua strongly recommends you to refer the product documentation, [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/v6.5/docs/quick-start-guide-for-kubernetes).
 
 ## Prerequisites
 * Your Aqua credentials: username and password

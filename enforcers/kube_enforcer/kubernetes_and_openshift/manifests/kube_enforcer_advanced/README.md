@@ -13,7 +13,7 @@ Starboard assesses workload compliance throughout the lifecycle of the workloads
 * Re-evaluate workload compliance during workload runtime, taking any workload and policy changes into account
 * Reflect the results of compliance evaluation in the Aqua UI at all times, not only when workloads are created
 
-Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua KubeEnforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers#section-advanced-deployment-for-pod-enforcer-injection) for detailed information.
+Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua KubeEnforcer(s)](https://docs.aquasec.com/v6.5/docs/deploy-k8s-aqua-kubeenforcers#section-advanced-deployment-for-pod-enforcer-injection) for detailed information.
 
 ### Advanced Deployment (for Pod Enforcer injection)
 
@@ -31,13 +31,13 @@ The deployment commands shown below use the **kubectl** cli, however they can be
 - A PEM-encoded CA bundle to validate the KubeEnforcer certificate
 - A PEM-encoded SSL cert to configure the KubeEnforcer
 
-It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide).
+It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/v6.5/docs/sizing-guide).
 
 ## Considerations
 
 Consider the following options for deploying the KubeEnforcer:
 
-- **PEM-encoded CA bundle and SSL certs**: Use the [gen_ke_certs.sh script](./gen_ke_certs.sh) to generate the required CA bundle, SSL certificates, and deploy the KubeEnforcer config. To generate CA bundle and SSL certificates manually, refer to the product documentation, [Configure mTLS](https://docs.aquasec.com/docs/configure-mtls).
+- **PEM-encoded CA bundle and SSL certs**: Use the [gen_ke_certs.sh script](./gen_ke_certs.sh) to generate the required CA bundle, SSL certificates, and deploy the KubeEnforcer config. To generate CA bundle and SSL certificates manually, refer to the product documentation, [Configure mTLS](https://docs.aquasec.com/v6.5/docs/configure-mtls).
 
 - **Mutual Auth / Custom SSL certs**: Prepare the SSL cert for the domain you choose to configure for the Aqua Server. You should modify the manifest deployment files with the mounts to the SSL secrets files.
 

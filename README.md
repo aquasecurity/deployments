@@ -49,4 +49,4 @@ You can deploy the mentioned Aqua components using one of the following methods:
 
 Each Aqua component can be deployed through a selection of the methods above, as listed in component's directory itself.
 
-Before you start using the deployment methods in this repository, Aqua strongly recommends you to refer the [Product documentation on Deployments](https://docs.aquasec.com/docs/deployment-overview).
+Before you start using the deployment methods in this repository, Aqua strongly recommends you to refer the [Product documentation on Deployments](https://docs.aquasec.com/v6.5/docs/deployment-overview).

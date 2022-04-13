@@ -29,6 +29,6 @@ Server includes the following components:
 
 ## References
 Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends you to refer the following product documentation:
-* [Deploy Server Components](https://docs.aquasec.com/docs/deploy-k8s-server-components) 
-* [Kubernetes with Helm Charts](https://docs.aquasec.com/docs/kubernetes-with-helm)
-* [Deploy Aqua on Amazon Elastic Container Service (ECS)](https://docs.aquasec.com/docs/amazon-elastic-container-service-ecs#section-step-1-deploy-the-aqua-server-gateway-and-database).
+* [Deploy Server Components](https://docs.aquasec.com/v6.5/docs/deploy-k8s-server-components) 
+* [Kubernetes with Helm Charts](https://docs.aquasec.com/v6.5/docs/kubernetes-with-helm)
+* [Deploy Aqua on Amazon Elastic Container Service (ECS)](https://docs.aquasec.com/v6.5/docs/amazon-elastic-container-service-ecs#section-step-1-deploy-the-aqua-server-gateway-and-database).
