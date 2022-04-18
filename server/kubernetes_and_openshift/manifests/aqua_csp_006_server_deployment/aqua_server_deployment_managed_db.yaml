@@ -26,7 +26,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:2022.4.13
+        image: registry.aquasec.com/console:2022.4.23preview
         imagePullPolicy: IfNotPresent
 #        resources:
 #          limits:
@@ -117,7 +117,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:2022.4.13
+        image: registry.aquasec.com/gateway:2022.4.23preview
         imagePullPolicy: IfNotPresent
 #        resources:
 #          limits:

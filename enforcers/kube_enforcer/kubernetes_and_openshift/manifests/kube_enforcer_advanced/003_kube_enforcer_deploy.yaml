@@ -21,7 +21,7 @@ metadata:
     app: aqua-kube-enforcer
     aqua.component: kubeenforcer
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -31,7 +31,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:2022.4.13
+          image: registry.aquasec.com/kube-enforcer:2022.4.23preview
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -94,7 +94,7 @@ spec:
           #  - name: aqua-grpc-kube-enforcer
           #    mountPath: /opt/aquasec/ssl
         - name: envoy
-          image: registry.aquasec.com/envoy:2022.4.13
+          image: registry.aquasec.com/envoy:2022.4.23preview
           env:
           - name: ENVOY_UID
             value: "0"
