@@ -28,5 +28,5 @@ KubeEnforcers are supported on Linux platforms (with exception of VMware Tanzu T
 ## References
 
 Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends you to refer the following product documentation:
-* [Deploy Kube Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers).
-* [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-kube-enforcers).
+* [Deploy Kube Enforcer(s)](https://docs.aquasec.com/v6.5/docs/deploy-k8s-aqua-kubeenforcers).
+* [Enforcers Overview](https://docs.aquasec.com/v6.5/docs/enforcers-overview#section-kube-enforcers).

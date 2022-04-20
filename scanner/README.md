@@ -25,5 +25,5 @@ Aqua scanner performs scanning of the following objects for security issues:
 
 ## References
 Before you start using any method to deploy Aqua scanner, Aqua strongly recommends you to refer the Product documentation:
-* [Deploy Scanner(s)](https://docs.aquasec.com/docs/deploy-k8s-scanners)
-* [Kubernetes with Helm Charts](https://docs.aquasec.com/docs/kubernetes-with-helm#section-step-2-deploy-the-aqua-server-database-gateway-and-scanner).
+* [Deploy Scanner(s)](https://docs.aquasec.com/v6.5/docs/deploy-k8s-scanners)
+* [Kubernetes with Helm Charts](https://docs.aquasec.com/v6.5/docs/kubernetes-with-helm#section-step-2-deploy-the-aqua-server-database-gateway-and-scanner).

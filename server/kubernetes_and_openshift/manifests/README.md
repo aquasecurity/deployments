@@ -14,7 +14,7 @@ This repository shows all the directories and manifest yaml files required to de
 * OpenShift 
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Server Components](https://docs.aquasec.com/docs/deploy-k8s-server-components).
+Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Server Components](https://docs.aquasec.com/v6.5/docs/deploy-k8s-server-components).
 
 ## Specific OpenShift notes
 The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
@@ -25,21 +25,21 @@ The deployment commands shown below use the **kubectl** cli, however they can be
 * Access to the target Kubernetes cluster with RBAC authorization
 * The cluster should have a default storage and load-balancer controller. If your cluster does not have these, you should edit the YAML files to configure them as required.
 
-It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide).
+It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/v6.5/docs/sizing-guide).
 ## Considerations
 Before you start deploying Aqua server, you may perform the following configurations, as required.
 ### Packaged or external managed database
 Aqua Enterprise offers packaged PostgreSQL database container. For large environments and enterprise companies with advanced requirements, Aqua recommends to use an external managed PostgreSQL database by following the deployment steps below.
 ### HTTPS for the Aqua Server
-To configure an HTTPS (secure) channel, refer to [Configure HTTPS for the Aqua Server](https://docs.aquasec.com/docs/deploy-k8s-configure-https-for-the-aqua-server).
+To configure an HTTPS (secure) channel, refer to [Configure HTTPS for the Aqua Server](https://docs.aquasec.com/v6.5/docs/deploy-k8s-configure-https-for-the-aqua-server).
 ### Active-active Server mode
-To configure Active-active Server mode for high availability of Aqua Enterprise, refer to the product documentation, [Deploy Aqua in Active-Active Server Mode](https://docs.aquasec.com/docs/deploy-k8s-aqua-in-active-active-server-mode).
+To configure Active-active Server mode for high availability of Aqua Enterprise, refer to the product documentation, [Deploy Aqua in Active-Active Server Mode](https://docs.aquasec.com/v6.5/docs/deploy-k8s-aqua-in-active-active-server-mode).
 ### mTLS
-To configure mTLS (mutual TLS) instead of the default TLS between server and other Aqua components, refer to the product documentation, [Configure mTLS](https://docs.aquasec.com/docs/configure-mtls).
+To configure mTLS (mutual TLS) instead of the default TLS between server and other Aqua components, refer to the product documentation, [Configure mTLS](https://docs.aquasec.com/v6.5/docs/configure-mtls).
 ### Run the Server behind a reverse proxy
-The Aqua Server container (deployed from the image registry.aquasec.com/console) can be run behind a reverse proxy server such as Apache, NGINX, or HAProxy. To configure this, refer to the product documentation, [Run the Server behind a reverse proxy](https://docs.aquasec.com/docs/aqua-server-recommendations#section-run-the-server-behind-a-reverse-proxy).
+The Aqua Server container (deployed from the image registry.aquasec.com/console) can be run behind a reverse proxy server such as Apache, NGINX, or HAProxy. To configure this, refer to the product documentation, [Run the Server behind a reverse proxy](https://docs.aquasec.com/v6.5/docs/aqua-server-recommendations#section-run-the-server-behind-a-reverse-proxy).
 ### Ingress resource
-For large environments with more than 500 nodes, you should define a gRPC-supported Ingress to act as a load balancer for multiple Aqua Gateways. To configure this, refer to the product documentation, [Advanced Deployment Architecture](https://docs.aquasec.com/docs/advanced-deployment-architecture).
+For large environments with more than 500 nodes, you should define a gRPC-supported Ingress to act as a load balancer for multiple Aqua Gateways. To configure this, refer to the product documentation, [Advanced Deployment Architecture](https://docs.aquasec.com/v6.5/docs/advanced-deployment-architecture).
 ## Supported platforms
 | < PLATFORM >              | Description                                                  |
 | ---------------------- | ------------------------------------------------------------ |
@@ -102,7 +102,7 @@ You can skip any of the steps if you have already performed.
    kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/server/kubernetes_and_openshift/manifests/aqua_csp_005_storage/aqua_db_pvc.yaml
    ```
 
-For large and complex deployments, refer to the product documentation, [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide) and [Aqua Packaged DB Operational Guide](https://docs.aquasec.com/docs/aqua-packaged-db-operational-guide#section-configure-the-db-environment-size-recommended).
+For large and complex deployments, refer to the product documentation, [Sizing Guide](https://docs.aquasec.com/v6.5/docs/sizing-guide) and [Aqua Packaged DB Operational Guide](https://docs.aquasec.com/v6.5/docs/aqua-packaged-db-operational-guide#section-configure-the-db-environment-size-recommended).
 
 **Step 4. Deploy Aqua server.**
 

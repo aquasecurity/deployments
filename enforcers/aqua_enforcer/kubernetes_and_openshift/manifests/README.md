@@ -7,7 +7,7 @@ This repository shows the manifest yaml files required to deploy Aqua Enforcer o
 * OpenShift 
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers) for detailed information.
+Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/v6.5/docs/deploy-k8s-aqua-enforcers) for detailed information.
 
 ### Specific OpenShift notes
 The deployment commands shown below, use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
@@ -19,7 +19,7 @@ The deployment commands shown below, use the **kubectl** cli, however they can b
 - The target Enforcer Group token 
 - Access to the target Aqua gateway 
 
-It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide).
+It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/v6.5/docs/sizing-guide).
 
 ## Considerations
 
