@@ -80,8 +80,8 @@ is_it_rhel() {
   if [ $? -eq 0 ]; then
     echo "Info: This is RHEL 8 system. Going to download and apply SELinux policy module"
     echo "Info: Downloading SELinux policy module"
-    wget -q https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.te
-    wget -q https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.pp
+    curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.te
+    curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.pp
     if [ ! -f "${ENFORCER_SELINUX_POLICY_FILE_NAME}" ]; then
       error_message "Unable to locate ${ENFORCER_SELINUX_POLICY_FILE_NAME} on current directory"
     fi
