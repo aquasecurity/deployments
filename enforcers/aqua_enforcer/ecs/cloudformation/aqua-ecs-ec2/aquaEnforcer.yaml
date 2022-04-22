@@ -131,7 +131,7 @@ Resources:
               Privileged: !Ref Taskprivileged
               LinuxParameters:
                 Capabilities:
-                  ADD:
+                  Add:
                     - SYS_ADMIN
                     - NET_ADMIN
                     - NET_RAW
