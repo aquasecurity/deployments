@@ -932,7 +932,7 @@ Resources:
       DeleteAutomatedBackups: False
       DeletionProtection: False
       Engine: postgres
-      EngineVersion: 11.9
+      EngineVersion: 11.15
       MasterUsername: !Join ['', ['{{resolve:secretsmanager:', !Ref SecretU, ':SecretString}}' ]]
       MasterUserPassword: !Join ['', ['{{resolve:secretsmanager:', !Ref SecretP, ':SecretString}}' ]]
       MultiAZ: !Ref MultiAzDatabase
@@ -957,7 +957,7 @@ Resources:
       DeleteAutomatedBackups: False
       DeletionProtection: False
       Engine: postgres
-      EngineVersion: 11.9
+      EngineVersion: 11.15
       MasterUsername: !Join ['', ['{{resolve:secretsmanager:', !Ref SecretU, ':SecretString}}' ]]
       MasterUserPassword: !Join ['', ['{{resolve:secretsmanager:', !Ref SecretP, ':SecretString}}' ]]
       MultiAZ: !Ref MultiAzDatabase
