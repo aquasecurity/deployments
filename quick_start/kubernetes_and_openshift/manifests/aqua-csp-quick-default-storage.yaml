@@ -744,6 +744,7 @@ rules:
     verbs: ["get", "list", "watch"]
   - apiGroups: ["*"]
     resources: ["jobs"]
+    verbs: ["create", "delete"]
   - apiGroups: ["*"]
     resources: ["pods"]
     verbs: ["create", "delete"]
