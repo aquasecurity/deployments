@@ -5,6 +5,12 @@
 
 You can deploy VM Enforcer on your execution VM using the shell script provided by Aqua. This procedure is supported for the Linux platform only.
 
+## Prerequisites for RHEL8
+
+1) Selinux
+2) Selinux Policy Devel 
+    `sudo yum install setools-console selinux-policy-devel`
+    
 ## Deployment modes
 
 Deployment of VM Enforcer is supported by two modes as explained below.
