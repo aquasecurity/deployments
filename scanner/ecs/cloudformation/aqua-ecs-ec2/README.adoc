@@ -1,5 +1,5 @@
 :version: 2022.4
-:imageVersion: 2022.4.46
+:imageVersion: 2022.4
 
 = Deploy Aqua Scanner on AWS ECS Cluster
 

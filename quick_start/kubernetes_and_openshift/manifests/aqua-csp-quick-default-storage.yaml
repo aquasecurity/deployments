@@ -241,7 +241,7 @@ spec:
     spec:
       containers:
         - name: aqua-audit-db
-          image: registry.aquasec.com/database:2022.4.46
+          image: registry.aquasec.com/database:2022.4
           ports:
             - name: aqua-audit-db
               containerPort: 5432
@@ -332,7 +332,7 @@ spec:
     spec:
       containers:
         - name: aqua-db
-          image: registry.aquasec.com/database:2022.4.46
+          image: registry.aquasec.com/database:2022.4
           ports:
             - name: aqua-db
               containerPort: 5432
@@ -433,7 +433,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: registry.aquasec.com/console:2022.4.46
+        image: registry.aquasec.com/console:2022.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -537,7 +537,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: registry.aquasec.com/gateway:2022.4.46
+        image: registry.aquasec.com/gateway:2022.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -924,7 +924,7 @@ metadata:
   name: starboard-conftest-config
   namespace: aqua
 data:
-  conftest.imageRef: registry.aquasec.com/kube-enforcer:2022.4.46
+  conftest.imageRef: registry.aquasec.com/kube-enforcer:2022.4
   conftest.resources.requests.cpu: 1m
   conftest.resources.requests.memory: 10M
   conftest.resources.limits.cpu: 15m
@@ -1173,7 +1173,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:2022.4.46
+          image: registry.aquasec.com/kube-enforcer:2022.4
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -1258,7 +1258,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:2022.4.46
+        image: registry.aquasec.com/enforcer:2022.4
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

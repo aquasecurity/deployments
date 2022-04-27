@@ -308,7 +308,7 @@ metadata:
   name: starboard-conftest-config
   namespace: aqua
 data:
-  conftest.imageRef: registry.aquasec.com/kube-enforcer:2022.4.46
+  conftest.imageRef: registry.aquasec.com/kube-enforcer:2022.4
   conftest.resources.requests.cpu: 1m
   conftest.resources.requests.memory: 10M
   conftest.resources.limits.cpu: 15m
