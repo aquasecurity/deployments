@@ -35,7 +35,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: registry.aquasec.com/enforcer:2022.4.13
+        image: registry.aquasec.com/enforcer:2022.4.46
         imagePullPolicy: Always
 #        resources:
 #          limits:
