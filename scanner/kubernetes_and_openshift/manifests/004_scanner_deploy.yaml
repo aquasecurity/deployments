@@ -34,7 +34,7 @@ spec:
         fsGroup: 11433
       containers:
         - name: kube-scanner
-          image: registry.aquasec.com/scanner:2022.4.13
+          image: registry.aquasec.com/scanner:2022.4
           imagePullPolicy: Always
 #          resources:
 #            limits:

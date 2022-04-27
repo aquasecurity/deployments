@@ -1,5 +1,5 @@
-:version: 6.5
-:imageVersion: 6.5
+:version: 2022.4
+:imageVersion: 2022.4
 
 = Deploy Server on AWS ECS Cluster
 

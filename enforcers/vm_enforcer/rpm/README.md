@@ -128,7 +128,7 @@ To Build an RPM package for VM-Enforcer:
 
 ```shell
 export RPM_ARCH=x86_64 #change to arm64 for arm based systems
-export RPM_VERSION=6.5.0 #mention version for VM Enforcer
+export RPM_VERSION=2022.4 #mention version for VM Enforcer
 ```
 
 5. Download NFPM (RPM Package Creator).
