@@ -183,7 +183,7 @@ Resources:
    Properties:
      Length: 5
      ServiceToken: !GetAtt RandomStringLambdaFunction.Arn
-  # ECS Cluster
+  # ECS Cluster#
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:

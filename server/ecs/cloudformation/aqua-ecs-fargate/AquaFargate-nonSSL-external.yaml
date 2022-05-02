@@ -182,7 +182,7 @@ Resources:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: !Join ["-", [!Ref ClusterName, !GetAtt RandomString.RandomString]]
-  # Aqua Console
+  # #Aqua Console
   AquaConsoleLB:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
     DependsOn:

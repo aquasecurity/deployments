@@ -566,7 +566,7 @@ spec:
       #   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
       #     name: aquasec-ssl
-      #     readOnly: true
+      # #    readOnly: true
       # volumes:
       # - name: aquasec-ssl
       #   secret:

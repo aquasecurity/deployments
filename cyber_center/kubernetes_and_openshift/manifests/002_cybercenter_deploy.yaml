@@ -65,4 +65,4 @@ spec:
 #          - key: aqua_cc.key
 #            path: cc.key
 #          - key: rootCA.crt
-#            path: ca.crt
+##            path: ca.crt

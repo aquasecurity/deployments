@@ -11,7 +11,7 @@
  Aqua components can be deployed on multiple platforms such as Kubernetes, AWS ECS, OpenShift, no-orchestrator, and more, using different deployment methods such as manifests, Helm, Operator, proprietary CLI tools, RPM, and scripts. Deployment resources for each Aqua component is listed in the respective directory.
 
 ### Aqua Enterprise SaaS edition deployment
-
+#
 Users working with Aqua Enterprise SaaS edition do not need to deploy Aqua server in their datacenter but only the relevant Enforcers to enable runtime protection. Following are the components that are available for Aqua SaaS users:
 * [Enforcers](./enforcers):  
   * **Aqua Enforcer**: containers and host protection

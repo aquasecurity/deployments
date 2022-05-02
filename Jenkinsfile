@@ -40,7 +40,7 @@ pipeline {
                 }
             }
         }
-        stage("generateStages") {
+        stage("Analyze Changes") {
             steps {
                 script {
                     dir("deployments") {
@@ -60,8 +60,7 @@ pipeline {
                 }
             }
         }
-        stage("run parallel stages") {
-            parallel {
+
                 stage('Cloudformation') {
                     when {
                         allOf {
@@ -112,7 +111,7 @@ pipeline {
                         }
                     }
                 }
-                stage('others') {
+                stage('Others') {
                     when {
                         allOf {
                             not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
@@ -127,8 +126,6 @@ pipeline {
                             }
                         }
                     }
-                }
-            }
         }
     }
     post {

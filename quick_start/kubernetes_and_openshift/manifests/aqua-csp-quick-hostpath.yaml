@@ -62,7 +62,7 @@ data:
   SCALOCK_AUDIT_DBNAME: "slk_audit"
   # Port of the Postgres Audit database.
   SCALOCK_AUDIT_DBPORT: "5432"
-  # Set the value of this variable to require to strictly require an SSL encrypted connection to the Postgres Audit database.
+  ## Set the value of this variable to require to strictly require an SSL encrypted connection to the Postgres Audit database.
   SCALOCK_AUDIT_DBSSL: "require"
   # Username for connection to the Postgres Audit database.
   SCALOCK_AUDIT_DBUSER: "postgres"
