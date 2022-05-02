@@ -19,7 +19,7 @@ Before you start using the quick-start deployment method documented in this repo
 * Your Aqua Enterprise License Token
 * Access to the target Kubernetes cluster
 
-## Configuration for Enforcers and storage
+### Configuration for Enforcers and storage
 
 Through the quick-start deployment method, Aqua Enforcer is deployed to provide runtime security for your Kubernetes workloads. In addition to Aqua Enforcer, KubeEnforcer can also be deployed. If your Kubernetes cluster has shared storage, Aqua can be deployed to use the same. If you use Minikube or your cluster does not have shared storage, Aqua can be deployed using the host path for persistent storage. 
 

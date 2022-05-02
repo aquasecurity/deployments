@@ -572,7 +572,7 @@ spec:
       #   secret:
       #     secretName: aqua-ssl
       #     items:
-      #     - key: aqua.crt
+      ##     - key: aqua.crt
       #       path: cert.pem
       #     - key: aqua.key
       #       path: key.pem

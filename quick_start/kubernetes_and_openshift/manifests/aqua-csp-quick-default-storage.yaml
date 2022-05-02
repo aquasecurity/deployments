@@ -577,7 +577,7 @@ spec:
       # - name: aqua-grpc-gateway
       #   secret:
       #     secretName: aqua-grpc-gateway
-      #     items:
+      ##     items:
       #     - key: aqua_gateway.crt
       #       path: cert.pem
       #     - key: aqua_gateway.key

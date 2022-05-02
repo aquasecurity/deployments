@@ -14,7 +14,7 @@ type: Opaque
 ---
 apiVersion: v1
 data:
-  ### Aqua database password. Defaults to "password". Please change the same if needed.
+  #### Aqua database password. Defaults to "password". Please change the same if needed.
   password: cGFzc3dvcmQK
 kind: Secret
 metadata:
