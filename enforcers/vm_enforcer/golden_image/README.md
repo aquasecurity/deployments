@@ -10,4 +10,4 @@ You can prepare a golden image for automated and easy deployment of VMs (hosts) 
 
 ### Deployment steps
 
-Refer to the [Product documentation](https://docs.aquasec.com/v6.5/docs/vm-enforcer-golden-image) for the complete description and instructions.
+Refer to the [Product documentation](https://docs.aquasec.com/v2022.4/docs/vm-enforcer-golden-image) for the complete description and instructions.

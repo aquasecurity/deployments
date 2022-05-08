@@ -57,7 +57,7 @@ kubectl create secret docker-registry aqua-registry \
 Deploy Aqua Enterprise using the required yaml file mentioned in the current directory as per your use case. For example:
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/quick_start/kubernetes_and_openshift/manifests/aqua-csp-quick-DaemonSet-hostPath.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/quick_start/kubernetes_and_openshift/manifests/aqua-csp-quick-DaemonSet-hostPath.yaml
 ```
 
 For more information on selecting the yaml file that you need, refer to the [Configuration of Enforcers and storage](#configuration-of-enforcers-and-storage) section.

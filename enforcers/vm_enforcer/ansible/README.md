@@ -17,7 +17,7 @@ You can deploy VM Enforcers, using an Ansible playbook, on the desired VM Enforc
 **Step 1. Download the Ansible playbook**
 
 ```shell
-git clone https://github.com/aquasecurity/deployments.git -b 6.5
+git clone https://github.com/aquasecurity/deployments.git -b 2022.4
 cd ./deployments/enforcers/vm_enforcer/ansible/
 ```
 

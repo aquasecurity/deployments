@@ -35,8 +35,7 @@ Following packages are required for installing VM Enforcer `.rpm` package:
       --ask-password
      ```
 
-Make sure to replace the `<release-number>` and `<build-number>` with the relevant versions (example: 6.5.0 and 6.5.21215).
-
+Make sure to replace the `<release-number>` and `<build-number>` with the relevant versions, check aqua release page [aqua update releases](https://docs.aquasec.com/docs/update-releases).
 
 **Step 2. Copy the downloaded RPM package onto the target VM(s).**
 
