@@ -711,6 +711,11 @@ Resources:
   LBLogsStoreBucket:
     Type: AWS::S3::Bucket
     Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: 'true'
+        BlockPublicPolicy: 'true'
+        IgnorePublicAcls: 'true'
+        RestrictPublicBuckets: 'true'
       AccessControl: Private
       BucketName: !GetAtt S3BucketName.OutputString
       BucketEncryption:
@@ -803,6 +808,7 @@ Resources:
       - RdsSecurityGroup
       - RdsInstanceSubnetGroup
     Properties:
+      PubliclyAccessible: 'false'
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
       VPCSecurityGroups:
@@ -828,6 +834,7 @@ Resources:
       - RdsSecurityGroup
       - RdsInstanceSubnetGroup
     Properties:
+      PubliclyAccessible: 'false'
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
       VPCSecurityGroups:
