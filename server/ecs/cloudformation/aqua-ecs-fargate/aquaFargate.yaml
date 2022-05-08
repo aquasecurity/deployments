@@ -819,7 +819,7 @@ Resources:
       - RdsSecurityGroup
       - RdsInstanceSubnetGroup
     Properties:
-      PubliclyAccessible: 'false'
+      #PubliclyAccessible: 'false'
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
       VPCSecurityGroups:
