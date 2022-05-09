@@ -22,8 +22,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('svc_team_1_aws_secret_access_key')
         AWS_REGION = "us-west-2"
         TRIVY_RUN_AS_PLUGIN = "aqua"
-        AQUA_KEY = credentials('deployments_trivy_api_key')
-        AQUA_SECRET = credentials('deployments_trivy_secret')
+        //AQUA_KEY = credentials('deployments_trivy_api_key')
+        //AQUA_SECRET = credentials('deployments_trivy_secret')
     }
     stages {
         stage("Checkout") {
@@ -72,22 +72,24 @@ pipeline {
                     }
                     steps {
                         script {
-                            log.info "Starting to test Cloudformation yamls"
+                            withCredentials([string(credentialsId: 'deployments_trivy_api_key', variable: 'AQUA_KEY')],[string(credentialsId: 'deployments_trivy_secret', variable: 'AQUA_SECRET')]) {
+                                log.info "Starting to test Cloudformation yamls"
 
-                            def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation --build-arg ENV_AQUA_KEY=${AQUA_KEY} --build-arg ENV_AQUA_SECRET=${AQUA_SECRET} .")
-                            deploymentImage.inside("-u root") {
-                                log.info "Installing aqaua-deployment  python package"
-                                sh """
-                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
-                                pip install aqua-deployment
-                                """
-                                log.info "Finished to install aqaua-deployment python package"
+                                def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation --build-arg AQUA_KEY=${AQUA_KEY} --build-arg AQUA_SECRET=${AQUA_SECRET} .")
+                                deploymentImage.inside("-u root") {
+                                    log.info "Installing aqaua-deployment  python package"
+                                    sh """
+                                    aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
+                                    pip install aqua-deployment
+                                    """
+                                    log.info "Finished to install aqaua-deployment python package"
 
-                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
-                                    ["${it.split("/")[-1]}": deployments.generateStage(it, "cloudformation")]
+                                    def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
+                                        ["${it.split("/")[-1]}": deployments.generateStage(it, "cloudformation")]
+                                    }
+                                    parallel parallelStagesMap
+
                                 }
-                                parallel parallelStagesMap
-
                             }
 
                         }
