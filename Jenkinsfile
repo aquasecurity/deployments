@@ -1,4 +1,4 @@
-@Library('aqua-pipeline-lib@master') _
+@Library('aqua-pipeline-lib@baruch-test') _
 
 class Global {
     static Object CHANGED_FILES = []
@@ -31,7 +31,7 @@ pipeline {
                 script {
                     log.info "CHANGE_TARGET: ${CHANGE_TARGET}"
                     log.info "CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    deployment.clone branch: "master"
+                    deployment.clone branch: "baruch-test"
                     checkout([
                             $class                           : 'GitSCM',
                             branches                         : scm.branches,
