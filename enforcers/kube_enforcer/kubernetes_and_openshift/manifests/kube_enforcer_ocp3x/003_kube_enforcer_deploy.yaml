@@ -19,8 +19,8 @@ metadata:
     app: aqua-kube-enforcer
     aqua.component: kubeenforcer
 spec:
-  #This is recommended vale but can be configured
-  replicas: 2
+  #This is the recommended value, but can be configured
+  replicas: 1
   template:
     metadata:
       labels:
