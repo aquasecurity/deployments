@@ -72,7 +72,10 @@ pipeline {
                     }
                     steps {
                         script {
-                            withCredentials([string(credentialsId: 'deployments_trivy_api_key', variable: 'AQUA_KEY')],[string(credentialsId: 'deployments_trivy_secret', variable: 'AQUA_SECRET')]) {
+                            withCredentials([
+                                string(credentialsId: 'deployments_trivy_api_key', variable: 'AQUA_KEY'),
+                                string(credentialsId: 'deployments_trivy_secret', variable: 'AQUA_SECRET')
+                                ]){
                                 log.info "Starting to test Cloudformation yamls"
 
                                 def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation --build-arg AQUA_KEY=${AQUA_KEY} --build-arg AQUA_SECRET=${AQUA_SECRET} .")
