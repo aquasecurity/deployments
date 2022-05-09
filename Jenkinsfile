@@ -1,4 +1,4 @@
-@Library('aqua-pipeline-lib@master') _
+@Library('aqua-pipeline-lib@baruch-test') _
 
 class Global {
     static Object CHANGED_FILES = []
@@ -21,6 +21,9 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('svc_team_1_aws_access_key_id')
         AWS_SECRET_ACCESS_KEY = credentials('svc_team_1_aws_secret_access_key')
         AWS_REGION = "us-west-2"
+        TRIVY_RUN_AS_PLUGIN= "aqua"
+        AQUA_KEY=credentials('deployments_trivy_api_key')
+        AQUA_SECRET=credentials('deployments_trivy_secret')
     }
     stages {
         stage("Checkout") {
@@ -28,7 +31,7 @@ pipeline {
                 script {
                     log.info "CHANGE_TARGET: ${CHANGE_TARGET}"
                     log.info "CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    deployment.clone branch: "master"
+                    deployment.clone branch: "baruch-test"
                     checkout([
                             $class                           : 'GitSCM',
                             branches                         : scm.branches,
@@ -60,8 +63,6 @@ pipeline {
                 }
             }
         }
-        stage("run parallel stages") {
-            parallel {
                 stage('Cloudformation') {
                     when {
                         allOf {
@@ -92,44 +93,6 @@ pipeline {
                         }
                     }
                 }
-                stage("Manifest") {
-                    when {
-                        allOf {
-                            not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
-                            expression { return deployments.runCloudFormation(CHANGE_TARGET) }
-                        }
-                    }
-                    steps {
-                        script {
-                            log.info "Starting to test Manifest yamls"
-                            def deploymentImage = docker.build("deployment-manifest-image", "-f Dockerfile-manifest .")
-                            deploymentImage.inside("-u root") {
-                                def parallelStagesMap = Global.CHANGED_MANIFESTS_FILES.collectEntries {
-                                    ["${it.split("/")[-1]}": deployments.generateStage(it, "manifest")]
-                                }
-                                parallel parallelStagesMap
-                            }
-                        }
-                    }
-                }
-                stage('others') {
-                    when {
-                        allOf {
-                            not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
-                            expression { return deployments.runCloudFormation(CHANGE_TARGET) }
-                        }
-                    }
-                    steps {
-                        script {
-                            log.info "Starting to test SORTED_CHANGED_FILES"
-                            for (file in Global.SORTED_CHANGED_FILES) {
-                                log.info "file: ${file} was changed"
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
     post {
         always {
