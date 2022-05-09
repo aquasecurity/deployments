@@ -24,7 +24,7 @@ To test the upgrade, it is required to use the database credentials and connecti
    As specified in the prerequisites above, please update the configmap manifest file with appropriate values before applying it. This defines the database connection settings.
 
    ```SHELL
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5_unofficial/server/kubernetes_and_openshift/test_upgrade/001_aqua_test_upgrade_configMap.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/server/kubernetes_and_openshift/test_upgrade/001_aqua_test_upgrade_configMap.yaml
    ```
 
 2. **Create test-upgrade secrets**
@@ -32,7 +32,7 @@ To test the upgrade, it is required to use the database credentials and connecti
    As specified in the prerequisites above, please update the upgrade secrets manifest file with appropriate values before applying it. This defines the database password secret.
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5_unofficial/server/kubernetes_and_openshift/test_upgrade/002_aqua_test_uprade_secrets.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/server/kubernetes_and_openshift/test_upgrade/002_aqua_test_uprade_secrets.yaml
    ```
 
 3. **Deploy the Console testing the ugprade**
@@ -40,7 +40,7 @@ To test the upgrade, it is required to use the database credentials and connecti
   Deployment of the Console should result in a successful or error output. This indicates the database's ability to upgrade to the new version.
 
    ```shell
-   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5_unofficial/server/kubernetes_and_openshift/test_upgrade/003_aqua_test_upgrade_job.yaml
+   $ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/server/kubernetes_and_openshift/test_upgrade/003_aqua_test_upgrade_job.yaml
    ```
  
 ## Upgrade the Aqua installation

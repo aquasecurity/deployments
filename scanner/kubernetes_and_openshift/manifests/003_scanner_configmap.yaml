@@ -5,7 +5,7 @@ metadata:
   namespace: aqua
 data:  
   # Aqua Scanner IP/Domain/Servicename followed by HTTPS port.
-  AQUA_SERVER: ""
+  AQUA_SERVER: "aqua-web:443"
 
   # Scanner's private key for HTTPS and Mutual Auth with offline CyberCenter
   #AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/key.pem"

@@ -70,7 +70,7 @@ kubectl create secret docker-registry aqua-registry \
 **Step 3. Create a service account and RBAC for your deployment platform (if not already done).** Replace the platform name from [Supported platforms](#supported-platforms).
 
    ```SHELL
-   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/001_aqua_enforcer_rbac/< PLATFORM >/aqua_sa.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/001_aqua_enforcer_rbac/< PLATFORM >/aqua_sa.yaml
    ```
 
 ## Deploy Aqua Enforcer using manifests
@@ -88,19 +88,19 @@ kubectl create secret docker-registry aqua-registry \
      * Download, edit, and apply the secrets.
 
       ```SHELL
-      kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/003_aqua_enforcer_secrets.yaml
+      kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/003_aqua_enforcer_secrets.yaml
       ```    
 
 **Step 2. Deploy directly or download, edit, and apply ConfigMap as required.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/002_aqua_enforcer_configMap.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/002_aqua_enforcer_configMap.yaml
 ```
 
 **Step 3. Deploy Aqua Enforcer as daemonset.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
 ```
 
 ## Automate Aqua Enforcer deployment using Aquactl
@@ -121,7 +121,7 @@ Flag and parameter type              | Values                                   
 | ---------------------- | ------------------------------------------------------------ |
 | -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, icp, openshift, tkg, tkgi**    |
 | * -v or --version
-(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **6.5** |
+(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **2022.4** |
 | -r or --registry (string) | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com** |
 | --pull-policy (string) | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent** |
 | --service-account (string) | Kubernetes service account name, it defaults to **aqua-sa** |
@@ -142,5 +142,5 @@ After the manifests are created, follow the instructions that appear on the cons
 ### Usage example 
 
 ```SHELL
-aquactl download enforcer --platform gke --version 6.5
+aquactl download enforcer --platform gke --version 2022.4
 ```

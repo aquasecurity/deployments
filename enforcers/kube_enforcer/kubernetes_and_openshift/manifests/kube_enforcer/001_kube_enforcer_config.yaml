@@ -1,3 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-kube-enforcer
+  namespace: aqua
+data:
+  # Specify whether to enable/disable the cache by using "yes", "true", "no", "false" values.
+  # Default value is "yes".
+  AQUA_ENABLE_CACHE: "yes"
+  # Specify cache expiration period in seconds.
+  # Default value is 60
+  AQUA_CACHE_EXPIRATION_PERIOD: "60"
+  TLS_SERVER_CERT_FILEPATH: "/certs/aqua_ke.crt"
+  TLS_SERVER_KEY_FILEPATH: "/certs/aqua_ke.key"
+  ## Based on your ingress config update the name here ##
+  AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway.aqua:8443"
+  AQUA_TLS_PORT: "8443"
+  AQUA_LOGICAL_NAME: ""
+  # Cluster display name in aqua enterprise.
+  CLUSTER_NAME: "Default-cluster-name"
+  # Enable KA policy scanning via starboard
+  AQUA_KAP_ADD_ALL_CONTROL: "true"
+  AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
+  # Enable the below Env for mTLS between kube-enforcer and gateway
+  # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
+  # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
+  # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"
+---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -225,8 +253,7 @@ spec:
     plural: configauditreports
     kind: ConfigAuditReport
     listKind: ConfigAuditReportList
-    categories:
-      - all
+    categories: []
     shortNames:
       - configaudit
 ---
