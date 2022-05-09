@@ -856,7 +856,7 @@ Resources:
       MultiAZ: !Ref MultiAzDatabase
       StorageType: gp2
       StorageEncrypted: True
-      #KmsKeyId: !GetAtt KMSKeyForDB.Arn
+      ##KmsKeyId: !GetAtt KMSKeyForDB.Arn
   RdsInstanceSubnetGroup:
     Type: 'AWS::RDS::DBSubnetGroup'
     Properties:
