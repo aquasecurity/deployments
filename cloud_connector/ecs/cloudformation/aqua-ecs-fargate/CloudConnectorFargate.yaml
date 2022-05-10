@@ -314,3 +314,4 @@ Outputs:
   AquaEcsTaskRole:
     Description: IAM role assigned to access ECR
     Value: !Ref AquaEcsTaskRole
+    #

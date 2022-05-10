@@ -12,7 +12,7 @@ Metadata:
           - Taskprivileged
           - AquaEnforcerImage
           - ECSClusterName
-          #- SSLCert
+          ##- SSLCert
     ParameterLabels:
         AquaGatewayAddress:
             default: Existing Aqua Gateway DNS/IP
