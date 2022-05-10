@@ -63,12 +63,16 @@ pipeline {
                 }
             }
         }
-        stage("run parallel stages") {
+        stage('Cloudformation') {
             when {
                 allOf {
                     not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
                     expression { return deployments.runCloudFormation(CHANGE_TARGET) }
                 }
+            }
+            environment {
+                AQUA_KEY = credentials('deployments_trivy_api_key')
+                AQUA_SECRET = credentials('deployments_trivy_secret')
             }
             steps {
                 script {
