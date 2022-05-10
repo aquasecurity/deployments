@@ -21,9 +21,9 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('svc_team_1_aws_access_key_id')
         AWS_SECRET_ACCESS_KEY = credentials('svc_team_1_aws_secret_access_key')
         AWS_REGION = "us-west-2"
-        //TRIVY_RUN_AS_PLUGIN = "aqua"
-        //AQUA_KEY = credentials('deployments_trivy_api_key')
-        //AQUA_SECRET = credentials('deployments_trivy_secret')
+        TRIVY_RUN_AS_PLUGIN = "aqua"
+        AQUA_KEY = credentials('deployments_trivy_api_key')
+        AQUA_SECRET = credentials('deployments_trivy_secret')
     }
     stages {
         stage("Checkout") {
@@ -80,7 +80,7 @@ pipeline {
                     script {
                         log.info "Starting to test Cloudformation yamls"
 
-                        def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation .")
+                        def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation .").withRun("-e AQUA_KEY=${AQUA_KEY}, AQUA_SECRET=${AQUA_SECRET}" ) { c ->
                         deploymentImage.inside("-u root") {
                             log.info "Installing aqaua-deployment  python package"
                             sh """
