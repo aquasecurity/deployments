@@ -861,7 +861,7 @@ Resources:
           FromPort: '5432'
           ToPort: '5432'
           SourceSecurityGroupId: !Ref AquaFargateSecurityGroup
-  #Secrets
+  ##Secrets
   SecretP:
     Type: AWS::SecretsManager::Secret
     Properties:
