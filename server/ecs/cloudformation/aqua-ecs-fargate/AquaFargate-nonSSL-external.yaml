@@ -101,9 +101,11 @@ Parameters:
     Description: Enter Endpoint URL of Audit DB
     Type: String
   AuditDBUserName:
+    Default: 'DummyUname' # Added to test Pipeline
     Description: Enter Audit DB User name
     Type: String
   AuditDBPassword:
+    Default: 'DummyPass' # Added to test Pipeline
     NoEcho: true
     Description: Enter Audit DB password
     Type: String

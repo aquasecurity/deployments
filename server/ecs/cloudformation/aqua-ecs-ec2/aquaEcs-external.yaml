@@ -151,7 +151,7 @@ Conditions:
   CreateAuditrds: !Equals [!Ref AuditRDS, 'Yes']
   ReplaceAuditrds: !Equals [!Ref AuditRDS, 'No']
 Resources:
-  #Role for generating a Random string
+  ##Role for generating a Random string
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
