@@ -21,7 +21,7 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('svc_team_1_aws_access_key_id')
         AWS_SECRET_ACCESS_KEY = credentials('svc_team_1_aws_secret_access_key')
         AWS_REGION = "us-west-2"
-        TRIVY_RUN_AS_PLUGIN = "aqua"
+        //TRIVY_RUN_AS_PLUGIN = "aqua"
         //AQUA_KEY = credentials('deployments_trivy_api_key')
         //AQUA_SECRET = credentials('deployments_trivy_secret')
     }
@@ -71,10 +71,10 @@ pipeline {
                 }
             }
             steps {
-                withCredentials([
-                    string(credentialsId: 'deployments_trivy_api_key', variable: 'AQUA_KEY'),
-                    string(credentialsId: 'deployments_trivy_secret', variable: 'AQUA_SECRET')
-                    ]){
+                // withCredentials([
+                //     string(credentialsId: 'deployments_trivy_api_key', variable: 'AQUA_KEY'),
+                //     string(credentialsId: 'deployments_trivy_secret', variable: 'AQUA_SECRET')
+                //     ]){
 
                 
                     script {
