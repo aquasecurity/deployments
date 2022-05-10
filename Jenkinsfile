@@ -81,7 +81,6 @@ pipeline {
                         log.info "Starting to test Cloudformation yamls"
 
                         def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation .").withRun("-e AQUA_KEY=${AQUA_KEY}, AQUA_SECRET=${AQUA_SECRET}" ) { c ->
-                        deploymentImage.inside("-u root") {
                             log.info "Installing aqaua-deployment  python package"
                             sh """
                             aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
@@ -138,6 +137,7 @@ pipeline {
         }
     }
 }
+
 post {
     always {
         script {
