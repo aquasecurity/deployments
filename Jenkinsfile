@@ -80,7 +80,7 @@ pipeline {
                     script {
                         log.info "Starting to test Cloudformation yamls"
 
-                        def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation --build-arg AQUA_KEY=${AQUA_KEY} --build-arg AQUA_SECRET=${AQUA_SECRET} .")
+                        def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation .")
                         deploymentImage.inside("-u root") {
                             log.info "Installing aqaua-deployment  python package"
                             sh """
