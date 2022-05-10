@@ -64,71 +64,67 @@ pipeline {
             }
         }
         stage("run parallel stages") {
-            parallel {
-                stage('Cloudformation') {
-                    when {
-                        allOf {
-                            not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
-                            expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+            when {
+                allOf {
+                    not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
+                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                }
+            }
+            steps {
+                script {
+                    log.info "Starting to test Cloudformation yamls"
+
+                    def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation --build-arg AQUA_KEY=${env.AQUA_KEY} --build-arg AQUA_SECRET=${env.AQUA_SECRET} .")
+                    deploymentImage.inside("-u root") {
+                        log.info "Installing aqaua-deployment  python package"
+                        sh """
+                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
+                        pip install aqua-deployment
+                        """
+                        log.info "Finished to install aqaua-deployment python package"
+
+                        def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
+                            ["${it.split("/")[-1]}": deployments.generateStage(it, "cloudformation")]
                         }
+                        parallel parallelStagesMap
+
                     }
-                    steps {
-                        script {
-                            log.info "Starting to test Cloudformation yamls"
 
-                            def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation --build-arg AQUA_KEY=${env.AQUA_KEY} --build-arg AQUA_SECRET=${env.AQUA_SECRET} .")
-                            deploymentImage.inside("-u root") {
-                                log.info "Installing aqaua-deployment  python package"
-                                sh """
-                                aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
-                                pip install aqua-deployment
-                                """
-                                log.info "Finished to install aqaua-deployment python package"
-
-                                def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
-                                    ["${it.split("/")[-1]}": deployments.generateStage(it, "cloudformation")]
-                                }
-                                parallel parallelStagesMap
-
-                            }
-
+                }
+            }
+        }
+        stage("Manifest") {
+            when {
+                allOf {
+                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
+                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                }
+            }
+            steps {
+                script {
+                    log.info "Starting to test Manifest yamls"
+                    def deploymentImage = docker.build("deployment-manifest-image", "-f Dockerfile-manifest .")
+                    deploymentImage.inside("-u root") {
+                        def parallelStagesMap = Global.CHANGED_MANIFESTS_FILES.collectEntries {
+                            ["${it.split("/")[-1]}": deployments.generateStage(it, "manifest")]
                         }
+                        parallel parallelStagesMap
                     }
                 }
-                stage("Manifest") {
-                    when {
-                        allOf {
-                            not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
-                            expression { return deployments.runCloudFormation(CHANGE_TARGET) }
-                        }
-                    }
-                    steps {
-                        script {
-                            log.info "Starting to test Manifest yamls"
-                            def deploymentImage = docker.build("deployment-manifest-image", "-f Dockerfile-manifest .")
-                            deploymentImage.inside("-u root") {
-                                def parallelStagesMap = Global.CHANGED_MANIFESTS_FILES.collectEntries {
-                                    ["${it.split("/")[-1]}": deployments.generateStage(it, "manifest")]
-                                }
-                                parallel parallelStagesMap
-                            }
-                        }
-                    }
+            }
+        }
+        stage('others') {
+            when {
+                allOf {
+                    not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
+                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
                 }
-                stage('others') {
-                    when {
-                        allOf {
-                            not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
-                            expression { return deployments.runCloudFormation(CHANGE_TARGET) }
-                        }
-                    }
-                    steps {
-                        script {
-                            log.info "Starting to test SORTED_CHANGED_FILES"
-                            for (file in Global.SORTED_CHANGED_FILES) {
-                                log.info "file: ${file} was changed"
-                            }
-                        }
+            }
+            steps {
+                script {
+                    log.info "Starting to test SORTED_CHANGED_FILES"
+                    for (file in Global.SORTED_CHANGED_FILES) {
+                        log.info "file: ${file} was changed"
                     }
                 }
             }
