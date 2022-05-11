@@ -12,3 +12,4 @@ data:
   # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_enforcer.crt"
   # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_enforcer.key"
   # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"
+  # AQUA_OCP_FULL_VERSION: <OCP version> #set this variable with the exact OCP version to allow accurate vulnerability scanning
