@@ -1,12 +1,16 @@
 @Library('aqua-pipeline-lib@baruch-test') _
+import com.aquasec.deployments.orchestrators.*
 
 class Global {
     static Object CHANGED_FILES = []
     static Object CHANGED_CF_FILES = []
     static Object CHANGED_MANIFESTS_FILES = []
     static Object SORTED_CHANGED_FILES = []
+    static Object MANIFEST_FILES = []
     static String BUILD_USER_EMAIL
 }
+
+def orchestrator = new OrcFactory(this).GetOrc()
 
 pipeline {
     agent { label 'azure_slaves' }
@@ -16,6 +20,7 @@ pipeline {
         skipStagesAfterUnstable()
         skipDefaultCheckout()
         buildDiscarder(logRotator(daysToKeepStr: '7'))
+        lock('k3s')
     }
     environment {
         AWS_ACCESS_KEY_ID = credentials('svc_team_1_aws_access_key_id')
@@ -40,7 +45,7 @@ pipeline {
                 }
             }
         }
-        stage("generateStages") {
+        stage("Analyze Changes") {
             steps {
                 script {
                     dir("deployments") {
@@ -110,7 +115,52 @@ pipeline {
                 }
             }
         }
-        stage('others') {
+        stage("K3S Cluster") {
+            when {
+                allOf {
+                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
+                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                }
+            }
+            stages{
+                stage("Install Cluster"){
+                    steps {
+                        script {
+                            orchestrator.install()
+                            k3sDeployments.setKubeconfig()
+                        }
+                    }
+                }
+                stage("Prepare Cluster"){
+                    steps {
+                        withCredentials([usernamePassword(credentialsId: 'deploymentPullImage', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                            script{
+                            k3sDeployments.createNS()
+                            k3sDeployments.createRegistry()
+                            }
+                        }
+                    }
+                }
+                stage("Deploy Manifests"){
+                    steps{
+                        script{
+                            log.info "Starting to Deploy Aqua yamls"
+                            def Manifests = k3sDeployments.getManifests()
+                            def deploymentImage = docker.build("deployment-k3s-image", "-f Dockerfile-k3s .")
+                            deploymentImage.inside("-u root --network host") {
+                                def parallelStagesMap = Manifests.collectEntries {
+                                    ["${it.split("/")[-1]}": k3sDeployments.generateDeployment(it)]
+                                }
+                                parallel parallelStagesMap
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        stage('Other Files') {
             when {
                 allOf {
                     not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
@@ -127,9 +177,12 @@ pipeline {
             }
         }
     }
+    
     post {
         always {
             script {
+                orchestrator.uninstall()
+                echo "k3s uninstalled"
                 cleanWs()
 //                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
             }
