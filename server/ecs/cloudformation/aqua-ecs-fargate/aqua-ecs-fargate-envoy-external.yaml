@@ -13,8 +13,7 @@ Metadata:
           - VpcCidr
           - EcsInstanceSubnets
           - LbSubnets
-          - SSLCert          
-          - Region
+          - SSLCert   
       - Label:
           default: Aqua Security Configuration
         Parameters:
@@ -37,8 +36,6 @@ Metadata:
         default: SSL cert ARN
       ClusterName:
         default: ECS cluster name
-      Region:
-        default: AWS region
       VpcId:
         default: VPC ID
       VpcCidr:
@@ -51,9 +48,6 @@ Metadata:
         default: Web Console Source
 
 Parameters:
-  Region:
-    Type: String
-    Description: AWS region
   AquaServerImage:
     Type: String
     Description: Enter server image path on ECR
@@ -178,7 +172,7 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-group: !Join ['-', ['/aqua/console', !Ref EcsCluster]]
-              awslogs-region: !Ref Region
+              awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: aquaConsole
           Secrets:
             - Name: SCALOCK_DBPASSWORD
@@ -379,7 +373,7 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-group: !Join ['-', ['/aqua/envoy', !Ref EcsCluster]]
-              awslogs-region: !Ref Region
+              awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: aquaEnvoy
           Secrets:
             - Name: SCALOCK_DBPASSWORD
@@ -449,7 +443,7 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-group: !Join ['-', ['/aqua/gateway', !Ref EcsCluster]]
-              awslogs-region: !Ref Region
+              awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: aquaGateway
           Secrets:
             - Name: SCALOCK_DBPASSWORD
