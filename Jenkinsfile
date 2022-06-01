@@ -224,7 +224,7 @@ pipeline {
                 helm.removeDockerLocalImages()
                 cleanWs()
                 }
-                catch(){
+                catch(err){
                 cleanWs()
                 helm.removeDockerLocalImages()
                 }
