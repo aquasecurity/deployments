@@ -6,7 +6,6 @@ class Global {
     static Object CHANGED_CF_FILES = []
     static Object CHANGED_MANIFESTS_FILES = []
     static Object SORTED_CHANGED_FILES = []
-    static Object MANIFEST_FILES = []
     static String BUILD_USER_EMAIL
 }
 
