@@ -217,11 +217,15 @@ pipeline {
     post {
         always {
             script {
+                try{
                 helm.updateConsul("delete")
                 orchestrator.uninstall()
                 echo "k3s uninstalled"
                 helm.removeDockerLocalImages()
+                }
+                catch(){
                 cleanWs()
+                }
 //                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
             }
         }
