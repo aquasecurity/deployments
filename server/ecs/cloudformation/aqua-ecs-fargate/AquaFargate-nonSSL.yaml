@@ -723,7 +723,7 @@ Resources:
         - Key: BucketType
           Value: Log
     DeletionPolicy: Delete
-  ## Custom resource to transform input to lowercase.                                             
+  # Custom resource to transform input to lowercase.                                             
   LowerCaseLambda:
     Type: 'AWS::Lambda::Function'
     Properties:
