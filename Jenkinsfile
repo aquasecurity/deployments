@@ -161,6 +161,12 @@ pipeline {
             }
         }
         stage("Deploy Manifests"){
+            when {
+                allOf {
+                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
+                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                }
+            }
             steps{
                 script{
                     def deploymentImage = docker.build("deployment-k3s-image", "-f Dockerfile-k3s .")
@@ -176,6 +182,12 @@ pipeline {
                     }
                 }
         stage("Updating Consul") {
+            when {
+                allOf {
+                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
+                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                }
+            }
             steps {
                 script {
                     helm.updateConsul("create")
@@ -187,6 +199,12 @@ pipeline {
             }
         }
         stage("Running Mstp Tests") {
+            when {
+                allOf {
+                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
+                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                }
+            }
             steps {
                 script {
                     log.info "Running Mstp tests"
