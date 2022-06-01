@@ -191,9 +191,6 @@ pipeline {
                 script {
                     helm.updateConsul("create")
                     log.info "Updated Consul successfully"
-                 //   sh """
-                //        sleep 1d
-                 //   """
                 }
             }
         }
