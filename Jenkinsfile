@@ -222,9 +222,11 @@ pipeline {
                 orchestrator.uninstall()
                 echo "k3s uninstalled"
                 helm.removeDockerLocalImages()
+                cleanWs()
                 }
                 catch(){
                 cleanWs()
+                helm.removeDockerLocalImages()
                 }
 //                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
             }
