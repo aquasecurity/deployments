@@ -12,7 +12,7 @@ Metadata:
           - AquaScannerPassword
           - AquaScannerImage
           - ECSClusterName
-          ##- SSLCert
+          #- SSLCert
     ParameterLabels:
         AquaGatewayAddress:
             default: Existing Aqua Server DNS/IP
