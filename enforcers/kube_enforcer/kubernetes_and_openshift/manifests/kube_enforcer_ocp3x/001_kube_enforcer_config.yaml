@@ -176,6 +176,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
+    app.kubernetes.io/version: "0.15.4"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -191,21 +192,26 @@ spec:
           type: date
           name: Age
           description: The age of the report
-        - jsonPath: .report.summary.dangerCount
+        - jsonPath: .report.summary.criticalCount
           type: integer
-          name: Danger
+          name: Critial
           priority: 1
-          description: The number of checks that failed with Danger status
-        - jsonPath: .report.summary.warningCount
+          description: The number of failed checks with critial severity
+        - jsonPath: .report.summary.highCount
           type: integer
-          name: Warning
+          name: High
           priority: 1
-          description: The number of checks that failed with Warning status
-        - jsonPath: .report.summary.passCount
+          description: The number of failed checks with high severity
+        - jsonPath: .report.summary.mediumCount
           type: integer
-          name: Pass
+          name: Medium
           priority: 1
-          description: The number of checks that passed
+          description: The number of failed checks with medium severity
+        - jsonPath: .report.summary.lowCount
+          type: integer
+          name: Low
+          priority: 1
+          description: The number of failed checks with low severity
       schema:
         openAPIV3Schema:
           x-kubernetes-preserve-unknown-fields: true
@@ -296,14 +302,12 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: starboard-conftest-config
+  name: starboard-policies-config
   namespace: aqua
-data:
-  conftest.imageRef: registry.aquasec.com/kube-enforcer:master
-  conftest.resources.requests.cpu: 1m
-  conftest.resources.requests.memory: 10M
-  conftest.resources.limits.cpu: 15m
-  conftest.resources.limits.memory: 40M
+  labels:
+    app.kubernetes.io/name: starboard-operator
+    app.kubernetes.io/instance: starboard-operator
+    app.kubernetes.io/version: "0.15.4"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -360,6 +364,7 @@ rules:
       - replicasets
       - statefulsets
       - daemonsets
+      - deployments
     verbs:
       - get
       - list
@@ -399,6 +404,23 @@ rules:
     verbs:
       - create
       - delete
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - networkpolicies
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - policy
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - get
+      - list
+      - watch
   - apiGroups:
       - aquasecurity.github.io
     resources:
