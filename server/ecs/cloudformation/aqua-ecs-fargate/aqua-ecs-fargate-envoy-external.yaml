@@ -405,7 +405,6 @@ Resources:
               Value: slk_audit
             - Name: SCALOCK_AUDIT_DBHOST
               Value: !If [CreateAuditrds, !Ref AuditDBInstanceEndPointURL, !Ref AquaDBInstanceEndPointURL]
-      TaskRoleArn: !Ref AquaEcsTaskRole              
   AquaGatewayTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     DependsOn:
@@ -724,15 +723,6 @@ Resources:
       SecretString: !Ref AuditDBPassword
 Outputs:
   AquaConsole:
-    Description: URL to access Aqua Security Console HTTP
-    Value: !Join
-      - ''
-      - - 'http://'
-        - !GetAtt
-          - AquaConsole
-          - DNSName
-        - ':8080'
-  AquaConsole:
     Description: URL to access Aqua Security Console HTTPS
     Value: !Join
       - ''
@@ -775,4 +765,4 @@ Outputs:
     Value : !Ref AuditDBInstanceEndPointURL
     Export :
       Name : 
-        'Fn::Sub': '${AWS::StackName}-Aqua60AuditDBInstanceID'    
+        'Fn::Sub': '${AWS::StackName}-Aqua60AuditDBInstanceID'
