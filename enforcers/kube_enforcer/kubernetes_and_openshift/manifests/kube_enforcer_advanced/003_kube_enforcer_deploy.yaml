@@ -74,6 +74,14 @@ spec:
               value: "8442"
             - name: CLUSTER_NAME
               value: "Default-cluster-name"   # Cluster display name in aqua enterprise.
+            - name: AQUA_KB_IMAGE_NAME
+              value: aquasec/kube-bench:v0.6.7
+            - name: AQUA_ME_IMAGE_NAME
+              value: registry.aquasec.com/microenforcer:2022.4
+            - name: AQUA_KB_ME_REGISTRY_NAME
+              value: aqua-registry
+            - name: AQUA_ENFORCER_DS_NAME
+              value: "aqua-agent"
             - name: AQUA_ENVOY_MODE
               value: "true"
             # Enable KA policy scanning via starboard

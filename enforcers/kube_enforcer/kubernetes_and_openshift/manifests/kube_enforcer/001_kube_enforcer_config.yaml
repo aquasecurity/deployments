@@ -21,6 +21,11 @@ data:
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
+  #Move KE Settings to CM
+  AQUA_KB_IMAGE_NAME: aquasec/kube-bench:v0.6.7
+  AQUA_ME_IMAGE_NAME: registry.aquasec.com/microenforcer:2022.4
+  AQUA_KB_ME_REGISTRY_NAME: aqua-registry
+  AQUA_ENFORCER_DS_NAME: "aqua-agent"
   # Enable the below Env for mTLS between kube-enforcer and gateway
   # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
   # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
