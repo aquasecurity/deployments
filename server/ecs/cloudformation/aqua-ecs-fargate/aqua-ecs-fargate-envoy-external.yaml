@@ -478,7 +478,7 @@ Resources:
   PrivateNamespace:
     Type: AWS::ServiceDiscovery::PrivateDnsNamespace
     Properties:
-      Name: ecs.aqua
+      Name: ecs.aqua.ext
       Vpc: !Ref VpcId
   DiscoveryService:
     DependsOn:
