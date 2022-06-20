@@ -108,7 +108,7 @@ pipeline {
                     deploymentImage.inside("-u root") {
                         log.info "Installing aqaua-deployment  python package"
                         sh """
-                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${awsDeploymentAccountID}
+                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${AWS_ACCOUNT_ID}
                         pip install aqua-deployment
                         """
                         log.info "Finished to install aqaua-deployment python package"
@@ -173,7 +173,7 @@ pipeline {
                     deploymentImage.inside("-u root --network host") {
                         log.info "Pulling manifests with Aquactl and modifying other manifests"
                         sh """
-                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${awsDeploymentAccountID}
+                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${AWS_ACCOUNT_ID}
                         pip install aqua-deployment
                         /bin/bash k3s/prepare.sh
                         """
