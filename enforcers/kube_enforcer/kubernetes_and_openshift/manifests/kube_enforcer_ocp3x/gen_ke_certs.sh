@@ -19,7 +19,7 @@ _banner() {
     echo
     echo
     printf "PROCEED? [y/N] "
-    read _user_input < /dev/tty
+    read -r _user_input < /dev/tty
     if [ "$_user_input" = "y" ] || [ "$_user_input" = "Y" ]; then
         _generate_ca
     else
@@ -35,7 +35,7 @@ _check_k8s_connection() {
         exit 1
     fi
 
-    if ! `$(command -v kubectl) version &> /dev/null`; then
+    if ! $(command -v kubectl) version &> /dev/null; then
         echo "Dont have access to kubernetes cluster"
         exit 1
     fi
@@ -43,10 +43,10 @@ _check_k8s_connection() {
 
 _generate_ca() {
     printf "\nInfo: Generating root CA private key\n"
-    if `openssl genrsa -des3 -out rootCA.key 4096`; then
+    if openssl genrsa -des3 -out rootCA.key 4096; then
         printf "\nInfo: Successfully generated rootCA.key\n"
         printf "Info: Generating root CA certificate from root CA private key with admission_ca as common name\n"
-        if `openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt -subj "/CN=admission_ca"`; then
+        if openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt -subj "/CN=admission_ca"; then
             printf "\nInfo: Successfully generated rootCA.crt\n"
             _generate_ssl
         else
@@ -61,7 +61,7 @@ _generate_ca() {
 
 _generate_ssl() {
     printf "\nInfo: Generating kubeEnforcer SSL private key for %s namespace \n", $ns
-    if `openssl genrsa -out aqua_ke.key 2048`; then
+    if openssl genrsa -out aqua_ke.key 2048; then
         printf "\nInfo: Successfully generated aqua_ke.key\n"
         # CSR config file to generate kubeEnforcer CSR
         cat > server.conf <<-EOF
@@ -79,10 +79,10 @@ _generate_ssl() {
         subjectAltName = @alt_names
 EOF
         printf "\nInfo: Generating kubeEnforcer CSR\n"
-        if `openssl req -new -sha256 -key aqua_ke.key -subj "/CN=aqua-kube-enforcer.$ns.svc" -config server.conf -out aqua_ke.csr`; then
+        if openssl req -new -sha256 -key aqua_ke.key -subj "/CN=aqua-kube-enforcer.$ns.svc" -config server.conf -out aqua_ke.csr; then
             printf "\nInfo: Successfully generated aqua_ke.csr\n"
             printf "\nInfo: Generating kubeEnforcer certificate\n"
-            if `openssl x509 -req -in aqua_ke.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out aqua_ke.crt -days 365 -sha256 -extensions v3_req -extfile server.conf`; then
+            if openssl x509 -req -in aqua_ke.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out aqua_ke.crt -days 365 -sha256 -extensions v3_req -extfile server.conf; then
                 printf "\nInfo: Successfully generated aqua_ke.crt\n"
                 _prepare_ke
             else
@@ -102,13 +102,24 @@ EOF
 
 _prepare_ke() {
     script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+    _rootCA=$(cat rootCA.crt | base64 | tr -d '\n' | tr -d '\r')
+    githubBranch="2022.4"
     if test -f "$script_dir/001_kube_enforcer_config.yaml"; then
-        _rootCA=`cat rootCA.crt | base64 | tr -d '\n' | tr -d '\r'`
-        if `sed -i'.original' "s/caBundle:/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml"`; then
+        _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
+        if eval "$_addCABundle"; then
             printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
             _deploy_ke_admin
         else
-            printf "\nError: Failed to prepare KubeEnforcer config file"
+            printf "\nError: Failed to prepare KubeEnforcer config file from local"
+            exit 1
+        fi
+    elif curl https://raw.githubusercontent.com/aquasecurity/deployments/$githubBranch/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_ocp3x/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"; then
+        _addCABundle=$(sed -i "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
+        if eval "$_addCABundle"; then
+            printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
+            _deploy_ke_admin
+        else
+            printf "\nError: Failed to prepare KubeEnforcer config file from github"
             exit 1
         fi
     else
@@ -118,11 +129,11 @@ _prepare_ke() {
 
 _deploy_ke_admin() {
     printf "Info: Do you want to deploy KubeEnforcer config? [y/N] "
-    read _user_input < /dev/tty
+    read -r _user_input < /dev/tty
     if [ "$_user_input" = "y" ] || [ "$_user_input" = "Y" ]; then
         _check_k8s_connection
         echo
-        if `$(command -v kubectl) apply -f 001_kube_enforcer_config.yaml &> /dev/tty`; then
+        if $(command -v kubectl) apply -f 001_kube_enforcer_config.yaml &> /dev/tty; then
             printf "\nInfo: KubeEnforcer config successfully deployed\n"
             printf "Info: Please proceed with secrets and pod deployment\n"
         else
