@@ -160,7 +160,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.14.1
+          image: docker.io/aquasec/starboard-operator:0.15.4
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -192,6 +192,8 @@ spec:
               value: "10"
             - name: OPERATOR_BATCH_DELETE_DELAY
               value: "10s"
+            - name: OPERATOR_CLUSTER_COMPLIANCE_ENABLED
+              value: "false"
           ports:
             - name: metrics
               containerPort: 8080
