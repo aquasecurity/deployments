@@ -34,7 +34,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:master
+          image: aquadev.azurecr.io/kube-enforcer:master
           imagePullPolicy: Always
           livenessProbe:
             httpGet:

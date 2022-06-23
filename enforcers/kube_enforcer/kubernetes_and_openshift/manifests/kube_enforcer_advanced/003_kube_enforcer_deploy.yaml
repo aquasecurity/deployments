@@ -32,7 +32,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: registry.aquasec.com/kube-enforcer:master
+          image: aquadev.azurecr.io/kube-enforcer:master
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -95,7 +95,7 @@ spec:
           #  - name: aqua-grpc-kube-enforcer
           #    mountPath: /opt/aquasec/ssl
         - name: envoy
-          image: registry.aquasec.com/envoy:develop
+          image: aquadev.azurecr.io/envoy:develop
           env:
           - name: ENVOY_UID
             value: "0"
