@@ -16,5 +16,5 @@ The Tenant Manager is a web-based application with a simple, intuitive user inte
 - Aqua Enterprise Self-Hosted
 
 ## Resources
-- [Deploy the Tenant Manager](https://docs.aquasec.com/docs/tm-deploy)
-- [What is the Tenant Manager](https://docs.aquasec.com/docs/tm-what-is)
+- [Deploy the Tenant Manager](https://docs.aquasec.com/v6.5/docs/tm-deploy)
+- [What is the Tenant Manager](https://docs.aquasec.com/v6.5/docs/tm-what-is)

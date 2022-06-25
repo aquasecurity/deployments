@@ -24,5 +24,5 @@ VM Enforcers provide the enforcement and assurance for your hosts (VMs). It is r
 
 ## Resources
 
-* [VM Enforcer Overview](https://docs.aquasec.com/docs/enforcers-overview#section-vm-enforcers)
-* [Create a VM Enforcer Group and VM Enforcer](https://docs.aquasec.com/docs/create-a-vm-enforcer-group-and-vm-enforcer)
+* [VM Enforcer Overview](https://docs.aquasec.com/v6.5/docs/enforcers-overview#section-vm-enforcers)
+* [Create a VM Enforcer Group and VM Enforcer](https://docs.aquasec.com/v6.5/docs/create-a-vm-enforcer-group-and-vm-enforcer)

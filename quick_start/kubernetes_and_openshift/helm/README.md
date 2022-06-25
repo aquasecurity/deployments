@@ -4,4 +4,4 @@ The quick-start deployment is used to deploy Aqua Enterprise in your Kubernetes 
 
 Ensure that you use the latest branch of the Aqua Security Helm repository.
 
-For production usage, enterprise-grade deployments, advanced use cases, and deployment on other Kubernetes platforms, deploy Aqua Enterprise with the required Aqua components (such as server, enforcers, scanner, so on.) on your orchestration platform. For more information, refer to the Product documentation, [Deploy Aqua Enterprise](https://docs.aquasec.com/docs/deployment-overview).
+For production usage, enterprise-grade deployments, advanced use cases, and deployment on other Kubernetes platforms, deploy Aqua Enterprise with the required Aqua components (such as server, enforcers, scanner, so on.) on your orchestration platform. For more information, refer to the Product documentation, [Deploy Aqua Enterprise](https://docs.aquasec.com/v6.5/docs/deployment-overview).

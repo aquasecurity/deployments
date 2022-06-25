@@ -7,7 +7,7 @@ This repository shows the manifest yaml files required to deploy Aqua Scanner on
 * OpenShift
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Aqua Scanner](https://docs.aquasec.com/docs/deploy-k8s-scanners) for detailed information.
+Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Aqua Scanner](https://docs.aquasec.com/v6.5/docs/deploy-k8s-scanners) for detailed information.
 
 ## Specific OpenShift notes
 The deployment commands shown below use the **kubectl** cli, you can also deploy using the **oc** cli commands, to work on all platforms including OpenShift.
@@ -35,7 +35,7 @@ Consider the following options for deploying Aqua Scanner:
   
   - **To use Aqua generated certs:** Populate root CA to the scanner deployment. To get this cert, connect to aqua instance and copy it from **/opt/aquasec/cert.pem**
   
-  - ***(Optional)* mTLS communication between scanner and the offline CyberCenter:**  If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure mTLS (mutual TLS) communication between scanner and the offline CyberCenter, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-scanner)
+  - ***(Optional)* mTLS communication between scanner and the offline CyberCenter:**  If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure mTLS (mutual TLS) communication between scanner and the offline CyberCenter, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/v6.5/docs/configure-mtls-between-the-offline-cybercenter-and-scanner)
 
 ## Pre-deployment
 

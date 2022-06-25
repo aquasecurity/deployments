@@ -6,7 +6,7 @@ You can deploy VM Enforcers, using an Ansible playbook, on the desired VM Enforc
 
 ## Prerequisites for deploying VM Enforcers
 
-* VM Enforcer Group token. Refer to [Create a VM Enforcer Group and VM Enforcer](https://docs.aquasec.com/docs/create-a-vm-enforcer-group-and-vm-enforcer) to create this token.
+* VM Enforcer Group token. Refer to [Create a VM Enforcer Group and VM Enforcer](https://docs.aquasec.com/v6.5/docs/create-a-vm-enforcer-group-and-vm-enforcer) to create this token.
 * Aqua username and password
 * Following packages are required on the VM to install VM Enforcer:
    * runc
@@ -59,4 +59,4 @@ ansible-playbook vm-enforcer.yaml -i ./path/to/hosts -e vme_uninstall=true
 ## References
 * Getting started with [Ansible](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html) and [Run your first Playbook](https://docs.ansible.com/ansible/latest/network/getting_started/first_playbook.html) guides.
 * [Aqua VM Enforcer Overview](../README.md) and all other [Aqua Enforcers types](../../README.md) overview
-* Aqua VM Enforcers [official documentation](https://docs.aquasec.com/docs/vm-enforcer)
+* Aqua VM Enforcers [official documentation](https://docs.aquasec.com/v6.5/docs/vm-enforcer)

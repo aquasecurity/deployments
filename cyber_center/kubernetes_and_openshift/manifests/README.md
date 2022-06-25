@@ -16,7 +16,7 @@ The deployment commands shown below use the **kubectl** cli. You can also deploy
 * Your Aqua credentials: username and password
 * Your Aqua Enterprise License Token
 
-It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide).
+It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/v6.5/docs/sizing-guide).
 
 ## Considerations
 
@@ -29,8 +29,8 @@ The CyberCenter image is added in the [CyberCenter deploy yaml file](./002_cyber
 
 ### mTLS
 
-* **mTLS with server:** To configure the CyberCenter with mTLS (mutual TLS) to have secure communication with server, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Server](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-server).
-* ***(Optional)* mTLS with scanner:** If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure the offline CyberCenter with mTLS to have secure communication with scanner, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/docs/configure-mtls-between-the-offline-cybercenter-and-scanner).
+* **mTLS with server:** To configure the CyberCenter with mTLS (mutual TLS) to have secure communication with server, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Server](https://docs.aquasec.com/v6.5/docs/configure-mtls-between-the-offline-cybercenter-and-server).
+* ***(Optional)* mTLS with scanner:** If you deploy additional scanners for the scanning operation, the offline CyberCenter communicates with these scanners. To configure the offline CyberCenter with mTLS to have secure communication with scanner, refer to the product documentation, [Configure mTLS between the Offline CyberCenter and Scanner](https://docs.aquasec.com/v6.5/docs/configure-mtls-between-the-offline-cybercenter-and-scanner).
 
 ## Pre-deployment
 
