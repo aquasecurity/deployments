@@ -1,6 +1,6 @@
 # Quick-start deployment of Aqua Enterprise using Helm
 
-The quick-start deployment is used to deploy Aqua Enterprise in your Kubernetes cluster quickly and easily. It is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test but not for production environments. For deployment instructions, refer to the [aqua-helm repository](https://github.com/aquasecurity/aqua-helm/tree/6.5/quick-start-deployment-not-for-production-purposes).
+The quick-start deployment is used to deploy Aqua Enterprise in your Kubernetes cluster quickly and easily. It is suited for proofs-of-concept (POCs) and environments intended for instruction, development, and test but not for production environments. For deployment instructions, refer to the [aqua-helm repository](https://github.com/aquasecurity/aqua-helm/tree/2022.4/quick-start-deployment-not-for-production-purposes).
 
 Ensure that you use the latest branch of the Aqua Security Helm repository.
 

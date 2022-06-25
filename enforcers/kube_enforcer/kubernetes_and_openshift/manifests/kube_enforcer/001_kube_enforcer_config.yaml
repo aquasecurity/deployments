@@ -1,3 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-kube-enforcer
+  namespace: aqua
+data:
+  # Specify whether to enable/disable the cache by using "yes", "true", "no", "false" values.
+  # Default value is "yes".
+  AQUA_ENABLE_CACHE: "yes"
+  # Specify cache expiration period in seconds.
+  # Default value is 60
+  AQUA_CACHE_EXPIRATION_PERIOD: "60"
+  TLS_SERVER_CERT_FILEPATH: "/certs/aqua_ke.crt"
+  TLS_SERVER_KEY_FILEPATH: "/certs/aqua_ke.key"
+  ## Based on your ingress config update the name here ##
+  AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway.aqua:8443"
+  AQUA_TLS_PORT: "8443"
+  AQUA_LOGICAL_NAME: ""
+  # Cluster display name in aqua enterprise.
+  CLUSTER_NAME: "Default-cluster-name"
+  # Enable KA policy scanning via starboard
+  AQUA_KAP_ADD_ALL_CONTROL: "true"
+  AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
+  # Enable the below Env for mTLS between kube-enforcer and gateway
+  # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
+  # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
+  # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"
+---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -75,7 +103,7 @@ rules:
     verbs: ["get", "list", "watch"]
   - apiGroups: [ "*" ]
     resources: [ "secrets" ]
-    verbs: [ "get", "list", "watch", "update", "create" ]
+    verbs: [ "get", "list", "watch", "update", "create", "delete"]
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
@@ -132,6 +160,9 @@ rules:
   - apiGroups: ["*"]
     resources: ["pods"]
     verbs: ["create", "delete"]
+  - apiGroups: ["*"]
+    resources: ["leases"]
+    verbs: ["get", "list", "create", "update"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -166,7 +197,7 @@ data:
   AQUA_TLS_PORT: "8443"
   AQUA_LOGICAL_NAME: ""
   # Cluster display name in aqua enterprise.
-  CLUSTER_NAME: "aqua-secure"
+  CLUSTER_NAME: "Default-cluster-name"
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
@@ -182,6 +213,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
+    app.kubernetes.io/version: "0.15.4"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -197,21 +229,26 @@ spec:
           type: date
           name: Age
           description: The age of the report
-        - jsonPath: .report.summary.dangerCount
+        - jsonPath: .report.summary.criticalCount
           type: integer
-          name: Danger
+          name: Critial
           priority: 1
-          description: The number of checks that failed with Danger status
-        - jsonPath: .report.summary.warningCount
+          description: The number of failed checks with critial severity
+        - jsonPath: .report.summary.highCount
           type: integer
-          name: Warning
+          name: High
           priority: 1
-          description: The number of checks that failed with Warning status
-        - jsonPath: .report.summary.passCount
+          description: The number of failed checks with high severity
+        - jsonPath: .report.summary.mediumCount
           type: integer
-          name: Pass
+          name: Medium
           priority: 1
-          description: The number of checks that passed
+          description: The number of failed checks with medium severity
+        - jsonPath: .report.summary.lowCount
+          type: integer
+          name: Low
+          priority: 1
+          description: The number of failed checks with low severity
       schema:
         openAPIV3Schema:
           x-kubernetes-preserve-unknown-fields: true
@@ -302,14 +339,12 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: starboard-conftest-config
+  name: starboard-policies-config
   namespace: aqua
-data:
-  conftest.imageRef: registry.aquasec.com/kube-enforcer:6.5
-  conftest.resources.requests.cpu: 1m
-  conftest.resources.requests.memory: 10M
-  conftest.resources.limits.cpu: 15m
-  conftest.resources.limits.memory: 40M
+  labels:
+    app.kubernetes.io/name: starboard-operator
+    app.kubernetes.io/instance: starboard-operator
+    app.kubernetes.io/version: "0.15.4"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -342,6 +377,8 @@ rules:
       - configmaps
       - secrets
       - serviceaccounts
+      - resourcequotas
+      - limitranges
     verbs:
       - list
       - watch
@@ -366,6 +403,7 @@ rules:
       - replicasets
       - statefulsets
       - daemonsets
+      - deployments
     verbs:
       - get
       - list
@@ -406,6 +444,23 @@ rules:
       - create
       - delete
   - apiGroups:
+      - networking.k8s.io
+    resources:
+      - networkpolicies
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - policy
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - aquasecurity.github.io
     resources:
       - vulnerabilityreports
@@ -441,81 +496,3 @@ subjects:
   - kind: ServiceAccount
     name: starboard-operator
     namespace: aqua
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: starboard-operator
-  namespace: aqua
-  labels:
-    app: starboard-operator
-spec:
-  replicas: 1
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app: starboard-operator
-  template:
-    metadata:
-      labels:
-        app: starboard-operator
-    spec:
-      serviceAccountName: starboard-operator
-      automountServiceAccountToken: true
-      securityContext: {}
-      containers:
-        - name: operator
-          image: docker.io/aquasec/starboard-operator:0.14.1
-          imagePullPolicy: IfNotPresent
-          securityContext:
-            privileged: false
-            readOnlyRootFilesystem: true
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-          env:
-            - name: OPERATOR_NAMESPACE
-              value: aqua
-            - name: OPERATOR_TARGET_NAMESPACES
-              value: ""
-            - name: OPERATOR_LOG_DEV_MODE
-              value: "false"
-            - name: OPERATOR_CONCURRENT_SCAN_JOBS_LIMIT
-              value: "10"
-            - name: OPERATOR_SCAN_JOB_RETRY_AFTER
-              value: 30s
-            - name: OPERATOR_METRICS_BIND_ADDRESS
-              value: :8080
-            - name: OPERATOR_HEALTH_PROBE_BIND_ADDRESS
-              value: :9090
-            - name: OPERATOR_CIS_KUBERNETES_BENCHMARK_ENABLED
-              value: "false"
-            - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
-              value: "false"
-            - name: OPERATOR_BATCH_DELETE_LIMIT
-              value: "10"
-            - name: OPERATOR_BATCH_DELETE_DELAY
-              value: "10s"
-          ports:
-            - name: metrics
-              containerPort: 8080
-            - name: probes
-              containerPort: 9090
-          readinessProbe:
-            httpGet:
-              path: /readyz/
-              port: probes
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:
-              path: /healthz/
-              port: probes
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 10

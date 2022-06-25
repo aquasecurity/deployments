@@ -9,6 +9,7 @@ data:
   AQUA_SERVER: "aqua-gateway:8443"
   RESTART_CONTAINERS: "no"
   AQUA_LOGICAL_NAME: ""
+  AQUA_EXPRESS_MODE: "false"        # Change to true, to enable express mode deployment of enforcer
   # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_enforcer.crt"
   # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_enforcer.key"
   # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"

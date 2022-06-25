@@ -7,7 +7,7 @@ This repository shows the manifest yaml files required to deploy the Aqua CyberC
 * OpenShift
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Offline CyberCenter](https://docs.aquasec.com/v6.5/docs/deploy-offline-cybercenter) for detailed information.
+Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Offline CyberCenter](https://docs.aquasec.com/v2022.4/docs/deploy-offline-cybercenter) for detailed information.
 
 ## Specific OpenShift notes
 The deployment commands shown below use the **kubectl** cli. You can also deploy using the **oc** cli commands, to work on all platforms including OpenShift.

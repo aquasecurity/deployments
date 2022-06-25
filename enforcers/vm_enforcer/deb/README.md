@@ -13,9 +13,7 @@ Following packages are required for installing the VM Enforcer DEB package:
 * runc
 
 ## Deploy VM Enforcer
-| Release Number      |  Build Number          |
-| ------------------- | ------------------------|
-| 6.5.21326.26.1      | 6.5.21336 |
+
 
 **Step 1. Download the DEB package for your architecture, using an authorized username and password.**
 
@@ -35,7 +33,7 @@ Following packages are required for installing the VM Enforcer DEB package:
       --ask-password
      ```
 
-Make sure to replace the `<release-number>` and `<build-number>` with the relevant versions (example: 6.5.0 and 6.5.21215).
+Make sure to replace the `<release-number>` and `<build-number>` with the relevant versions, check aqua release page [aqua update releases](https://docs.aquasec.com/docs/update-releases).
 
 
 **Step 2. Copy the downloaded DEB package to the target VM(s).**

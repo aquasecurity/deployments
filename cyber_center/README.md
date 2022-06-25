@@ -16,5 +16,5 @@ Aqua’s CyberCenter is a cloud-based cyber-intelligence knowledge base, maintai
 * Aqua Enterprise Self-Hosted edition
 
 ## References
-* [CyberCenter Description](https://docs.aquasec.com/v6.5/docs/cybercenter-description)
-* [Information Sent to CyberCenter](https://docs.aquasec.com/v6.5/docs/info-sent-to-cybercenter)
+* [CyberCenter Description](https://docs.aquasec.com/v2022.4/docs/cybercenter-description)
+* [Information Sent to CyberCenter](https://docs.aquasec.com/v2022.4/docs/info-sent-to-cybercenter)

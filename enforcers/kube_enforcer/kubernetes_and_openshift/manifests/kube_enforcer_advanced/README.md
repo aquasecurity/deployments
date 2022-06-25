@@ -70,11 +70,11 @@ You can skip any step in this section, if you have already performed.
         
       1. Generate certs for aqua namespace.
         ```shell
-        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash
+        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash
         ```
       2. Generate certs for custom namespace, Replace the `<namespace name>` in the below command with the namespace where KE is going to be deployed, and run the command.
         ```shell
-        curl https://raw.githubusercontent.com/aquasecurity/deployments/6.5/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash -s -- <namespace name>
+        curl https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash -s -- <namespace name>
         ```
 
    - **Option B (Manual)**: Perform the steps mentioned in the [Deploy the KubeEnforcer Config manually](#deploy-the-kubeenforcer-config-manually) section.
