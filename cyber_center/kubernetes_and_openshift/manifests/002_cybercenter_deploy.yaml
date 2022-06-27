@@ -37,7 +37,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: aqua-cc
-        image: "registry.aquasec.com/cc-standard:latest"
+        image: "aquadev.azurecr.io/cc-standard:latest"
         imagePullPolicy: Always
         args:
         - --address=:5000
