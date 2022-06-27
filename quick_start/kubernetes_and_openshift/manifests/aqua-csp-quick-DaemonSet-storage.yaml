@@ -427,7 +427,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: aquadev.azurecr.io/server:2022.4
+        image: aquadev.azurecr.io/console:2022.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:

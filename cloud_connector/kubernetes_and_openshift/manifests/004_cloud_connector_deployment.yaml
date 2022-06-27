@@ -37,7 +37,7 @@ spec:
           value: ""
         - name: AQUA_TLS_VERIFY
           value: "1"       
-        image: aquadev.azurecr.io/aqua-cloud-connector:2022.4
+        image: aquadev.azurecr.io/aqua-cloud-connector:develop
         imagePullPolicy: Always 
         name: aqua-cloud-connector 
         terminationMessagePath: /dev/termination-log 
