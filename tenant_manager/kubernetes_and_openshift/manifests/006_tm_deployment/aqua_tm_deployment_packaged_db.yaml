@@ -152,7 +152,7 @@ spec:
         fsGroup: 11433
       containers:
       - name: aqua-tenantmanager
-        image: aquadev.azurecr.io/tenantmanager:6.5
+        image: aquadev.azurecr.io/tenantmanager:develop
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
