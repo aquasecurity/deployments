@@ -32,7 +32,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: aquadev.azurecr.io/kube-enforcer:master
+          image: registry.aquasec.com/kube-enforcer:2022.4
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -77,7 +77,7 @@ spec:
             - name: AQUA_KB_IMAGE_NAME
               value: "aquasec/kube-bench:v0.6.8"
             - name: AQUA_ME_IMAGE_NAME
-              value: "aquadev.azurecr.io/microenforcer:2022.4"
+              value: "registry.aquasec.com/microenforcer:2022.4"
             - name: AQUA_KB_ME_REGISTRY_NAME
               value: "aqua-registry"
             - name: AQUA_ENFORCER_DS_NAME
@@ -103,7 +103,7 @@ spec:
           #  - name: aqua-grpc-kube-enforcer
           #    mountPath: /opt/aquasec/ssl
         - name: envoy
-          image: aquadev.azurecr.io/envoy:2022.4
+          image: registry.aquasec.com/envoy:2022.4
           env:
           - name: ENVOY_UID
             value: "0"

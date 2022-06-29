@@ -241,7 +241,7 @@ spec:
     spec:
       containers:
         - name: aqua-audit-db
-          image: aquadev.azurecr.io/database:2022.4
+          image: registry.aquasec.com/database:2022.4
           ports:
             - name: aqua-audit-db
               containerPort: 5432
@@ -332,7 +332,7 @@ spec:
     spec:
       containers:
         - name: aqua-db
-          image: aquadev.azurecr.io/database:2022.4
+          image: registry.aquasec.com/database:2022.4
           ports:
             - name: aqua-db
               containerPort: 5432
@@ -433,7 +433,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-web
-        image: aquadev.azurecr.io/console:2022.4
+        image: registry.aquasec.com/console:2022.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -536,7 +536,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: aqua-gateway
-        image: aquadev.azurecr.io/gateway:2022.4
+        image: registry.aquasec.com/gateway:2022.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -917,7 +917,7 @@ metadata:
   name: starboard-conftest-config
   namespace: aqua
 data:
-  conftest.imageRef: aquadev.azurecr.io/kube-enforcer:master
+  conftest.imageRef: registry.aquasec.com/kube-enforcer:2022.4
   conftest.resources.requests.cpu: 1m
   conftest.resources.requests.memory: 10M
   conftest.resources.limits.cpu: 15m
@@ -1166,7 +1166,7 @@ spec:
       serviceAccountName: aqua-kube-enforcer-sa
       containers:
         - name: kube-enforcer
-          image: aquadev.azurecr.io/kube-enforcer:master
+          image: registry.aquasec.com/kube-enforcer:2022.4
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
@@ -1251,7 +1251,7 @@ spec:
         envFrom:
         - configMapRef:
             name: aqua-csp-enforcer
-        image: aquadev.azurecr.io/agent:master
+        image: registry.aquasec.com/enforcer:2022.4
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
