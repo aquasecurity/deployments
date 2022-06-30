@@ -35,7 +35,7 @@ spec:
       serviceAccount: aqua-sa
       containers:
       - name: envoy
-        image: registry.aquasec.com/envoy:develop
+        image: registry.aquasec.com/envoy:2022.4
         env:
         - name: ENVOY_UID
           value: "0"
