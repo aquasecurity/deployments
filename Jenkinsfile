@@ -185,6 +185,8 @@ pipeline {
                 allOf {
                     not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
                     expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                    expression { env.CHANGE_TARGET != 'develop' }
+
                 }
             }
             steps {
@@ -199,6 +201,8 @@ pipeline {
                 allOf {
                     not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
                     expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                    expression { env.CHANGE_TARGET != 'develop' }
+
                 }
             }
             steps {
