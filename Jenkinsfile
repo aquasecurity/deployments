@@ -187,6 +187,10 @@ pipeline {
                     not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
                     expression { return deployments.runCloudFormation(CHANGE_TARGET) }
                 }
+                not{
+                    branch 'develop'
+                }
+
             }
             steps {
                 script {
@@ -201,6 +205,10 @@ pipeline {
                     not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
                     expression { return deployments.runCloudFormation(CHANGE_TARGET) }
                 }
+                not{
+                    branch 'develop'
+                }
+
             }
             steps {
                 script {
