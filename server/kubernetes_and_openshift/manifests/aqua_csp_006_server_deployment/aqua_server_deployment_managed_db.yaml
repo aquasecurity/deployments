@@ -28,7 +28,7 @@ spec:
       - name: aqua-web
         image: registry.aquasec.com/console:2022.4
         imagePullPolicy: IfNotPresent
-##        resources:
+#        resources:
 #          limits:
 #            cpu: 3000m
 #            memory: 2Gi
