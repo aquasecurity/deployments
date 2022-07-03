@@ -42,7 +42,7 @@ pipeline {
         stage("Checkout") {
             steps {
                 script {
-                    log.info ${env.BRANCH_NAME}
+                    log.info "${env.BRANCH_NAME}"
                     log.info "CHANGE_TARGET: ${CHANGE_TARGET}"
                     log.info "CHANGE_BRANCH: ${CHANGE_BRANCH}"
                     deployment.clone branch: "master"
