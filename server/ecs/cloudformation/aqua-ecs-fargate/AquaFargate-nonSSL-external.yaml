@@ -699,7 +699,7 @@ Resources:
             Condition:
               StringEquals:
                 s3:x-amz-acl: bucket-owner-full-control
-  #mysecrets
+  ##mysecrets
   SecretU:
     Type: AWS::SecretsManager::Secret
     Properties:
