@@ -25,6 +25,7 @@ data:
   AQUA_ME_IMAGE_NAME: "registry.aquasec.com/microenforcer:2022.4"
   AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
   AQUA_ENFORCER_DS_NAME: "aqua-agent"             #Sets Deamonset Name
+  AQUA_ME_GW_CERT_SECRET_NAME: ""
   # Enable the below Env for mTLS between kube-enforcer and gateway
   # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
   # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"

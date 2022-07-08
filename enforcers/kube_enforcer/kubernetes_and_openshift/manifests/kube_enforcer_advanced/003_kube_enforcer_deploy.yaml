@@ -82,6 +82,8 @@ spec:
               value: "aqua-registry"
             - name: AQUA_ENFORCER_DS_NAME
               value: "aqua-agent"                #Sets Deamonset Name
+            - name: AQUA_ME_GW_CERT_SECRET_NAME
+              value: ""
             - name: AQUA_ENVOY_MODE
               value: "true"
             # Enable KA policy scanning via starboard
