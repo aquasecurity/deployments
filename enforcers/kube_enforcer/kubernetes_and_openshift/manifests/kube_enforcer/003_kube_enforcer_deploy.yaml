@@ -15,6 +15,7 @@ kind: Deployment
 metadata:
   name: aqua-kube-enforcer
   namespace: aqua
+  branch: develop
   labels:
     app: aqua-kube-enforcer
     aqua.component: kubeenforcer
