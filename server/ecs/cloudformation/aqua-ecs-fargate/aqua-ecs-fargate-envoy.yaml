@@ -327,7 +327,7 @@ Resources:
         - '-'
         - - !Ref EcsCluster
           - aqua-console
-      DesiredCount: '1'
+      DesiredCount: '2'
       DeploymentConfiguration:
         MaximumPercent: '100'
         MinimumHealthyPercent: '0'
@@ -648,8 +648,8 @@ Resources:
           ToPort: '443'
           CidrIp: !Ref AquaConsoleAccess
         - IpProtocol: tcp
-          FromPort: '8433'
-          ToPort: '8433'
+          FromPort: '8443'
+          ToPort: '8443'
           CidrIp: !Ref AquaConsoleAccess
   AquaFargateSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
