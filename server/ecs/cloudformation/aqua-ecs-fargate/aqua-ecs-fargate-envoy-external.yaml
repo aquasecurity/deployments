@@ -224,7 +224,7 @@ Resources:
         - '-'
         - - !Ref EcsCluster
           - aqua-console
-      DesiredCount: '2'
+      DesiredCount: '1'
       DeploymentConfiguration:
         MaximumPercent: '100'
         MinimumHealthyPercent: '0'
