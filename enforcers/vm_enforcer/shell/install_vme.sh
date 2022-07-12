@@ -20,7 +20,10 @@ TLS verify Flag (Optional):
     --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
     NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
     --publiccert-file             path to Client public certififate
-    --privatekey-file             path to Client private key  
+    --privatekey-file             path to Client private key
+CPU & memory limits (Optional):
+    --memory-limit                enforcer memory limit in Gb. default: 2.6
+    --cpu-limit                   enforcer cpu limit in cores. default: 2
 
 EOF
 
@@ -71,6 +74,12 @@ load_config_from_env() {
       exit 1
     fi
     is_bin_in_path curl || error_message "curl is not installed on this host"
+  fi
+  if [ -n "${MEMORY_LIMIT}" ]; then
+    AQUA_MEMORY_LIMIT=$(echo `echo "1024*1024*1024*${MEMORY_LIMIT}/1" | bc -l` | cut -d. -f1)
+  fi
+  if [ -n "${CPU_LIMIT}" ]; then
+    AQUA_QUOTA_CPU_LIMIT=$(echo `echo 100000*${CPU_LIMIT} | bc -l` | cut -d. -f1)
   fi
 }
 
@@ -123,7 +132,7 @@ prerequisites_check() {
 
 is_flag_value_valid() {
   [ -z "$2" ] && error_message "Value is missing. please set $1 [value]"
-  flags=("-v" "--version" "-u" "--aqua-username" "-p" "--aqua-password" "-t" "--token" "-g" "--gateway" "-tls" "--aqua-tls-verify" "--rootca-file" "--publiccert-file" "--privatekey-file" "-f" "--tar-file" "-c" "--config-file" "-i" "--install-path")
+  flags=("-v" "--version" "-u" "--aqua-username" "-p" "--aqua-password" "-t" "--token" "-g" "--gateway" "-tls" "--aqua-tls-verify" "--rootca-file" "--publiccert-file" "--privatekey-file" "-f" "--tar-file" "-c" "--config-file" "-i" "--install-path" "--memory-limit" "--cpu-limit")
   for flag in "${flags[@]}"; do
     if [ "${flag}" == "$2" ]; then
       error_message "Value is missing. please set $1 [value]"
@@ -202,7 +211,9 @@ edit_templates_sh() {
   	s|AQUA_TLS_VERIFY=.*\"|AQUA_TLS_VERIFY=${AQUA_TLS_VERIFY}\"|;
     s|AQUA_ROOT_CA=.*\"|AQUA_ROOT_CA=${AQUA_ROOT_CA}\"|;
     s|AQUA_PUBLIC_KEY=.*\"|AQUA_PUBLIC_KEY=${AQUA_PUBLIC_KEY}\"|;
-    s|AQUA_PRIVATE_KEY=.*\"|AQUA_PRIVATE_KEY=${AQUA_PRIVATE_KEY}\",\"AQUA_ENFORCER_TYPE=host\"|" ${ENFORCER_RUNC_CONFIG_TEMPLATE} >${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
+    s|AQUA_PRIVATE_KEY=.*\"|AQUA_PRIVATE_KEY=${AQUA_PRIVATE_KEY}\"|;
+    s|\"limit\"\:.*|\"limit\"\: ${AQUA_MEMORY_LIMIT}|;
+    s|AQUA_QUOTA_CPU_LIMIT=.*|AQUA_QUOTA_CPU_LIMIT=${AQUA_QUOTA_CPU_LIMIT}\",\"AQUA_ENFORCER_TYPE=host\"|" ${ENFORCER_RUNC_CONFIG_TEMPLATE} >${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
 
   echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} file."
   sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${RUN_SCRIPT_TEMPLATE_FILE_NAME} >${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} && chmod +x ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME}
@@ -271,6 +282,8 @@ setup_sh_env() {
   ENFORCER_SERVICE_FILE_NAME_PATH="${SYSTEMD_FOLDER}/${ENFORCER_SERVICE_FILE_NAME}"
   ENFORCER_RUNC_CONFIG_FILE_NAME="config.json"
   ENFORCER_SELINUX_POLICY_FILE_NAME="aquavme.pp"
+  AQUA_CPU_LIMIT=200000
+  AQUA_MEMORY_LIMIT=2791728742
 }
 
 cp_files_rpm() {
@@ -413,6 +426,18 @@ bootstrap_args_sh() {
       ;;
     --custom-envs)
       CUSTOM_ENVS="$2"
+      shift
+      shift
+      ;;
+    --cpu-limit)
+      is_flag_value_valid "--cpu-limit" "$2"
+      CPU_LIMIT="$2"
+      shift
+      shift
+      ;;
+    --memory-limit)
+      is_flag_value_valid "--memory-limit" "$2"
+      MEMORY_LIMIT="$2"
       shift
       shift
       ;;
