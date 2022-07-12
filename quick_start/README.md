@@ -23,4 +23,4 @@ It is **not** suited for:
 - Aqua Enterprise Self-Hosted
 
 ## Resources
-- [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/docs/quick-start-guide-for-kubernetes)
+- [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/v6.5/docs/quick-start-guide-for-kubernetes)

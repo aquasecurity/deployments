@@ -13,7 +13,8 @@ VM Enforcers provide the enforcement and assurance for your hosts (VMs). It is r
 ## Deployment methods
 
 * [**Ansible Playbook**](./ansible/): for deploying VM Enforcer on a set of wide range of linux operating system VMs at a time
-* [**RPM Package**](./rpm/): for deploying VM Enforcer on Red Hat based operating system which supports `.rpm` packages
+* [**Debian Package**](./deb/): for deploying VM Enforcer on one or more VMs using the Debian package
+* [**RPM Package**](./rpm/): for deploying VM Enforcer on Red Hat based operating system which supports the `.rpm` packages
 * [**Shell Script**](./shell/): for depoying VM Enforcer using script
 
 ## Suited for
@@ -23,5 +24,5 @@ VM Enforcers provide the enforcement and assurance for your hosts (VMs). It is r
 
 ## Resources
 
-* [VM Enforcer Overview](https://docs.aquasec.com/docs/enforcers-overview#section-vm-enforcers)
-* [Create a VM Enforcer Group and VM Enforcer](https://docs.aquasec.com/docs/create-a-vm-enforcer-group-and-vm-enforcer)
+* [VM Enforcer Overview](https://docs.aquasec.com/v6.5/docs/enforcers-overview#section-vm-enforcers)
+* [Create a VM Enforcer Group and VM Enforcer](https://docs.aquasec.com/v6.5/docs/create-a-vm-enforcer-group-and-vm-enforcer)

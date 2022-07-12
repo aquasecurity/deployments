@@ -6,7 +6,7 @@ Debian is a popular and freely-available computer operating system that uses the
 You can use DEB package to deploy a VM Enforcer on one or more VMs (hosts).
 
 ## Prerequisites
-Following packages are required for installing VM Enforcer `.deb` package:
+Following packages are required for installing the VM Enforcer DEB package:
 * wget
 * tar
 * jq
@@ -38,10 +38,10 @@ Following packages are required for installing VM Enforcer `.deb` package:
 Make sure to replace the `<release-number>` and `<build-number>` with the relevant versions (example: 6.5.0 and 6.5.21215).
 
 
-**Step 2. Copy the downloaded DEB package onto the target VM(s).**
+**Step 2. Copy the downloaded DEB package to the target VM(s).**
 
 
-**Step 3. Write the `aquavmenforcer.json` configuration file**
+**Step 3. Write the `aquavmenforcer.json` configuration file.**
 
 ```shell
 sudo mkdir -p /etc/conf/
@@ -50,35 +50,43 @@ sudo touch /etc/conf/aquavmenforcer.json
 
 **Step 4. Run the following command with the relevant values for:**
 
-   * `GATEWAY_HOSTENAME` and `PORT`: Aqua Gateway host/IP address and port
+   * `GATEWAY_HOSTNAME` and `PORT`: Aqua Gateway host/IP address and port
    * `TOKEN_VALUE`: Enforcer group token
-   * `AQUA_TLS_VERIFY_VALUE`: false\true, Set up the enforcer with tls-verify. This is optional, but it is **MANDATORY** for aqua **cloud** users with value `true`.
+   * `AQUA_TLS_VERIFY_VALUE`: *(Optional)* false\true. Set up the enforcer with tls-verify optionally. This configuration is **MANDATORY** for aqua **cloud** users, by setting up with value `true`.
+   * If `AQUA_TLS_VERIFY_VALUE` value is `true` below values are **MANDATORY** :
+   * `ROOT_CA_PATH`: path to root CA certififate (Incase of self-signed certificate otherwise `ROOT_CA_PATH` is **OPTIONAL** )
+   [NOTE]: ROOT_CA_PATH certificate value must be same as that is used to generate Gateway certificates
+   * `PUBLIC_KEY_PATH`: path to Client public certififate
+   * `PRIVATE_KEY_PATH`: path to Client private key   
    
    ```shell
    sudo tee /etc/conf/aquavmenforcer.json << EOF
    {
-       "AQUA_GATEWAY": "{GATEWAY_HOSTENAME}:{PORT}",
+       "AQUA_GATEWAY": "{GATEWAY_HOSTNAME}:{PORT}",
        "AQUA_TOKEN": "{TOKEN_VALUE}",
-       "AQUA_TLS_VERIFY": {AQUA_TLS_VERIFY_VALUE}
+       "AQUA_TLS_VERIFY": {AQUA_TLS_VERIFY_VALUE},
+       "AQUA_ROOT_CA": "{ROOT_CA_PATH}",
+       "AQUA_PUBLIC_KEY": "{PUBLIC_KEY_PATH}",
+       "AQUA_PRIVATE_KEY": "{PRIVATE_KEY_PATH}"       
    }
    EOF
    ```
 
-**Step 5. Deploy the DEB**
+**Step 5. Deploy the DEB package.**
 
 ```shell
-sudo dpkg -i /path/to/aqua-vm-enforcer-{version}.{arch}.deb
+sudo dpkg -i /path/to/aqua-vm-enforcer-{version}.{amd64}.deb
 ```
 
 ## Upgrade
 
-To upgrade the VM Enforcer using the DEB package:
+To upgrade VM Enforcer using the DEB package:
 
 1. Download the (updated) DEB package. Refer to step 1 in the [Deploy VM Enforcer](#deploy-vm-enforcer) section.
-2. Upgrade the VM Enforcer using the following command:
+2. Upgrade VM Enforcer.
 
 ```shell
-sudo dpkg -i /path/to/aqua-vm-enforcer-<version>.<arch>.deb
+sudo dpkg -i /path/to/aqua-vm-enforcer-<version>.<amd64>.deb
 ```
 
 ## Troubleshooting
@@ -101,26 +109,26 @@ sudo systemctl status aqua-enforcer
 
 2. Check the journal logs.
 
-If the service status is inactive or shows any errors, you can check the journalctl logs for more details:
+If the service status is inactive or showing any errors, you can check the journalctl logs for more details.
 
 ```shell
 sudo journalctl -u aqua-enforcer.service
 ```
    
 ## Uninstall
-To uninstall the VM Enforcer `deb` package:
+Uninstall the VM Enforcer DEB package:
 
 ```shell
 sudo dpkg -r aqua-vm-enforcer
 ```
 
-## Build an DEB package (optional)
+## Build a DEB package (optional)
 
-To Build an DEB package for VM-Enforcer:
+To Build a DEB package for VM Enforcer:
 1. Update the DEB scripts as required.
 2. Update the DEB version in `nfpm.yaml`.
-3. Upload the VM-Enforcer archive to `archives` folder.
-4. Create environment variables of `DEB_ARCH` and `DEB_VERSION`.
+3. Upload the VM Enforcer archive to `archives` folder.
+4. Create environment variables, `DEB_ARCH` and `DEB_VERSION`.
 
 ```shell
 export DEB_ARCH=amd64 #change to arm64 for arm based systems
@@ -135,7 +143,7 @@ sudo apt update
 sudo apt install nfpm
 ```
 
-6. Build the DEB.
+6. Build the DEB package.
 
 ```shell
 mkdir -p pkg

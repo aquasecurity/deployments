@@ -17,5 +17,5 @@ Following are the enforcers that can be deployed in Aqua:
 * Aqua Self-Hosted Enterprise edition
 
 ### References
-For more information on the Aqua enforcers, refer the product documentation, [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview) and [Assurance and Enforcement Overview](https://docs.aquasec.com/docs/assurance-and-enforcement-overview).
+For more information on the Aqua enforcers, refer the product documentation, [Enforcers Overview](https://docs.aquasec.com/v6.5/docs/enforcers-overview) and [Assurance and Enforcement Overview](https://docs.aquasec.com/v6.5/docs/assurance-and-enforcement-overview).
 

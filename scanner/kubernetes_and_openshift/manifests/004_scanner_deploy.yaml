@@ -18,12 +18,14 @@ metadata:
   namespace: aqua
   labels:
     app: aqua-scanner
+    aqua.component: scanner
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: aqua-scanner
+        aqua.component: scanner
     spec:
       serviceAccountName: aqua-sa
       securityContext:
@@ -65,8 +67,7 @@ spec:
             #- name: "docker-socket-mount"
             #  mountPath: "/var/run/docker.sock"
             - name: "ssl-certs"
-              mountPath: "/etc/ssl/certs"
-              readOnly: true
+              mountPath: "/etc/ssl/certs/aqua-ssl.crt"
 #            - mountPath: /opt/aquascans
 #              name: aquascans
 #            - mountPath: /opt/aquasec/ssl

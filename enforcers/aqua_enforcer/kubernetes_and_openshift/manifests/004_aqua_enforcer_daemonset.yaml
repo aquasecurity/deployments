@@ -3,6 +3,7 @@ kind: DaemonSet
 metadata:
   labels:
     app: aqua-agent
+    aqua.component: enforcer
   name: aqua-agent
   namespace: aqua
 spec:
@@ -13,6 +14,7 @@ spec:
     metadata:
       labels:
         app: aqua-agent
+        aqua.component: enforcer
       name: aqua-agent
       namespace: aqua
       annotations:
@@ -58,7 +60,6 @@ spec:
         - containerPort: 8096
           protocol: TCP
         name: aqua-agent
-        resources: {}
         securityContext:
           privileged: false
           capabilities:

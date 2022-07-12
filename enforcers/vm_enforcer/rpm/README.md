@@ -50,16 +50,24 @@ sudo touch /etc/conf/aquavmenforcer.json
 
 **Step 4. Run the following command with the relevant values for:**
 
-   * `GATEWAY_HOSTENAME` and `PORT`: Aqua Gateway host/IP address and port
+   * `GATEWAY_HOSTNAME` and `PORT`: Aqua Gateway host/IP address and port
    * `TOKEN_VALUE`: Enforcer group token
    * `AQUA_TLS_VERIFY_VALUE`: false\true, Set up the enforcer with tls-verify. This is optional, but it is **MANDATORY** for aqua **cloud** users with value `true`.
+   * If `AQUA_TLS_VERIFY_VALUE` value is `true` below values are **MANDATORY** :
+   * `ROOT_CA_PATH`: path to root CA certififate (Incase of self-signed certificate otherwise `ROOT_CA_PATH` is **OPTIONAL** )
+   [NOTE]: ROOT_CA_PATH certificate value must be same as that is used to generate Gateway certificates
+   * `PUBLIC_KEY_PATH`: path to Client public certififate
+   * `PRIVATE_KEY_PATH`: path to Client private key
    
    ```shell
    sudo tee /etc/conf/aquavmenforcer.json << EOF
    {
-       "AQUA_GATEWAY": "{GATEWAY_HOSTENAME}:{PORT}",
+       "AQUA_GATEWAY": "{GATEWAY_HOSTNAME}:{PORT}",
        "AQUA_TOKEN": "{TOKEN_VALUE}",
-       "AQUA_TLS_VERIFY": {AQUA_TLS_VERIFY_VALUE}
+       "AQUA_TLS_VERIFY": {AQUA_TLS_VERIFY_VALUE},
+       "AQUA_ROOT_CA": "{ROOT_CA_PATH}",
+       "AQUA_PUBLIC_KEY": "{PUBLIC_KEY_PATH}",
+       "AQUA_PRIVATE_KEY": "{PRIVATE_KEY_PATH}"       
    }
    EOF
    ```
@@ -123,19 +131,25 @@ To Build an RPM package for VM-Enforcer:
 4. Create environment variables of `RPM_ARCH` and `RPM_VERSION`.
 
 ```shell
-export RPM_ARCH=amd64 #change to arm64 for arm based systems
+export RPM_ARCH=x86_64 #change to arm64 for arm based systems
 export RPM_VERSION=6.5.0 #mention version for VM Enforcer
 ```
 
 5. Download NFPM (RPM Package Creator).
 
 ```shell
-curl -sfL https://install.goreleaser.com/github.com/goreleaser/nfpm.sh | sh
+    echo '[goreleaser]
+    name=GoReleaser
+    baseurl=https://repo.goreleaser.com/yum/
+    enabled=1
+    gpgcheck=0' | sudo tee /etc/yum.repos.d/goreleaser.repo
+    sudo yum install nfpm
+
 ```
 
 6. Build the RPM.
 
 ```shell
 mkdir -p pkg
-./bin/nfpm pkg --packager rpm --target ./pkg/
+nfpm pkg --packager rpm --target ./pkg/
 ```

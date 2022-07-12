@@ -26,16 +26,47 @@ load_config_from_env() {
     GATEWAY_ENDPOINT=""
     AQUA_TOKEN=""
     AQUA_TLS_VERIFY=false
+    AQUA_ROOT_CA=""
+    AQUA_PUBLIC_KEY=""
+    AQUA_PRIVATE_KEY=""
   else
     echo "Info: Config File found, loading configuration"
     AQUA_CONFIG=$(cat ${CONFIG_FILE})
     GATEWAY_ENDPOINT=$(echo ${AQUA_CONFIG} | jq '.AQUA_GATEWAY // empty' | sed -e 's/^"//' -e 's/"$//')
     AQUA_TOKEN=$(echo ${AQUA_CONFIG} | jq '.AQUA_TOKEN // empty' | sed -e 's/^"//' -e 's/"$//')
     AQUA_TLS_VERIFY=$(echo ${AQUA_CONFIG} | jq '.AQUA_TLS_VERIFY // empty' | sed -e 's/^"//' -e 's/"$//')
+    echo $AQUA_TLS_VERIFY "---------------------"
+
+    AQUA_ROOT_CA_PATH=$(echo ${AQUA_CONFIG} | jq '.AQUA_ROOT_CA // empty' | sed -e 's/^"//' -e 's/"$//')
+    AQUA_PUBLIC_KEY_PATH=$(echo ${AQUA_CONFIG} | jq '.AQUA_PUBLIC_KEY // empty' | sed -e 's/^"//' -e 's/"$//')
+    AQUA_PRIVATE_KEY_PATH=$(echo ${AQUA_CONFIG} | jq '.AQUA_PRIVATE_KEY // empty' | sed -e 's/^"//' -e 's/"$//')
+    if ([ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -n "${AQUA_PRIVATE_KEY_PATH}" ]) || ([ -n "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]); then
+      echo "AQUA_PUBLIC_KEY AQUA_PRIVATE_KEY values are missing from ${AQUA_CONFIG}, incase of self-signed certificates AQUA_ROOT_CA is required"
+      exit 1
+    fi
+    if [ -n "${AQUA_PUBLIC_KEY_PATH}" ] && [ -n "${AQUA_PRIVATE_KEY_PATH}" ]; then
+      if [ -n "${AQUA_ROOT_CA_PATH}" ] && [ -e "${AQUA_ROOT_CA_PATH}" ]; then
+        ROOT_CA_FILENAME=$(basename "$AQUA_ROOT_CA_PATH")
+        AQUA_ROOT_CA="/opt/aquasec/ssl/$ROOT_CA_FILENAME"
+      fi  
+      PUBLIC_KEY_FILENAME=$(basename "$AQUA_PUBLIC_KEY_PATH")
+      PRIVATE_KEY_FILENAME=$(basename "$AQUA_PRIVATE_KEY_PATH")
+      AQUA_PUBLIC_KEY="/opt/aquasec/ssl/$PUBLIC_KEY_FILENAME"
+      AQUA_PRIVATE_KEY="/opt/aquasec/ssl/$PRIVATE_KEY_FILENAME"
+    fi      
     if [ -z "${AQUA_TLS_VERIFY}" ]; then
       echo "Info: AQUA_TLS_VERIFY var is missing, Setting it to 'false'"
       AQUA_TLS_VERIFY=false
+      AQUA_ROOT_CA=""
+      AQUA_PUBLIC_KEY=""
+      AQUA_PRIVATE_KEY=""
     fi
+    if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]; then
+      echo "Info: AQUA_ROOT_CA, AQUA_PUBLIC_KEY, AQUA_PRIVATE_KEY  var is missing, Setting it to blank "
+      AQUA_ROOT_CA=""
+      AQUA_PUBLIC_KEY=""
+      AQUA_PRIVATE_KEY=""
+    fi    
     if [ -z "${GATEWAY_ENDPOINT}" ] || [ -z "${AQUA_TOKEN}" ]; then
       echo "Error: Requires \$GATEWAY_ENDPOINT && \$AQUA_TOKEN to be exposed an ENV variables."
       exit 1
@@ -106,9 +137,12 @@ edit_templates_rpm() {
 		s|AQUA_PRODUCT_PATH=.*\"|AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\"|;
 		s|AQUA_INSTALL_PATH=.*\"|AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\"|;
 		s|AQUA_SERVER=.*\"|AQUA_SERVER=${GATEWAY_ENDPOINT}\"|;
-		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${AQUA_TOKEN}\"|;
-		s|AQUA_TLS_VERIFY=.*\"|AQUA_TLS_VERIFY=${AQUA_TLS_VERIFY}\"|;
-		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\",\"AQUA_ENFORCER_TYPE=host\"|" ${TEMPLATE_DIR}/${ENFORCER_RUNC_CONFIG_TEMPLATE} >${RUNC_TMP_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
+		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${AQUA_TOKEN}\"|;    
+		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\"|;
+  	s|AQUA_TLS_VERIFY=.*\"|AQUA_TLS_VERIFY=${AQUA_TLS_VERIFY}\"|;
+    s|AQUA_ROOT_CA=.*\"|AQUA_ROOT_CA=${AQUA_ROOT_CA}\"|;
+    s|AQUA_PUBLIC_KEY=.*\"|AQUA_PUBLIC_KEY=${AQUA_PUBLIC_KEY}\"|;
+    s|AQUA_PRIVATE_KEY=.*\"|AQUA_PRIVATE_KEY=${AQUA_PRIVATE_KEY}\",\"AQUA_ENFORCER_TYPE=host\"|" ${TEMPLATE_DIR}/${ENFORCER_RUNC_CONFIG_TEMPLATE} >${RUNC_TMP_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
 
   echo "Info: Creating ${RUN_SCRIPT_FILE_NAME} file."
   sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${TEMPLATE_DIR}/${RUN_SCRIPT_TEMPLATE_FILE_NAME} >${RUNC_TMP_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} && chmod +x ${RUNC_TMP_DIRECTORY}/${RUN_SCRIPT_FILE_NAME}
@@ -181,6 +215,14 @@ create_folder_rpm() {
   mkdir ${INSTALL_PATH}/aquasec/audit 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/tmp 2>/dev/null
   mkdir ${INSTALL_PATH}/aquasec/data 2>/dev/null
+  mkdir ${INSTALL_PATH}/aquasec/ssl 2>/dev/null
+  if [ -n "${AQUA_ROOT_CA_PATH}" ] && [ -e "${AQUA_ROOT_CA_PATH}" ]; then
+    cp ${AQUA_ROOT_CA_PATH} /opt/aquasec/ssl
+  fi  
+  if [ -n "${AQUA_PUBLIC_KEY_PATH}" ] && [ -n "${AQUA_PRIVATE_KEY_PATH}" ]; then
+    cp ${AQUA_PUBLIC_KEY_PATH} /opt/aquasec/ssl
+    cp ${AQUA_PRIVATE_KEY_PATH} /opt/aquasec/ssl
+  fi 
   rm -f /opt/aquasec/tmp/aquasec.log && touch /opt/aquasec/tmp/aquasec.log
   mkdir -p ${ENFORCER_RUNC_FS_DIRECTORY} 2>/dev/null
   mkdir -p ${TEMPLATE_DIR}
