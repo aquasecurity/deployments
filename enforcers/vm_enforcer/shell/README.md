@@ -41,10 +41,17 @@ Switch to the root user and run:
 
   AQUA_TLS_VERIFY   bool           default value = false
   -tls, --aqua-tls-verify aqua_tls_verify
-  --rootca-file                 path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+  --rootca-file                  path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
   NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
   --publiccert-file              path to Client public certififate
-  --privatekey-file             path to Client private key  
+  --privatekey-file              path to Client private key  
+
+  AQUA_MEMORY_LIMIT (Optional):
+  AQUA_MEMORY_LIMIT  numeric     enforcer memory limit in Gb. default: 2.6
+
+  AQUA_CPU_LIMIT (Optional):
+  AQUA_CPU_LIMIT     numeric     enforcer cpu limit in cores. default: 2
+ 
 ```
 
 ### Offline mode
@@ -97,6 +104,9 @@ Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in 
   NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
   --publiccert-file             path to Client public certififate
   --privatekey-file             path to Client private key   
+  CPU & memory limits (Optional):
+  --memory-limit                enforcer memory limit in Gb. default: 2.6
+  --cpu-limit                   enforcer cpu limit in cores. default: 2
 ```
 
 **Syntax: Deploy VM Enforcer with TLS enabled**
