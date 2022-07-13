@@ -33,24 +33,24 @@ Switch to the root user and run:
   GATEWAY_ENDPOINT  string         Aqua Gateway address
   TOKEN             string         Aqua Enforcer token
 
-  DOWNLOAD_MODE     bool	         download artifacts from aquasec default value = true
-  AQUA_USERNAME     string	       Aqua username
-  AQUA_PWD          string	       Aqua password
+  DOWNLOAD_MODE     bool           download artifacts from aquasec default value = true
+  AQUA_USERNAME     string         Aqua username
+  AQUA_PWD          string         Aqua password
 
   AQUA_TLS_VERIFY (Optional):
 
   AQUA_TLS_VERIFY   bool           default value = false
   -tls, --aqua-tls-verify aqua_tls_verify
-  --rootca-file                  path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
+  --rootca-file                    path to root CA certififate (Incase of self-signed certificate otherwise --rootca-file is optional )
   NOTE: --rootca-file certificate value must be same as that is used to generate Gateway certificates
-  --publiccert-file              path to Client public certififate
-  --privatekey-file              path to Client private key  
+  --publiccert-file                path to Client public certififate
+  --privatekey-file                path to Client private key  
 
   AQUA_MEMORY_LIMIT (Optional):
-  AQUA_MEMORY_LIMIT  numeric     enforcer memory limit in Gb. default: 2.6
+  AQUA_MEMORY_LIMIT  numeric       enforcer memory limit in Gb. default value = 2.6
 
   AQUA_CPU_LIMIT (Optional):
-  AQUA_CPU_LIMIT     numeric     enforcer cpu limit in cores. default: 2
+  AQUA_CPU_LIMIT     numeric       enforcer cpu limit in cores. default value = 2
  
 ```
 
@@ -96,7 +96,7 @@ Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in 
   -v, --version  string         Aqua Enforcer version
   -g, --gateway  string         Aqua Gateway address
   -t, --token    string         Aqua Enforcer token
-  -d, --download bool           Download Aqua Host Enforcer ( default value = true)
+  -d, --download bool           Download Aqua Host Enforcer ( default value = true )
 
   TLS verify Flag (Optional):
   -tls, --aqua-tls-verify aqua_tls_verify
@@ -105,8 +105,8 @@ Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in 
   --publiccert-file             path to Client public certififate
   --privatekey-file             path to Client private key   
   CPU & memory limits (Optional):
-  --memory-limit                enforcer memory limit in Gb. default: 2.6
-  --cpu-limit                   enforcer cpu limit in cores. default: 2
+  --memory-limit                enforcer memory limit in Gb ( default value = 2.6 )
+  --cpu-limit                   enforcer cpu limit in cores ( default value = 2 )
 ```
 
 **Syntax: Deploy VM Enforcer with TLS enabled**
