@@ -37,7 +37,7 @@ load_config_from_env() {
     AQUA_TLS_VERIFY=false
     AQUA_ROOT_CA=""
     AQUA_PUBLIC_KEY=""
-    AQUA_PRIVATE_KEY=""    
+    AQUA_PRIVATE_KEY=""  
   else
     echo "Info: Config File found, loading configuration"
     AQUA_CONFIG=$(cat ${CONFIG_FILE})
@@ -49,6 +49,8 @@ load_config_from_env() {
     AQUA_ROOT_CA_PATH=$(echo ${AQUA_CONFIG} | jq '.AQUA_ROOT_CA // empty' | sed -e 's/^"//' -e 's/"$//')
     AQUA_PUBLIC_KEY_PATH=$(echo ${AQUA_CONFIG} | jq '.AQUA_PUBLIC_KEY // empty' | sed -e 's/^"//' -e 's/"$//')
     AQUA_PRIVATE_KEY_PATH=$(echo ${AQUA_CONFIG} | jq '.AQUA_PRIVATE_KEY // empty' | sed -e 's/^"//' -e 's/"$//')
+    CPU_LIMIT=$(echo ${AQUA_CONFIG} | jq '.AQUA_CPU_LIMIT // empty' | sed -e 's/^"//' -e 's/"$//')
+    MEMORY_LIMIT=$(echo ${AQUA_CONFIG} | jq '.AQUA_MEMORY_LIMIT // empty' | sed -e 's/^"//' -e 's/"$//')
     if ([ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -n "${AQUA_PRIVATE_KEY_PATH}" ]) || ([ -n "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]); then
       echo "AQUA_PUBLIC_KEY AQUA_PRIVATE_KEY values are missing from ${AQUA_CONFIG}, incase of self-signed certificates AQUA_ROOT_CA is required"
       exit 1
@@ -69,7 +71,7 @@ load_config_from_env() {
       AQUA_TLS_VERIFY=false
       AQUA_ROOT_CA=""
       AQUA_PUBLIC_KEY=""
-      AQUA_PRIVATE_KEY=""      
+      AQUA_PRIVATE_KEY=""
     fi
     if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]; then
       echo "Info: AQUA_ROOT_CA, AQUA_PUBLIC_KEY, AQUA_PRIVATE_KEY  var is missing, Setting it to blank "
@@ -80,6 +82,12 @@ load_config_from_env() {
     if [ -z "${GATEWAY_ENDPOINT}" ] || [ -z "${AQUA_TOKEN}" ]; then
       echo "Error: Requires \$GATEWAY_ENDPOINT && \$AQUA_TOKEN to be exposed an ENV variables."
       exit 1
+    fi
+    if [ -n "${MEMORY_LIMIT}" ]; then
+      AQUA_MEMORY_LIMIT=$(echo `echo "1024*1024*1024*${MEMORY_LIMIT}" | bc -l` | cut -d. -f1)
+    fi
+    if [ -n "${CPU_LIMIT}" ]; then
+      AQUA_QUOTA_CPU_LIMIT=$(echo `echo 100000*${CPU_LIMIT} | bc -l` | cut -d. -f1)
     fi
   fi
   echo "ended load_config_from_env()"
@@ -158,7 +166,9 @@ edit_templates_deb() {
   	s|AQUA_TLS_VERIFY=.*\"|AQUA_TLS_VERIFY=${AQUA_TLS_VERIFY}\"|;
     s|AQUA_ROOT_CA=.*\"|AQUA_ROOT_CA=${AQUA_ROOT_CA}\"|;
     s|AQUA_PUBLIC_KEY=.*\"|AQUA_PUBLIC_KEY=${AQUA_PUBLIC_KEY}\"|;
-    s|AQUA_PRIVATE_KEY=.*\"|AQUA_PRIVATE_KEY=${AQUA_PRIVATE_KEY}\",\"AQUA_ENFORCER_TYPE=host\"|" ${TEMPLATE_DIR}/${ENFORCER_RUNC_CONFIG_TEMPLATE} >${RUNC_TMP_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
+    s|AQUA_PRIVATE_KEY=.*\"|AQUA_PRIVATE_KEY=${AQUA_PRIVATE_KEY}\"|;
+    s|\"limit\"\:.*|\"limit\"\: ${AQUA_MEMORY_LIMIT}|;
+    s|AQUA_QUOTA_CPU_LIMIT=.*|AQUA_QUOTA_CPU_LIMIT=${AQUA_QUOTA_CPU_LIMIT}\",\"AQUA_ENFORCER_TYPE=host\"|" ${TEMPLATE_DIR}/${ENFORCER_RUNC_CONFIG_TEMPLATE} >${RUNC_TMP_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
 
   echo "Info: Creating ${RUN_SCRIPT_FILE_NAME} file."
   sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${TEMPLATE_DIR}/${RUN_SCRIPT_TEMPLATE_FILE_NAME} >${RUNC_TMP_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} && chmod +x ${RUNC_TMP_DIRECTORY}/${RUN_SCRIPT_FILE_NAME}
@@ -225,6 +235,8 @@ setup_deb_env() {
   ENFORCER_SERVICE_FILE_NAME_PATH="${SYSTEMD_FOLDER}/${ENFORCER_SERVICE_FILE_NAME}"
   ENFORCER_RUNC_CONFIG_FILE_NAME="config.json"
   ENFORCER_SELINUX_POLICY_FILE_NAME="aquavme.pp"
+  AQUA_QUOTA_CPU_LIMIT=200000
+  AQUA_MEMORY_LIMIT=2791728742
   echo "ended setup_deb_env()"
 }
 
