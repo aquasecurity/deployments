@@ -75,11 +75,11 @@ load_config_from_env() {
     fi
     is_bin_in_path curl || error_message "curl is not installed on this host"
   fi
-  if [ -n "${MEMORY_LIMIT}" ]; then
-    AQUA_MEMORY_LIMIT=$(echo `echo "1024*1024*1024*${MEMORY_LIMIT}/1" | bc -l` | cut -d. -f1)
+  if [ -n "${AQUA_MEMORY_LIMIT}" ]; then
+    AQUA_MEMORY_LIMIT=$(echo `echo "1024*1024*1024*${AQUA_MEMORY_LIMIT}" | bc -l` | cut -d. -f1)
   fi
-  if [ -n "${CPU_LIMIT}" ]; then
-    AQUA_QUOTA_CPU_LIMIT=$(echo `echo 100000*${CPU_LIMIT} | bc -l` | cut -d. -f1)
+  if [ -n "${AQUA_CPU_LIMIT}" ]; then
+    AQUA_QUOTA_CPU_LIMIT=$(echo `echo 100000*${AQUA_CPU_LIMIT} | bc -l` | cut -d. -f1)
   fi
 }
 
@@ -282,8 +282,8 @@ setup_sh_env() {
   ENFORCER_SERVICE_FILE_NAME_PATH="${SYSTEMD_FOLDER}/${ENFORCER_SERVICE_FILE_NAME}"
   ENFORCER_RUNC_CONFIG_FILE_NAME="config.json"
   ENFORCER_SELINUX_POLICY_FILE_NAME="aquavme.pp"
-  AQUA_CPU_LIMIT=200000
-  AQUA_MEMORY_LIMIT=2791728742
+  AQUA_CPU_LIMIT=${AQUA_CPU_LIMIT:-2}
+  AQUA_MEMORY_LIMIT=${AQUA_MEMORY_LIMIT:-2.6}
 }
 
 cp_files_rpm() {
@@ -431,13 +431,13 @@ bootstrap_args_sh() {
       ;;
     --cpu-limit)
       is_flag_value_valid "--cpu-limit" "$2"
-      CPU_LIMIT="$2"
+      AQUA_CPU_LIMIT="$2"
       shift
       shift
       ;;
     --memory-limit)
       is_flag_value_valid "--memory-limit" "$2"
-      MEMORY_LIMIT="$2"
+      AQUA_MEMORY_LIMIT="$2"
       shift
       shift
       ;;
