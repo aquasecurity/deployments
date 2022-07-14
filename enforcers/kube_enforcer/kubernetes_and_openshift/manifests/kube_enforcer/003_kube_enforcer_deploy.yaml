@@ -13,9 +13,8 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aqua-kube-enforcer
+  name: aqua-kube-enforcer-develop
   namespace: aqua
-  branch: develop
   labels:
     app: aqua-kube-enforcer
     aqua.component: kubeenforcer
