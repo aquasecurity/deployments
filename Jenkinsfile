@@ -38,6 +38,8 @@ pipeline {
         VAULT_TERRAFORM_RID = credentials('VAULT_TERRAFORM_RID')
         VAULT_TERRAFORM_RID_USERNAME = "$VAULT_TERRAFORM_RID_USR"
         VAULT_TERRAFORM_RID_PASSWORD = "$VAULT_TERRAFORM_RID_PSW"
+        DOCKER_HUB_USERNAME = 'aquaautomationci'
+        DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
     }
     stages {
         stage("Checkout") {
@@ -53,7 +55,7 @@ pipeline {
                             extensions                       : [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
                             userRemoteConfigs                : scm.userRemoteConfigs
                     ])
-
+                    utils.dockerlogin username: env.DOCKER_HUB_USERNAME, password: DOCKER_HUB_PASSWORD, registry: ""
                 }
             }
         }
