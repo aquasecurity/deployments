@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: aqua-db
+    aqua.component: database
+    deployedby: aqua-yaml
+  name: aqua-db
+  namespace: aqua
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aqua-db
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: aqua-db
+        aqua.component: database
+      name: aqua-db
+      namespace: aqua
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-db-config
+        image: docker-dev.odyssey.apps.csintra.net/com/csg/cto/ahsintapp/aqua/database:2022.4.46
+        imagePullPolicy: IfNotPresent
+        name: aqua-db
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        resources: {}
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-db
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - '[ -f $PGDATA/server.key ] && chmod 600 $PGDATA/server.key || echo ''OK'' '
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: aqua-db
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-db-config
+        image: docker-dev.odyssey.apps.csintra.net/com/csg/cto/ahsintapp/aqua/database:2022.4.46
+        name: aqua-db-init
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-db
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 11433
+        runAsGroup: 70
+        runAsUser: 70
+      serviceAccount: aqua-sa
+      serviceAccountName: aqua-sa
+      volumes:
+      - name: postgres-db
+        persistentVolumeClaim:
+          claimName: aqua-db-pvc
