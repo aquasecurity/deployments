@@ -29,6 +29,7 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('svc_team_1_aws_access_key_id')
         AWS_SECRET_ACCESS_KEY = credentials('svc_team_1_aws_secret_access_key')
         AWS_REGION = "us-west-2"
+        AWS_ACCOUNT_ID = credentials('awsDeploymentAccountID')
         AQUADEV_AZURE_ACR_PASSWORD = credentials('aquadevAzureACRpassword')
         AUTH0_CREDS = credentials('auth0Credential')
         VAULT_TERRAFORM_SID = credentials('VAULT_TERRAFORM_SID')
@@ -37,6 +38,8 @@ pipeline {
         VAULT_TERRAFORM_RID = credentials('VAULT_TERRAFORM_RID')
         VAULT_TERRAFORM_RID_USERNAME = "$VAULT_TERRAFORM_RID_USR"
         VAULT_TERRAFORM_RID_PASSWORD = "$VAULT_TERRAFORM_RID_PSW"
+        DOCKER_HUB_USERNAME = 'aquaautomationci'
+        DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
     }
     stages {
         stage("Checkout") {
@@ -52,7 +55,7 @@ pipeline {
                             extensions                       : [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
                             userRemoteConfigs                : scm.userRemoteConfigs
                     ])
-
+                    utils.dockerlogin username: env.DOCKER_HUB_USERNAME, password: DOCKER_HUB_PASSWORD, registry: ""
                 }
             }
         }
@@ -107,7 +110,7 @@ pipeline {
                     deploymentImage.inside("-u root") {
                         log.info "Installing aqaua-deployment  python package"
                         sh """
-                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
+                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${AWS_ACCOUNT_ID}
                         pip install aqua-deployment
                         """
                         log.info "Finished to install aqaua-deployment python package"
@@ -172,7 +175,7 @@ pipeline {
                     deploymentImage.inside("-u root --network host") {
                         log.info "Pulling manifests with Aquactl and modifying other manifests"
                         sh """
-                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner 172746256356
+                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${AWS_ACCOUNT_ID}
                         pip install aqua-deployment
                         /bin/bash k3s/prepare.sh
                         """
