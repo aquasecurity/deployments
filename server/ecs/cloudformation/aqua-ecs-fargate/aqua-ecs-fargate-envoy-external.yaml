@@ -375,36 +375,12 @@ Resources:
               awslogs-group: !Join ['-', ['/aqua/envoy', !Ref EcsCluster]]
               awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: aquaEnvoy
-          Secrets:
-            - Name: SCALOCK_DBPASSWORD
-              ValueFrom: !Ref SecretP
-            - Name: SCALOCK_AUDIT_DBPASSWORD
-              ValueFrom: !If [CreateAuditrds, !Ref SecretAuditP, !Ref SecretP]
-            - Name: SCALOCK_DBUSER
-              ValueFrom: !Ref SecretU
-            - Name: SCALOCK_AUDIT_DBUSER
-              ValueFrom: !If [CreateAuditrds, !Ref SecretAuditU, !Ref SecretU]                          
           Environment:
-            - Name: AQUA_GRPC_MODE
-              Value: 1
-            - Name: AQUA_DOCKERLESS_SCANNING
-              Value: 1
-            - Name: SCALOCK_DBSSL
-              Value: require
-            - Name: SCALOCK_AUDIT_DBSSL
-              Value: require
-            - Name: SCALOCK_DBNAME
-              Value: scalock
-            - Name: BATCH_INSTALL_GATEWAY
-              Value: !GetAtt
-                - AquaNlb
-                - DNSName
-            - Name: SCALOCK_DBHOST
-              Value: !Ref AquaDBInstanceEndPointURL
-            - Name: SCALOCK_AUDIT_DBNAME
-              Value: slk_audit
-            - Name: SCALOCK_AUDIT_DBHOST
-              Value: !If [CreateAuditrds, !Ref AuditDBInstanceEndPointURL, !Ref AquaDBInstanceEndPointURL]
+            - Name: CUSTOM_GATEWAY_ADDRESS
+              Value: !Join
+                - '-'
+                - - !Ref EcsCluster
+                  - aqua-gateway.ecs.aqua
   AquaGatewayTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     DependsOn:
