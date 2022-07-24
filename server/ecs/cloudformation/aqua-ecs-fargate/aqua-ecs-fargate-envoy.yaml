@@ -476,6 +476,14 @@ Resources:
               awslogs-group: !Join ['-', ['/aqua/envoy', !Ref EcsCluster]]
               awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: aquaEnvoy
+          Environment:
+            - Name: CUSTOM_GATEWAY_ADDRESS
+              Value: !Join
+                - '-'
+                - - !Ref EcsCluster
+                  - aqua-gateway.ecs.aqua
+
+
   AquaGatewayTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     DependsOn:
