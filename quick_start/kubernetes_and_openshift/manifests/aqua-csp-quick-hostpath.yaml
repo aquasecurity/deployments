@@ -805,7 +805,6 @@ data:
   CLUSTER_NAME: "Default-cluster-name"
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
-  AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
   # Enable the below Env for mTLS between kube-enforcer and gateway
   # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
   # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
