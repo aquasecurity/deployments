@@ -53,6 +53,12 @@ spec:
               protocol: TCP
             - containerPort: 8080
               protocol: TCP
+         # It is recommended to use the above resources on production deployment
+         #  resources:
+         #    requests:
+         #      cpu: "250m"
+         #      memory: "500Mi"
+         #      ephemeral-storage: "5Gi"
           env:
             - name: AQUA_TOKEN
               valueFrom:
@@ -153,6 +159,12 @@ spec:
               containerPort: 8080
             - name: probes
               containerPort: 9090
+          # It is recommended to use the above resources on production deployment
+          #  resources:
+          #    requests:
+          #      cpu: "250m"
+          #      memory: "500Mi"
+          #      ephemeral-storage: "5Gi"
           readinessProbe:
             httpGet:
               path: /readyz/

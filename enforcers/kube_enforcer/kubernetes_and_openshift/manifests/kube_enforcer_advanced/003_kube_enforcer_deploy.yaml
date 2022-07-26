@@ -121,6 +121,12 @@ spec:
           ports:
             - containerPort: 8443
               protocol: TCP
+          # It is recommended to use the above resources on production deployment
+          #  resources:
+          #    requests:
+          #      cpu: "250m"
+          #      memory: "500Mi"
+          #      ephemeral-storage: "5Gi"
           readinessProbe:
             exec:
               command:
@@ -209,6 +215,12 @@ spec:
               containerPort: 8080
             - name: probes
               containerPort: 9090
+          # It is recommended to use the above resources on production deployment
+          #  resources:
+          #    requests:
+          #      cpu: "250m"
+          #      memory: "500Mi"
+          #      ephemeral-storage: "5Gi"
           readinessProbe:
             httpGet:
               path: /readyz/
