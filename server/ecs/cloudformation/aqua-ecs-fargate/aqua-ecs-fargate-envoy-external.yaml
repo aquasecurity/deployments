@@ -376,11 +376,11 @@ Resources:
               awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: aquaEnvoy
           Environment:
-            - Name: CUSTOM_GATEWAY_ADDRESS
+            - Name: GATEWAY_ADDRESS
               Value: !Join
                 - '-'
                 - - !Ref EcsCluster
-                  - aqua-gateway.ecs.aqua
+                  - aqua-gateway.ecs.aqua.ext
   AquaGatewayTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     DependsOn:
