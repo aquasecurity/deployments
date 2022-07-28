@@ -477,7 +477,7 @@ Resources:
               awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: aquaEnvoy
           Environment:
-            - Name: CUSTOM_GATEWAY_ADDRESS
+            - Name: GATEWAY_ADDRESS
               Value: !Join
                 - '-'
                 - - !Ref EcsCluster
