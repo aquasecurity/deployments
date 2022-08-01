@@ -114,7 +114,7 @@ _prepare_ke() {
             exit 1
         fi
     elif curl https://raw.githubusercontent.com/aquasecurity/deployments/$githubBranch/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"; then
-        _addCABundle=$(sed -i "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
+        _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
         if eval "$_addCABundle"; then
             printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
             _deploy_ke_admin
