@@ -32,7 +32,14 @@ spec:
           valueFrom: 
             secretKeyRef: 
               key: password 
-              name: user-secret 
+              name: user-secret
+        ## Mandatory for SaaS Environments:
+        #- name: AQUA_CLOUD_CONNECTOR_TOKEN
+        #  valueFrom:
+        #    secretKeyRef:
+        #      key: token
+        #      name: user-secret
+
         - name: AQUA_CLOUD_CONNECTOR_HEALTH_PORT # Default port is 8080 
           value: ""
         - name: AQUA_TLS_VERIFY
