@@ -3,7 +3,7 @@
 
 = Deploy Aqua Cloud Connector on AWS ECS Cluster
 
-image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/CloudConnectorFargate.yaml]
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/CloudConnectorFargateToken.yaml]
 
 == Overview
 
@@ -14,6 +14,8 @@ This page contains instructions for deploying Aqua Cloud Connector on any Amazon
 For high availability, you must deploy Aqua on 2 availability Zones (AZs).
 
 Your deployment creates the Aqua Cloud Connector service, on the Fargate ECS instance. A CloudFormation template is used to deploy Aqua Cloud Connector. This can be done either with the AWS CloudFormation Management Console or the AWS Command Line interface (CLI), as explained below.
+
+*Note:* It is mandatory to use *CloudConnectorFargateToken.yaml* for *SaaS* environments due to token based authentication, for *On-Prem* environments any of the options is suitable.
 
 == Prerequisites
 

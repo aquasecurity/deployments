@@ -20,15 +20,20 @@ spec:
       containers: 
       - env: 
         - name: AQUA_SERVER 
-          value: "<gw_url>:443" 
+          value: "<gw_url>:443"
         - name: AQUA_CLOUD_CONNECTOR_CONFIG_FILE_PATH 
           value: /etc/config/connector.yaml 
         - name: AQUA_CLOUD_CONNECTOR_USERNAME 
           valueFrom: 
             secretKeyRef: 
               key: username 
-              name: user-secret 
-        - name: AQUA_CLOUD_CONNECTOR_PASSWORD 
+              name: user-secret
+        - name: AQUA_CLOUD_CONNECTOR_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: user-secret
+        - name: AQUA_CLOUD_CONNECTOR_PASSWORD
           valueFrom: 
             secretKeyRef: 
               key: password 
@@ -43,7 +48,7 @@ spec:
         - name: AQUA_CLOUD_CONNECTOR_HEALTH_PORT # Default port is 8080 
           value: ""
         - name: AQUA_TLS_VERIFY
-          value: "1"       
+          value: "1"
         image: registry.aquasec.com/aqua-cloud-connector:2022.4
         imagePullPolicy: Always 
         name: aqua-cloud-connector 
