@@ -50,7 +50,7 @@ data:
     # Used with self-signed certs and AQUA_TLS_VERIFY=true on the Enforcer and if the below chain does not include a root cert
     #         validation_context:
     #           trusted_ca:
-    #             filename: "/etc/ssl/envoy/ca.crt
+    #             filename: "/etc/ssl/envoy/ca.crt"
               alpn_protocols: "h2,http/1.1"
               tls_certificates:
               - certificate_chain:
