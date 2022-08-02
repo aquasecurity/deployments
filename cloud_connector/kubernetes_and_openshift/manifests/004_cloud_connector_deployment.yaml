@@ -23,11 +23,6 @@ spec:
           value: "<gw_url>:443"
         - name: AQUA_CLOUD_CONNECTOR_CONFIG_FILE_PATH 
           value: /etc/config/connector.yaml 
-        - name: AQUA_CLOUD_CONNECTOR_USERNAME 
-          valueFrom: 
-            secretKeyRef: 
-              key: username 
-              name: user-secret
         - name: AQUA_CLOUD_CONNECTOR_USERNAME
           valueFrom:
             secretKeyRef:
