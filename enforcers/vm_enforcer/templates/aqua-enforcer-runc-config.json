@@ -26,7 +26,9 @@
       "AQUA_TLS_VERIFY=false",
       "AQUA_ROOT_CA=/opt/aquasec/ssl/rootCA.crt",
       "AQUA_PUBLIC_KEY=/opt/aquasec/ssl/aqua_enforcer.crt",
-      "AQUA_PRIVATE_KEY=/opt/aquasec/ssl/aqua_enforcer.key"
+      "AQUA_PRIVATE_KEY=/opt/aquasec/ssl/aqua_enforcer.key",
+      "AQUA_PERIOD_CPU_LIMIT=100000",
+      "AQUA_QUOTA_CPU_LIMIT=200000"
     ],
     "cwd": "/opt/aquasec",
     "capabilities": {
@@ -305,7 +307,10 @@
           "allow": true,
           "access": "rwm"
         }
-      ]
+      ],
+      "memory": {
+        "limit": 2791728742
+      }
     },
     "namespaces": [
       {
