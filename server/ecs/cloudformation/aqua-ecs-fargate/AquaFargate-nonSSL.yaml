@@ -838,7 +838,6 @@ Resources:
       PubliclyAccessible: false
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
-      
       VPCSecurityGroups:
         - !Ref RdsSecurityGroup
       BackupRetentionPeriod: '7'
