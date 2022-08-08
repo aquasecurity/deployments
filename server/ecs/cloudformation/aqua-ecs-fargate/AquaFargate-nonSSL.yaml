@@ -711,6 +711,11 @@ Resources:
   LBLogsStoreBucket:
     Type: AWS::S3::Bucket
     Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: 'true'
+        BlockPublicPolicy: 'true'
+        IgnorePublicAcls: 'true'
+        RestrictPublicBuckets: 'true'
       AccessControl: Private
       BucketName: !GetAtt S3BucketName.OutputString
       BucketEncryption:
@@ -803,6 +808,7 @@ Resources:
       - RdsSecurityGroup
       - RdsInstanceSubnetGroup
     Properties:
+    
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
       VPCSecurityGroups:
@@ -820,6 +826,7 @@ Resources:
       MultiAZ: !Ref MultiAzDatabase
       StorageType: gp2
       StorageEncrypted: True
+      PubliclyAccessible: false
       #KmsKeyId: !GetAtt KMSKeyForDB.Arn
   AuditRdsInstance:
     Condition: CreateAuditrds
@@ -828,8 +835,10 @@ Resources:
       - RdsSecurityGroup
       - RdsInstanceSubnetGroup
     Properties:
+      PubliclyAccessible: false
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
+      
       VPCSecurityGroups:
         - !Ref RdsSecurityGroup
       BackupRetentionPeriod: '7'

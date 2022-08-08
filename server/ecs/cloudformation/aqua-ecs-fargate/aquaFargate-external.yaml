@@ -670,6 +670,11 @@ Resources:
   LBLogsStoreBucket:
     Type: AWS::S3::Bucket
     Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: 'true'
+        BlockPublicPolicy: 'true'
+        IgnorePublicAcls: 'true'
+        RestrictPublicBuckets: 'true'
       AccessControl: Private
       ##BucketName: !Sub '${AWS::StackName}-lb-accesslogs'
       BucketName: !Sub '${ECSCluster}-lb-accesslogs'
