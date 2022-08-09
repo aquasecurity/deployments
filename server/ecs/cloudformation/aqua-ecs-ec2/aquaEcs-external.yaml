@@ -828,6 +828,11 @@ Resources:
       BucketName: !Sub
         - ${ECSClusterName2}-lb-accesslogs
         - { ECSClusterName2: !Join ["-", ["s3", !GetAtt RandomString.RandomString]] }
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
