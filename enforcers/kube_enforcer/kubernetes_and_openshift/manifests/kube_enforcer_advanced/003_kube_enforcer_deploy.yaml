@@ -91,6 +91,9 @@ spec:
               value: "true"
             - name: AQUA_LOGICAL_NAME
               value: ""
+            #Enable Skipping Kube-Bench on nodes based on node labels
+            # - name: NODE_LABELS_TO_SKIP_KUBE_BENCH 
+              # value: ""          #Comma-separated node-labels for nodes on which Kube-Bench is to be skipped. key1=val1,key2=val2,...
             - name: POD_NAME
               valueFrom:
                 fieldRef:
