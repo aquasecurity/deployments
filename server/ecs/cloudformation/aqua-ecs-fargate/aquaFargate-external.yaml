@@ -670,6 +670,11 @@ Resources:
   LBLogsStoreBucket:
     Type: AWS::S3::Bucket
     Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - BucketKeyEnabled: 'true'
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
       PublicAccessBlockConfiguration:
         BlockPublicAcls: 'true'
         BlockPublicPolicy: 'true'
@@ -678,10 +683,6 @@ Resources:
       AccessControl: Private
       ##BucketName: !Sub '${AWS::StackName}-lb-accesslogs'
       BucketName: !Sub '${ECSCluster}-lb-accesslogs'
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
       VersioningConfiguration:
         Status: Enabled
       Tags:

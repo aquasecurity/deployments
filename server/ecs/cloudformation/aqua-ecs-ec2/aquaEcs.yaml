@@ -928,7 +928,6 @@ Resources:
     Properties:
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
-      PubliclyAccessible: false
       VPCSecurityGroups:
         - !Ref RdsSecurityGroup
       BackupRetentionPeriod: '7'
@@ -962,6 +961,7 @@ Resources:
       DBInstanceClass: !Ref AuditRdsInstanceClass
       DBSubnetGroupName: !Ref RdsInstanceSubnetGroup
       DeleteAutomatedBackups: False
+      PubliclyAccessible: false
       DeletionProtection: False
       Engine: postgres
       EngineVersion: 11.15

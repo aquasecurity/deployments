@@ -835,7 +835,8 @@ Resources:
         RestrictPublicBuckets: true
       BucketEncryption:
         ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
+          - BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
       VersioningConfiguration:
         Status: Enabled
