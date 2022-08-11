@@ -38,8 +38,12 @@ pipeline {
         VAULT_TERRAFORM_RID = credentials('VAULT_TERRAFORM_RID')
         VAULT_TERRAFORM_RID_USERNAME = "$VAULT_TERRAFORM_RID_USR"
         VAULT_TERRAFORM_RID_PASSWORD = "$VAULT_TERRAFORM_RID_PSW"
+<<<<<<< HEAD
         DOCKER_HUB_USERNAME = 'aquaautomationci'
         DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
+=======
+        DEPLOY_REGISTRY = "aquasec.azurecr.io"
+>>>>>>> 49ee8a4 (Jenkinsfile update - support custom registry value)
     }
     stages {
         stage("Checkout") {
@@ -157,7 +161,7 @@ pipeline {
                     orchestrator.install()
                     helm.settingKubeConfig()
                     kubectl.createNamespace create: "yes"
-                    kubectl.createDockerRegistrySecret create: "yes"
+                    kubectl.createDockerRegistrySecret create: "yes", registry: env.DEPLOY_REGISTRY
 
                 }
             }
