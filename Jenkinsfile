@@ -37,6 +37,7 @@ pipeline {
         VAULT_TERRAFORM_RID = credentials('VAULT_TERRAFORM_RID')
         VAULT_TERRAFORM_RID_USERNAME = "$VAULT_TERRAFORM_RID_USR"
         VAULT_TERRAFORM_RID_PASSWORD = "$VAULT_TERRAFORM_RID_PSW"
+        DEPLOY_REGISTRY = "aquasec.azurecr.io"
     }
     stages {
         stage("Checkout") {
@@ -154,7 +155,7 @@ pipeline {
                     orchestrator.install()
                     helm.settingKubeConfig()
                     kubectl.createNamespace create: "yes"
-                    kubectl.createDockerRegistrySecret create: "yes"
+                    kubectl.createDockerRegistrySecret create: "yes", registry: env.DEPLOY_REGISTRY
 
                 }
             }
