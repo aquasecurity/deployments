@@ -73,7 +73,7 @@ spec:
             secretKeyRef:
               key: password
               name: aqua-db
-      #   volumeMounts:
+      ##   volumeMounts:
       #   - mountPath: /opt/aquasec/ssl
       #     name: aqua-grpc-web
       #     readOnly: true
