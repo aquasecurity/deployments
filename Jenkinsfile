@@ -40,6 +40,7 @@ pipeline {
         VAULT_TERRAFORM_RID_PASSWORD = "$VAULT_TERRAFORM_RID_PSW"
         DOCKER_HUB_USERNAME = 'aquaautomationci'
         DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
+        DEPLOY_REGISTRY = "aquasec.azurecr.io"
     }
     stages {
         stage("Checkout") {
@@ -157,7 +158,7 @@ pipeline {
                     orchestrator.install()
                     helm.settingKubeConfig()
                     kubectl.createNamespace create: "yes"
-                    kubectl.createDockerRegistrySecret create: "yes"
+                    kubectl.createDockerRegistrySecret create: "yes", registry: env.DEPLOY_REGISTRY
 
                 }
             }
@@ -177,7 +178,7 @@ pipeline {
                         sh """
                         aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${AWS_ACCOUNT_ID}
                         pip install aqua-deployment
-                        /bin/bash k3s/prepare.sh
+                        /bin/bash k3s/prepare.sh ${DEPLOY_REGISTRY}
                         """
                             }
                         }
