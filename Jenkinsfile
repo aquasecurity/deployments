@@ -181,7 +181,7 @@ pipeline {
                         sh """
                         aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${AWS_ACCOUNT_ID}
                         pip install aqua-deployment
-                        /bin/bash k3s/prepare.sh
+                        /bin/bash k3s/prepare.sh ${DEPLOY_REGISTRY}
                         """
                             }
                         }
