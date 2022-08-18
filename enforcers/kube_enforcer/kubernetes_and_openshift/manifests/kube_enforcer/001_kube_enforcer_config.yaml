@@ -26,6 +26,8 @@ data:
   AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
   AQUA_ENFORCER_DS_NAME: "aqua-agent"             #Sets Deamonset Name
   AQUA_ME_GW_CERT_SECRET_NAME: ""
+  #Enable Skipping Kube-Bench on nodes based on node labels
+  # AQUA_NODE_LABELS_TO_SKIP_KB: "" #Comma-separated node-labels for nodes on which Kube-Bench is to be skipped. key1=val1,key2=val2,...
   # Enable the below Env for mTLS between kube-enforcer and gateway
   # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
   # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
