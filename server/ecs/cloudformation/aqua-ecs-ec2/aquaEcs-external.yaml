@@ -180,7 +180,7 @@ Resources:
       Handler: index.lambda_handler
       Timeout: 10
       Role: !GetAtt "LambdaExecutionRole.Arn"
-      Runtime: python3.6
+      Runtime: python3.9
       Code:
         ZipFile: |
           import cfnresponse
@@ -828,9 +828,15 @@ Resources:
       BucketName: !Sub
         - ${ECSClusterName2}-lb-accesslogs
         - { ECSClusterName2: !Join ["-", ["s3", !GetAtt RandomString.RandomString]] }
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
       BucketEncryption:
         ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
+          - BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
       VersioningConfiguration:
         Status: Enabled
