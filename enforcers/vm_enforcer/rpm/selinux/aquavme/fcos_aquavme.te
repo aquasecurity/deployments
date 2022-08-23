@@ -2,15 +2,16 @@
 module fcos_aquavme 1.0;
 
 require {
-	type syslogd_t;
-	type user_tmp_t;
+	type systemd_tmpfiles_t;
 	type chkpwd_t;
 	type init_t;
-	type sshd_t;
-	type systemd_tmpfiles_t;
-	type shadow_t;
 	type install_t;
-	class file { open read };
+	type sshd_t;
+	type user_tmp_t;
+	type syslogd_t;
+	type shadow_t;
+	type unconfined_service_t;
+	class file { open read write };
 	class process { noatsecure rlimitinh siginh };
 	class capability net_admin;
 	class cap_userns sys_ptrace;
@@ -18,11 +19,12 @@ require {
 
 #============= init_t ==============
 allow init_t install_t:process siginh;
-allow init_t user_tmp_t:file open;
+allow init_t unconfined_service_t:process siginh;
+allow init_t user_tmp_t:file { open write };
 
 #============= sshd_t ==============
 allow sshd_t chkpwd_t:process { noatsecure rlimitinh siginh };
-allow sshd_t shadow_t:file read;
+allow sshd_t shadow_t:file { open read };
 
 #============= syslogd_t ==============
 allow syslogd_t self:cap_userns sys_ptrace;
