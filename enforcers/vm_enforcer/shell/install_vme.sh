@@ -107,14 +107,14 @@ is_it_fedora() {
     echo "Info: Downloading SELinux policy module"
     #curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
     #curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
-    curl -s -o aquavme.te https://raw.githubusercontent.com/BaruchBilanski/deployments-fork/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
-    curl -s -L -o aquavme.pp https://github.com/BaruchBilanski/deployments-fork/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
+    curl -s -o fcos_aquavme.te https://raw.githubusercontent.com/BaruchBilanski/deployments-fork/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
+    curl -s -L -o fcos_aquavme.pp https://github.com/BaruchBilanski/deployments-fork/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
 
     if [ ! -f "${ENFORCER_SELINUX_POLICY_FILE_NAME}" ]; then
       error_message "Unable to locate ${ENFORCER_SELINUX_POLICY_FILE_NAME} on current directory"
     fi
     echo "Info: Applying SELinux policy module"
-    semodule -i ${ENFORCER_SELINUX_POLICY_FILE_NAME}
+    semodule -i fcos_aquavme.pp
   fi
 }
 

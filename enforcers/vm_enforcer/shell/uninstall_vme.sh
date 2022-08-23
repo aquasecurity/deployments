@@ -46,6 +46,16 @@ remove_selinux_module() {
     fi
 }
 
+remove_selinux_module_fedora() {
+    semodule -l | grep aquavme
+    if [ $? -eq 0 ]; then
+        echo "Info: Removing SElinux policy module."
+        semodule -r fcos_aquavme
+    else
+        echo "Info: SElinux policy module not found"
+    fi
+}
+
 is_it_rhel() {
   cat /etc/*release | grep PLATFORM_ID | grep "platform:el8" &>/dev/null
 
@@ -60,7 +70,7 @@ is_it_fedora() {
 
   if [ $? -eq 0 ]; then
     echo "Info: This is a Fedora system. Going to disable SELinux policy module if exists"
-    remove_selinux_module
+    remove_selinux_module_fedora
   fi
 }
 
