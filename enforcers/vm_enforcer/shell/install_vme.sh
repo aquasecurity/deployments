@@ -105,8 +105,11 @@ is_it_fedora() {
   if [ $? -eq 0 ]; then
     echo "Info: This is Fedora system. Going to download and apply SELinux policy module"
     echo "Info: Downloading SELinux policy module"
-    curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.te
-    curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.pp
+    #curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
+    #curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
+    curl -s -o aquavme.te https://raw.githubusercontent.com/BaruchBilanski/deployments-fork/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
+    curl -s -L -o aquavme.pp https://github.com/BaruchBilanski/deployments-fork/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
+
     if [ ! -f "${ENFORCER_SELINUX_POLICY_FILE_NAME}" ]; then
       error_message "Unable to locate ${ENFORCER_SELINUX_POLICY_FILE_NAME} on current directory"
     fi
@@ -119,10 +122,11 @@ is_it_fedora() {
 prerequisites_check() {
   load_config_from_env
 
+  is_root
+
   is_it_rhel "$@"
   is_it_fedora "$@"
 
-  is_root
 
   if is_bin_in_path runc; then
     RUNC_LOCATION=$(which runc)
