@@ -99,10 +99,28 @@ is_it_rhel() {
   fi
 }
 
+is_it_fedora() {
+  cat /etc/*release | grep PLATFORM_ID | grep "platform:f3" &>/dev/null
+
+  if [ $? -eq 0 ]; then
+    echo "Info: This is Fedora 3X system. Going to download and apply SELinux policy module"
+    echo "Info: Downloading SELinux policy module"
+    curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.te
+    curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.pp
+    if [ ! -f "${ENFORCER_SELINUX_POLICY_FILE_NAME}" ]; then
+      error_message "Unable to locate ${ENFORCER_SELINUX_POLICY_FILE_NAME} on current directory"
+    fi
+    echo "Info: Applying SELinux policy module"
+    semodule -i ${ENFORCER_SELINUX_POLICY_FILE_NAME}
+  fi
+}
+
+
 prerequisites_check() {
   load_config_from_env
 
   is_it_rhel "$@"
+  is_it_fedora "$@"
 
   is_root
 
@@ -128,6 +146,7 @@ prerequisites_check() {
 
   is_bin_in_path awk || error_message "awk is not installed on this host"
   is_bin_in_path tar || error_message "tar is not installed on this host"
+  is_bin_in_path bc || error_message "bc is not installed on this host"
 }
 
 is_flag_value_valid() {

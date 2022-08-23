@@ -55,7 +55,18 @@ is_it_rhel() {
   fi
 }
 
+is_it_fedora() {
+  cat /etc/*release | grep PLATFORM_ID | grep "platform:f3" &>/dev/null
+
+  if [ $? -eq 0 ]; then
+    echo "Info: This is Fedora3X system. Going to disable SELinux policy module if exists"
+    remove_selinux_module
+  fi
+}
+
+
 stop_service
 remove_service
 remove_dirs
 is_it_rhel
+is_it_fedora

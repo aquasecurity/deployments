@@ -10,7 +10,13 @@ You can deploy VM Enforcer on your execution VM using the shell script provided 
 1) Selinux
 2) Selinux Policy Devel 
     `sudo yum install setools-console selinux-policy-devel`
-    
+
+## Prerequisites for Fedora3X
+
+1) Selinux
+2) Selinux Policy Devel 
+    `sudo dnf install setools-console selinux-policy-devel`
+
 ## Deployment modes
 
 Deployment of VM Enforcer is supported by two modes as explained below.
