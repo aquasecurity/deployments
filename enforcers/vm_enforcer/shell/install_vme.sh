@@ -101,7 +101,6 @@ is_it_rhel() {
 
 is_it_fedora() {
   cat /etc/*release | grep PLATFORM_ID | grep "platform:f3" &>/dev/null
-  ENFORCER_SELINUX_POLICY_FILE_NAME=fcos_aquavme.pp
   if [ $? -eq 0 ]; then
     echo "Info: This is Fedora system. Going to download and apply SELinux policy module"
     echo "Info: Downloading SELinux policy module"
@@ -110,11 +109,11 @@ is_it_fedora() {
     curl -s -o fcos_aquavme.te https://raw.githubusercontent.com/BaruchBilanski/deployments-fork/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
     curl -s -L -o fcos_aquavme.pp https://github.com/BaruchBilanski/deployments-fork/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
 
-    if [ ! -f "${ENFORCER_SELINUX_POLICY_FILE_NAME}" ]; then
-      error_message "Unable to locate ${ENFORCER_SELINUX_POLICY_FILE_NAME} on current directory"
+    if [ ! -f "fcos_aquavme.pp" ]; then
+      error_message "Unable to locate fcos_aquavme.pp on current directory"
     fi
     echo "Info: Applying SELinux policy module"
-    semodule -i ${ENFORCER_SELINUX_POLICY_FILE_NAME}
+    semodule -i fcos_aquavme.pp
   fi
 }
 
