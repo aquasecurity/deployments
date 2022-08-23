@@ -59,7 +59,7 @@ is_it_fedora() {
   cat /etc/*release | grep PLATFORM_ID | grep "platform:f3" &>/dev/null
 
   if [ $? -eq 0 ]; then
-    echo "Info: This is Fedora3X system. Going to disable SELinux policy module if exists"
+    echo "Info: This is a Fedora system. Going to disable SELinux policy module if exists"
     remove_selinux_module
   fi
 }
