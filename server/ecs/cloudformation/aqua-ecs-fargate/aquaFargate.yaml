@@ -208,7 +208,7 @@ Resources:
       Handler: index.lambda_handler
       Timeout: 10
       Role: !GetAtt "LambdaExecutionRole.Arn"
-      Runtime: python3.6
+      Runtime: python3.9
       Code:
         ZipFile: |
           import cfnresponse
@@ -720,6 +720,11 @@ Resources:
   LBLogsStoreBucket:
     Type: AWS::S3::Bucket
     Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: 'true'
+        BlockPublicPolicy: 'true'
+        IgnorePublicAcls: 'true'
+        RestrictPublicBuckets: 'true'
       AccessControl: Private
       #BucketName: !Sub '${AWS::StackName}-lb-accesslogs'
       BucketName: !GetAtt S3BucketName.OutputString
@@ -814,6 +819,7 @@ Resources:
       - RdsSecurityGroup
       - RdsInstanceSubnetGroup
     Properties:
+      PubliclyAccessible: false
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
       VPCSecurityGroups:
@@ -839,6 +845,7 @@ Resources:
       - RdsSecurityGroup
       - RdsInstanceSubnetGroup
     Properties:
+      PubliclyAccessible: false
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
       VPCSecurityGroups:
