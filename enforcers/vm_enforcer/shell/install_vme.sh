@@ -229,7 +229,7 @@ edit_templates_sh() {
 
 systemd_type() {
   SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME}
-    if [ "${SYSTEMD_VERSION}" -lt "240" ]; then
+  if [ "${SYSTEMD_VERSION}" -lt "240" ]; then
     SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_236}
   fi
   if [ "${SYSTEMD_VERSION}" -lt "236" ]; then
