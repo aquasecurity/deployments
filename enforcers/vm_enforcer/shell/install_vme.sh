@@ -104,10 +104,8 @@ is_it_fedora() {
   if [ $? -eq 0 ]; then
     echo "Info: This is Fedora system. Going to download and apply SELinux policy module"
     echo "Info: Downloading SELinux policy module"
-    #curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
-    #curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
-    curl -s -o fcos_aquavme.te https://raw.githubusercontent.com/BaruchBilanski/deployments-fork/2022.4-vmenforcer-fedora/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
-    curl -s -L -o fcos_aquavme.pp https://github.com/BaruchBilanski/deployments-fork/raw/2022.4-vmenforcer-fedora/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
+    curl -s -o fcos_aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
+    curl -s -L -o fcos_aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
 
     if [ ! -f "fcos_aquavme.pp" ]; then
       error_message "Unable to locate fcos_aquavme.pp on current directory"
