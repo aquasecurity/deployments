@@ -99,12 +99,31 @@ is_it_rhel() {
   fi
 }
 
+is_it_fedora() {
+  cat /etc/*release | grep PLATFORM_ID | grep "platform:f3" &>/dev/null
+  if [ $? -eq 0 ]; then
+    echo "Info: This is Fedora system. Going to download and apply SELinux policy module"
+    echo "Info: Downloading SELinux policy module"
+    curl -s -o fcos_aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
+    curl -s -L -o fcos_aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
+
+    if [ ! -f "fcos_aquavme.pp" ]; then
+      error_message "Unable to locate fcos_aquavme.pp on current directory"
+    fi
+    echo "Info: Applying SELinux policy module"
+    semodule -i fcos_aquavme.pp
+  fi
+}
+
+
 prerequisites_check() {
   load_config_from_env
 
-  is_it_rhel "$@"
-
   is_root
+
+  is_it_rhel "$@"
+  is_it_fedora "$@"
+
 
   if is_bin_in_path runc; then
     RUNC_LOCATION=$(which runc)
@@ -128,6 +147,7 @@ prerequisites_check() {
 
   is_bin_in_path awk || error_message "awk is not installed on this host"
   is_bin_in_path tar || error_message "tar is not installed on this host"
+  is_bin_in_path bc || error_message "bc is not installed on this host"
 }
 
 is_flag_value_valid() {
