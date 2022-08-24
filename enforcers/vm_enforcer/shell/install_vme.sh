@@ -144,6 +144,7 @@ get_templates_online() {
 
   curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer.template.service
   curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer.template.old.service
+  curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_236} https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer.template.236.service
   curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/run.template.sh
   curl -s -o ${ENFORCER_RUNC_CONFIG_TEMPLATE} https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer-runc-config.json
   
@@ -155,6 +156,9 @@ get_templates_local() {
   fi
   if [ ! -f "${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD}" ]; then
     error_message "Unable to locate ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} on current directory"
+  fi
+  if [ ! -f "${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_236}" ]; then
+    error_message "Unable to locate ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_236} on current directory"
   fi
   if [ ! -f "${RUN_SCRIPT_TEMPLATE_FILE_NAME}" ]; then
     error_message "Unable to locate ${RUN_SCRIPT_TEMPLATE_FILE_NAME} on current directory"
@@ -224,11 +228,11 @@ edit_templates_sh() {
 }
 
 systemd_type() {
-  SYSTEMD_IS_OLD=false
-
   SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME}
+    if [ "${SYSTEMD_VERSION}" -lt "240" ]; then
+    SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_236}
+  fi
   if [ "${SYSTEMD_VERSION}" -lt "236" ]; then
-    SYSTEMD_IS_OLD=true
     SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD}
   fi
 }
@@ -277,6 +281,7 @@ setup_sh_env() {
   ENFORCER_SERVICE_FILE_NAME="aqua-enforcer.service"
   ENFORCER_SERVICE_TEMPLATE_FILE_NAME="aqua-enforcer.template.service"
   ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD="aqua-enforcer.template.old.service"
+  ENFORCER_SERVICE_TEMPLATE_FILE_NAME_236="aqua-enforcer.template.236.service"
   RUN_SCRIPT_FILE_NAME="run.sh"
   RUN_SCRIPT_TEMPLATE_FILE_NAME="run.template.sh"
   ENFORCER_SERVICE_FILE_NAME_PATH="${SYSTEMD_FOLDER}/${ENFORCER_SERVICE_FILE_NAME}"

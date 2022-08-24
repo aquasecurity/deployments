@@ -9,7 +9,7 @@ WorkingDirectory={{ .Values.WorkingDirectory }}
 PIDFile=/run/aqua-enforcer.pid
 Restart=always
 StandardOutput=append:/opt/aquasec/tmp/aquasec.log
-StandardError=apeend:/opt/aquasec/tmp/aquasec.log
+StandardError=append:/opt/aquasec/tmp/aquasec.log
 
 [Install]
 WantedBy=multi-user.target

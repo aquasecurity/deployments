@@ -180,11 +180,12 @@ edit_templates_deb() {
 
 systemd_type() {
   echo "started systemd_type()"
-  SYSTEMD_IS_OLD=false
 
   SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME}
+  if [ "${SYSTEMD_VERSION}" -lt "240" ]; then
+    SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_236}
+  fi
   if [ "${SYSTEMD_VERSION}" -lt "236" ]; then
-    SYSTEMD_IS_OLD=true
     SYSTEMD_TEMPLATE_TO_USE=${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD}
   fi
   echo "ended systemd_type()"
@@ -229,6 +230,7 @@ setup_deb_env() {
   SYSTEMD_FOLDER="/etc/systemd/system"
   ENFORCER_SERVICE_FILE_NAME="aqua-enforcer.service"
   ENFORCER_SERVICE_TEMPLATE_FILE_NAME="aqua-enforcer.template.service"
+  ENFORCER_SERVICE_TEMPLATE_FILE_NAME_236="aqua-enforcer.template.236.service"
   ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD="aqua-enforcer.template.old.service"
   RUN_SCRIPT_FILE_NAME="run.sh"
   RUN_SCRIPT_TEMPLATE_FILE_NAME="run.template.sh"
