@@ -115,10 +115,19 @@ is_it_fedora() {
   fi
 }
 
+check_arch() {
+  arch=$(uname -m)
+  if [[ $arch == "arm64" ]] || [[ $arch == "aarch64" ]]
+  then
+    echo "ARM64 architecture detected"
+    ENFORCER_VERSION+="-arm64"
+  fi
+}
+
 
 prerequisites_check() {
   load_config_from_env
-
+  check_arch
   is_root
 
   is_it_rhel "$@"
@@ -189,6 +198,7 @@ get_app_online() {
   ENFORCER_RUNC_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-runc-config.json"
   ENFORCER_RUNC_OLD_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-v1.0.0-rc2-runc-config.json"
 
+  echo ${ENFORCER_RUNC_TAR_FILE_URL}
   if ! curl --output /dev/null --silent --head --fail -u ${AQUA_USERNAME}:${AQUA_PWD} ${ENFORCER_RUNC_TAR_FILE_URL}; then
     error_message "Unable to download package. please check credentials or the version"
   fi
