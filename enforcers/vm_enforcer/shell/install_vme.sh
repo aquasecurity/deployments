@@ -117,11 +117,7 @@ is_it_fedora() {
 
 check_arch() {
   arch=$(uname -m)
-  if [[ $arch == "arm64" ]] || [[ $arch == "aarch64" ]]
-  then
-    echo "ARM64 architecture detected"
-    ENFORCER_VERSION+="-arm64"
-  fi
+  ENFORCER_VERSION_FILE="$ENFORCER_VERSION.$arch"
 }
 
 
@@ -198,7 +194,6 @@ get_app_online() {
   ENFORCER_RUNC_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-runc-config.json"
   ENFORCER_RUNC_OLD_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-v1.0.0-rc2-runc-config.json"
 
-  echo ${ENFORCER_RUNC_TAR_FILE_URL}
   if ! curl --output /dev/null --silent --head --fail -u ${AQUA_USERNAME}:${AQUA_PWD} ${ENFORCER_RUNC_TAR_FILE_URL}; then
     error_message "Unable to download package. please check credentials or the version"
   fi
@@ -219,7 +214,7 @@ get_app_local() {
 }
 
 get_app() {
-  ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.${ENFORCER_VERSION}.tar"
+  ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.${ENFORCER_VERSION_FILE}.tar"
   if [ "${DOWNLOAD_MODE}" == "true" ]; then
     get_app_online
     get_templates_online
