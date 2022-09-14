@@ -42,12 +42,14 @@ A CloudFormation template is used to deploy Aqua Enterprise. This can be done ei
  docker login registry.aquasec.com -u <AQUA_USERNAME> -p <AQUA_PASSWORD>
 ----
 
-*Step 2. Pull the Aqua product images for the Server (Console) and Gateway.*
+*Step 2. Pull the Aqua product images for the Server (Console) and Gateway.* +
+*Optional:* for *ADA* deployment pull the *envoy* image as well
 
 [source,options="nowrap",subs="attributes"]
 ----
 docker pull registry.aquasec.com/console:{imageVersion}
 docker pull registry.aquasec.com/gateway:{imageVersion}
+*optional: docker pull registry.aquasec.com/envoy:{imageVersion}
 ----
 
 *Step 3. Push both of the images to ECR.*
