@@ -87,8 +87,15 @@ is_it_rhel() {
   fi
 }
 
+check_arch() {
+  arch=$(uname -m)
+  ENFORCER_VERSION_FILE="$ENFORCER_VERSION.$arch"
+}
+
 prerequisites_check() {
   load_config_from_env
+  check_arch
+
 
   is_it_rhel "$@"
 
@@ -176,7 +183,7 @@ get_app_local() {
 }
 
 get_app() {
-  ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.${ENFORCER_VERSION}.tar"
+  ENFORCER_RUNC_TAR_FILE_NAME="aqua-host-enforcer.${ENFORCER_VERSION_FILE}.tar"
   if [ "${DOWNLOAD_MODE}" == "true" ]; then
     get_app_online
     get_templates_online
