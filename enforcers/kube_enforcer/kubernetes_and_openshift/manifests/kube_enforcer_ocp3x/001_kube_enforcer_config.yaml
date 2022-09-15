@@ -25,6 +25,8 @@ data:
   AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
   AQUA_ENFORCER_DS_NAME: "aqua-agent"                   #Sets Deamonset Name
   AQUA_ME_GW_CERT_SECRET_NAME: ""
+   #Enable Skipping Kube-Bench on nodes based on node labels
+  # AQUA_NODE_LABELS_TO_SKIP_KB: ""  #Comma-separated node-labels for nodes on which Kube-Bench is to be skipped. key1=val1,key2=val2,...
   AQUA_ADMISSION_CONTROL_WHEN_GW_DISCONNECTED: "false"
   AQUA_AUTO_WORKLOAD_DISCOVERY: "true"
   AQUA_AUTO_WORKLOAD_SCAN: "true"
