@@ -631,6 +631,8 @@ Resources:
                 Resource:
                   - !Ref SecretP
                   - !Ref SecretU
+                  - !Ref SecretAuditP
+                  - !Ref SecretAuditU
         - PolicyName: !Join
             - '-'
             - - !Ref EcsCluster
