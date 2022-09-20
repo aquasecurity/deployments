@@ -631,6 +631,8 @@ Resources:
                 Resource:
                   - !Ref SecretP
                   - !Ref SecretU
+                  - !If [CreateAuditrds, !Ref SecretAuditP, Ref: AWS::NoValue]
+                  - !If [CreateAuditrds, !Ref SecretAuditU, Ref: AWS::NoValue]
         - PolicyName: !Join
             - '-'
             - - !Ref EcsCluster
