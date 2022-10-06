@@ -92,9 +92,20 @@ check_arch() {
   ENFORCER_VERSION_FILE="$ENFORCER_VERSION.$arch"
 }
 
+check_version() {
+  rx='([1-9]{1}\d{0,3})(\.)([0-9]|[1-9]\d{1,3})(\.)([0-9]|[1-9]\d{1,3})'
+  if [[ $ENFORCER_VERSION =~ $rx ]]; then
+   echo "Info: Version $ENFORCER_VERSION"
+  else
+   echo "Error: Unable to validate package version: '$ENFORCER_VERSION', please provide minor version"
+   exit 1
+  fi
+}
+
 prerequisites_check() {
   load_config_from_env
   check_arch
+  check_version
 
 
   is_it_rhel "$@"
