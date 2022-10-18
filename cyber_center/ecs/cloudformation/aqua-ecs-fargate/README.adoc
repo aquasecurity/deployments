@@ -42,7 +42,7 @@ docker pull registry.aquasec.com/cc-premium:latest
 
 *Step 3. Push both of the images to ECR.*
 
-== Deployment method 1: CloudFormation Management Console
+== Deployment method: CloudFormation Management Console
 
 *Step 1. Click the Launch Stack icon at the top of this page.* This will take you to the *Create stack* function of the AWS CloudFormation Management Console.
 
