@@ -115,7 +115,6 @@ Resources:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: !Join [ "-", [ !Ref ClusterName, !GetAtt RandomString.RandomString ] ]
-
   AquaNlb:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
     Properties:
@@ -129,7 +128,6 @@ Resources:
       LoadBalancerAttributes:
         - Key: load_balancing.cross_zone.enabled
           Value: true
-
   AquaCyberListener:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
     DependsOn:
@@ -157,7 +155,6 @@ Resources:
       Port: '5000'
       Protocol: TCP
       VpcId: !Ref VpcId
-
   AquaCCTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     DependsOn:
@@ -274,7 +271,6 @@ Resources:
     Properties:
       LogGroupName: !Join ['-', ['/aqua/cc', !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
       RetentionInDays: 30
-
 Outputs:
   AquaEcsTaskRole:
     Description: IAM role assigned to access ECR
