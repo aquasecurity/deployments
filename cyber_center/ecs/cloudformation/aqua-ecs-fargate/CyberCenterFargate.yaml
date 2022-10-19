@@ -16,7 +16,7 @@ Metadata:
       - Label:
           default: Aqua Security Configuration
         Parameters:
-          - AquaCCImage
+          - AquaCyberCenterImage
     ParameterLabels:
       VpcId:
         default: VPC ID
@@ -31,7 +31,7 @@ Metadata:
       ClusterName:
         default: Name of ecs cluster
 Parameters:
-  AquaCCImage:
+  AquaCyberCenterImage:
     Type: String
     Description: Enter cyber center image path on ECR
   VpcId:
@@ -173,7 +173,7 @@ Resources:
           Host: {}
       ContainerDefinitions:
         - Name: !Join ["-", ["aqua-cc", !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
-          Image: !Ref AquaCCImage
+          Image: !Ref AquaCyberCenterImage
           Ulimits:
             - Name: nofile
               SoftLimit: '1048576'
