@@ -1,5 +1,5 @@
-:version: 2022.4
-:imageVersion: 2022.4
+:version: 2022.11
+:imageVersion: 2022.11
 
 = Deploy Aqua Enforcer on AWS ECS Cluster
 

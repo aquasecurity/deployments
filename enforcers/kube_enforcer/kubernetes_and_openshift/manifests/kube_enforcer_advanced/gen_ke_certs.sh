@@ -103,7 +103,7 @@ EOF
 _prepare_ke() {
     script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
     _rootCA=$(cat rootCA.crt | base64 | tr -d '\n' | tr -d '\r')
-    githubBranch="2022.4"
+    githubBranch="2022.11"
     if test -f "$script_dir/001_kube_enforcer_config.yaml"; then
         _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
         if eval "$_addCABundle"; then

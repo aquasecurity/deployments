@@ -89,8 +89,8 @@ is_it_rhel() {
   if [ $? -eq 0 ]; then
     echo "Info: This is RHEL 8 system. Going to download and apply SELinux policy module"
     echo "Info: Downloading SELinux policy module"
-    curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.te
-    curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.pp
+    curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.te
+    curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.11/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.pp
     if [ ! -f "${ENFORCER_SELINUX_POLICY_FILE_NAME}" ]; then
       error_message "Unable to locate ${ENFORCER_SELINUX_POLICY_FILE_NAME} on current directory"
     fi
@@ -104,8 +104,8 @@ is_it_fedora() {
   if [ $? -eq 0 ]; then
     echo "Info: This is Fedora system. Going to download and apply SELinux policy module"
     echo "Info: Downloading SELinux policy module"
-    curl -s -o fcos_aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
-    curl -s -L -o fcos_aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
+    curl -s -o fcos_aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
+    curl -s -L -o fcos_aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.11/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
 
     if [ ! -f "fcos_aquavme.pp" ]; then
       error_message "Unable to locate fcos_aquavme.pp on current directory"
@@ -167,10 +167,10 @@ is_flag_value_valid() {
 
 get_templates_online() {
 
-  curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer.template.service
-  curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer.template.old.service
-  curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/run.template.sh
-  curl -s -o ${ENFORCER_RUNC_CONFIG_TEMPLATE} https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer-runc-config.json
+  curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/templates/aqua-enforcer.template.service
+  curl -s -o ${ENFORCER_SERVICE_TEMPLATE_FILE_NAME_OLD} https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/templates/aqua-enforcer.template.old.service
+  curl -s -o ${RUN_SCRIPT_TEMPLATE_FILE_NAME} https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/templates/run.template.sh
+  curl -s -o ${ENFORCER_RUNC_CONFIG_TEMPLATE} https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/templates/aqua-enforcer-runc-config.json
   
 }
 

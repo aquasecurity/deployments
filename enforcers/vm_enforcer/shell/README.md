@@ -28,7 +28,7 @@ Deploying VM Enforcer in the online mode can download the archive file from aqua
 **Execute the following command to run and install VM Enforcer**
 Switch to the root user and run:
 ```shell
-  curl -s https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/shell/install_vme.sh | ENFORCER_VERSION=<value> GATEWAY_ENDPOINT=<value> TOKEN=<value> AQUA_USERNAME=<value> AQUA_PWD=<value> bash
+  curl -s https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/shell/install_vme.sh | ENFORCER_VERSION=<value> GATEWAY_ENDPOINT=<value> TOKEN=<value> AQUA_USERNAME=<value> AQUA_PWD=<value> bash
 ```
 
 
@@ -76,11 +76,11 @@ Make sure to replace the `<release-number>` and `<build-number>` with the releva
 **Step 2: Download aqua templates and config files**
 
 ```shell
-  curl -s -o aqua-enforcer.template.service https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer.template.service
-  curl -s -o aqua-enforcer.template.old.service https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer.template.old.service
-  curl -s -o run.template.sh https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/run.template.sh
-  curl -s -o aqua-enforcer-runc-config.json https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer-runc-config.json
-  curl -s -o aqua-enforcer-v1.0.0-rc2-runc-config.json https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/templates/aqua-enforcer-v1.0.0-rc2-runc-config.json
+  curl -s -o aqua-enforcer.template.service https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/templates/aqua-enforcer.template.service
+  curl -s -o aqua-enforcer.template.old.service https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/templates/aqua-enforcer.template.old.service
+  curl -s -o run.template.sh https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/templates/run.template.sh
+  curl -s -o aqua-enforcer-runc-config.json https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/templates/aqua-enforcer-runc-config.json
+  curl -s -o aqua-enforcer-v1.0.0-rc2-runc-config.json https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/templates/aqua-enforcer-v1.0.0-rc2-runc-config.json
 ```
 
 **Step 3: Download and Deploy VM Enforcer**
@@ -88,7 +88,7 @@ Make sure to replace the `<release-number>` and `<build-number>` with the releva
 **Download Archive**
 
 ```shell
-  curl -s -o install_vme.sh https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/shell/install_vme.sh
+  curl -s -o install_vme.sh https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/shell/install_vme.sh
   chmod +x ./install_vme.sh
 ```
 
@@ -126,5 +126,5 @@ Add the following flags in the `Install_vme.sh` script to deploy VM Enforcer in 
 ## Uninstall
 
 ```
-curl -s https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/shell/uninstall_vme.sh | bash
+curl -s https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/enforcers/vm_enforcer/shell/uninstall_vme.sh | bash
 ```

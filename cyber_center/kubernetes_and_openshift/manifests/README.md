@@ -7,7 +7,7 @@ This repository shows the manifest yaml files required to deploy the Aqua CyberC
 * OpenShift
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Offline CyberCenter](https://docs.aquasec.com/v2022.4/docs/deploy-offline-cybercenter) for detailed information.
+Before you follow the deployment steps explained below, Aqua strongly recommends you refer to the product documentation, [Deploy Offline CyberCenter](https://docs.aquasec.com/v2022.11/docs/deploy-offline-cybercenter) for detailed information.
 
 ## Specific OpenShift notes
 The deployment commands shown below use the **kubectl** cli. You can also deploy using the **oc** cli commands, to work on all platforms including OpenShift.
@@ -56,14 +56,14 @@ kubectl create secret docker-registry aqua-registry \
 **Step 3. Create a service account (if not already done).**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/cyber_center/kubernetes_and_openshift/manifests/001_cybercenter_serviceAccount.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/cyber_center/kubernetes_and_openshift/manifests/001_cybercenter_serviceAccount.yaml
 ```
 
 ## Deploy the CyberCenter using manifests
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/cyber_center/kubernetes_and_openshift/manifests/002_cybercenter_deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.11/cyber_center/kubernetes_and_openshift/manifests/002_cybercenter_deploy.yaml
 ```
 
 ## Post-deployment
-After the offline CyberCenter is deployed successfully, you must disable **Fast Scanning** from Aqua UI to scan artifacts successfully. For more information on disabling this option, refer to [Configure Scan Options](https://docs.aquasec.com/v2022.4/docs/configure-scan-options#section-configure-scan-options).
+After the offline CyberCenter is deployed successfully, you must disable **Fast Scanning** from Aqua UI to scan artifacts successfully. For more information on disabling this option, refer to [Configure Scan Options](https://docs.aquasec.com/v2022.11/docs/configure-scan-options#section-configure-scan-options).
