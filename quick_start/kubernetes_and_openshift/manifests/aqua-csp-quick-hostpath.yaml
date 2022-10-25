@@ -639,7 +639,6 @@ metadata:
   namespace: aqua
 webhooks:
   - name: imageassurance.aquasec.com
-    failurePolicy: Ignore
     rules:
       - operations: ["CREATE", "UPDATE"]
         apiGroups: ["*"]
@@ -662,13 +661,15 @@ webhooks:
           - customresourcedefinitions
     clientConfig:
       # Please follow instruction in document to generate new CA cert
-      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFVENDQWZtZ0F3SUJBZ0lVTkljWmkzL2xqbEtObFZ0WXBwVyttN2xWZnNVd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUNBWERUSXdNRGd5TnpBNU5EZ3dNMW9ZRHpJeQpPVFF3TmpFeU1EazBPREF6V2pBWE1SVXdFd1lEVlFRRERBeGhaRzFwYzNOcGIyNWZZMkV3Z2dFaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURZSlovRmRjVUtDdmdqSHlVVnhxWitRTTBRLzNGYzQyTzkKUGlXTllGS2l3L1FJTUIxTHZpQklXSFQyVEZLRkVYYUtZcmdzTHE0MElFZWMyN2Jvd2RTbXJVZEV3bEdtNkQrMQpIaGROQWI4WEllWTNteEpUUlR2cVhzYitrUnptYjJCL2xRVVlLNFJxaW8vN2RyZjFEYjBwWEFYVmxzRFNvQUhoCkxUWUxXbmhldGNLTUEvT3FCQXBoaWM4VzZZN1VJY2FtWnVZZUMxOVBlMlZKSHFxZ3o5MDNybjFGTnNMWnA4Q00Kb0dXeENEU0RFSWRuTmMxVis1WUg4VmxLRk9wb2IxYWtIZFFPeVlROFVPR2hnMHh3YXNGMnRRc2RCQ3BTUFBNYwo3K01kWnF0c2dtVGJQaUN6bWRra25uWWZ4cmxsWVVmOGFCelBrMzhyQ2ZiMnF5ZHJLTGZSQWdNQkFBR2pVekJSCk1CMEdBMVVkRGdRV0JCVDlDWlVURzRtQThrYzBISEJsamhRZUxKWjZoekFmQmdOVkhTTUVHREFXZ0JUOUNaVVQKRzRtQThrYzBISEJsamhRZUxKWjZoekFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFDUE5Ick5rcTBpN2tpMnNGcUtWa3l0RGpRWTFzaVNRcjNsbXVweDlVL1FuaytBQ2huYUhjNDVqSFVTCi9JdmNWMnljQVZ1aUQ3eFJXWkdYVzRuRE14QjdBZ0RKWmhJd3hGTVl1bVpGZEtCUlBLKy9WY3ZFTFFoZ3Z6T0QKNWhvNHZ0RzlHTzBDUzhqNUtGZ3pWaDgxcmsyU2c1RDN6TGVISjVVNDVRK2xlRGtldXJmMzFqQWJsMU1vai9JWgpndVUyd1Y5RkJJaFZONTMwd1Y4b01oWnVZRWZvUmZhOEpIbXhTMmNNbHUxQWZ5YmZkcFB2cCtpUHZKc0t2UTgzCmdueEd4K1k5NldzL0pmWDlXSFpBT1kyQXVVYS9hUjZLSnVraG9KVTk2Z3p5VXd0eFV5aWExdDg5M0hZNmQ3bG0KU1BmaVEzWm40dXdxaEczMUhGSmZMMG5iSmlxZQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFVENDQWZtZ0F3SUJBZ0lVTkljWmkzL2xqbEtObFZ0WXBwVyttN2xWZnNVd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUNBWERUSXdNRGd5TnpBNU5EZ3dNMW9ZRHpJeQpPVFF3TmpFeU1EazBPREF6V2pBWE1SVXdFd1lEVlFRRERBeGhaRzFwYzNOcGIyNWZZMkV3Z2dFaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURZSlovRmRjVUtDdmdqSHlVVnhxWitRTTBRLzNGYzQyTzkKUGlXTllGS2l3L1FJTUIxTHZpQklXSFQyVEZLRkVYYUtZcmdzTHE0MElFZWMyN2Jvd2RTbXJVZEV3bEdtNkQrMQpIaGROQWI4WEllWTNteEpUUlR2cVhzYitrUnptYjJCL2xRVVlLNFJxaW8vN2RyZjFEYjBwWEFYVmxzRFNvQUhoCkxUWUxXbmhldGNLTUEvT3FCQXBoaWM4VzZZN1VJY2FtWnVZZUMxOVBlMlZKSHFxZ3o5MDNybjFGTnNMWnA4Q00Kb0dXeENEU0RFSWRuTmMxVis1WUg4VmxLRk9wb2IxYWtIZFFPeVlROFVPR2hnMHh3YXNGMnRRc2RCQ3BTUFBNYwo3K01kWnF0c2dtVGJQaUN6bWRra25uWWZ4cmxsWVVmOGFCelBrMzhyQ2ZiMnF5ZHJLTGZSQWdNQkFBR2pVekJSCk1CMEdBMVVkRGdRV0JCVDlDWlVURzRtQThrYzBISEJsamhRZUxKWjZoekFmQmdOVkhTTUVHREFXZ0JUOUNaVVQKRzRtQThrYzBISEJsamhRZUxKWjZoekFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFDUE5Ick5rcTBpN2tpMnNGcUtWa3l0RGpRWTFzaVNRcjNsbXVweDlVL1FuaytBQ2huYUhjNDVqSFVTCi9JdmNWMnljQVZ1aUQ3eFJXWkdYVzRuRE14QjdBZ0RKWmhJd3hGTVl1bVpGZEtCUlBLKy9WY3ZFTFFoZ3Z6T0QKNWhvNHZ0RzlHTzBDUzhqNUtGZ3pWaDgxcmsyU2c1RDN6TGVISjVVNDVRK2xlRGtldXJmMzFqQWJsMU1vai9JWgpndVUyd1Y5RkJJaFZONTMwd1Y4b01oWnVZRWZvUmZhOEpIbXhTMmNNbHUxQWZ5YmZkcFB2cCtpUHZKc0t2UTgzCmdueEd4K1k5NldzL0pmWDlXSFpBT1kyQXVVYS9hUjZLSnVraG9KVTk2Z3p5VXd0eFV5aWExdDg5M0hZNmQ3bG0KU1BmaVEzWm40dXdxaEczMUhGSmZMMG5iSmlxZQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg
       service:
         namespace: aqua
         name: aqua-kube-enforcer
     timeoutSeconds: 5
+    failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
+
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
@@ -682,7 +683,7 @@ webhooks:
         name: aqua-kube-enforcer
         namespace: aqua
         path: "/mutate"
-      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFVENDQWZtZ0F3SUJBZ0lVTkljWmkzL2xqbEtObFZ0WXBwVyttN2xWZnNVd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUNBWERUSXdNRGd5TnpBNU5EZ3dNMW9ZRHpJeQpPVFF3TmpFeU1EazBPREF6V2pBWE1SVXdFd1lEVlFRRERBeGhaRzFwYzNOcGIyNWZZMkV3Z2dFaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURZSlovRmRjVUtDdmdqSHlVVnhxWitRTTBRLzNGYzQyTzkKUGlXTllGS2l3L1FJTUIxTHZpQklXSFQyVEZLRkVYYUtZcmdzTHE0MElFZWMyN2Jvd2RTbXJVZEV3bEdtNkQrMQpIaGROQWI4WEllWTNteEpUUlR2cVhzYitrUnptYjJCL2xRVVlLNFJxaW8vN2RyZjFEYjBwWEFYVmxzRFNvQUhoCkxUWUxXbmhldGNLTUEvT3FCQXBoaWM4VzZZN1VJY2FtWnVZZUMxOVBlMlZKSHFxZ3o5MDNybjFGTnNMWnA4Q00Kb0dXeENEU0RFSWRuTmMxVis1WUg4VmxLRk9wb2IxYWtIZFFPeVlROFVPR2hnMHh3YXNGMnRRc2RCQ3BTUFBNYwo3K01kWnF0c2dtVGJQaUN6bWRra25uWWZ4cmxsWVVmOGFCelBrMzhyQ2ZiMnF5ZHJLTGZSQWdNQkFBR2pVekJSCk1CMEdBMVVkRGdRV0JCVDlDWlVURzRtQThrYzBISEJsamhRZUxKWjZoekFmQmdOVkhTTUVHREFXZ0JUOUNaVVQKRzRtQThrYzBISEJsamhRZUxKWjZoekFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFDUE5Ick5rcTBpN2tpMnNGcUtWa3l0RGpRWTFzaVNRcjNsbXVweDlVL1FuaytBQ2huYUhjNDVqSFVTCi9JdmNWMnljQVZ1aUQ3eFJXWkdYVzRuRE14QjdBZ0RKWmhJd3hGTVl1bVpGZEtCUlBLKy9WY3ZFTFFoZ3Z6T0QKNWhvNHZ0RzlHTzBDUzhqNUtGZ3pWaDgxcmsyU2c1RDN6TGVISjVVNDVRK2xlRGtldXJmMzFqQWJsMU1vai9JWgpndVUyd1Y5RkJJaFZONTMwd1Y4b01oWnVZRWZvUmZhOEpIbXhTMmNNbHUxQWZ5YmZkcFB2cCtpUHZKc0t2UTgzCmdueEd4K1k5NldzL0pmWDlXSFpBT1kyQXVVYS9hUjZLSnVraG9KVTk2Z3p5VXd0eFV5aWExdDg5M0hZNmQ3bG0KU1BmaVEzWm40dXdxaEczMUhGSmZMMG5iSmlxZQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFVENDQWZtZ0F3SUJBZ0lVTkljWmkzL2xqbEtObFZ0WXBwVyttN2xWZnNVd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUNBWERUSXdNRGd5TnpBNU5EZ3dNMW9ZRHpJeQpPVFF3TmpFeU1EazBPREF6V2pBWE1SVXdFd1lEVlFRRERBeGhaRzFwYzNOcGIyNWZZMkV3Z2dFaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURZSlovRmRjVUtDdmdqSHlVVnhxWitRTTBRLzNGYzQyTzkKUGlXTllGS2l3L1FJTUIxTHZpQklXSFQyVEZLRkVYYUtZcmdzTHE0MElFZWMyN2Jvd2RTbXJVZEV3bEdtNkQrMQpIaGROQWI4WEllWTNteEpUUlR2cVhzYitrUnptYjJCL2xRVVlLNFJxaW8vN2RyZjFEYjBwWEFYVmxzRFNvQUhoCkxUWUxXbmhldGNLTUEvT3FCQXBoaWM4VzZZN1VJY2FtWnVZZUMxOVBlMlZKSHFxZ3o5MDNybjFGTnNMWnA4Q00Kb0dXeENEU0RFSWRuTmMxVis1WUg4VmxLRk9wb2IxYWtIZFFPeVlROFVPR2hnMHh3YXNGMnRRc2RCQ3BTUFBNYwo3K01kWnF0c2dtVGJQaUN6bWRra25uWWZ4cmxsWVVmOGFCelBrMzhyQ2ZiMnF5ZHJLTGZSQWdNQkFBR2pVekJSCk1CMEdBMVVkRGdRV0JCVDlDWlVURzRtQThrYzBISEJsamhRZUxKWjZoekFmQmdOVkhTTUVHREFXZ0JUOUNaVVQKRzRtQThrYzBISEJsamhRZUxKWjZoekFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQTBHQ1NxR1NJYjNEUUVCQ3dVQQpBNElCQVFDUE5Ick5rcTBpN2tpMnNGcUtWa3l0RGpRWTFzaVNRcjNsbXVweDlVL1FuaytBQ2huYUhjNDVqSFVTCi9JdmNWMnljQVZ1aUQ3eFJXWkdYVzRuRE14QjdBZ0RKWmhJd3hGTVl1bVpGZEtCUlBLKy9WY3ZFTFFoZ3Z6T0QKNWhvNHZ0RzlHTzBDUzhqNUtGZ3pWaDgxcmsyU2c1RDN6TGVISjVVNDVRK2xlRGtldXJmMzFqQWJsMU1vai9JWgpndVUyd1Y5RkJJaFZONTMwd1Y4b01oWnVZRWZvUmZhOEpIbXhTMmNNbHUxQWZ5YmZkcFB2cCtpUHZKc0t2UTgzCmdueEd4K1k5NldzL0pmWDlXSFpBT1kyQXVVYS9hUjZLSnVraG9KVTk2Z3p5VXd0eFV5aWExdDg5M0hZNmQ3bG0KU1BmaVEzWm40dXdxaEczMUhGSmZMMG5iSmlxZQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg
     rules:
       - operations: ["CREATE", "UPDATE"]
         apiGroups: ["*"]
@@ -709,7 +710,7 @@ rules:
     verbs: ["get", "list", "watch"]
   - apiGroups: [ "*" ]
     resources: [ "secrets" ]
-    verbs: [ "get", "list", "watch", "update", "create", "delete" ]
+    verbs: [ "get", "list", "watch", "update", "create", "delete"]
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
@@ -796,8 +797,8 @@ data:
   # Specify cache expiration period in seconds.
   # Default value is 60
   AQUA_CACHE_EXPIRATION_PERIOD: "60"
-  TLS_SERVER_CERT_FILEPATH: "/certs/server.crt"
-  TLS_SERVER_KEY_FILEPATH: "/certs/server.key"
+  TLS_SERVER_CERT_FILEPATH: "/certs/aqua_ke.crt"
+  TLS_SERVER_KEY_FILEPATH: "/certs/aqua_ke.key"
   ## Based on your ingress config update the name here ##
   AQUA_GATEWAY_SECURE_ADDRESS: "aqua-gateway.aqua:8443"
   AQUA_TLS_PORT: "8443"
@@ -807,6 +808,13 @@ data:
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
+  AQUA_KB_IMAGE_NAME: "aquasec/kube-bench:v0.6.8"
+  AQUA_ME_IMAGE_NAME: "registry.aquasec.com/microenforcer:2022.4"
+  AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
+  AQUA_ENFORCER_DS_NAME: "aqua-agent"               #Sets Daemonset name
+  #Enable Skipping Kube-Bench on nodes based on node labels
+  # AQUA_NODE_LABELS_TO_SKIP_KB: ""  #Comma-separated node-labels for nodes on which Kube-Bench is to be skipped. key1=val1,key2=val2,...
+
   # Enable the below Env for mTLS between kube-enforcer and gateway
   # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
   # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
@@ -819,6 +827,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
+    app.kubernetes.io/version: "0.15.10"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -834,21 +843,26 @@ spec:
           type: date
           name: Age
           description: The age of the report
-        - jsonPath: .report.summary.dangerCount
+        - jsonPath: .report.summary.criticalCount
           type: integer
-          name: Danger
+          name: Critial
           priority: 1
-          description: The number of checks that failed with Danger status
-        - jsonPath: .report.summary.warningCount
+          description: The number of failed checks with critial severity
+        - jsonPath: .report.summary.highCount
           type: integer
-          name: Warning
+          name: High
           priority: 1
-          description: The number of checks that failed with Warning status
-        - jsonPath: .report.summary.passCount
+          description: The number of failed checks with high severity
+        - jsonPath: .report.summary.mediumCount
           type: integer
-          name: Pass
+          name: Medium
           priority: 1
-          description: The number of checks that passed
+          description: The number of failed checks with medium severity
+        - jsonPath: .report.summary.lowCount
+          type: integer
+          name: Low
+          priority: 1
+          description: The number of failed checks with low severity
       schema:
         openAPIV3Schema:
           x-kubernetes-preserve-unknown-fields: true
@@ -912,6 +926,16 @@ spec:
     categories: []
     shortNames:
       - clusterconfigaudit
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: starboard-policies-config
+  namespace: aqua
+  labels:
+    app.kubernetes.io/name: starboard-operator
+    app.kubernetes.io/instance: starboard-operator
+    app.kubernetes.io/version: "0.15.10"
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -978,6 +1002,8 @@ rules:
       - configmaps
       - secrets
       - serviceaccounts
+      - resourcequotas
+      - limitranges
     verbs:
       - list
       - watch
@@ -1002,6 +1028,7 @@ rules:
       - replicasets
       - statefulsets
       - daemonsets
+      - deployments
     verbs:
       - get
       - list
@@ -1041,6 +1068,23 @@ rules:
     verbs:
       - create
       - delete
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - networkpolicies
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - policy
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - get
+      - list
+      - watch
   - apiGroups:
       - aquasecurity.github.io
     resources:
@@ -1102,7 +1146,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.14.1
+          image: docker.io/aquasec/starboard-operator:0.15.10
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -1134,6 +1178,8 @@ spec:
               value: "10"
             - name: OPERATOR_BATCH_DELETE_DELAY
               value: "10s"
+            - name: OPERATOR_CLUSTER_COMPLIANCE_ENABLED
+              value: "false"
           ports:
             - name: metrics
               containerPort: 8080
@@ -1177,11 +1223,13 @@ metadata:
     app: aqua-kube-enforcer
     aqua.component: kubeenforcer
 spec:
+  #This is the recommended value, but can be configured
   replicas: 1
   template:
     metadata:
       labels:
         app: aqua-kube-enforcer
+        aqua.component: kubeenforcer
     spec:
       securityContext:
         runAsUser: 11431
@@ -1215,25 +1263,31 @@ spec:
                 secretKeyRef:
                   name: aqua-kube-enforcer-token
                   key: token
+                  optional: true
             - name: POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
           envFrom:
-          - configMapRef:
-              name: aqua-csp-kube-enforcer
+            - configMapRef:
+                name: aqua-csp-kube-enforcer
           volumeMounts:
             - name: "kube-enforcer-ssl"
               mountPath: "/certs"
+          #  - name: aqua-grpc-kube-enforcer
+          #    mountPath: /opt/aquasec/ssl
       volumes:
         - name: "kube-enforcer-ssl"
           secret:
             secretName: "kube-enforcer-ssl"
             items:
-            - key: server.crt
-              path: server.crt
-            - key: server.key
-              path: server.key            
+              - key: aqua_ke.crt
+                path: aqua_ke.crt
+              - key: aqua_ke.key
+                path: aqua_ke.key
+      #  - name: aqua-grpc-kube-enforcer
+      #    secret:
+      #      secretName: aqua-grpc-kube-enforcer
       imagePullSecrets:
         - name: aqua-registry
   selector:
