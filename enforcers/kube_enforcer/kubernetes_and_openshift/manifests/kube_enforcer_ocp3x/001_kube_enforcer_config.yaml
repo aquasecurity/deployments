@@ -4,6 +4,8 @@ metadata:
   name: aqua-csp-kube-enforcer
   namespace: aqua
 data:
+  #Enable/Disable KB scanning on tainted nodes
+  AQUA_KB_SCAN_TAINTED_NODES: "true"
   # Specify whether to enable/disable the cache by using "yes", "true", "no", "false" values.
   # Default value is "yes".
   AQUA_ENABLE_CACHE: "yes"
