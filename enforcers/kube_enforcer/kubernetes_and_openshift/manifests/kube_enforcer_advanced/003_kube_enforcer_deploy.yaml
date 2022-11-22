@@ -48,6 +48,9 @@ spec:
             - containerPort: 8449
             - containerPort: 8442
           env:
+            #Enable/Disable KB scanning on tainted nodes
+            - name: AQUA_KB_SCAN_TAINTED_NODES
+              value: "true"
             - name: AQUA_TOKEN
               valueFrom:
                 secretKeyRef:
