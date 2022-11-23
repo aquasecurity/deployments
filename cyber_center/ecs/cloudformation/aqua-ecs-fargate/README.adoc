@@ -1,0 +1,61 @@
+:version: 2022.4
+:imageVersion: 2022.4
+
+= Deploy Cyber Center on AWS ECS Fargate Cluster
+
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/CyberCenterFargate.yaml]
+
+== Overview
+
+This page contains instructions for deploying Aqua Cyber Center Self-Hosted edition on an Amazon ECS Fargate cluster. Using the deployment instructions in this page.
+
+Your deployment creates the following services:
+
+- Aqua Cyber Center, deployed with an Amazon Network Load Balancer
+
+In addition, it creates an IAM role for granting Aqua Server, the access to ECR (Elastic Container Registry).
+
+A CloudFormation template is used to deploy Cyber Center.
+
+== Prerequisites
+
+- A VPC with at least 2 subnets
+- From Aqua Security: your Aqua credentials (username and password).
+
+== Pre-deployment
+
+*Step 1. Login to the Aqua Registry with your credentials.*
+
+[source,options="nowrap",subs="attributes"]
+----
+ docker login registry.aquasec.com -u <AQUA_USERNAME> -p <AQUA_PASSWORD>
+----
+
+*Step 2. Pull the Aqua product images for the Server (Console) and Gateway.*
+
+[source,options="nowrap",subs="attributes"]
+----
+docker pull registry.aquasec.com/cc-standard:latest
+or
+docker pull registry.aquasec.com/cc-premium:latest
+----
+
+*Step 3. Push both of the images to ECR.*
+
+== Deployment method: CloudFormation Management Console
+
+*Step 1. Click the Launch Stack icon at the top of this page.* This will take you to the *Create stack* function of the AWS CloudFormation Management Console.
+
+*Step 2. Ensure that your AWS region is set to where you want to deploy Aqua Enterprise.*
+
+*Step 3. Click Next.*
+
+*Step 4. Set or modify any of the parameters*.
+
+*Step 5. Click Next to create the stack.*
+
+It will typically require up to 20 minutes for Aqua Cyber Center to be deployed. When completed, you can obtain the DNS name of the Aqua Cyber Center from the console output, under key name `AquaCyberCenterConnection`.
+
+== Version upgrade
+
+To upgrade your Aqua Enterprise version, modify the existing stack with the new Aqua product images.
