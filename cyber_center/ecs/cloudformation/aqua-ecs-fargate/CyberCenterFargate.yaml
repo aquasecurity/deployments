@@ -1,0 +1,281 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  This AWS CloudFormation template installs the Aqua Cyber Center components
+  in ECS FARGATE .
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: ECS Infrastructure Configuration
+        Parameters:
+          - VpcId
+          - VpcCidr
+          - EcsInstanceSubnets
+          - LbSubnets
+          - LBScheme
+      - Label:
+          default: Aqua Security Configuration
+        Parameters:
+          - AquaCyberCenterImage
+    ParameterLabels:
+      VpcId:
+        default: VPC ID
+      VpcCidr:
+        default: VPC CIDR
+      EcsInstanceSubnets:
+        default: ECS Instance Subnets
+      LbSubnets:
+        default: Aqua LB Subnets
+      LBScheme:
+        default: Aqua LB Scheme
+      ClusterName:
+        default: Name of ecs cluster
+Parameters:
+  AquaCyberCenterImage:
+    Type: String
+    Description: Enter cyber center image path on ECR
+  VpcId:
+    Description: VpcId to deploy into
+    Type: 'AWS::EC2::VPC::Id'
+  VpcCidr:
+    Description: 'For use by load balancer service polling. Enter VPC CIDR. Ex: 10.0.0.0/16'
+    Type: String
+  EcsInstanceSubnets:
+    Type: 'List<AWS::EC2::Subnet::Id>'
+    Description: Select all the subnets ECS utilizes
+  LbSubnets:
+    Type: 'List<AWS::EC2::Subnet::Id>'
+    Description: Select external subnets if you need internet access.
+  LBScheme:
+    Type: String
+    Default: internet-facing
+    AllowedValues:
+      - internet-facing
+      - internal
+  ClusterName:
+    Description: Name of the ecs cluster that will be created
+    Type: String
+    MinLength: '5'
+    MaxLength: '25'
+    AllowedPattern: '[a-zA-Z0-9-]*'
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: allowLambdaLogging
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "logs:*"
+                Resource: "*"
+  RandomStringLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.lambda_handler
+      Timeout: 10
+      Role: !GetAtt "LambdaExecutionRole.Arn"
+      Runtime: python3.9
+      Code:
+        ZipFile: |
+          import cfnresponse
+          from random import choice
+          from string import ascii_lowercase, digits
+          def random_string(length=8, chars=ascii_lowercase + digits):
+            return "".join(choice(chars) for x in range(length))
+          def lambda_handler(event, context):
+            print(f"Data in event: {event}")
+            response_data = {}
+            if event["RequestType"] == "Create":
+              string_length = int(event["ResourceProperties"]["Length"])
+              physicalResourceId = random_string(string_length)
+              response_data = { "RandomString": physicalResourceId }
+          
+            else: # if event["RequestType"] == "Update" or event["RequestType"] == "Delete":
+              physicalResourceId = event["PhysicalResourceId"]
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, physicalResourceId)
+  RandomString:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      Length: 5
+      ServiceToken: !GetAtt RandomStringLambdaFunction.Arn
+  # ECS Cluster
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Join [ "-", [ !Ref ClusterName, !GetAtt RandomString.RandomString ] ]
+  AquaNlb:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      Name: !Join
+        - '-'
+        - - !Ref ECSCluster
+          - aquaNlb
+      Scheme: !Ref LBScheme
+      Subnets: !Ref LbSubnets
+      Type: network
+      LoadBalancerAttributes:
+        - Key: load_balancing.cross_zone.enabled
+          Value: true
+  AquaCyberListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    DependsOn:
+      - AquaCyberTargetGroup
+      - AquaNlb
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref AquaCyberTargetGroup
+      LoadBalancerArn: !Ref AquaNlb
+      Port: '5000'
+      Protocol: TCP
+  AquaCyberTargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    DependsOn:
+      - AquaNlb
+    Properties:
+      TargetType: ip
+      HealthCheckIntervalSeconds: 30
+      HealthCheckProtocol: TCP
+      HealthyThresholdCount: 3
+      UnhealthyThresholdCount: 3
+      HealthCheckPort: 5000
+      Name: !Join [ "-", [ "aqua-cc", !Join [ "-", [ "tg", !GetAtt RandomString.RandomString ] ] ] ]
+      Port: '5000'
+      Protocol: TCP
+      VpcId: !Ref VpcId
+  AquaCCTaskDefinition:
+    Type: 'AWS::ECS::TaskDefinition'
+    DependsOn:
+      - AquaNlb
+      - AquaEcsTaskRole
+    Properties:
+      Family: !Join ["-", ["aqua-cc", !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: '2048'
+      Memory: '4096'
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !Ref AquaEcsTaskRole
+      Volumes:
+        - Name: config
+          Host: {}
+      ContainerDefinitions:
+        - Name: !Join ["-", ["aqua-cc", !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
+          Image: !Ref AquaCyberCenterImage
+          Ulimits:
+            - Name: nofile
+              SoftLimit: '1048576'
+              HardLimit: '1048576'
+          PortMappings:
+            - ContainerPort: '5000'
+              HostPort: '5000'
+              Protocol: tcp
+          Essential: 'true'
+          Entrypoint:
+            - '/usr/local/bin/cybercenter'
+          Command:
+            - '--address=:5000'
+            - '--offline-key=pleaseopen'
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Join ['-', ['/aqua/cc', !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
+              awslogs-region: !Ref "AWS::Region"
+              awslogs-stream-prefix: aquaCyberCenter
+      TaskRoleArn: !Ref AquaEcsTaskRole
+  AquaCCService:
+    Type: 'AWS::ECS::Service'
+    DependsOn:
+      - AquaCCTaskDefinition
+    Properties:
+      Cluster: !Ref ECSCluster
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref AquaFargateSecurityGroup
+          Subnets: !Ref EcsInstanceSubnets
+      LoadBalancers:
+        - ContainerName: !Join [ "-", [ "aqua-cc", !Join [ "-", [ "td", !GetAtt RandomString.RandomString ] ] ] ]
+          ContainerPort: '5000'
+          TargetGroupArn: !Ref AquaCyberTargetGroup
+      ServiceName: !Join ["-", ["aqua-cc", !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
+      DesiredCount: '1'
+      DeploymentConfiguration:
+        MaximumPercent: '200'
+        MinimumHealthyPercent: '100'
+      TaskDefinition: !Ref AquaCCTaskDefinition
+  AquaFargateSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Allow lb access to fargate tasks
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5000
+          ToPort: 5000
+          CidrIp: !Ref VpcCidr
+  AquaEcsTaskRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Join ["-", ["AquaEcsTaskRole", !GetAtt RandomString.RandomString]]
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: !Join ["-", ["AquaCCPolicy", !GetAtt RandomString.RandomString]]
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ecr:GetDownloadUrlForLayer'
+                  - 'ecr:BatchGetImage'
+                  - 'ecr:DescribeImages'
+                  - 'ecr:GetAuthorizationToken'
+                  - 'ecr:DescribeRepositories'
+                  - 'ecr:ListImages'
+                  - 'ecr:BatchCheckLayerAvailability'
+                  - 'ecr:GetRepositoryPolicy'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                  - 'logs:CreateLogGroup'
+                  - 'logs:PutLogEvents'
+                  - 'logs:CreateLogDelivery'
+                  - 'logs:CreateLogStream'
+                  - 'logs:TagLogGroup'
+                Resource: '*'
+              - !Ref 'AWS::NoValue'
+  AquaCCLogs:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join ['-', ['/aqua/cc', !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
+      RetentionInDays: 30
+Outputs:
+  AquaEcsTaskRole:
+    Description: IAM role assigned to access ECR
+    Value: !Ref AquaEcsTaskRole
+  AquaCyberCenterConnection:
+    Description: >-
+      Aqua Cyber Center connection string for use in Console.
+    Value: !Join [":", [!GetAtt AquaNlb.DNSName, "5000"]]
