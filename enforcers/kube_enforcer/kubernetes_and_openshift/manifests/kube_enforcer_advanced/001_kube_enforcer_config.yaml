@@ -256,6 +256,11 @@ rules:
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
+  #### Can be removed if your platform isn't Openshift
+  - apiGroups: [ "operator.openshift.io" ]
+    resources: [ "imagecontentsourcepolicies" ]
+    verbs: [ "get", "list", "watch" ]
+    ####
   - apiGroups: ["*"]
     resources: ["configmaps"]
     verbs: ["get", "list", "watch"]
