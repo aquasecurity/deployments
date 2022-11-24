@@ -144,6 +144,7 @@ Resources:
                     - AUDIT_CONTROL
                     - SYSLOG
                     - SYS_CHROOT
+                    - LINUX_IMMUTABLE
               LogConfiguration:
                 LogDriver: awslogs
                 Options:
