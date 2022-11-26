@@ -134,7 +134,7 @@ rules:
       - list
       - watch
   - apiGroups:
-      - ""
+      - "*"
     resources:
       - secrets
     verbs:
@@ -176,10 +176,10 @@ rules:
   - apiGroups: ["*"]
     resources: ["leases"]
     verbs: ["get", "list", "create", "update"]  
-  - apiGroups: [ "" ]
+  - apiGroups: [ "*" ]
     resources: [ "secrets" ]
     verbs: ["create", "delete"]
-  - apiGroups: [ "" ]
+  - apiGroups: [ "*" ]
     resources: [ "configmaps" ]
     verbs: ["update", "create"]
 ---
