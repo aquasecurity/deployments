@@ -104,6 +104,8 @@ spec:
           name: aquasec-audit
         - mountPath: /data
           name: aquasec-data
+        - mountPath: /var/lib/containers
+          name: containers
         # - mountPath: /opt/aquasec/ssl
         #   name: aqua-grpc-enforcer
       dnsPolicy: ClusterFirst
@@ -152,6 +154,11 @@ spec:
           path: /var/lib/aquasec/data
           type: ""
         name: aquasec-data
+      - hostPath:
+          path: /var/lib/containers
+          type: ""
+        name: containers
+
       # - name: aqua-grpc-enforcer
       #   secret:
       #     secretName: aqua-grpc-enforcer
