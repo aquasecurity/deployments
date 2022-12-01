@@ -65,6 +65,8 @@ spec:
               value: "aqua-secure"   # Cluster display name in aqua enterprise.
             - name: AQUA_ENVOY_MODE
               value: "true"
+            - name: AQUA_KB_IMAGE_NAME
+              value: "aquasec/kube-bench:v0.6.10"
             # Enable KA policy scanning via starboard
             - name: AQUA_KAP_ADD_ALL_CONTROL
               value: "true"

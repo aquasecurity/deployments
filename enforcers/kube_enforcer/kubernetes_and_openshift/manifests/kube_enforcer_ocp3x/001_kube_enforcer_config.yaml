@@ -165,6 +165,7 @@ data:
   # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
   # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
   # AQUA_ROOT_CA: "/opt/aquasec/ssl/rootCA.crt"
+  AQUA_KB_IMAGE_NAME: "aquasec/kube-bench:v0.6.10"
 ---
 # Starboard resource yamls################
 apiVersion: apiextensions.k8s.io/v1beta1
