@@ -167,6 +167,8 @@ data:
   AQUA_LOGICAL_NAME: ""
   # Cluster display name in aqua enterprise.
   CLUSTER_NAME: "aqua-secure"
+  #Sets Enforcer Daemonset name
+  AQUA_ENFORCER_DS_NAME: "aqua-agent"
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
