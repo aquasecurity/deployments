@@ -111,12 +111,14 @@ rules:
   - apiGroups: ["*"]
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
     verbs: ["get", "list", "watch"]
-  - apiGroups: [ "*" ]
-    resources: [ "secrets" ]
-    verbs: [ "get", "list", "watch", "update", "create", "delete"]
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
+    #### Can be removed if your platform isn't Openshift
+  - apiGroups: [ "operator.openshift.io" ]
+    resources: [ "imagecontentsourcepolicies" ]
+    verbs: [ "get", "list", "watch" ]
+    ####
   - apiGroups: ["*"]
     resources: ["configmaps"]
     verbs: ["get", "list", "watch", "update", "create"]
@@ -139,6 +141,18 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - "*"
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      # Comment the below 3 verbs if Pod-Enforcer injection is not going to be used
+      - create
+      - update
+      - delete
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -173,6 +187,12 @@ rules:
   - apiGroups: ["*"]
     resources: ["leases"]
     verbs: ["get", "list", "create", "update"]
+  - apiGroups: [ "*" ]
+    resources: [ "secrets" ]
+    verbs: ["create", "delete"]
+  - apiGroups: [ "*" ]
+    resources: [ "configmaps" ]
+    verbs: ["update", "create"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -340,7 +360,11 @@ rules:
       - pods
       - pods/log
       - replicationcontrollers
+      - resourcequotas
+      - limitranges
       - services
+      - configmaps
+      - serviceaccounts
     verbs:
       - get
       - list
@@ -368,7 +392,7 @@ rules:
       - create
       - update
   - apiGroups:
-      - ""
+      - "*"
     resources:
       - secrets
     verbs:
@@ -478,3 +502,54 @@ subjects:
   - kind: ServiceAccount
     name: starboard-operator
     namespace: aqua
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: starboard-operator
+  namespace: aqua
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - create
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - serviceaccounts
+    verbs:
+      - create
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - create
+      - delete
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: starboard-operator
+  namespace: aqua
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: starboard-operator
+subjects:
+- kind: ServiceAccount
+  name: starboard-operator
+  namespace: aqua
