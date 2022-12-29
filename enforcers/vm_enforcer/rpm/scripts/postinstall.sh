@@ -83,7 +83,7 @@ fi
 }
 
 is_it_rhel() {
-  cat /etc/*release | grep PLATFORM_ID | grep "platform:el8" &>/dev/null
+  cat /etc/*release | grep PLATFORM_ID | grep "platform:el8\|platform:el9" &>/dev/null
   if [ $? -eq 0 ]; then
     echo "Info: This is RHEL 8 system. Going to apply SELinux policy module"
     SELINUX_POLICY_MODULE="aquavme"
