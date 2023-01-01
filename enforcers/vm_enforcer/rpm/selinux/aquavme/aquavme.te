@@ -23,7 +23,6 @@ require {
 allow init_t unconfined_service_t:process siginh;
 allow init_t usr_t:file write;
 allow init_t user_tmp_t:file write;
-allow init_t usr_t:file write;
 
 
 #============= iptables_t ==============
