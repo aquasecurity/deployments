@@ -57,10 +57,10 @@ remove_selinux_module_fedora() {
 }
 
 is_it_rhel() {
-  cat /etc/*release | grep PLATFORM_ID | grep "platform:el8" &>/dev/null
+  cat /etc/*release | grep PLATFORM_ID | grep "platform:el8\|platform:el9" &>/dev/null
 
   if [ $? -eq 0 ]; then
-    echo "Info: This is RHEL 8 system. Going to disable SELinux policy module if exists"
+    echo "Info: This is RHEL 8\9 system. Going to disable SELinux policy module if exists"
     remove_selinux_module
   fi
 }

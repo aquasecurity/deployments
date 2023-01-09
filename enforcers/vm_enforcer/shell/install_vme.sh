@@ -84,10 +84,10 @@ load_config_from_env() {
 }
 
 is_it_rhel() {
-  cat /etc/*release | grep PLATFORM_ID | grep "platform:el8" &>/dev/null
+  cat /etc/*release | grep PLATFORM_ID | grep "platform:el8\|platform:el9" &>/dev/null
 
   if [ $? -eq 0 ]; then
-    echo "Info: This is RHEL 8 system. Going to download and apply SELinux policy module"
+    echo "Info: This is RHEL 8\9 system. Going to download and apply SELinux policy module"
     echo "Info: Downloading SELinux policy module"
     curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.te
     curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.pp
@@ -139,7 +139,7 @@ prerequisites_check() {
   else
     error_message "runc is not installed on this host"
   fi
-  RUNC_VERSION=$(${RUNC_LOCATION} -v | grep runc | awk '{print $4}')
+  RUNC_VERSION=$(${RUNC_LOCATION} -v | grep runc | awk '{print $3}')
   echo "Detected RunC Version ${RUNC_VERSION}"
 
   is_bin_in_path docker && warning_message "docker is installed on this host"
