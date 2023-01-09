@@ -100,16 +100,15 @@ You can skip any step in this section, if you have already performed.
   ```  
 
 ***Note: For KubeEnforcer deployment in OpenShift environments***
-   * Prior to deployment of the KubeEnforcer, copy and run these commands:
+   * Prior to deployment of the KubeEnforcer, apply kube-enforcer scc:
   ```shell
-  oc adm policy add-cluster-role-to-user cluster-reader system:serviceaccount:aqua:aqua-kube-enforcer-sa
-  oc adm policy add-scc-to-user privileged system:serviceaccount:aqua:aqua-kube-enforcer-sa
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/004_kube_enforcer_scc.yaml
   ```
 
 **Step 3. Deploy KubeEnforcer.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
 ```
 
 ### Deploy the KubeEnforcer Config manually
