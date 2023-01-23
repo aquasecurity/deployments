@@ -20,7 +20,7 @@ metadata:
     release.openshift.io/create-only: "true"
   name: aqua-kube-enforcer-scc
 priority: null
-readOnlyRootFilesystem: true
+readOnlyRootFilesystem: false
 requiredDropCapabilities: [ALL]
 runAsUser:
   type: RunAsAny
