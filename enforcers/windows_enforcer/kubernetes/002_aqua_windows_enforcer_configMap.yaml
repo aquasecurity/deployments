@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-windows-enforcer
+  namespace: aqua
+data:
+  AQUA_RUNTIME_PROTECTION: "true"
+  AQUA_NETWORK_PROTECTION: "true"
+  AQUA_IMAGE_ASSURANCE: "true"
+  AQUA_HOST_PROTECTION: "true"
+  AQUA_HOST_NETWORK_PROTECTION: "true"
+  AQUA_HOST_USER_PROTECTION: "true"
+  AQUA_HOST_MALWARE_PROTECTION: "true"
+  AQUA_ENFORCER_TYPE: "full"

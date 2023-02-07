@@ -1,0 +1,190 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: aqua-windows-agent
+    aqua.component: enforcer
+  name: aqua-windows-agent
+  namespace: aqua
+spec:
+  selector:
+    matchLabels:
+      app: aqua-windows-agent
+  template:
+    metadata:
+      labels:
+        app: aqua-windows-agent
+        aqua.component: windows-enforcer
+      name: aqua-windows-agent
+      namespace: aqua
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/aqua-windows-agent: unconfined
+    spec:
+      containers:
+      - env:
+        - name: AQUA_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: AQUA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: windows-enforcer-token
+              optional: true
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-windows-enforcer
+        image: 934027998561.dkr.ecr.us-west-2.amazonaws.com/aquaagentwindowsinstaller:2022.4.196 # mcr.microsoft.com/windows/servercore:ltsc2022
+        command:
+        - powershell.exe
+        - -command
+        - msiexec /fvasum 
+        - AquaAgentWindowsInstaller.msi 
+        - AQUA_TOKEN=bfe78371-c1e7-49dd-be6f-61f61e44ac3a # ce5f2841-dab9-4d5d-906c-9b728943d5e1 
+        - AQUA_SERVER=20.103.158.77:31086 #c81b352b27-d-gw.cloud.aquasec.com:443 
+        - AQUA_ENFORCER_TYPE="full"  
+        - /qn
+        - /lv AquaAgentWindowsInstaller.install.log;
+        - While (-Not (Get-Service slkd)) { Start-Sleep -s 30 };
+        - While (Get-Service slkd | Where-Object {$_.Status -EQ "Running"}){ Start-Sleep -s 30 } 
+        imagePullPolicy: Always
+#        resources:
+#          limits:
+#            cpu: 1000m
+#            memory: 1.5Gi
+#          requests:
+#            cpu: 350m
+#            memory: 512Mi
+        startupProbe:
+          exec:
+            command: 
+            - powershell.exe
+            - -c
+            - Get-Service slkd
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        livenessProbe:
+          exec:
+            command: 
+            - powershell.exe
+            - -c
+            - Get-Service slkd
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          exec:
+            command: 
+            - powershell.exe
+            - -c
+            - Get-Service slkd
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - powershell.exe
+              - -command
+              - msiexec /x
+              - AquaAgentWindowsInstaller.msi
+              - /qn
+              - /lv AquaAgentWindowsInstaller.remove.log;
+              - Start-Sleep -s 60;
+              - Stop-Service slkd;
+              - Remove-Item -LiteralPath "C:\Program Files\Aquasec" -Force -Recurse
+        name: aqua-windows-agent
+        securityContext:
+          windowsOptions:
+            hostProcess: true
+            runAsUserName: "NT AUTHORITY\\SYSTEM"
+      nodeSelector:
+        kubernetes.io/os: windows
+      hostNetwork: true
+        # terminationMessagePath: /dev/termination-log
+        # terminationMessagePolicy: File
+        # volumeMounts:
+        # - mountPath: /var/run
+        #   name: var-run
+        # - mountPath: /dev
+        #   name: dev
+        # - mountPath: /host/sys
+        #   name: sys
+        #   readOnly: true
+        # - mountPath: /host/proc
+        #   name: proc
+        #   readOnly: true
+        # - mountPath: /host/etc
+        #   name: etc
+        #   readOnly: true
+        # - mountPath: /host/opt/aquasec
+        #   name: aquasec
+        #   readOnly: true
+        # - mountPath: /opt/aquasec/tmp
+        #   name: aquasec-tmp
+        # - mountPath: /opt/aquasec/audit
+        #   name: aquasec-audit
+        # - mountPath: /data
+        #   name: aquasec-data
+        # - mountPath: /var/lib/containers
+        #   name: containers
+        # # - mountPath: /opt/aquasec/ssl
+        # #   name: aqua-grpc-enforcer
+      dnsPolicy: ClusterFirst
+      hostPID: true
+      imagePullSecrets:
+       - name: ecr-registry
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: aqua-sa
+      serviceAccountName: aqua-sa
+      terminationGracePeriodSeconds: 30
+      # volumes:
+      # - hostPath:
+      #     path: /var/run
+      #     type: ""
+      #   name: var-run
+      # - hostPath:
+      #     path: /dev
+      #     type: ""
+      #   name: dev
+      # - hostPath:
+      #     path: /sys
+      #     type: ""
+      #   name: sys
+      # - hostPath:
+      #     path: /proc
+      #     type: ""
+      #   name: proc
+      # - hostPath:
+      #     path: /etc
+      #     type: ""
+      #   name: etc
+      # - hostPath:
+      #     path: /var/lib/aquasec
+      #     type: ""
+      #   name: aquasec
+      # - hostPath:
+      #     path: /var/lib/aquasec/tmp
+      #     type: ""
+      #   name: aquasec-tmp
+      # - hostPath:
+      #     path: /var/lib/aquasec/audit
+      #     type: ""
+      #   name: aquasec-audit
+      # - hostPath:
+      #     path: /var/lib/aquasec/data
+      #     type: ""
+      #   name: aquasec-data
+      # - hostPath:
+      #     path: /var/lib/containers
+      #     type: ""
+      #   name: containers
+
+      # - name: aqua-grpc-enforcer
+      #   secret:
+      #     secretName: aqua-grpc-enforcer
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
