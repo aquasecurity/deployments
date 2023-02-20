@@ -665,7 +665,7 @@ webhooks:
       service:
         namespace: aqua
         name: aqua-kube-enforcer
-    timeoutSeconds: 5
+    timeoutSeconds: 2
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
@@ -689,7 +689,7 @@ webhooks:
         apiGroups: ["*"]
         apiVersions: ["v1"]
         resources: ["pods"]
-    timeoutSeconds: 5
+    timeoutSeconds: 2
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
