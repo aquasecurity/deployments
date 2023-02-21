@@ -3,7 +3,7 @@
 
 = Deploy Aqua Scanner on AWS ECS Cluster
 
-image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaScanner.yaml]
+image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaScannerToken.yaml]
 
 == Overview
 
@@ -15,12 +15,15 @@ For high availability, you must deploy Aqua on 2 availability Zones (AZs).
 
 Your deployment creates the Aqua Scanner service, on the specific ECS instance. A CloudFormation template is used to deploy Aqua Scanner. This can be done either with the AWS CloudFormation Management Console or the AWS Command Line interface (CLI), as explained below.
 
+*Note:* It is mandatory to use *aquaScannerToken.yaml* for *SaaS* environments due to token based authentication, for *On-Prem* environments the aquaScanner.yaml option is suitable, due to lack of token based authentication.
+
+
 == Prerequisites
 
 - One or more ECS clusters
 - Aqua Server DNS/IP
 - From Aqua Security: your Aqua credentials (username and password) and CSP License Token
-- Aqua Scanner Username and Password
+- Aqua Scanner Username and Password or Token
 
 == Pre-deployment
 
