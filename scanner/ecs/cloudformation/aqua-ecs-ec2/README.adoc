@@ -23,7 +23,7 @@ Your deployment creates the Aqua Scanner service, on the specific ECS instance. 
 - One or more ECS clusters
 - Aqua Server DNS/IP
 - From Aqua Security: your Aqua credentials (username and password) and CSP License Token
-- Aqua Scanner Username and Password or Token
+- Aqua Scanner Token or Username and Password (for Username Password please use aquaScanner.yaml manifest)
 
 == Pre-deployment
 
