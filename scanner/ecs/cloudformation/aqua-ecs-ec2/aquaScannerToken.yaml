@@ -58,7 +58,7 @@ Resources:
               -  "/bin/sh"
             Command: 
               -  "-c" 
-              -  "/opt/aquasec/scannercli daemon --host ${AQUA_SERVER} --token ${AQUA_SCANNER_TOKEN} --no-verify"
+              -  "/opt/aquasec/scannercli daemon --host ${AQUA_SERVER} --token ${AQUA_SCANNER_TOKEN}"
             Cpu: '1024'
             Memory: '2048'
             MountPoints:
@@ -110,6 +110,7 @@ Resources:
         RoleName: !Join 
           - '-'
           - - !Ref ECSClusterName
+            - Scanner
             - AquaEcsTaskRole
         AssumeRolePolicyDocument:
           Version: 2012-10-17
@@ -125,6 +126,7 @@ Resources:
           - PolicyName: !Join 
               - '-'
               - - !Ref ECSClusterName
+                - Scanner
                 - AquaScannerPolicy
             PolicyDocument:
               Version: 2012-10-17
