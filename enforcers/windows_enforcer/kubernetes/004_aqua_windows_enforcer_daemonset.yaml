@@ -40,9 +40,9 @@ spec:
         - powershell.exe
         - -command
         - $argList=@("/I","AquaAgentWindowsInstaller.msi","AQUA_TOKEN=$Env:AQUA_TOKEN","AQUA_SERVER=$Env:AQUA_SERVER","AQUA_ENFORCER_TYPE=$Env:AQUA_ENFORCER_TYPE","/qn","/lv AquaAgentWindowsInstaller.install.log");
-        - $result=Start-Process -FilePath msiexec.exe -ArgumentList $argList -Wait;
+        - $Process=Start-Process -FilePath msiexec.exe -ArgumentList $argList -NoNewWindow -PassThru -Wait;
         - Get-Content AquaAgentWindowsInstaller.install.log;
-        - While (Get-Service slkd){ Start-Sleep -s 30 } 
+        - While (Get-Service slkd | Where-Object {$_.Status -eq "Running"}){ Start-Sleep -s 30 }
         imagePullPolicy: Always
 #        resources:
 #          limits:
@@ -57,32 +57,32 @@ spec:
             - powershell.exe
             - -c
             - Get-Service -Name slkd
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 15
+          periodSeconds: 15
         livenessProbe:
           exec:
             command: 
             - powershell.exe
             - -c
             - Get-Service -Name slkd
-          initialDelaySeconds: 60
-          periodSeconds: 180
+          initialDelaySeconds: 15
+          periodSeconds: 15
         readinessProbe:
           exec:
             command: 
             - powershell.exe
             - -c
-            - Get-Service -Name slkd # | Where-Object {$_.Status -eq "Running"}
-          initialDelaySeconds: 60
-          periodSeconds: 180
+            - Get-Service -Name slkd  | Where-Object {$_.Status -eq "Running"}
+          initialDelaySeconds: 15
+          periodSeconds: 15
         lifecycle:
           preStop:
             exec:
               command:
               - powershell.exe
               - -command
-              - $argList=@("/X","AquaAgentWindowsInstaller.msi","/qn","/L*vx c:\AquaAgentWindowsInstaller.remove.log","/norestart");
-              - $result=Start-Process -FilePath msiexec.exe -ArgumentList $argList -Wait 
+              - $argList=@("/X","AquaAgentWindowsInstaller.msi","/qn","/L*vx c:\c\AquaAgentWindowsInstaller.remove.log","/norestart","MSIRESTARTMANAGERCONTROL=Disable");
+              - $Process=Start-Process -FilePath msiexec.exe -ArgumentList $argList -NoNewWindow -PassThru -Wait;
         name: aqua-windows-agent
         securityContext:
           windowsOptions:
@@ -99,7 +99,7 @@ spec:
       schedulerName: default-scheduler
       serviceAccount: aqua-sa
       serviceAccountName: aqua-sa
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 180
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
