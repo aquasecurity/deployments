@@ -116,8 +116,13 @@ is_it_fedora() {
 }
 
 check_arch() {
-  arch=$(uname -m)
-  ENFORCER_VERSION_FILE="$ENFORCER_VERSION.$arch"
+  # In internal storage artifact stored per architecture
+  arch_suffix=""
+  if [ "${DEV_INSTALL}" != "true" ]; then
+    arch=$(uname -m)
+    arch_suffix=".$arch"
+  fi
+  ENFORCER_VERSION_FILE="$ENFORCER_VERSION$arch_suffix"
 }
 
 
