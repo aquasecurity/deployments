@@ -95,7 +95,7 @@ spec:
       dnsPolicy: ClusterFirst
       hostPID: true
       imagePullSecrets:
-       - name: ecr-registry
+       - name: aqua-registry
       restartPolicy: Always
       schedulerName: default-scheduler
       serviceAccount: aqua-sa
