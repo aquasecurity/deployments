@@ -130,11 +130,11 @@ image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-sta
 
 If you have an existing PostgreSQL database and want to use the same for Aqua Enterprise deployment without SSL certificate, use the CloudFormation template `aquaFargate-nonSSL-external.yaml` from this directory, in the CLI shown above.
 
-= MicroEnforcer deployment
+= Aqua MicroEnforcer deployment
 
 AWS Fargate is a Container as a Service (CaaS) enviornment and you can deploy Aqua MicroEnforcer to provide runtime security to the containers deployed in AWS Fargate. 
 
-For deployment options and instructions, refer to the Product documentation, https://docs.aquasec.com/v{version}/platform/aqua-enforcement/microenforcer/[Micro Enforcer].
+For deployment options and instructions, refer to the Product documentation, https://docs.aquasec.com/v{version}/platform/aqua-enforcement/microenforcer/[Aqua MicroEnforcer].
 
 = Version upgrade
 
