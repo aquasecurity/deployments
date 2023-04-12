@@ -12,7 +12,7 @@ In Kubernetes, the enforcer runs as a DaemonSet deployment for workload runtime 
 * [Manifests and Aquactl](./kubernetes_and_openshift/manifests)
 * [Helm](./kubernetes_and_openshift/helm)
 * [Operator](./kubernetes_and_openshift/operator)
-* [AWS CloudFormation ECS-EC2](./ecs/cloudformation/aqua-ecs-c2)
+* [AWS CloudFormation ECS-EC2](./ecs/cloudformation/aqua-ecs-ec2)
 
 ## Suited for
 * Aqua Enterprise SaaS
