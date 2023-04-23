@@ -11,6 +11,7 @@ Following are the enforcers that can be deployed in Aqua:
 * [Aqua Enforcer](./aqua_enforcer): full runtime protection for containers, as well as selected host-related functionality.
 * [Kube Enforcer](./kube_enforcer): runtime security for your Kubernetes workloads and infrastructure. It can be deployed with advanced configuration and/or co-requisite Starboard.
 * [VM Enforcer](./vm_enforcer): enforcement and assurance functionality for hosts (VMs) and Kubernetes nodes.
+* [Windows Enforcer](./windows_enforcer): full runtime protection for containers, as well as selected host-related functionality for Windows platforms.
 
 ### Suited for
 * Aqua SaaS edition
