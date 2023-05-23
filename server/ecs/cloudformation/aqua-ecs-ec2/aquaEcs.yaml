@@ -205,7 +205,7 @@ Parameters:
       - 'false'
   AquaLicenseToken:
     Type: String
-    Description: Aqua license token
+    Description: Aqua license token - will be deployed automatically on startup
     Default: 'DummyToken'
 
 Conditions:
