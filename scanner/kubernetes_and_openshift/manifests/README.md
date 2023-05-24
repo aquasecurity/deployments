@@ -15,7 +15,7 @@ The deployment commands shown below use the **kubectl** cli, you can also deploy
 ## Prerequisites
 
 - Your Aqua credentials: username and password
-- *Scanner* role permissions to authenicate over the Aqua server
+- *Scanner* role permissions to authenticate over the Aqua server
 - Update the following secrets in base64 encoding in the [002_scanner_secrets.yaml](./002_scanner_secrets.yaml) file:
   - AQUA_SCANNER_USERNAME
   - AQUA_SCANNER_PASSWORD
