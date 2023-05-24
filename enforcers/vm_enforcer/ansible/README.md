@@ -1,15 +1,15 @@
-# Deploy VM Enforcer using Ansibel Playbook
+# Deploy VM Enforcer using Ansible Playbook
 
 ## Overview
 
-You can deploy VM Enforcers, using an Ansible playbook, on the desired VM Enforcer group. This procedure is supported for Linux platforms only.
+You can use an Ansible playbook to deploy VM Enforcers on the desired VM Enforcer group. This procedure is supported for Linux platforms only.
 
-## Prerequisites for deploying VM Enforcers
+## Prerequisites
 
 * VM Enforcer Group token. Refer to [Create a VM Enforcer Group and VM Enforcer](https://docs.aquasec.com/docs/create-a-vm-enforcer-group-and-vm-enforcer) to create this token.
 * Aqua username and password
-* Following packages are required on the VM to install VM Enforcer:
-   * runc
+* The following packages:
+   * runC
    * wget
 
 ## Preparation
@@ -30,10 +30,9 @@ cd ./deployments/enforcers/vm_enforcer/ansible/
 test.aqua.com  ansible_user=test-user
 ```
 
-## Deploy VM Enforcer on all VMs using ansible-playbook
+## Deploy VM Enforcers on all VMs using ansible-playbook
 
 Add the [mandatory\optional variables](#mandatory-variables) with the `--extra-vars` flag in the deployment command as shown below, and run the command.
-
 
 Mandatory:
  * USERNAME
