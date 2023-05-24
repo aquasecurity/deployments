@@ -26,6 +26,7 @@ Metadata:
           - BatchInstallToken
           - ActiveActive
           - Taskprivileged
+          - AquaLicenseToken
       - Label:
           default: 'RDS Configuration: RDS Configuration'
         Parameters:
@@ -202,6 +203,10 @@ Parameters:
     AllowedValues:
       - 'true'
       - 'false'
+  AquaLicenseToken:
+    Type: String
+    Description: Aqua license token - will be deployed automatically on startup
+    Default: 'DummyToken'
 
 Conditions:
   CreateActiveActive: !Equals [ !Ref ActiveActive, 'true' ]
@@ -331,6 +336,8 @@ Resources:
               ValueFrom: !Ref SecretU
             - Name: BATCH_INSTALL_TOKEN
               ValueFrom: !Ref Secret1
+            - Name: LICENSE_TOKEN
+              ValueFrom: !Ref SecretAquaLicenseToken
             - Name: AQUA_PUBSUB_DBPASSWORD
               ValueFrom: !Ref SecretP
             - Name: AQUA_PUBSUB_DBUSER
@@ -855,6 +862,7 @@ Resources:
                   - !Ref SecretP
                   - !Ref Secret1
                   - !Ref SecretU
+                  - !Ref SecretAquaLicenseToken
         - PolicyName: !Join ["-", ["KMSPermisions", !GetAtt RandomString.RandomString]]
           PolicyDocument:
             Version: 2012-10-17
@@ -1017,6 +1025,13 @@ Resources:
       Name: !Join ["/", ["AquaBatchInstallToken", !GetAtt RandomString.RandomString]]
       SecretString:
         !Ref BatchInstallToken
+  SecretAquaLicenseToken:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: Aqua license token
+      Name: !Join ["/", ["AquaLicenseToken", !GetAtt RandomString.RandomString]]
+      SecretString:
+        !Ref AquaLicenseToken
 Outputs:
   AquaConsole:
     Description: URL to access Aqua Security Console
