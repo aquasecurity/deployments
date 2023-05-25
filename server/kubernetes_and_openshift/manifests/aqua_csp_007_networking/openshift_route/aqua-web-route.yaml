@@ -32,7 +32,7 @@ spec:
     name: aqua-web
     weight: 100
   port:
-  # Please change the targetPort to aqua-web if you would like to use http(insecure mode)
+  # Please change the targetPort to aqua-web if you would like to use http protocol(insecure mode)
     targetPort: aqua-web-ssl
   tls:
     termination: passthrough
