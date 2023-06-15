@@ -205,6 +205,8 @@ Resources:
         Type: 'AWS::ECS::Service'
         Properties:
           Cluster: !Ref ECSClusterName
+          # If the default capacity provider strategy is configured as AGS in AWS ECS, use launch type as EC2 in deployment method.          
+          # LaunchType: EC2
           SchedulingStrategy: DAEMON
           ServiceName: !Join 
             - '-'
