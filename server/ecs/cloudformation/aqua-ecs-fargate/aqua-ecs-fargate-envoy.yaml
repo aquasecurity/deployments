@@ -802,7 +802,7 @@ Resources:
       DBInstanceClass: !Ref RdsInstanceClass
       DBSubnetGroupName: !Ref RdsInstanceSubnetGroup
       Engine: postgres
-      EngineVersion: 11.12
+      EngineVersion: 12.15
       MasterUsername: !Ref RdsMasterUsername
       MasterUserPassword: !Ref RdsMasterPassword
       MultiAZ: !Ref MultiAzDatabase
