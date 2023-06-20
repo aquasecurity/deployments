@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
+Transform: 'AWS::LanguageExtensions'
 Description: >-
   This AWS CloudFormation template installs the Aqua Command Center componants
   in ECS EC2.
@@ -25,6 +26,7 @@ Metadata:
           - BatchInstallToken
           - ActiveActive
           - Taskprivileged
+          - AquaLicenseToken
       - Label:
           default: 'RDS Configuration: RDS Configuration'
         Parameters:
@@ -54,7 +56,7 @@ Metadata:
       MultiAzDatabase:
         default: Enable Multi-AZ RDS
       Taskprivileged:
-        default: Task Privileged  
+        default: Task Privileged
       SSLCert:
         default: SSL cert ARN
 Parameters:
@@ -132,6 +134,14 @@ Parameters:
       - db.r5.8xlarge
       - db.r5.16xlarge
     ConstraintDescription: Must be a valid EC2 RDS instance type
+  RdsDeletionPolicy:
+    Description: Select Retain to keep the RDS instance once cluster is destroyed, Select Snapshot to keep a snapshot of the RDS instance once cluster is destroyed, Select Delete to destroy the RDS instance and not create a snapshot once cluster is destroyed
+    Type: String
+    AllowedValues:
+      - Delete
+      - Retain
+      - Snapshot
+    Default: Snapshot
   AuditRDS:
     Description: Select Yes to create a separate RDS instance for Audit
     Default: 'No'
@@ -188,11 +198,15 @@ Parameters:
       - 'false'
   Taskprivileged:
     Description: Select false to run enforcer in non-privileged mode. defualt is privileged mode.
-    Type: String 
+    Type: String
     Default: 'true'
-    AllowedValues:  
+    AllowedValues:
       - 'true'
-      - 'false'    
+      - 'false'
+  AquaLicenseToken:
+    Type: String
+    Description: Aqua license token - will be deployed automatically on startup
+    Default: 'DummyToken'
 
 Conditions:
   CreateActiveActive: !Equals [ !Ref ActiveActive, 'true' ]
@@ -244,7 +258,7 @@ Resources:
               string_length = int(event["ResourceProperties"]["Length"])
               physicalResourceId = random_string(string_length)
               response_data = { "RandomString": physicalResourceId }
-            
+
             else: # if event["RequestType"] == "Update" or event["RequestType"] == "Delete":
               physicalResourceId = event["PhysicalResourceId"]
             cfnresponse.send(event, context, cfnresponse.SUCCESS, response_data, physicalResourceId)
@@ -322,6 +336,8 @@ Resources:
               ValueFrom: !Ref SecretU
             - Name: BATCH_INSTALL_TOKEN
               ValueFrom: !Ref Secret1
+            - Name: LICENSE_TOKEN
+              ValueFrom: !Ref SecretAquaLicenseToken
             - Name: AQUA_PUBSUB_DBPASSWORD
               ValueFrom: !Ref SecretP
             - Name: AQUA_PUBSUB_DBUSER
@@ -846,6 +862,7 @@ Resources:
                   - !Ref SecretP
                   - !Ref Secret1
                   - !Ref SecretU
+                  - !Ref SecretAquaLicenseToken
         - PolicyName: !Join ["-", ["KMSPermisions", !GetAtt RandomString.RandomString]]
           PolicyDocument:
             Version: 2012-10-17
@@ -938,13 +955,14 @@ Resources:
       PubliclyAccessible: false
       DeletionProtection: False
       Engine: postgres
-      EngineVersion: 11.15
+      EngineVersion: 12.15
       MasterUsername: !Join ['', ['{{resolve:secretsmanager:', !Ref SecretU, ':SecretString}}' ]]
       MasterUserPassword: !Join ['', ['{{resolve:secretsmanager:', !Ref SecretP, ':SecretString}}' ]]
       MultiAZ: !Ref MultiAzDatabase
       StorageType: gp2
       StorageEncrypted: True
       #KmsKeyId: !GetAtt KMSKeyForDB.Arn
+    DeletionPolicy: !Ref RdsDeletionPolicy
   AuditRdsInstance:
     Condition: CreateAuditrds
     Type: 'AWS::RDS::DBInstance'
@@ -1002,11 +1020,18 @@ Resources:
       SecretString: 'aquaadmin'
   Secret1:
     Type: AWS::SecretsManager::Secret
-    Properties: 
+    Properties:
       Description: Aqua batch install token
       Name: !Join ["/", ["AquaBatchInstallToken", !GetAtt RandomString.RandomString]]
       SecretString:
         !Ref BatchInstallToken
+  SecretAquaLicenseToken:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: Aqua license token
+      Name: !Join ["/", ["AquaLicenseToken", !GetAtt RandomString.RandomString]]
+      SecretString:
+        !Ref AquaLicenseToken
 Outputs:
   AquaConsole:
     Description: URL to access Aqua Security Console
@@ -1027,12 +1052,12 @@ Outputs:
     Description : Aqua DB Instance Identifier
     Value : !Ref RdsInstance
     Export :
-      Name : 
+      Name :
         'Fn::Sub': '${AWS::StackName}-Aqua53DBInstanceID'
   AquaAuditDBInstanceIdentifier:
     Condition: CreateAuditrds
     Description : Aqua audit DB Instance Identifier
     Value : !Ref AuditRdsInstance
     Export :
-      Name : 
+      Name :
         'Fn::Sub': '${AWS::StackName}-Aqua53AuditDBInstanceID'
