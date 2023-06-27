@@ -1758,6 +1758,14 @@ rules:
       - list
       - watch
   - apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - batch
     resources:
       - jobs
@@ -1767,6 +1775,7 @@ rules:
       - watch
   - apiGroups:
       - networking.k8s.io
+      - extensions
     resources:
       - ingresses
     verbs:

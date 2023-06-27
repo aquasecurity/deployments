@@ -110,15 +110,15 @@ metadata:
 rules:
   - apiGroups: ["*"]
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
-    verbs: [ "get", "list", "watch" ]
+    verbs: ["get", "list", "watch"]
   - apiGroups:
-    - apps.openshift.io
+      - apps.openshift.io
     resources:
-    - deploymentconfigs
+      - deploymentconfigs
     verbs:
-    - get
-    - list
-    - watch
+      - get
+      - list
+      - watch
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]

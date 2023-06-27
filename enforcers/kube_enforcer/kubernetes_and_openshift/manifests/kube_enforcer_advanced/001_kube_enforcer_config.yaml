@@ -1232,6 +1232,14 @@ rules:
       - list
       - watch
   - apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - aquasecurity.github.io
     resources:
       - clusterconfigauditreports
