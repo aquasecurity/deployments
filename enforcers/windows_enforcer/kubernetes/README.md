@@ -77,11 +77,11 @@ kubectl create secret docker-registry aqua-registry \
 **Step 2. Deploy directly or download, edit, and apply ConfigMap as required.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes_and_openshift/manifests/002_aqua_windows_enforcer_configMap.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes/002_aqua_windows_enforcer_configMap.yaml
 ```
 
 **Step 3. Deploy Aqua Enforcer as daemonset.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes_and_openshift/manifests/004_aqua_windows_enforcer_daemonset.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes/004_aqua_windows_enforcer_daemonset.yaml
 ```
