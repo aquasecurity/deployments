@@ -18,7 +18,7 @@ pipeline {
 
     options {
         ansiColor('xterm')
-        timestamps()
+//        timestamps()
         skipStagesAfterUnstable()
         skipDefaultCheckout()
         buildDiscarder(logRotator(daysToKeepStr: '7'))
@@ -46,8 +46,7 @@ pipeline {
         stage("Checkout") {
             steps {
                 script {
-                    log.info "CHANGE_TARGET: ${CHANGE_TARGET}"
-                    log.info "CHANGE_BRANCH: ${CHANGE_BRANCH}"
+                    log.info "CHANGE_TARGET: ${CHANGE_TARGET}, CHANGE_BRANCH: ${CHANGE_BRANCH}"
                     deployment.clone branch: "master"
                     checkout([
                             $class                           : 'GitSCM',
