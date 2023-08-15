@@ -98,10 +98,15 @@ kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022
 ```
 
 **Step 3. Deploy Aqua Enforcer as daemonset.**
+   * For **gke-autopilot** replace **/var/lib** with **/var/autopilot/addon** under volumeMounts and volumes sections
+   ```SHELL
+   curl -s https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml | sed -e "s/\/var\/lib/\/var\/autopilot\/addon/" | kubectl apply -f -
+   ```
 
-```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
-```
+   * For the rest platforms deploy 004_aqua_enforcer_daemonset.yaml 
+   ```SHELL
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
+   ```
 
 ## Automate Aqua Enforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Aqua Enforcer using Manifests](#deploy-aqua-enforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the Aqua Enforcer deployment.
