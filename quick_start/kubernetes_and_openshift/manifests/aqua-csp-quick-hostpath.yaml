@@ -708,6 +708,14 @@ rules:
   - apiGroups: ["*"]
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
     verbs: ["get", "list", "watch"]
+  - apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
   - apiGroups: [ "*" ]
     resources: [ "secrets" ]
     verbs: [ "get", "list", "watch", "update", "create", "delete"]
@@ -808,7 +816,7 @@ data:
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
-  AQUA_KB_IMAGE_NAME: "aquasec/kube-bench:v0.6.10"
+  AQUA_KB_IMAGE_NAME: "aquasec/kube-bench:v0.6.15"
   AQUA_ME_IMAGE_NAME: "registry.aquasec.com/microenforcer:2022.4"
   AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
   AQUA_ENFORCER_DS_NAME: "aqua-agent"               #Sets Daemonset name
@@ -827,7 +835,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.10"
+    app.kubernetes.io/version: "0.15.13"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -935,7 +943,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.10"
+    app.kubernetes.io/version: "0.15.13"
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1034,6 +1042,14 @@ rules:
       - list
       - watch
   - apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - batch
     resources:
       - jobs
@@ -1070,6 +1086,7 @@ rules:
       - delete
   - apiGroups:
       - networking.k8s.io
+      - extensions
     resources:
       - networkpolicies
       - ingresses
@@ -1146,7 +1163,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.15.10
+          image: docker.io/aquasec/starboard-operator:0.15.13
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -1174,6 +1191,8 @@ spec:
               value: "false"
             - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
               value: "false"
+            - name: OPERATOR_CONFIG_AUDIT_SCANNER_SCAN_ONLY_CURRENT_REVISIONS
+              value: "true"
             - name: OPERATOR_BATCH_DELETE_LIMIT
               value: "10"
             - name: OPERATOR_BATCH_DELETE_DELAY
