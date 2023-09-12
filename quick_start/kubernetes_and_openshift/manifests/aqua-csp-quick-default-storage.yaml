@@ -809,7 +809,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.10"
+    app.kubernetes.io/version: "0.15.15"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -917,7 +917,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.10"
+    app.kubernetes.io/version: "0.15.15"
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1128,7 +1128,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.15.10
+          image: docker.io/aquasec/starboard-operator:0.15.15
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
