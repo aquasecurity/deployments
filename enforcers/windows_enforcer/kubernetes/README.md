@@ -53,7 +53,7 @@ kubectl create secret docker-registry aqua-registry \
 **Step 3. Create a service account and RBAC for your deployment platform (if not already done).** Replace the platform name from [Supported platforms](#supported-platforms).
 
    ```SHELL
-   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes_and_openshift/manifests/001_aqua_windows_enforcer_rbac/aks/aqua_sa.yaml
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes/001_aqua_windows_enforcer_rbac/aks/aqua_sa.yaml
    ```
 
 ## Deploy Aqua Enforcer using manifests
@@ -63,7 +63,7 @@ kubectl create secret docker-registry aqua-registry \
    * Create the token secret that authenticates the Aqua Windows Enforcer over the Aqua Server.
 
       ```SHELL
-      kubectl create secret generic enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
+      kubectl create secret generic windows-enforcer-token --from-literal=token=<token_from_server_ui> -n aqua
       ```
 
                                         (or)
@@ -71,17 +71,17 @@ kubectl create secret docker-registry aqua-registry \
      * Download, edit, and apply the secrets.
 
       ```SHELL
-      kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes_and_openshift/manifests/003_aqua_windows_enforcer_secrets.yaml
+      kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes/003_aqua_windows_enforcer_secrets.yaml
       ```    
 
 **Step 2. Deploy directly or download, edit, and apply ConfigMap as required.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes_and_openshift/manifests/002_aqua_windows_enforcer_configMap.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes/002_aqua_windows_enforcer_configMap.yaml
 ```
 
 **Step 3. Deploy Aqua Enforcer as daemonset.**
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes_and_openshift/manifests/004_aqua_windows_enforcer_daemonset.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/windows_enforcer/kubernetes/004_aqua_windows_enforcer_daemonset.yaml
 ```

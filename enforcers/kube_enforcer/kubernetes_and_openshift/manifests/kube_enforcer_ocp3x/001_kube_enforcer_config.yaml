@@ -23,7 +23,7 @@ data:
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
-  AQUA_KB_IMAGE_NAME: "aquasec/kube-bench:v0.6.12"
+  AQUA_KB_IMAGE_NAME: "aquasec/kube-bench:v0.6.15"
   AQUA_ME_IMAGE_NAME: "registry.aquasec.com/microenforcer:2022.4"
   AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
   AQUA_ENFORCER_DS_NAME: "aqua-agent"                        #Sets Daemonset name
@@ -102,7 +102,15 @@ metadata:
 rules:
   - apiGroups: ["*"]
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
-    verbs: ["get", "list", "watch"]   
+    verbs: ["get", "list", "watch"]
+  - apiGroups:
+    - apps.openshift.io
+    resources:
+    - deploymentconfigs
+    verbs:
+    - get
+    - list
+    - watch   
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
@@ -377,6 +385,14 @@ rules:
       - list
       - watch
   - apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - batch
     resources:
       - jobs
@@ -406,6 +422,7 @@ rules:
       - watch  
   - apiGroups:
       - networking.k8s.io
+      - extensions
     resources:
       - networkpolicies
       - ingresses

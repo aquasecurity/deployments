@@ -142,6 +142,8 @@ spec:
               value: "false"
             - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
               value: "false"
+            - name: OPERATOR_CONFIG_AUDIT_SCANNER_SCAN_ONLY_CURRENT_REVISIONS
+              value: "true"
             - name: OPERATOR_BATCH_DELETE_LIMIT
               value: "10"
             - name: OPERATOR_BATCH_DELETE_DELAY
