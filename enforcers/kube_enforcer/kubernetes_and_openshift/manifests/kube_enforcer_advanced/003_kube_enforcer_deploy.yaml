@@ -158,7 +158,7 @@ metadata:
   labels:
     app.kubernetes.io/name: trivy-operator
     app.kubernetes.io/instance: trivy-operator
-    app.kubernetes.io/version: "0.11.0"
+    app.kubernetes.io/version: "0.16.1"
     app.kubernetes.io/managed-by: kubectl
 spec:
   replicas: 1
@@ -178,7 +178,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: "trivy-operator"
-          image: "docker.io/aquasec/trivy-operator:0.11.0"
+          image: "docker.io/aquasec/trivy-operator:0.16.1"
           imagePullPolicy: IfNotPresent
           env:
             - name: OPERATOR_NAMESPACE
@@ -217,6 +217,8 @@ spec:
               value: "true"
             - name: OPERATOR_SCANNER_REPORT_TTL
               value: "24h"
+            - name: OPERATOR_SBOM_GENERATION_ENABLED
+              value: "false"
             - name: OPERATOR_CONFIG_AUDIT_SCANNER_ENABLED
               value: "true"
             - name: OPERATOR_CLUSTER_COMPLIANCE_ENABLED
