@@ -14,6 +14,7 @@ Metadata:
           - LbSubnets
           - SSLCert
           - LBScheme
+          - ClusterName
       - Label:
           default: Aqua Security Configuration
         Parameters:
@@ -22,7 +23,7 @@ Metadata:
           - AquaGatewayImage
           - ActiveActive
       - Label:
-          default: 'RDS Configuration: RDS Configuration'
+          default: 'RDS Configuration'
         Parameters:
           - RdsInstanceName
           - RdsInstanceClass
@@ -119,7 +120,6 @@ Parameters:
     Default: 'No'
     Type: String
     AllowedValues: ['Yes', 'No']
-
   AuditRdsInstanceClass:
     Description: ''
     Type: String
@@ -168,7 +168,7 @@ Parameters:
   SSLCert:
     Description: ARN of the SSL cert to be used with console web UI LB
     Type: String
-  ActiveActive: 
+  ActiveActive:
     Description: Active Active configuration for aqua console 
     Type: String
     Default: 'false'
