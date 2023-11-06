@@ -227,25 +227,25 @@ Parameters:
       - "true"
       - "false"
   TLSRootCA:
-    Description: Provide output of the root certificate
+    Description: The ARN of the root certificate stored in AWS Secrets Manager.
     Type: String
   AquaServerCrt:
-    Description: Provide output of the Aqua server certificate
+    Description: The ARN of the Aqua server certificate stored in AWS Secrets Manager.
     Type: String
   AquaServerKey:
-    Description: Provide output of the Aqua server certificate key
+    Description: The ARN of the Aqua server certificate key stored in AWS Secrets Manager.
     Type: String
   AquaGatewayCrt:
-    Description: Provide output of the Aqua gateway certificate
+    Description: The ARN of the Aqua gateway certificate stored in AWS Secrets Manager.
     Type: String
   AquaGatewayKey:
-    Description: Provide output of the Aqua gateway certificate key
+    Description: The ARN of the Aqua gateway certificate key stored in AWS Secrets Manager.
     Type: String
   AquaEnforcerCrt:
-    Description: Provide output of the Aqua enforcer certificate
+    Description: The ARN of the Aqua enforcer certificate stored in AWS Secrets Manager.
     Type: String
   AquaEnforcerKey:
-    Description: Provide output of the Aqua enforcer certificate key
+    Description: The ARN of the Aqua enforcer certificate key stored in AWS Secrets Manager.
     Type: String
   TlsVerify:
     Description: Enable mTLS/TLS between enforcer and gateway
@@ -440,7 +440,7 @@ Resources:
               awslogs-stream-prefix: secret-sidecar-root-ca
           Environment:
             - name: SECRET_ARN
-              value: !Ref SecretRootCa
+              value: !Ref TLSRootCA
             - name: SECRET_FILENAME
               value: root_ca.pem
           MountPoints:
@@ -459,7 +459,7 @@ Resources:
               awslogs-stream-prefix: secret-sidecar-server-crt
           Environment:
             - name: SECRET_ARN
-              value: !Ref SecretAquaServerCrt
+              value: !Ref AquaServerCrt
             - name: SECRET_FILENAME
               value: cert.pem
           MountPoints:
@@ -478,7 +478,7 @@ Resources:
               awslogs-stream-prefix: secret-sidecar-server-key
           Environment:
             - name: SECRET_ARN
-              value: !Ref SecretAquaServerKey
+              value: !Ref AquaServerKey
             - name: SECRET_FILENAME
               value: key.pem
           MountPoints:
@@ -746,7 +746,7 @@ Resources:
               awslogs-stream-prefix: secret-sidecar-root-ca
           Environment:
             - name: SECRET_ARN
-              value: !Ref SecretRootCa
+              value: !Ref TLSRootCA
             - name: SECRET_FILENAME
               value: root_ca.pem
           MountPoints:
@@ -765,7 +765,7 @@ Resources:
               awslogs-stream-prefix: secret-sidecar-gateway-crt
           Environment:
             - name: SECRET_ARN
-              value: !Ref SecretAquaGatewayCrt
+              value: !Ref AquaGatewayCrt
             - name: SECRET_FILENAME
               value: cert.pem
           MountPoints:
@@ -784,7 +784,7 @@ Resources:
               awslogs-stream-prefix: secret-sidecar-gateway-key
           Environment:
             - name: SECRET_ARN
-              value: !Ref SecretAquaGatewayKey
+              value: !Ref AquaGatewayKey
             - name: SECRET_FILENAME
               value: key.pem
           MountPoints:
@@ -920,7 +920,7 @@ Resources:
               awslogs-stream-prefix: secret-sidecar-root-ca
           Environment:
             - name: SECRET_ARN
-              value: !Ref SecretRootCa
+              value: !Ref TLSRootCA
             - name: SECRET_FILENAME
               value: root_ca.pem
           MountPoints:
@@ -939,7 +939,7 @@ Resources:
               awslogs-stream-prefix: secret-sidecar-enforcer-crt
           Environment:
             - name: SECRET_ARN
-              value: !Ref SecretAquaEnforcerCrt
+              value: !Ref AquaEnforcerCrt
             - name: SECRET_FILENAME
               value: cert.pem
           MountPoints:
@@ -958,7 +958,7 @@ Resources:
               awslogs-stream-prefix: secret-sidecar-enforcer-key
           Environment:
             - name: SECRET_ARN
-              value: !Ref SecretAquaEnforcerKey
+              value: !Ref AquaEnforcerKey
             - name: SECRET_FILENAME
               value: key.pem
           MountPoints:
@@ -1124,13 +1124,13 @@ Resources:
                   - !Ref Secret1
                   - !Ref SecretU
                   - !Ref SecretAquaLicenseToken
-                  - !Ref SecretRootCa
-                  - !Ref SecretAquaServerCrt
-                  - !Ref SecretAquaServerKey
-                  - !Ref SecretAquaGatewayCrt
-                  - !Ref SecretAquaGatewayKey
-                  - !Ref SecretAquaEnforcerCrt
-                  - !Ref SecretAquaEnforcerKey
+                  - !Ref TLSRootCA
+                  - !Ref AquaServerCrt
+                  - !Ref AquaServerKey
+                  - !Ref AquaGatewayCrt
+                  - !Ref AquaGatewayKey
+                  - !Ref AquaEnforcerCrt
+                  - !Ref AquaEnforcerKey
         - PolicyName: !Join ["-", ["KMSPermisions", !GetAtt RandomString.RandomString]]
           PolicyDocument:
             Version: 2012-10-17
@@ -1300,62 +1300,6 @@ Resources:
       Name: !Join ["/", ["AquaLicenseToken", !GetAtt RandomString.RandomString]]
       SecretString:
         !Ref AquaLicenseToken
-  SecretRootCa:
-    Type: AWS::SecretsManager::Secret
-    Condition: TLSEnable
-    Properties:
-      Description: Root certificate
-      Name: !Join [ "/", [ "RootCA", !GetAtt RandomString.RandomString ] ]
-      SecretString:
-        !Ref TLSRootCA
-  SecretAquaServerCrt:
-    Type: AWS::SecretsManager::Secret
-    Condition: TLSEnable
-    Properties:
-      Description: Aqua server certificate
-      Name: !Join [ "/", [ "AquaServerCrt", !GetAtt RandomString.RandomString ] ]
-      SecretString:
-        !Ref AquaServerCrt
-  SecretAquaServerKey:
-    Type: AWS::SecretsManager::Secret
-    Condition: TLSEnable
-    Properties:
-      Description: Aqua server certificate key
-      Name: !Join [ "/", [ "AquaServerKey", !GetAtt RandomString.RandomString ] ]
-      SecretString:
-        !Ref AquaServerKey
-  SecretAquaGatewayCrt:
-    Type: AWS::SecretsManager::Secret
-    Condition: TLSEnable
-    Properties:
-      Description: Aqua gateway certificate
-      Name: !Join [ "/", [ "AquaGatewayCrt", !GetAtt RandomString.RandomString ] ]
-      SecretString:
-        !Ref AquaGatewayCrt
-  SecretAquaGatewayKey:
-    Type: AWS::SecretsManager::Secret
-    Condition: TLSEnable
-    Properties:
-      Description: Aqua gateway certificate key
-      Name: !Join [ "/", [ "AquaGatewayKey", !GetAtt RandomString.RandomString ] ]
-      SecretString:
-        !Ref AquaGatewayKey
-  SecretAquaEnforcerCrt:
-    Type: AWS::SecretsManager::Secret
-    Condition: TLSEnable
-    Properties:
-      Description: Aqua enforcer
-      Name: !Join [ "/", [ "AquaEnforcerCrt", !GetAtt RandomString.RandomString ] ]
-      SecretString:
-        !Ref AquaEnforcerCrt
-  SecretAquaEnforcerKey:
-    Type: AWS::SecretsManager::Secret
-    Condition: TLSEnable
-    Properties:
-      Description: Aqua enforcer certificate key
-      Name: !Join [ "/", [ "AquaEnforcerKey", !GetAtt RandomString.RandomString ] ]
-      SecretString:
-        !Ref AquaEnforcerKey
 Outputs:
   AquaConsole:
     Description: URL to access Aqua Security Console
