@@ -113,7 +113,7 @@ _prepare_ke() {
             printf "\nError: Failed to prepare KubeEnforcer config file from local"
             exit 1
         fi
-    elif curl https://raw.githubusercontent.com/aquasecurity/deployments/$githubBranch/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced_starboard/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"; then
+    elif curl https://raw.githubusercontent.com/aquasecurity/deployments/$githubBranch/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced_trivy/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"; then
         _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
         if eval "$_addCABundle"; then
             printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
