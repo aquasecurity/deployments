@@ -22,6 +22,8 @@ Metadata:
           - AquaServerImage
           - AquaGatewayImage
           - ActiveActive
+          - AquaLogLevel
+          - AquaPassword
       - Label:
           default: TLS Configuration
         Parameters:
@@ -221,13 +223,22 @@ Parameters:
     AllowedValues:
       - 'true'
       - 'false'
+  AquaLogLevel:
+    Description: Aqua log level, by default set to INFO
+    Type: String
+    Default: "INFO"
+    AllowedValues:
+      - "WARN"
+      - "DEBUG"
+      - "INFO"
+      - "ERROR"
+  AquaPassword:
+    Type: String
+    Description: Use this Aqua admin password
+    NoEcho: true
 Conditions:
-  CreateActiveActive: !Equals
-    - !Ref ActiveActive
-    - 'true'
-  CreateAuditrds: !Equals
-    - !Ref AuditRDS
-    - 'Yes'
+  CreateActiveActive: !Equals [ !Ref ActiveActive, 'true' ]
+  CreateAuditrds: !Equals [!Ref AuditRDS, 'Yes']
   TLSEnable: !Equals
     - !Ref TLSEnabled
     - 'true'
@@ -358,9 +369,11 @@ Resources:
               ValueFrom: !Ref SecretP
             - Name: AQUA_PUBSUB_DBUSER
               ValueFrom: !Ref SecretU
+            - Name: ADMIN_PASSWORD
+              ValueFrom: !Ref SecretAquaPassword
           Environment:
             - Name: SCALOCK_LOG_LEVEL
-              Value: DEBUG
+              Value: !Ref AquaLogLevel
             - Name: AQUA_GRPC_MODE
               Value: 1
             - Name: AQUA_DOCKERLESS_SCANNING
@@ -665,7 +678,7 @@ Resources:
               ValueFrom: !Ref SecretU
           Environment:
             - Name: SCALOCK_LOG_LEVEL
-              Value: DEBUG
+              Value: !Ref AquaLogLevel
             - Name: SCALOCK_DBSSL
               Value: require
             - Name: SCALOCK_AUDIT_DBSSL
@@ -688,11 +701,6 @@ Resources:
               Value: !If [TLSEnable, /tmp/cert.pem, !Ref "AWS::NoValue" ]
             - Name: AQUA_ROOT_CA
               Value: !If [TLSEnable, /tmp/root_ca.pem, !Ref "AWS::NoValue" ]
-            - Name: AQUA_VERIFY_ENFORCER
-              Value: !If
-                - AquaTlsVerify  # Condition: If AquaTlsVerify is true
-                - "1"        # Value if AquaTlsVerify is true
-                - "0"        # Value if AquaTlsVerify is not true
         # Conditional container definition for TLSEnable
         - !If
           - TLSEnable
@@ -880,6 +888,7 @@ Resources:
                 Resource:
                   - !Ref SecretP
                   - !Ref SecretU
+                  - !Ref SecretAquaPassword
                   - !If [TLSEnable, !Ref TLSRootCA, !Ref "AWS::NoValue"]
                   - !If [TLSEnable, !Ref AquaServerCrt, !Ref "AWS::NoValue"]
                   - !If [TLSEnable, !Ref AquaServerKey, !Ref "AWS::NoValue"]
@@ -899,22 +908,16 @@ Resources:
     Properties:
       LogGroupName: !Join ['-', ['/aqua/console', !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
       RetentionInDays: 30
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
   AquaGatewayLogs:
     Type: 'AWS::Logs::LogGroup'
     Properties:
       LogGroupName: !Join ['-', ['/aqua/gateway', !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
       RetentionInDays: 30
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
   AquaEnforcerLogs:
     Type: 'AWS::Logs::LogGroup'
     Properties:
       LogGroupName: !Join ['-', ['/aqua/enforcer', !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
       RetentionInDays: 30
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
   AquaNlb:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
     Properties:
@@ -1029,7 +1032,6 @@ Resources:
   RdsInstance:
     Type: 'AWS::RDS::DBInstance'
     Properties:
-      PubliclyAccessible: false
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
       VPCSecurityGroups:
@@ -1039,6 +1041,7 @@ Resources:
       DBInstanceClass: !Ref RdsInstanceClass
       DBSubnetGroupName: !Ref RdsInstanceSubnetGroup
       DeleteAutomatedBackups: false
+      PubliclyAccessible: false
       DeletionProtection: false
       Engine: postgres
       EngineVersion: 12.15
@@ -1053,7 +1056,6 @@ Resources:
     Condition: CreateAuditrds
     Type: 'AWS::RDS::DBInstance'
     Properties:
-      PubliclyAccessible: false
       AllocatedStorage: !Ref RdsStorage
       AutoMinorVersionUpgrade: 'false'
       VPCSecurityGroups:
@@ -1063,6 +1065,7 @@ Resources:
       DBInstanceClass: !Ref AuditRdsInstanceClass
       DBSubnetGroupName: !Ref RdsInstanceSubnetGroup
       DeleteAutomatedBackups: false
+      PubliclyAccessible: false
       DeletionProtection: false
       Engine: postgres
       EngineVersion: 12.15
@@ -1101,6 +1104,12 @@ Resources:
       Description: Aqua RDS Username
       Name: !Sub 'AquaRdsUsername-${RandomString}'
       SecretString: 'aquaadmin'
+  SecretAquaPassword:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: Aqua admin password
+      Name: !Sub 'AquaPassword-${RandomString.RandomString}'
+      SecretString: !Ref AquaPassword
 Outputs:
   AquaConsole:
     Description: URL to access Aqua Security Console
