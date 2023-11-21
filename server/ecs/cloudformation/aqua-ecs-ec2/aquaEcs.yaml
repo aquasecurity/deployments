@@ -920,7 +920,7 @@ Resources:
             Effect: Allow
             Resource: !Join ['', [!GetAtt LBLogsStoreBucket.Arn, /*]]
             Principal:
-              AWS: !Join ['', ['arn:aws:iam::', !Ref 'AWS::AccountId', ':root']]
+              AWS: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:root
             Action: ['s3:PutObject']
           - Sid: ELBAccessLogsServiceACL
             Effect: Allow

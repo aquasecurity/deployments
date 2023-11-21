@@ -104,13 +104,13 @@ rules:
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
     verbs: ["get", "list", "watch"]
   - apiGroups:
-    - apps.openshift.io
+      - apps.openshift.io
     resources:
-    - deploymentconfigs
+      - deploymentconfigs
     verbs:
-    - get
-    - list
-    - watch   
+      - get
+      - list
+      - watch
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
@@ -212,7 +212,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.13"
+    app.kubernetes.io/version: "0.15.15"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -343,7 +343,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.13"
+    app.kubernetes.io/version: "0.15.15"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
