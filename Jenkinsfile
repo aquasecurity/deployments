@@ -1,4 +1,5 @@
-@Library('aqua-pipeline-lib@master') _
+@Library('aqua-pipeline-lib@SLK-73488-aqua-ssl-certs-in-cloud-formation-EC2-template') _
+//@Library('aqua-pipeline-lib@master') _
 import com.aquasec.deployments.orchestrators.*
 
 class Global {
