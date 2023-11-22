@@ -19,7 +19,7 @@ For high availability, you must deploy Aqua on 2 availability Zones (AZs).
 Your deployment creates the following services:
 
 - Amazon Application Load Balancer
-- Aqua Server (Console)
+- Aqua Console
 - Aqua Database, created on a new Amazon RDS instance, which includes 7 days of rolling backups
 - Aqua Audit Database, created on a new Amazon RDS instance, which includes 7 days of rolling backups
 - Aqua Gateway
