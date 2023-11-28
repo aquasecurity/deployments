@@ -19,7 +19,7 @@ Metadata:
           default: Aqua Security Configuration
         Parameters:
           - AquaConsoleAccess
-          - AquaServerImage
+          - AquaConsoleImage
           - AquaGatewayImage
           - ActiveActive
           - AquaLogLevel
@@ -29,8 +29,8 @@ Metadata:
         Parameters:
           - TLSEnabled
           - TLSRootCA
-          - AquaServerCrt
-          - AquaServerKey
+          - AquaConsoleCrt
+          - AquaConsoleKey
           - AquaGatewayCrt
           - AquaGatewayKey
           - TlsVerify
@@ -64,9 +64,9 @@ Metadata:
       SSLCert:
         default: SSL cert ARN
 Parameters:
-  AquaServerImage:
+  AquaConsoleImage:
     Type: String
-    Description: Enter server image path on ECR
+    Description: Enter console image path on ECR
   AquaGatewayImage:
     Type: String
     Description: Enter gateway image path on ECR
@@ -194,7 +194,7 @@ Parameters:
       - 'false'
   TLSEnabled:
     Description: >-
-      Enable mTLS/TLS establishment between server <-> gateway and https for
+      Enable mTLS/TLS establishment between console <-> gateway and https for
       aqua console
     Type: String
     Default: 'false'
@@ -204,11 +204,11 @@ Parameters:
   TLSRootCA:
     Description: The ARN of the root certificate stored in AWS Secrets Manager.
     Type: String
-  AquaServerCrt:
-    Description: The ARN of the Aqua server certificate stored in AWS Secrets Manager.
+  AquaConsoleCrt:
+    Description: The ARN of the Aqua console certificate stored in AWS Secrets Manager.
     Type: String
-  AquaServerKey:
-    Description: The ARN of the Aqua server certificate key stored in AWS Secrets Manager.
+  AquaConsoleKey:
+    Description: The ARN of the Aqua console certificate key stored in AWS Secrets Manager.
     Type: String
   AquaGatewayCrt:
     Description: The ARN of the Aqua gateway certificate stored in AWS Secrets Manager.
@@ -331,7 +331,7 @@ Resources:
       ExecutionRoleArn: !GetAtt AquaEcsTaskRole.Arn
       ContainerDefinitions:
         - Name: !Join ["-", ["aqua-console", !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
-          Image: !Ref AquaServerImage
+          Image: !Ref AquaConsoleImage
           Ulimits:
             - Name: nofile
               SoftLimit: '1048576'
@@ -435,7 +435,7 @@ Resources:
           - !Ref 'AWS::NoValue'
         - !If
           - TLSEnable
-          - Name: secret-sidecar-server-crt
+          - Name: secret-sidecar-console-crt
             Image: public.ecr.aws/aws-containers/aws-secrets-manager-secret-sidecar:v0.1.4
             Cpu: '0'
             Memory: '128'
@@ -445,10 +445,10 @@ Resources:
               Options:
                 awslogs-group: !Join [ '-', [ '/aqua/console', !Join [ "-", [ "td", !GetAtt RandomString.RandomString ] ] ] ]
                 awslogs-region: !Ref "AWS::Region"
-                awslogs-stream-prefix: secret-sidecar-server-crt
+                awslogs-stream-prefix: secret-sidecar-console-crt
             Environment:
               - Name: SECRET_ARN
-                Value: !Ref AquaServerCrt
+                Value: !Ref AquaConsoleCrt
               - Name: SECRET_FILENAME
                 Value: cert.pem
             MountPoints:
@@ -457,7 +457,7 @@ Resources:
           - !Ref 'AWS::NoValue'
         - !If
           - TLSEnable
-          - Name: secret-sidecar-server-key
+          - Name: secret-sidecar-console-key
             Image: public.ecr.aws/aws-containers/aws-secrets-manager-secret-sidecar:v0.1.4
             Cpu: '0'
             Memory: '128'
@@ -467,10 +467,10 @@ Resources:
               Options:
                 awslogs-group: !Join [ '-', [ '/aqua/console', !Join [ "-", [ "td", !GetAtt RandomString.RandomString ] ] ] ]
                 awslogs-region: !Ref "AWS::Region"
-                awslogs-stream-prefix: secret-sidecar-server-key
+                awslogs-stream-prefix: secret-sidecar-console-key
             Environment:
               - Name: SECRET_ARN
-                Value: !Ref AquaServerKey
+                Value: !Ref AquaConsoleKey
               - Name: SECRET_FILENAME
                 Value: key.pem
             MountPoints:
@@ -890,8 +890,8 @@ Resources:
                   - !Ref SecretU
                   - !Ref SecretAquaPassword
                   - !If [TLSEnable, !Ref TLSRootCA, !Ref "AWS::NoValue"]
-                  - !If [TLSEnable, !Ref AquaServerCrt, !Ref "AWS::NoValue"]
-                  - !If [TLSEnable, !Ref AquaServerKey, !Ref "AWS::NoValue"]
+                  - !If [TLSEnable, !Ref AquaConsoleCrt, !Ref "AWS::NoValue"]
+                  - !If [TLSEnable, !Ref AquaConsoleKey, !Ref "AWS::NoValue"]
                   - !If [TLSEnable, !Ref AquaGatewayCrt, !Ref "AWS::NoValue"]
                   - !If [TLSEnable, !Ref AquaGatewayKey, !Ref "AWS::NoValue"]
         - PolicyName: !Join ["-", ["KMSPermisions", !GetAtt RandomString.RandomString]]
@@ -1115,7 +1115,7 @@ Outputs:
     Description: URL to access Aqua Security Console
     Value: !Sub 'https://${AquaConsoleLB.DNSName}'
   AquaConsoleGrpcConnection:
-    Description: DNS to server gRPC
+    Description: DNS to console gRPC
     Value: !Sub 'https://${AquaConsoleLB.DNSName}:8443'
   AquaGatewayExternalConnection:
     Description: >-
