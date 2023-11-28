@@ -6,7 +6,6 @@ class Global {
     static Object CHANGED_CF_FILES = []
     static Object CHANGED_MANIFESTS_FILES = []
     static Object SORTED_CHANGED_FILES = []
-    static String BUILD_USER_EMAIL
 }
 
 def orchestrator = new OrcFactory(this).GetOrc()
@@ -15,7 +14,9 @@ pipeline {
     agent {
         label 'deployment_slave'
     }
-
+    parameters {
+        string(name: 'DEPLOYMENT_BRANCH', defaultValue: 'master', description: "deployment branch")
+    }
     options {
         ansiColor('xterm')
         timestamps()
@@ -46,9 +47,8 @@ pipeline {
         stage("Checkout") {
             steps {
                 script {
-                    log.info "CHANGE_TARGET: ${CHANGE_TARGET}"
-                    log.info "CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    deployment.clone branch: "master"
+                    log.info "CHANGE_TARGET: ${CHANGE_TARGET}\n CHANGE_BRANCH: ${CHANGE_BRANCH}"
+                    deployment.clone branch: "${DEPLOYMENT_BRANCH}"
                     checkout([
                             $class                           : 'GitSCM',
                             branches                         : scm.branches,
@@ -105,7 +105,7 @@ pipeline {
             }
             steps {
                 script {
-                    log.info "Starting to test Cloudformation yamls"
+                    log.info "Starting to test Cloudformation YAML files"
 
                     def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation .")
                     deploymentImage.inside("-u root") {

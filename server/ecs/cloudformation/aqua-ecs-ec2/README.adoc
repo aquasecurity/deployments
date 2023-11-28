@@ -11,7 +11,7 @@ This page contains instructions for deploying Aqua Enterprise Self-Hosted editio
 
 - A separate DB (Database) for Audit
 - External DB
-- SSL enablement for the Aqua console 
+- SSL enablement for the Aqua console
 - Active-active Server mode
 
 For high availability, you must deploy Aqua on 2 availability Zones (AZs).
@@ -113,7 +113,7 @@ For an Active-active Server configuration, select the ActiveActive parameter val
 
 Having a seprate DB for audit events is an optional parameter. Following are the values for this parameter:
 
-- Select `Yes` for AuditRDS parameter if you would like to create a separate RDS instance 
+- Select `Yes` for AuditRDS parameter if you would like to create a separate RDS instance
 - Select `No` to use single RDS instance for both the Aqua DB and Audit DB
 - Default value for AuditRDS (or split DB) is `No`
 
@@ -122,6 +122,161 @@ Having a seprate DB for audit events is an optional parameter. Following are the
 image:https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png[Launch Stack,link=https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=aqua-ecs&templateURL=https://s3.amazonaws.com/aqua-security-public/{version}/aquaEcs-external.yaml]
 
 If you have an existing PostgreSQL database and want to use the same for aqua deployment, use the cloudformation template `aquaEcs-external.yaml` from this directory, in the CLI shown above.
+
+=== Configuring mTLS/TLS
+By default, deploying Aqua Enterprise configures TLS-based encrypted communication, using self-signed certificates, between Aqua components. If you want to use self-signed certificates to establish mTLS between aqua components use the below instrictions to generate rootCA and component certificates
+
+==== Create Root CA
+
+*Step 1. Create Root Key*
+
+
+```shell
+openssl genrsa -des3 -out rootCA.key 4096
+```
+
+__If you want a non password protected key just remove the `-des3` option
+__
+
+*Step 2. Create and self-sign the root certificate*
+
+
+ openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt
+
+
+==== Generate Aqua component certificates
+
+*Step 3. Generate keys*
+
+Create certificate keys for the Server, Gateway, and Aqua Enforcer.
+
+    openssl genrsa -out aqua-console.key 2048
+    openssl genrsa -out aqua-gateway.key 2048
+    openssl genrsa -out aqua-enforcer.key 2048
+
+
+*Step 4. Create Aqua Console certificate*
+
+====== Create the Aqua Console SSL config file
+
+Specify the Aqua Console service name followed by the HTTPS port as common name and any other alternate names as SAN DNS entries:
+
+
+    cat >aqua-console.conf <<EOF
+    [ req ]
+    default_bits = 2048
+    distinguished_name = req_distinguished_name
+    req_extensions = req_ext
+    prompt = no
+    [ req_distinguished_name ]
+    countryName = Country Name (2 letter code)
+    stateOrProvinceName = State or Province Name (full name)
+    localityName = Locality Name (e.g., city)
+    organizationName = Organization Name (e.g., company)
+    commonName = Common Name (e.g., server FQDN or YOUR name)
+    [ req_ext ]
+    subjectAltName = @alt_names
+    [alt_names]
+    DNS.1 = <console host public DNS>
+    DNS.2 = <console service DNS e.g. aqua-web>
+    IP.1 = <console service IP e.g. 10.X.X.X>
+    EOF
+
+====== Generate a CSR file for Aqua Console from the configuration above.
+
+
+    openssl req -new -sha256 -key aqua-console.key -config aqua-console.conf -out aqua-console.csr
+
+
+
+
+====== Generate the certificate using the CSR along with appropriate private keys and get it signed by the CA root key.
+
+    openssl x509 -req -in aqua-console.csr -CA rootCA.crt\
+    -CAkey rootCA.key -CAcreateserial \
+    -out aqua-console.crt -days 500 -sha256 \
+    -extensions req_ext -extfile aqua-console.conf
+
+
+*Step 5. Create Aqua Gateway certificate*
+
+====== Create the Aqua Gateway SSL config file
+Specify the Aqua Gateway service name as a common name and any other alternate names as SAN DNS entries.
+
+
+    cat >aqua-gateway.conf <<EOF
+    [ req ]default_bits = 2048
+    distinguished_name = req_distinguished_name
+    req_extensions = req_ext
+    prompt = no
+    [ req_distinguished_name ]
+    countryName = Country Name (2 letter code)
+    stateOrProvinceName = State or Province Name (full name)
+    localityName = Locality Name (e.g., city)
+    organizationName = Organization Name (e.g., company)
+    commonName = Common Name (e.g., server FQDN or YOUR name)
+    [ req_ext ]
+    subjectAltName = @alt_names
+    [alt_names]
+    DNS.1 = <gateway host public DNS>
+    DNS.2 = <gateway service DNS e.g. aqua-gateway>
+    IP.1 = <gateway service IP e.g. 10.X.X.X>
+    EOF
+
+
+====== Generate a CSR file for aqua_gateway from the configuration above.
+
+
+    openssl req -new -sha256 -key aqua-gateway.key -config aqua-gateway.conf -out aqua-gateway.csr
+
+====== Generate the certificate using the CSR along with appropriate private keys and get it signed by the CA root key.
+
+    openssl x509 -req -in aqua-gateway.csr -CA rootCA.crt -CAkey rootCA.key \
+    -CAcreateserial -out aqua-gateway.crt -days 500 \
+    -sha256 -extensions req_ext -extfile aqua-gateway.conf
+
+*Step 6. Create Aqua Enforcer certificate*
+
+====== Create the Aqua Enforcer (DaemonSet) SSL config file
+Specify the Aqua Enforcer service name as a common name.
+
+
+    openssl req -new -sha256 -key aqua-enforcer.key -subj "/C=US/ST=MA/O=aqua/CN=aqua-agent" -out aqua-enforcer.csr
+
+====== Generate the certificate using the CSR along with appropriate private keys and get it signed by the CA root key.
+
+    openssl x509 -req -in aqua-enforcer.csr -CA rootCA.crt \
+    -CAkey rootCA.key -CAcreateserial -out aqua-enforcer.crt \
+    -days 500 -sha256
+
+*Step 7. Verify certificates (optional)*
+
+Verify the contents of all the certificates by running these commands.
+
+    openssl x509 -in aqua-console.crt -text -noout
+    openssl x509 -in aqua-gateway.crt -text -noout
+    openssl x509 -in aqua-enforcer.crt -text -noout
+
+*Step 8. Upload certificates and key to AWS secret manager*
+
+Upload the following certificates and keys to AWS secret manager:
+
+* rootCA.crt
+* aqua-console.crt
+* aqua-console.key
+* aqua-gateway.crt
+* aqua-gateway.key
+* aqua-enforcer.crt
+* aqua-enforcer.key
+
+*Step 9. Upload Aqua Console certificates and key to AWS certificate manager*
+
+*Step 10. Update cloudformation stack*
+
+* Enable _TLSEnabled_
+* Enable _TlsVerify_
+* Enter Aqua Console, Gateway and Enforcer secrets ARN
+* Replace SSLCert with the new  ARN of the SSL certificate
 
 == Version upgrade
 

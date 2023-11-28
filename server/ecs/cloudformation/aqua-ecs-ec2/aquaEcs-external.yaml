@@ -1000,6 +1000,8 @@ Resources:
     Type: 'AWS::ECS::Service'
     Properties:
       Cluster: !Ref ECSClusterName
+      SchedulingStrategy: DAEMON
+      LaunchType: EC2
       ServiceName: !Sub 'aqua-enforcer-td-${RandomString}'
       TaskDefinition: !Ref AquaEnforcerTaskDefinition
   AquaConsoleSecurityGroup:
