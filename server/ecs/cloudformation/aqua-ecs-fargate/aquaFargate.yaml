@@ -316,6 +316,7 @@ Resources:
     Type: 'AWS::ECS::TaskDefinition'
     DependsOn:
       - AquaConsoleLogs
+      - RdsInstance
     Properties:
       Family: !Join ["-", ["aqua-console", !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
       RequiresCompatibilities:
@@ -623,6 +624,7 @@ Resources:
     Type: 'AWS::ECS::TaskDefinition'
     DependsOn:
       - AquaGatewayLogs
+      - RdsInstance
     Properties:
       Family: !Join ["-", ["aqua-gateway", !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
       NetworkMode: awsvpc
