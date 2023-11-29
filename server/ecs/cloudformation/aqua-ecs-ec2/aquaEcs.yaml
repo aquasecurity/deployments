@@ -1297,6 +1297,7 @@ Resources:
       MultiAZ: !Ref MultiAzDatabase
       StorageType: gp2
       StorageEncrypted: true
+    UpdateReplacePolicy: Retain
     DeletionPolicy: !Ref RdsDeletionPolicy
   AuditRdsInstance:
     Condition: CreateAuditrds

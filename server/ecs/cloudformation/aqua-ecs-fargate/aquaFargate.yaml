@@ -128,6 +128,14 @@ Parameters:
       - db.r5.8xlarge
       - db.r5.16xlarge
     ConstraintDescription: Must be a valid EC2 RDS instance type
+  RdsDeletionPolicy:
+    Description: Select Retain to keep the RDS instance once cluster is destroyed, Select Snapshot to keep a snapshot of the RDS instance once cluster is destroyed, Select Delete to destroy the RDS instance and not create a snapshot once cluster is destroyed
+    Type: String
+    AllowedValues:
+      - Delete
+      - Retain
+      - Snapshot
+    Default: Snapshot
   AuditRDS:
     Description: Select Yes to create a separate RDS instance for Audit
     Default: 'No'
@@ -1053,7 +1061,7 @@ Resources:
       StorageType: gp2
       StorageEncrypted: true
     UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
+    DeletionPolicy: !Ref RdsDeletionPolicy
   AuditRdsInstance:
     Condition: CreateAuditrds
     Type: 'AWS::RDS::DBInstance'
