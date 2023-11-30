@@ -82,3 +82,6 @@ ECSClusterName = The existing ECS cluster name
 *Step 3. Run the AWS create-stack CLI command.*
 
 This procedure will deploy Aqua Enforcer in your desired cluster and the newly deployed Aqua enforcer will get added to the existing Aqua server.
+
+## Special cases
+* The ECS cluster with the Bottlerocket OS is currently not supported.
