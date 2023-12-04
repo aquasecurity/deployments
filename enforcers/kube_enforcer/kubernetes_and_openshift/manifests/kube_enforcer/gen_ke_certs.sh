@@ -99,25 +99,6 @@ EOF
         exit 1
     fi
 }
-_prepare_ke() {
-    script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-    _rootCA=$(cat rootCA.crt | base64 | tr -d '\n' | tr -d '\r')
-    local_config_file="./config.yaml"
-
-    if test -f "$local_config_file"; then
-        _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$local_config_file")
-        if eval "$_addCABundle"; then
-            printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
-            _deploy_ke_admin
-        else
-            printf "\nError: Failed to prepare KubeEnforcer config file from local"
-            exit 1
-        fi
-    else
-        printf "\nError: Local config file 001_kube_enforcer_config.yaml not found"
-        exit 1
-    fi
-}
 
 # for using custom namespace instead of AQUA NS download the 001_kube_enforcer_config.yaml, make changes to it and keep it in current directory where this script is running
 _prepare_ke() {          
