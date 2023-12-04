@@ -108,7 +108,7 @@ _prepare_ke() {
 
     if test -f "$local_config_file"; then
         # Add CA bundle to the local KubeEnforcer config file
-        _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$local_config_file")
+        _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
         if eval "$_addCABundle"; then
             printf "\nInfo: Successfully prepared config.yaml manifest file.\n"
             _deploy_ke_admin
