@@ -1,29 +1,25 @@
 @Library('aqua-pipeline-lib@master') _
 import com.aquasec.deployments.orchestrators.*
 
-class Global {
-    static Object CHANGED_FILES = []
-    static Object CHANGED_CF_FILES = []
-    static Object CHANGED_MANIFESTS_FILES = []
-    static Object SORTED_CHANGED_FILES = []
-}
-
+def pythonImage = 'python:3-slim-buster'
+def changedCfFiles = []
+def changedFiles = []
+def changedManifestsFiles = []
+def sortedOtherChangedFiles = []
 def orchestrator = new OrcFactory(this).GetOrc()
 def debug = true
+def runCloudFormation = false
+
 pipeline {
     agent {
-        label 'deployment_slave'
+        label 'aws_slave'
     }
-    parameters {
-        string(name: 'DEPLOYMENT_BRANCH', defaultValue: 'master', description: "deployment branch")
-    }
+
     options {
         ansiColor('xterm')
-        timestamps()
-        skipStagesAfterUnstable()
+        disableConcurrentBuilds()
         skipDefaultCheckout()
         buildDiscarder(logRotator(daysToKeepStr: '7'))
-        lock('k3s')
     }
 
     environment {
@@ -47,15 +43,11 @@ pipeline {
         stage("Checkout") {
             steps {
                 script {
+                    gitUtils.clone repo: "deployment", branch: "master"
+                    dir("deployments") {
+                        checkout scm
+                    }
                     log.info "CHANGE_TARGET: ${CHANGE_TARGET}\n CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    deployment.clone branch: "${DEPLOYMENT_BRANCH}"
-                    checkout([
-                            $class                           : 'GitSCM',
-                            branches                         : scm.branches,
-                            doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
-                            extensions                       : [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'deployments']],
-                            userRemoteConfigs                : scm.userRemoteConfigs
-                    ])
                     utils.dockerlogin username: env.DOCKER_HUB_USERNAME, password: DOCKER_HUB_PASSWORD, registry: ""
                 }
             }
@@ -64,73 +56,103 @@ pipeline {
             steps {
                 script {
                     dir("deployments") {
-                        Global.CHANGED_FILES = sh(script: "git --no-pager diff origin/${CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
-                        def gitCommits = sh(script: "git log --pretty=format:'%h' -n 1", returnStdout: true).trim().split("\\r?\\n")
-                        for (commit in gitCommits) {
-                            log.info "commit: ${commit}"
-                        }
-                        for (file in Global.CHANGED_FILES) {
-                            log.info "file: ${file}"
-                        }
-                    }
-                    def sortChangedFiles = deployments.sortChangedFiles(Global.CHANGED_FILES)
-                    Global.CHANGED_CF_FILES = sortChangedFiles["CHANGED_CF_FILES"]
-                    Global.CHANGED_MANIFESTS_FILES = sortChangedFiles["CHANGED_MANIFESTS_FILES"]
-                    Global.SORTED_CHANGED_FILES = sortChangedFiles["SORTED_CHANGED_FILES"]
-                }
-            }
-        }
-        stage('Other Files') {
-            when {
-                allOf {
-                    not { expression { return Global.SORTED_CHANGED_FILES.isEmpty() } }
-                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
-                }
-            }
-            steps {
-                script {
-                    log.info "Starting to test SORTED_CHANGED_FILES"
-                    for (file in Global.SORTED_CHANGED_FILES) {
-                        log.info "file: ${file} was changed"
+                        sh "git fetch origin ${env.CHANGE_TARGET}:refs/remotes/origin/${env.CHANGE_TARGET}"
+                        changedFiles = sh(script: "git --no-pager diff origin/${env.CHANGE_TARGET} --name-only", returnStdout: true).trim().split("\\r?\\n")
+                        changedFiles = changedFiles.findAll { !it.endsWith('.adoc') }
+
+                        log.info "The following files have changed:\n  ${changedFiles.join('\n  ')}"
+                        def sortedChangedFiles = deployments.analyzeChangedFiles(changedFiles)
+                        changedCfFiles = sortedChangedFiles["cloudFormationChangedFiles"]
+                        changedManifestsFiles = sortedChangedFiles["manifestsChangedFiles"]
+                        sortedOtherChangedFiles = sortedChangedFiles["otherChangedFiles"]
+                        runCloudFormation = deployments.runCloudFormation(env.CHANGE_TARGET)
                     }
                 }
             }
         }
-        stage('Cloudformation') {
+        stage('Cloudformation Trivy Scan') {
             when {
                 allOf {
-                    not { expression { return Global.CHANGED_CF_FILES.isEmpty() } }
-                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                    not { expression { return changedCfFiles.isEmpty() } }
+                    expression { return runCloudFormation }
                 }
             }
             steps {
                 script {
-                    log.info "Starting to test Cloudformation YAML files"
+                    dir("deployments") {
+                        parallel changedCfFiles.collectEntries { filename ->
+                            def shortName = filename.split("/")[-1]
+                            shortName = "${shortName}".replaceAll(/aqua|\.yaml/, '')
 
-                    def deploymentImage = docker.build("deployment-cloudformation-image", "-f Dockerfile-cloudformation .")
-                    deploymentImage.inside("-u root") {
-                        log.info "Installing aqaua-deployment  python package"
-                        sh """
-                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${AWS_ACCOUNT_ID}
-                        pip install aqua-deployment
-                        """
-                        log.info "Finished to install aqaua-deployment python package"
-
-                        def parallelStagesMap = Global.CHANGED_CF_FILES.collectEntries {
-                            ["${it.split("/")[-1]}": deployments.generateStage(it, "cloudformation")]
+                            ["${shortName}": {
+                                stage("Trivy scan ${shortName}") {
+                                    docker.withRegistry('https://aquadev.azurecr.io', 'aquadev-push') {
+                                        docker.image("aquadev.azurecr.io/helm-cicd").inside("-u root") {
+                                            log.info "Starting Trivy scan for file: ${filename}"
+                                            sh "trivy config --severity HIGH,CRITICAL --ignorefile .trivyignore --exit-code 1 ${filename}"
+                                        }
+                                    }
+                                }
+                            }]
                         }
-                        parallel parallelStagesMap
-
                     }
+                }
+            }
+        }
+        stage('Verify and Deploy Cloudformation') {
+            when {
+                allOf {
+                    not { expression { return changedCfFiles.isEmpty() } }
+                    expression { return runCloudFormation }
+                }
+            }
+            steps {
+                script {
+                    docker.image("${pythonImage}").inside("-u root") {
+                        sh "pip install --upgrade -r requirements.txt"
+                        sh "pip -q install awscli"
+                        sh "aws --region ${env.AWS_REGION} codeartifact login --tool pip --repository deployment-pr --domain aqua-deployment --domain-owner ${env.AWS_ACCOUNT_ID}"
+                        sh "pip install --no-build-isolation aqua-deployment"
 
+                        parallel changedCfFiles.collectEntries { filename ->
+                            def shortName = filename.split("/")[-1]
+                            shortName = "${shortName}".replaceAll(/aqua|\.yaml/, '')
+
+                            ["${shortName}": {
+                                stage("Verify and Deploy ${shortName}") {
+                                    def extraFlag = ""
+                                    def testFile = ""
+                                    def clusterName = ""
+                                    def baseName = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}".toLowerCase()
+
+                                    if (filename.contains("aqua-ecs-fargate")) {
+                                        clusterName = "far-${baseName}"
+                                        testFile = "tests/fargate/test_cloudformation.py"
+                                    } else if (filename.contains("aqua-ecs-ec2")) {
+                                        clusterName = "ec2-${baseName}"
+                                        testFile = "tests/ec2/test_cloudformation.py"
+                                    } else {
+                                        log.error "file: ${file} is not one of fargate\\ec2"
+                                    }
+
+                                    if (filename.contains("external")) {
+                                        extraFlag = "--create_db"
+                                        clusterName = "${clusterName}-e"
+                                    }
+                                    sh "python ${testFile} --filename deployments/${filename} --image_tag ${env.CHANGE_TARGET} --cluster_name ${clusterName}"
+                                    sh "python ${testFile} --filename deployments/${filename} --image_tag ${env.CHANGE_TARGET} --cluster_name ${clusterName} --deploy ${extraFlag}"
+                                }
+                            }]
+                        }
+                    }
                 }
             }
         }
         stage("Manifest") {
             when {
                 allOf {
-                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
-                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                    not { expression { return changedManifestsFiles.isEmpty() } }
+                    expression { return runCloudFormation }
                 }
             }
             steps {
@@ -138,7 +160,7 @@ pipeline {
                     log.info "Starting to test Manifest yamls"
                     def deploymentImage = docker.build("deployment-manifest-image", "-f Dockerfile-manifest .")
                     deploymentImage.inside("-u root") {
-                        def parallelStagesMap = Global.CHANGED_MANIFESTS_FILES.collectEntries {
+                        def parallelStagesMap = changedManifestsFiles.collectEntries {
                             ["${it.split("/")[-1]}": deployments.generateStage(it, "manifest")]
                         }
                         parallel parallelStagesMap
@@ -149,8 +171,8 @@ pipeline {
         stage("K3S Cluster Install and Prepare") {
             when {
                 allOf {
-                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
-                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                    not { expression { return changedManifestsFiles.isEmpty() } }
+                    expression { return runCloudFormation }
                 }
             }
             steps {
@@ -159,19 +181,18 @@ pipeline {
                     helm.settingKubeConfig()
                     kubectl.createNamespace create: "yes"
                     kubectl.createDockerRegistrySecret create: "yes", registry: env.DEPLOY_REGISTRY
-
                 }
             }
         }
-        stage("Deploy Manifests"){
+        stage("Deploy Manifests") {
             when {
                 allOf {
-                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
-                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                    not { expression { return changedManifestsFiles.isEmpty() } }
+                    expression { return runCloudFormation }
                 }
             }
-            steps{
-                script{
+            steps {
+                script {
                     def deploymentImage = docker.build("deployment-k3s-image", "-f Dockerfile-k3s .")
                     deploymentImage.inside("-u root --network host") {
                         log.info "Pulling manifests with Aquactl and modifying other manifests"
@@ -180,15 +201,15 @@ pipeline {
                         pip install aqua-deployment
                         /bin/bash k3s/prepare.sh ${DEPLOY_REGISTRY}
                         """
-                            }
-                        }
                     }
                 }
+            }
+        }
         stage("Updating Consul") {
             when {
                 allOf {
-                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
-                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                    not { expression { return changedManifestsFiles.isEmpty() } }
+                    expression { return runCloudFormation }
                 }
             }
             steps {
@@ -201,8 +222,8 @@ pipeline {
         stage("Running Mstp Tests") {
             when {
                 allOf {
-                    not { expression { return Global.CHANGED_MANIFESTS_FILES.isEmpty() } }
-                    expression { return deployments.runCloudFormation(CHANGE_TARGET) }
+                    not { expression { return changedManifestsFiles.isEmpty() } }
+                    expression { return runCloudFormation }
                 }
             }
             steps {
@@ -213,22 +234,20 @@ pipeline {
             }
         }
     }
-    
     post {
         always {
             script {
-                try{
-                helm.updateConsul("delete")
-                orchestrator.uninstall()
-                echo "k3s uninstalled"
-                helm.removeDockerLocalImages()
-                cleanWs()
+                try {
+                    helm.updateConsul("delete")
+                    orchestrator.uninstall()
+                    echo "k3s uninstalled"
+                    helm.removeDockerLocalImages()
+                    cleanWs()
                 }
-                catch(err){
-                cleanWs()
-                helm.removeDockerLocalImages()
+                catch (err) {
+                    cleanWs()
+                    helm.removeDockerLocalImages()
                 }
-//                notifyFullJobDetailes subject: "${env.JOB_NAME} Pipeline | ${currentBuild.result}", emails: userEmail
             }
         }
     }
