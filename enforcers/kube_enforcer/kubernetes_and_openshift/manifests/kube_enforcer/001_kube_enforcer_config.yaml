@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: aqua-csp-kube-enforcer
-  namespace: aqua
+  namespace:
 data:
   #Enable/Disable KB scanning on tainted nodes
   AQUA_KB_SCAN_TAINTED_NODES: "true"
@@ -39,7 +39,7 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: kube-enforcer-admission-hook-config
-  namespace: aqua
+  namespace:
 webhooks:
   - name: imageassurance.aquasec.com
     rules:
@@ -67,7 +67,7 @@ webhooks:
       # Please follow instruction in document to generate new CA cert
       caBundle:
       service:
-        namespace: aqua
+        namespace:
         name: aqua-kube-enforcer
     timeoutSeconds: 2
     failurePolicy: Ignore
@@ -78,13 +78,13 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: kube-enforcer-me-injection-hook-config
-  namespace: aqua
+  namespace:
 webhooks:
   - name: microenforcer.aquasec.com
     clientConfig:
       service:
         name: aqua-kube-enforcer
-        namespace: aqua
+        namespace:
         path: "/mutate"
       caBundle:
     rules:
@@ -101,7 +101,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: aqua-kube-enforcer-sa
-  namespace: aqua
+  namespace:
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -166,7 +166,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: aqua-kube-enforcer
-  namespace: aqua
+  namespace:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -174,14 +174,14 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: aqua-kube-enforcer-sa
-    namespace: aqua
+    namespace:
 ---
 # This role specific to kube-bench scans permissions
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: aqua-kube-enforcer
-  namespace: aqua
+  namespace:
 rules:
   - apiGroups: ["*"]
     resources: ["pods/log"]
@@ -206,7 +206,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: aqua-kube-enforcer
-  namespace: aqua
+  namespace:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -214,7 +214,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: aqua-kube-enforcer-sa
-  namespace: aqua
+  namespace:
 ---
 # Starboard resource yamls################
 apiVersion: apiextensions.k8s.io/v1
@@ -327,7 +327,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: starboard-operator
-  namespace: aqua
+  namespace:
 imagePullSecrets:
   - name: aqua-registry
 ---
@@ -335,7 +335,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: starboard
-  namespace: aqua
+  namespace:
 data:
   configAuditReports.scanner: Conftest
 ---
@@ -343,13 +343,13 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: starboard
-  namespace: aqua
+  namespace:
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: starboard-policies-config
-  namespace: aqua
+  namespace:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
@@ -475,7 +475,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: starboard-operator
-  namespace: aqua
+  namespace:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -483,13 +483,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: starboard-operator
-    namespace: aqua
+    namespace:
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: starboard-operator
-  namespace: aqua
+  namespace:
 rules:
   - apiGroups:
       - "" 
@@ -526,7 +526,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: starboard-operator
-  namespace: aqua
+  namespace:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -534,4 +534,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: starboard-operator
-  namespace: aqua
+  namespace:
