@@ -105,7 +105,7 @@ _prepare_ke() {
     _rootCA=$(cat rootCA.crt | base64 | tr -d '\n' | tr -d '\r')
     githubBranch="2022.4"
     if test -f "$script_dir/001_kube_enforcer_config.yaml"; then
-        _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
+        _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle: $_rootCA/g; s/namespace:.*/namespace: $ns/g" "$script_dir/001_kube_enforcer_config.yaml")
         if eval "$_addCABundle"; then
             printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
             _deploy_ke_admin
