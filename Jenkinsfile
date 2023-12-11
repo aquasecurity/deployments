@@ -20,6 +20,7 @@ pipeline {
         disableConcurrentBuilds()
         skipDefaultCheckout()
         buildDiscarder(logRotator(daysToKeepStr: '7'))
+        lock('k3s')
     }
 
     environment {
