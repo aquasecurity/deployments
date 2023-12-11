@@ -12,7 +12,7 @@ def runCloudFormation = false
 
 pipeline {
     agent {
-        label 'aws_slave'
+        label 'deployment_slave'
     }
 
     options {
