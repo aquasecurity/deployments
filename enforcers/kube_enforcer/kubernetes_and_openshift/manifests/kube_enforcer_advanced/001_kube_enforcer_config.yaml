@@ -211,7 +211,7 @@ webhooks:
       service:
         namespace: aqua
         name: aqua-kube-enforcer
-    timeoutSeconds: 5
+    timeoutSeconds: 2
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
@@ -234,7 +234,7 @@ webhooks:
         apiGroups: ["*"]
         apiVersions: ["v1"]
         resources: ["pods"]
-    timeoutSeconds: 5
+    timeoutSeconds: 2
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
@@ -252,7 +252,15 @@ metadata:
 rules:
   - apiGroups: ["*"]
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
-    verbs: ["get", "list", "watch"]  
+    verbs: ["get", "list", "watch"]
+  - apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
@@ -357,7 +365,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.10"
+    app.kubernetes.io/version: "0.15.18"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -487,7 +495,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.10"
+    app.kubernetes.io/version: "0.15.18"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -529,6 +537,14 @@ rules:
       - list
       - watch
   - apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - batch
     resources:
       - jobs
@@ -558,6 +574,7 @@ rules:
       - watch  
   - apiGroups:
       - networking.k8s.io
+      - extensions
     resources:
       - networkpolicies
       - ingresses

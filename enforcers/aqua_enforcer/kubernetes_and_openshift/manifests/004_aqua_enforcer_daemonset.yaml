@@ -62,6 +62,12 @@ spec:
         name: aqua-agent
         securityContext:
           privileged: false
+          # For aws-bottlerocket set privileged: true and uncomment section below
+          # seLinuxOptions:
+          #   user: system_u
+          #   role: system_r
+          #   type: super_t
+          #   level: s0
           capabilities:
               add:
                 - SYS_ADMIN

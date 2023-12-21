@@ -673,6 +673,9 @@ spec:
                 - AUDIT_CONTROL
                 - SYSLOG
                 - SYS_CHROOT
+                - SYS_RESOURCE
+                - IPC_LOCK
+                - LINUX_IMMUTABLE
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:

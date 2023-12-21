@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: aqua-windows-agent
+    aqua.component: enforcer
+  name: aqua-windows-agent
+  namespace: aqua
+spec:
+  selector:
+    matchLabels:
+      app: aqua-windows-agent
+  template:
+    metadata:
+      labels:
+        app: aqua-windows-agent
+        aqua.component: windows-enforcer
+      name: aqua-windows-agent
+      namespace: aqua
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/aqua-windows-agent: unconfined
+    spec:
+      containers:
+      - env:
+        - name: AQUA_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: AQUA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: windows-enforcer-token
+              optional: true
+        envFrom:
+        - configMapRef:
+            name: aqua-csp-windows-enforcer
+        image: registry.aquasec.com/windows-enforcer:2022.4
+        command:
+        - powershell.exe
+        - -command
+        - $argList=@("/I","AquaAgentWindowsInstaller.msi","/qn","/L AquaAgentWindowsInstaller.install.log");
+        - $sysEnv=@(Get-ChildItem -Path Env:) | ForEach { $argList+=$_.Name+'="'+$_.Value+'"' };
+        - $Process=Start-Process -FilePath msiexec.exe -ArgumentList $argList -NoNewWindow -PassThru -Wait;
+        - Get-Content AquaAgentWindowsInstaller.install.log;
+        - While (Get-Service slkd | Where-Object {$_.Status -eq "Running"}){ Start-Sleep -s 30 }
+        imagePullPolicy: Always
+#        resources:
+#          limits:
+#            cpu: 1000m
+#            memory: 1.5Gi
+#          requests:
+#            cpu: 350m
+#            memory: 512Mi
+        startupProbe:
+          exec:
+            command: 
+            - powershell.exe
+            - -c
+            - Get-Service -Name slkd
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        livenessProbe:
+          exec:
+            command: 
+            - powershell.exe
+            - -c
+            - Get-Service -Name slkd
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        readinessProbe:
+          exec:
+            command: 
+            - powershell.exe
+            - -c
+            - Get-Service -Name slkd  | Where-Object {$_.Status -eq "Running"}
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        lifecycle:
+          preStop:
+            exec:
+              command: 
+              - powershell.exe
+              - -command
+              - $argList=@("/X","AquaAgentWindowsInstaller.msi","/qn","/L c:\c\AquaAgentWindowsInstaller.remove.log","/norestart","MSIRESTARTMANAGERCONTROL=Disable");
+              - $Process=Start-Process -FilePath msiexec.exe -ArgumentList $argList -NoNewWindow -PassThru -Wait;
+        name: aqua-windows-agent
+        securityContext:
+          windowsOptions:
+            hostProcess: true
+            runAsUserName: "NT AUTHORITY\\SYSTEM"
+      nodeSelector:
+        kubernetes.io/os: windows
+      hostNetwork: true
+      dnsPolicy: ClusterFirst
+      hostPID: true
+      imagePullSecrets:
+       - name: aqua-registry
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: aqua-sa
+      serviceAccountName: aqua-sa
+      terminationGracePeriodSeconds: 180
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate

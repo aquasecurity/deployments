@@ -691,6 +691,14 @@ rules:
   - apiGroups: ["*"]
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
     verbs: ["get", "list", "watch"]
+  - apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
   - apiGroups: [ "*" ]
     resources: [ "secrets" ]
     verbs: [ "get", "list", "watch", "update", "create", "delete"]
@@ -809,7 +817,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.10"
+    app.kubernetes.io/version: "0.15.18"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -917,7 +925,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.10"
+    app.kubernetes.io/version: "0.15.18"
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1016,6 +1024,14 @@ rules:
       - list
       - watch
   - apiGroups:
+      - apps.openshift.io
+    resources:
+      - deploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - batch
     resources:
       - jobs
@@ -1052,6 +1068,7 @@ rules:
       - delete
   - apiGroups:
       - networking.k8s.io
+      - extensions
     resources:
       - networkpolicies
       - ingresses
@@ -1128,7 +1145,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.15.10
+          image: docker.io/aquasec/starboard-operator:0.15.18
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -1156,6 +1173,8 @@ spec:
               value: "false"
             - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
               value: "false"
+            - name: OPERATOR_CONFIG_AUDIT_SCANNER_SCAN_ONLY_CURRENT_REVISIONS
+              value: "true"
             - name: OPERATOR_BATCH_DELETE_LIMIT
               value: "10"
             - name: OPERATOR_BATCH_DELETE_DELAY
@@ -1346,6 +1365,9 @@ spec:
                 - AUDIT_CONTROL
                 - SYSLOG
                 - SYS_CHROOT
+                - SYS_RESOURCE
+                - IPC_LOCK
+                - LINUX_IMMUTABLE
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
