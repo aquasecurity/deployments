@@ -920,6 +920,7 @@ Resources:
                 - AUDIT_CONTROL
                 - SYSLOG
                 - SYS_CHROOT
+                - SYS_RESOURCE
           LogConfiguration:
             LogDriver: awslogs
             Options:
