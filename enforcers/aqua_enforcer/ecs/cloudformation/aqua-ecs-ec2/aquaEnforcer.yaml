@@ -145,6 +145,7 @@ Resources:
                     - SYSLOG
                     - SYS_CHROOT
                     - LINUX_IMMUTABLE
+                    - SYS_RESOURCE
               LogConfiguration:
                 LogDriver: awslogs
                 Options:
