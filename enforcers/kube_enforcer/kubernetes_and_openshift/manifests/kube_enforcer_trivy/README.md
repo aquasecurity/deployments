@@ -117,7 +117,7 @@ Step 1. Download the manifest yaml file, *001_kube_enforcer_config.yaml*.
 
 Step 2. Generate a CA bundle and SSL certs.
 
-Step 3. Modify the config yaml file to include the PEM-encoded CA bundle (caBundle).
+Step 3. Modify the config yaml file to include the PEM-encoded CA bundle (caBundle) and uncomment the rules defined for cluster role.
 
 Step 4. Apply the modified manifest file config.
 

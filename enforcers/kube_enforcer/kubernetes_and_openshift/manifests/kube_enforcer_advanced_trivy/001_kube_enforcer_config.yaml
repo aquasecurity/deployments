@@ -264,11 +264,6 @@ rules:
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
-  #### Can be removed if your platform isn't Openshift
-  - apiGroups: [ "operator.openshift.io" ]
-    resources: [ "imagecontentsourcepolicies" ]
-    verbs: [ "get", "list", "watch" ]
-    ####
   - apiGroups: ["*"]
     resources: ["configmaps"]
     verbs: ["get", "list", "watch"]
@@ -303,6 +298,29 @@ rules:
       - create 
       - update
       - delete
+#### Please uncomment the below block if your platform is Openshift
+#  - apiGroups: ["*"]
+#    resources: ["pods","namespaces"]
+#    verbs: ["create", "delete"]
+#  - apiGroups: [""]
+#    resources: ["pods/exec"]
+#    verbs: ["create"]
+#  - apiGroups: ["operator.openshift.io"]
+#    resources: ["imagecontentsourcepolicies", "openshiftapiservers", "kubeapiservers"]
+#    verbs: ["get", "list", "watch"]
+#  - apiGroups: [ "" ]
+#    resources: [ "serviceaccounts", "endpoints" ]
+#    verbs: [ "list" ]
+#  - apiGroups: [ "config.openshift.io" ]
+#    resources: [ "clusteroperators" ]
+#    verbs: [ "get", "list" ]
+#  - apiGroups: ["security.openshift.io"]
+#    resources: ["securitycontextconstraints"]
+#    verbs: ["get", "list"]
+#  - apiGroups: ["machineconfiguration.openshift.io"]
+#    resources: ["machineconfigs", "machineconfigpools"]
+#    verbs: ["get", "list"]
+####
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
