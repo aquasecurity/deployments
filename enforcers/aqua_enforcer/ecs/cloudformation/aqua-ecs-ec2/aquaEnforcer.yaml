@@ -129,7 +129,7 @@ Resources:
                   ReadOnly: true
               Name: aqua-enforcer
               Privileged: !Ref Taskprivileged
-              dockerSecurityOptions:
+              DockerSecurityOptions:
                 - 'label:user:system_u'
                 - 'label:role:system_r'
                 - 'label:type:super_t'
