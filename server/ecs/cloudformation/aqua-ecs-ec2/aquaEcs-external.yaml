@@ -815,7 +815,7 @@ Resources:
     Properties:
       PidMode: 'host'
       ContainerDefinitions:
-        - Memory: '1024'
+        - Memory: '2048'
           Essential: true
           MountPoints:
             - ContainerPath: /var/run
