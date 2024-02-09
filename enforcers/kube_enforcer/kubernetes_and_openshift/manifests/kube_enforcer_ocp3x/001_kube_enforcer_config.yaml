@@ -23,7 +23,7 @@ data:
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
-  AQUA_KB_IMAGE_NAME: "aquasec/kube-bench:v0.7.0"
+  AQUA_KB_IMAGE_NAME: "aquasec/kube-bench:v0.7.1"
   AQUA_ME_IMAGE_NAME: "registry.aquasec.com/microenforcer:2022.4"
   AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
   AQUA_ENFORCER_DS_NAME: "aqua-agent"                        #Sets Daemonset name
@@ -212,7 +212,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.19"
+    app.kubernetes.io/version: "0.15.20"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -343,7 +343,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.19"
+    app.kubernetes.io/version: "0.15.20"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
