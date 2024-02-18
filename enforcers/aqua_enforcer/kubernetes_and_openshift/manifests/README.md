@@ -113,6 +113,17 @@ kubectl create secret docker-registry aqua-registry \
    kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
    ```
 
+#### For eks-bottlerocket deployment edit 004_aqua_enforcer_daemonset.yaml as follows
+```yaml 
+securityContext:
+   privileged: true
+   seLinuxOptions:
+      user: system_u
+      role: system_r
+      type: super_t
+      level: s0
+```
+
 ## Automate Aqua Enforcer deployment using Aquactl
 Aquactl is the command-line utility to automate the deployment steps mentioned in the section, [Deploy Aqua Enforcer using Manifests](#deploy-aqua-enforcer-using-manifests). Command shown in this section creates (downloads) manifests (yaml) files quickly and prepares them for the Aqua Enforcer deployment.
 

@@ -254,21 +254,16 @@ rules:
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
     verbs: ["get", "list", "watch"]
   - apiGroups:
-    - apps.openshift.io
+      - apps.openshift.io
     resources:
-    - deploymentconfigs
+      - deploymentconfigs
     verbs:
-    - get
-    - list
-    - watch  
+      - get
+      - list
+      - watch
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
-  #### Can be removed if your platform isn't Openshift
-  - apiGroups: [ "operator.openshift.io" ]
-    resources: [ "imagecontentsourcepolicies" ]
-    verbs: [ "get", "list", "watch" ]
-    ####
   - apiGroups: ["*"]
     resources: ["configmaps"]
     verbs: ["get", "list", "watch"]
@@ -303,6 +298,29 @@ rules:
       - create 
       - update
       - delete
+#### Please uncomment the below block if your platform is Openshift
+#  - apiGroups: ["*"]
+#    resources: ["pods","namespaces"]
+#    verbs: ["create", "delete"]
+#  - apiGroups: [""]
+#    resources: ["pods/exec"]
+#    verbs: ["create"]
+#  - apiGroups: ["operator.openshift.io"]
+#    resources: ["imagecontentsourcepolicies", "openshiftapiservers", "kubeapiservers"]
+#    verbs: ["get", "list", "watch"]
+#  - apiGroups: [ "" ]
+#    resources: [ "serviceaccounts", "endpoints" ]
+#    verbs: [ "list" ]
+#  - apiGroups: [ "config.openshift.io" ]
+#    resources: [ "clusteroperators" ]
+#    verbs: [ "get", "list" ]
+#  - apiGroups: ["security.openshift.io"]
+#    resources: ["securitycontextconstraints"]
+#    verbs: ["get", "list"]
+#  - apiGroups: ["machineconfiguration.openshift.io"]
+#    resources: ["machineconfigs", "machineconfigpools"]
+#    verbs: ["get", "list"]
+####
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -365,7 +383,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.13"
+    app.kubernetes.io/version: "0.15.20"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -495,7 +513,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.13"
+    app.kubernetes.io/version: "0.15.20"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

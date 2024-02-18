@@ -102,7 +102,7 @@ Resources:
         Properties:
           PidMode: 'host'
           ContainerDefinitions:
-            - Memory: '1024'
+            - Memory: '2048'
               Essential: 'true'
               MountPoints:
                 - ContainerPath: /var/run
@@ -129,6 +129,11 @@ Resources:
                   ReadOnly: true
               Name: aqua-enforcer
               Privileged: !Ref Taskprivileged
+              DockerSecurityOptions:
+                - 'label:user:system_u'
+                - 'label:role:system_r'
+                - 'label:type:super_t'
+                - 'label:level:s0'
               LinuxParameters:
                 Capabilities:
                   Add:
@@ -145,6 +150,7 @@ Resources:
                     - SYSLOG
                     - SYS_CHROOT
                     - LINUX_IMMUTABLE
+                    - SYS_RESOURCE
               LogConfiguration:
                 LogDriver: awslogs
                 Options:
