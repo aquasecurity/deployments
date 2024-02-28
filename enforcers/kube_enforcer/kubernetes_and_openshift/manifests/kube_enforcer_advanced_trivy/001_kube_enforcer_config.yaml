@@ -223,7 +223,6 @@ webhooks:
 #          values:
 #            - kube-system
 #            - kube-node-lease
-#      scope: Namespaced
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
@@ -255,7 +254,6 @@ webhooks:
 #          values:
 #            - kube-system
 #            - kube-node-lease
-#      scope: Namespaced
 ---
 apiVersion: v1
 kind: ServiceAccount
