@@ -76,6 +76,15 @@ allowedCapabilities:
 - SYS_RESOURCE
 - IPC_LOCK
 - LINUX_IMMUTABLE
+- CHOWN
+- DAC_OVERRIDE
+- FSETID
+- FOWNER
+- SETFCAP
+- SETPCAP
+- NET_BIND_SERVICE
+- AUDIT_WRITE
+- IPC_LOCK
 apiVersion: security.openshift.io/v1
 defaultAddCapabilities: null
 fsGroup:
