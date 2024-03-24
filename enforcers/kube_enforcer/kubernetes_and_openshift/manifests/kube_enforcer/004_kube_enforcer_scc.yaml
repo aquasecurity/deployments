@@ -1,5 +1,5 @@
 allowHostDirVolumePlugin: true
-allowHostIPC: false
+allowHostIPC: true
 allowHostNetwork: true
 allowHostPID: true
 allowHostPorts: false
