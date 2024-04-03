@@ -91,16 +91,37 @@ kubectl create secret docker-registry aqua-registry \
       kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/003_aqua_enforcer_secrets.yaml
       ```    
 
-**Step 2. Deploy directly or download, edit, and apply ConfigMap as required.**
+**Step 2. Deploy ConfigMap**
+ * For **gke-autopilot** set **AQUA_INSTALL_PATH: "/var/autopilot/addon/aquasec"** and **AQUA_PRODUCT_PATH: "/var/autopilot/addon/aquasec"**
+   ```SHELL
+   curl -s https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/002_aqua_enforcer_configMap.yaml | sed -e "s/AQUA_INSTALL_PATH:.*/AQUA_INSTALL_PATH: \"\/var\/autopilot\/addon\/aquasec\"/" -e "s/# AQUA_PRODUCT_PATH:.*/AQUA_PRODUCT_PATH: \"\/var\/autopilot\/addon\/aquasec\"/" | kubectl apply -f -
+   ```
 
-```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/002_aqua_enforcer_configMap.yaml
-```
+ * For the rest platforms deploy directly or download, edit, and apply ConfigMap as required.
+   ```SHELL
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/002_aqua_enforcer_configMap.yaml
+   ```
 
 **Step 3. Deploy Aqua Enforcer as daemonset.**
+   * For **gke-autopilot** replace **/var/lib** with **/var/autopilot/addon** under volumeMounts and volumes sections
+   ```SHELL
+   curl -s https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml | sed -e "s/\/var\/lib/\/var\/autopilot\/addon/" | kubectl apply -f -
+   ```
 
-```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
+   * For the rest platforms deploy 004_aqua_enforcer_daemonset.yaml 
+   ```SHELL
+   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml
+   ```
+
+#### For eks-bottlerocket deployment edit 004_aqua_enforcer_daemonset.yaml as follows
+```yaml 
+securityContext:
+   privileged: true
+   seLinuxOptions:
+      user: system_u
+      role: system_r
+      type: super_t
+      level: s0
 ```
 
 ## Automate Aqua Enforcer deployment using Aquactl

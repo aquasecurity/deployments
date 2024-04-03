@@ -16,7 +16,7 @@ Starboard assesses workload compliance throughout the lifecycle of the workloads
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua KubeEnforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers) for detailed information.
 
 ## Specific OpenShift notes
-The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below use the **kubectl** cli, however they can be easily replaced with the **oc** cli commands, to work on all platforms including OpenShift.
 
 ## Prerequisites
 
@@ -117,7 +117,7 @@ Step 1. Download the manifest yaml file, *001_kube_enforcer_config.yaml*.
 
 Step 2. Generate a CA bundle and SSL certs.
 
-Step 3. Modify the config yaml file to include the PEM-encoded CA bundle (caBundle).
+Step 3. Modify the config yaml file to include the PEM-encoded CA bundle (caBundle) and uncomment the rules defined for cluster role.
 
 Step 4. Apply the modified manifest file config.
 
@@ -139,24 +139,24 @@ You should pass the following deployment options through flags, as required.
 
 #### Aquactl operation
 
-Flag and parameter type              | Values                                                |
-| ---------------------- | ------------------------------------------------------------ |
-| -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, icp, openshift, tkg, tkgi**    |
-| -v or --version
-(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **2022.4** |
-| -r or --registry (string) | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com** |
-| --pull-policy (string) | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent** |
-| --service-account (string) | Kubernetes service account name, it defaults to **aqua-sa** |
-| -n, --namespace (string) | Kubernetes namespace name, it defaults to **aqua** |
-| --output-dir (string) | Output directory for the manifests (YAML files), it defaults to **aqua-deploy**, the directory aquactl was launched in |
+| Flag and parameter type                     | Values                                                                                                                                                          |
+|---------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, icp, openshift, tkg, tkgi** |
+| -v or --version                             |                                                                                                                                                                 |
+| (string) (mandatory flag)                   | Major version of Aqua Enterprise to deploy. For example: **2022.4**                                                                                             |
+| -r or --registry (string)                   | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com**                                                          |
+| --pull-policy (string)                      | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent**                                     |
+| --service-account (string)                  | Kubernetes service account name, it defaults to **aqua-sa**                                                                                                     |
+| -n, --namespace (string)                    | Kubernetes namespace name, it defaults to **aqua**                                                                                                              |
+| --output-dir (string)                       | Output directory for the manifests (YAML files), it defaults to **aqua-deploy**, the directory aquactl was launched in                                          |
 
 #### KubeEnforcer configuration
 
-Flag and type              | Values                                                |
-| ---------------------- | ------------------------------------------------------------ |
-| --gateway-url (string) | Aqua Gateway URL (IP, DNS, or service name) and port, it defaults to **aqua-gateway:8443**|
-| --token (string) | Deployment token for the KubeEnforcer group, it does not have a default value|
-| --ke-no-ssl (Boolean) | If specified as **true**, the SSL cert for the KubeEnforcer will not be generated. It defaults to **false**|
+| Flag and type          | Values                                                                                                      |
+|------------------------|-------------------------------------------------------------------------------------------------------------|
+| --gateway-url (string) | Aqua Gateway URL (IP, DNS, or service name) and port, it defaults to **aqua-gateway:8443**                  |
+| --token (string)       | Deployment token for the KubeEnforcer group, it does not have a default value                               |
+| --ke-no-ssl (Boolean)  | If specified as **true**, the SSL cert for the KubeEnforcer will not be generated. It defaults to **false** |
 
 The **--gateway-url** flag identifies an existing Aqua Gateway used to connect the KubeEnforcer. This flag is not used to configure a new Gateway, as in *aquactl download all* or *aquactl download server*.
 

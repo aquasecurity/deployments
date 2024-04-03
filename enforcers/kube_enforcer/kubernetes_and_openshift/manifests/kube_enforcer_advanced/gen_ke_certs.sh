@@ -128,6 +128,7 @@ _prepare_ke() {
 }
 
 _deploy_ke_admin() {
+    printf "Info: Please uncomment the rules defined for ClusterRole(aqua-kube-enforcer) in kube_enforcer_config.yaml before deploying kube-enforcer config file, if you're on openshift.\n"
     printf "Info: Do you want to deploy KubeEnforcer config? [y/N] "
     read -r _user_input < /dev/tty
     if [ "$_user_input" = "y" ] || [ "$_user_input" = "Y" ]; then
