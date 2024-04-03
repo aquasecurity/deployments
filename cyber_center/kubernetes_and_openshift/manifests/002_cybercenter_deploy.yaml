@@ -39,6 +39,9 @@ spec:
       - name: aqua-cc
         image: "registry.aquasec.com/cc-standard:latest"
         imagePullPolicy: Always
+        securityContext:
+          privileged: false
+          runAsUser: 0
         args:
         - --address=:5000
         - --offline-key=pleaseopen

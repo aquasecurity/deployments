@@ -10,9 +10,9 @@ The quick-start deployment supports the following Kubernetes platforms:
 * EKS (Amazon Elastic Kubernetes Service)
 * GKE (Google Kubernetes Engine)
 
-Deployment commands shown in this file uses **kubectl** cli, however they can easliy be replaced with the **oc** cli commands.
+Deployment commands shown in this file uses **kubectl** cli, however they can easily be replaced with the **oc** cli commands.
 
-Before you start using the quick-start deployment method documented in this reposiory, Aqua strongly recommends you to refer the product documentation, [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/docs/quick-start-guide-for-kubernetes).
+Before you start using the quick-start deployment method documented in this repository, Aqua strongly recommends you to refer the product documentation, [Quick-Start Guide for Kubernetes](https://docs.aquasec.com/docs/quick-start-guide-for-kubernetes).
 
 ## Prerequisites
 * Your Aqua credentials: username and password
