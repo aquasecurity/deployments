@@ -116,10 +116,6 @@ spec:
           windowsOptions:
             hostProcess: true
             runAsUserName: "NT AUTHORITY\\SYSTEM"
-      tolerations:
-        - key: "key"
-          operator: "Exists"
-          effect: "NoSchedule"
       nodeSelector:
         kubernetes.io/os: windows
       hostNetwork: true
