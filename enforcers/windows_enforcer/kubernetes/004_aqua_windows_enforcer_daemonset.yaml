@@ -79,6 +79,7 @@ spec:
             - powershell.exe
             - -c
             - Get-Service -Name slkd | Where-Object {$_.Status -eq "Running"}
+          timeoutSeconds: 5
           initialDelaySeconds: 15
           periodSeconds: 15
         readinessProbe:
