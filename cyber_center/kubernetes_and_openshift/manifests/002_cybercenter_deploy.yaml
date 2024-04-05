@@ -35,13 +35,14 @@ spec:
       namespace: aqua
     spec:
       serviceAccount: aqua-sa
+      securityContext:
+        runAsUser: 11431
+        runAsGroup: 11433
+        fsGroup: 11433
       containers:
       - name: aqua-cc
         image: "registry.aquasec.com/cc-standard:latest"
         imagePullPolicy: Always
-        securityContext:
-          privileged: false
-          runAsUser: 0
         args:
         - --address=:5000
         - --offline-key=pleaseopen
