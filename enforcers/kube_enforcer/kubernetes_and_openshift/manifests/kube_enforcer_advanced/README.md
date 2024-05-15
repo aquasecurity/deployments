@@ -7,9 +7,9 @@ This repository shows the manifest yaml files required to deploy Aqua KubeEnforc
 * OpenShift 
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Starboard is deployed with KubeEnforcer, by default which increases the effectiveness of Kubernetes security.
+Trivy Operator is deployed with KubeEnforcer, by default which increases the effectiveness of Kubernetes security.
 
-Starboard assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
+Trivy Operator assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
 * Re-evaluate workload compliance during workload runtime, taking any workload and policy changes into account
 * Reflect the results of compliance evaluation in the Aqua UI at all times, not only when workloads are created
 
@@ -20,7 +20,7 @@ Before you follow the deployment steps explained below, Aqua strongly recommends
 Deploying KubeEnforcer with advanced configuration will cause Pod Enforcer traffic to be routed to the KubeEnforcers via a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways.
 
 ## Specific OpenShift notes
-The deployment commands shown below use the **kubectl** cli, however they can be easily replaced with the **oc** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
 
 ## Prerequisites
 
@@ -70,11 +70,11 @@ You can skip any step in this section, if you have already performed.
         
       1. Generate certs for aqua namespace.
         ```shell
-        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash
+        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifest/kube_enforcer_advanced/gen_ke_certs.sh | bash
         ```
       2. Generate certs for custom namespace, Replace the `<namespace name>` in the below command with the namespace where KE is going to be deployed, and run the command.
         ```shell
-        curl https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/gen_ke_certs.sh | bash -s -- <namespace name>
+        curl https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifest/kube_enforcer_advanced/gen_ke_certs.sh | bash -s -- <namespace name>
         ```
 
    - **Option B (Manual)**: Perform the steps mentioned in the [Deploy the KubeEnforcer Config manually](#deploy-the-kubeenforcer-config-manually) section.
@@ -98,19 +98,19 @@ kubectl create secret generic aqua-kube-enforcer-certs --from-file server.key --
 * Download, edit, and apply the secrets manifest file to create the token and SSL cert secrets.
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/002_kube_enforcer_secrets.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifest/kube_enforcer_advanced/002_kube_enforcer_secrets.yaml
 ```
 
 ***Note: For KubeEnforcer deployment in OpenShift environments***
 * Prior to deployment of the KubeEnforcer, apply kube-enforcer scc:
   ```shell
-  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/004_kube_enforcer_scc.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifest/kube_enforcer_advanced/004_kube_enforcer_scc.yaml
   ```
 
 **Step 3. Deploy KubeEnforcer advanced**
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced/003_kube_enforcer_deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifest/kube_enforcer_advanced/003_kube_enforcer_deploy.yaml
 ```
 
 ### Deploy the KubeEnforcer Config manually
@@ -141,25 +141,25 @@ You should pass the following deployment options through flags, as required.
 
 #### Aquactl operation
 
-| Flag and parameter type                     | Values                                                                                                                                                          |
-|---------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, icp, openshift, tkg, tkgi** |
-| -v or --version                             |                                                                                                                                                                 |
-| (string) (mandatory flag)                   | Major version of Aqua Enterprise to deploy. For example: **2022.4**                                                                                             |
-| -r or --registry (string)                   | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com**                                                          |
-| --pull-policy (string)                      | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent**                                     |
-| --service-account (string)                  | Kubernetes service account name, it defaults to **aqua-sa**                                                                                                     |
-| -n, --namespace (string)                    | Kubernetes namespace name, it defaults to **aqua**                                                                                                              |
-| --output-dir (string)                       | Output directory for the manifests (YAML files), it defaults to **aqua-deploy**, the directory aquactl was launched in                                          |
+Flag and parameter type              | Values                                                |
+| ---------------------- | ------------------------------------------------------------ |
+| -p or --platform, (string) (mandatory flag) | Orchestration platform to deploy Aqua Enterprise on. you should pass one of the following as required: **kubernetes, aks, eks, gke, icp, openshift, tkg, tkgi**    |
+| -v or --version
+(string) (mandatory flag) | Major version of Aqua Enterprise to deploy. For example: **2022.4** |
+| -r or --registry (string) | Docker registry containing the Aqua Enterprise product images, it defaults to **registry.aquasec.com** |
+| --pull-policy (string) | The Docker image pull policy that should be used in deployment for the Aqua product images, it defaults to **IfNotPresent** |
+| --service-account (string) | Kubernetes service account name, it defaults to **aqua-sa** |
+| -n, --namespace (string) | Kubernetes namespace name, it defaults to **aqua** |
+| --output-dir (string) | Output directory for the manifests (YAML files), it defaults to **aqua-deploy**, the directory aquactl was launched in |
 
 #### configuration of KubeEnforcer advanced
 
-| Flag and type            | Values                                                                                                      |
-|--------------------------|-------------------------------------------------------------------------------------------------------------|
-| --advanced-configuration | To configure advanced deployment (for Pod Enforcer injection) of the KubeEnforcer                           |
-| --gateway-url (string)   | Aqua Gateway URL (IP, DNS, or service name) and port, it defaults to **aqua-gateway:8443**                  |
-| --token (string)         | Deployment token for the KubeEnforcer group, it does not have a default value                               |
-| --ke-no-ssl (Boolean)    | If specified as **true**, the SSL cert for the KubeEnforcer will not be generated. It defaults to **false** |
+Flag and type              | Values                                                |
+| ---------------------- | ------------------------------------------------------------ |
+| --advanced-configuration | To configure advanced deployment (for Pod Enforcer injection) of the KubeEnforcer|
+| --gateway-url (string) | Aqua Gateway URL (IP, DNS, or service name) and port, it defaults to **aqua-gateway:8443**|
+| --token (string) | Deployment token for the KubeEnforcer group, it does not have a default value|
+| --ke-no-ssl (Boolean) | If specified as **true**, the SSL cert for the KubeEnforcer will not be generated. It defaults to **false**|
 
 The **--gateway-url** flag identifies an existing Aqua Gateway used to connect the KubeEnforcer. This flag is not used to configure a new Gateway, as in *aquactl download all* or *aquactl download server*.
 

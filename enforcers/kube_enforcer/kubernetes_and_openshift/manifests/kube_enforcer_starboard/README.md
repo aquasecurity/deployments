@@ -7,9 +7,9 @@ This repository shows the manifest yaml files required to deploy Aqua KubeEnforc
 * OpenShift 
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Trivy Operator is deployed with the KubeEnforcer to increase the effectiveness of Kubernetes security.
+Starboard is deployed with the KubeEnforcer to increase the effectiveness of Kubernetes security.
 
-Trivy Operator assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
+Starboard assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
 * Re-evaluate workload compliance during workload runtime, taking any workload and policy changes into account
 * Reflect the results of compliance evaluation in the Aqua UI at all times, not only when workloads are created
 
@@ -68,11 +68,11 @@ You can skip any step in this section, if you have already performed.
         
       1. Generate certs for aqua namespace.
         ```shell
-        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh | bash
+        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_starboard/gen_ke_certs.sh | bash
         ```
       2. Generate certs for custom namespace, Replace the `<namespace name>` in the below command with the namespace where KE is going to be deployed, and run the command.
         ```shell
-        curl  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh | bash -s -- <namespace name>
+        curl  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_starboard/gen_ke_certs.sh | bash -s -- <namespace name>
         ```
 
    - **Option B (Manual)**: Perform the steps mentioned in the [Deploy the KubeEnforcer Config manually](#deploy-the-kubeenforcer-config-manually) section.
@@ -96,19 +96,19 @@ You can skip any step in this section, if you have already performed.
 * Download, edit, and apply the secrets manifest file to create the token and SSL cert secrets.
 
   ```SHELL
-  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/002_kube_enforcer_secrets.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_starboard/002_kube_enforcer_secrets.yaml
   ```  
 
 ***Note: For KubeEnforcer deployment in OpenShift environments***
    * Prior to deployment of the KubeEnforcer, apply kube-enforcer scc:
   ```shell
-  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/004_kube_enforcer_scc.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_starboard/004_kube_enforcer_scc.yaml
   ```
 
 **Step 3. Deploy KubeEnforcer.**
 
 ```SHELL
-  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_starboard/003_kube_enforcer_deploy.yaml
 ```
 
 ### Deploy the KubeEnforcer Config manually
