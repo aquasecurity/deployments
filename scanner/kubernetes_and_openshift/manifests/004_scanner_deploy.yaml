@@ -36,6 +36,16 @@ spec:
         - name: kube-scanner
           image: registry.aquasec.com/scanner:2022.4
           imagePullPolicy: Always
+#          livenessProbe:
+#            httpGet:
+#              port: 8081
+#              path: /healthz
+#              scheme: HTTP
+#            initialDelaySeconds: 15
+#            periodSeconds: 60
+#            successThreshold: 1
+#            failureThreshold: 3
+#            timeoutSeconds: 1
 #          resources:
 #            limits:
 #              cpu: 2000m
