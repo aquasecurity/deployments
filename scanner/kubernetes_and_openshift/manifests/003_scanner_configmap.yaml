@@ -19,7 +19,7 @@ data:
   # Set this to 1 to establish mTLS connection with CyberCenter
   #OFFLINE_CC_MTLS_ENABLE: "1"
 
-  #health monitor is supported from scanner version 2407.4.1
+  #health monitor is supported from SaaS scanner version 2407.4.20 and for on-prem 2022.4.613.7
   # enable below two values for health check monitor (liveness probe)
   #AQUA_HEALTH_MONITOR_ENABLED: "true"
   #AQUA_HEALTH_MONITOR_PORT: "8081"
