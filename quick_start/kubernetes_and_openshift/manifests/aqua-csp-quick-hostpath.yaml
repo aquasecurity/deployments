@@ -816,7 +816,7 @@ data:
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
-  AQUA_KB_IMAGE_NAME: "aquasec/kube-bench:v0.7.1"
+  AQUA_KB_IMAGE_NAME: "registry.aquasec.com/kube-bench:v0.7.3"
   AQUA_ME_IMAGE_NAME: "registry.aquasec.com/microenforcer:2022.4"
   AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
   AQUA_ENFORCER_DS_NAME: "aqua-agent"               #Sets Daemonset name
@@ -1163,7 +1163,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.15.20
+          image: registry.aquasec.com/starboard-operator:0.15.20
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
