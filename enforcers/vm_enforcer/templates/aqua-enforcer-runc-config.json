@@ -310,6 +310,9 @@
       ],
       "memory": {
         "limit": 2791728742
+      },
+      "cpu": {
+        "quota": 2
       }
     },
     "namespaces": [
