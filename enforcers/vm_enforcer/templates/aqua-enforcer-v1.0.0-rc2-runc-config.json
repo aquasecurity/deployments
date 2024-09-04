@@ -29,8 +29,7 @@
       "AQUA_ROOT_CA=/opt/aquasec/ssl/rootCA.crt",
       "AQUA_PUBLIC_KEY=/opt/aquasec/ssl/aqua_enforcer.crt",
       "AQUA_PRIVATE_KEY=/opt/aquasec/ssl/aqua_enforcer.key",      
-      "LD_LIBRARY_PATH=/opt/aquasec",
-      "AQUA_ENFORCER_TYPE=host"
+      "LD_LIBRARY_PATH=/opt/aquasec"
     ],
     "cwd": "/opt/aquasec",
     "capabilities": ["CAP_LINUX_IMMUTABLE",
