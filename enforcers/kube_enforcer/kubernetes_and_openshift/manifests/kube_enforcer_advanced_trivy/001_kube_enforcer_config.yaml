@@ -215,7 +215,8 @@ webhooks:
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
-# Uncomment the below to ensure that the webhook executes exclusively on objects in namespaces other than kube-system and kube-node-lease.
+# Uncomment the below to ensure that the webhook executes exclusively on objects in namespaces other than kube-system,
+# kube-node-lease and aqua.
 #    namespaceSelector:
 #      matchExpressions:
 #        - key: kubernetes.io/metadata.name
@@ -223,6 +224,7 @@ webhooks:
 #          values:
 #            - kube-system
 #            - kube-node-lease
+#            - aqua
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
@@ -246,7 +248,8 @@ webhooks:
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
-# Uncomment the below to ensure that the webhook executes exclusively on objects in namespaces other than kube-system and kube-node-lease.
+# Uncomment the below to ensure that the webhook executes exclusively on objects in namespaces other than kube-system,
+# kube-node-lease and aqua.
 #    namespaceSelector:
 #      matchExpressions:
 #        - key: kubernetes.io/metadata.name
@@ -254,6 +257,7 @@ webhooks:
 #          values:
 #            - kube-system
 #            - kube-node-lease
+#            - aqua
 ---
 apiVersion: v1
 kind: ServiceAccount
