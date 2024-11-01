@@ -142,6 +142,24 @@ rules:
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
+
+    apiGroups: ["aquasecurity.github.io"]
+   resources: ["configauditreports", "clusterconfigauditreports"]
+   verbs: ["get", "list", "watch"]
+#### Please uncomment the below block if your platform is MKE
+#  - apiGroups: ["*"]
+#    resources: ["pods","namespaces"]
+#    verbs: ["create", "delete"]
+#  - apiGroups: [""]
+#    resources: ["pods/exec"]
+#    verbs: ["create"]
+#  - apiGroups: [ "" ]
+#    resources: [ "serviceaccounts", "endpoints" ]
+#    verbs: [ "list" ]
+#  - apiGroups: [ "" ]
+#    resources: [ "pods/log" ]
+#    verbs: [ "get" ]
+
 #### Please uncomment the below block if your platform is Openshift
 #  - apiGroups: ["*"]
 #    resources: ["pods","namespaces"]
