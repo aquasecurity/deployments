@@ -6,47 +6,45 @@
 
 [Aqua Platform](https://www.aquasec.com/aqua-cloud-native-security-platform/) is a layered, full-lifecycle cloud native security platform that secures containerized, serverless, and VM-based applications, from application build, infrastructure through production runtime environments. Aqua Enterprise runs either in SaaS or Self-Hosted edition, at any scale.
 
- This repository explains different methods to deploy each Aqua component. It also provides a [quick_start](./quick_start) deployment suited for proofs-of-concept (POCs), training, and test environemnts.
+This repository explains different methods for deploying each Aqua Platform component. It also provides a [quick_start](./quick_start) deployment suited for proofs-of-concept (POCs), training, and test environemnts.
 
- Aqua components can be deployed on multiple platforms such as Kubernetes, AWS ECS, OpenShift, no-orchestrator, and more, using different deployment methods such as manifests, Helm, Operator, proprietary CLI tools, RPM, and scripts. Deployment resources for each Aqua component is listed in the respective directory.
+Aqua components can be deployed on multiple platforms such as Kubernetes, AWS ECS, OpenShift, no-orchestrator, and more, using different deployment methods such as manifests, Helm, Operator, proprietary CLI tools, RPM, and scripts. Deployment resources for each Aqua component are listed in the respective directories.
 
-### Aqua Enterprise SaaS edition deployment
+### Aqua Enterprise SaaS Edition deployment
 
-Users working with Aqua Enterprise SaaS edition do not need to deploy Aqua server in their datacenter but only the relevant Enforcers to enable runtime protection. Following are the components that are available for Aqua SaaS users:
+Users working with Aqua Enterprise SaaS Edition do not need to deploy the Aqua Server in their data center. They need deploy only the required scanners and Enforcers to enable build-time and runtime protection, respectively. The following components are available for Aqua SaaS users:
 * [Enforcers](./enforcers):  
-  * **Aqua Enforcer**: containers and host protection
-  * **KubeEnforcer**: full stack Kubernetes cluster protection 
-  * **VM Enforcer**: VM workloads protection
+  * **Aqua Enforcer**: container and host protection
+  * **KubeEnforcer**: full-stack Kubernetes cluster protection 
+  * **VM Enforcer**: VM workload protection
   * **MicroEnforcer**: runtime security for containers running in Containers-as-a-Service (CaaS) environments
   * **NanoEnforcer**: runtime protection of serverless functions
-* [Scanner](./scanner): Used to scan images, VMWare Tanzu applications, and serverless functions locally or stored in a registry
-* [Cloud Connector](./cloud_connector): the Aqua Cloud Connector establishes a secure connection to the Aqua Platform console, giving Aqua Platform remote access to resources on the local clusters.
+* [Scanner](./scanner): Used to scan images, VMware Tanzu applications, and serverless functions locally or stored in a registry
+* [Aqua Cloud Connector](./cloud_connector): Establishes a secure connection to the Aqua Platform console, giving Aqua Platform remote access to resources on local clusters
 
 
-### Aqua Enterprise Self-Hosted edition deployment
+### Aqua Enterprise Self-Hosted Edition deployment
 
-Aqua Enterprise Self-Hosted edition requires deploying Aqua server and other components in your datacenter. Following are the server components available for deployment:
-*  [Server](./server): core server components – Console, Gateway, and Database. This deployment is mandatory for Aqua Self-Hosted edition. 
-*  [Tenant Manager](./tenant_manager) *(Optional)*: manage multiple segregated Aqua deployments from a single console
-*  [CyberCenter](./cyber_center): required for air-gap environments
+Aqua Enterprise Self-Hosted Edition requires deploying the Aqua Server and other components in your data center. These Aqua Platform components are available for deployment:
+*  [Server](./server): core server components (Console, Gateway, and Database). Deployment of the Console and Gateway are mandatory; deployment of the Database is optional. 
+*  [CyberCenter](./cyber_center): required for air-gapped environments
+*  [Tenant Manager](./tenant_manager) (optional): manages multiple segregated Aqua deployments from a single console
 
-After deploying Server components, you can deploy Enforcers and Scanners similar to SaaS users.
-
-### Quick-start deployment
-
-A quick-start option is available for small non-production deployments and quick evaluations. It deploys Aqua Server and all Enforcers, in a single Kubernetes cluster.
+After deploying Server components, you can deploy Enforcers and Scanners in a manner that is similar to SaaS users.
 
 # Deployment methods
 
-You can deploy the mentioned Aqua components using one of the following methods:
+You can deploy the Aqua Platform components using one of the following methods:
 * Manifests
 * Helm
 * Operator
-* AWS Cloudformation
+* AWS CloudFormation
 * Aquactl (Aqua CLI)
 * RPM (for no-orchestrator environments)
 * Scripts
 
 Each Aqua component can be deployed through a selection of the methods above, as listed in component's directory itself.
 
-Before you start using the deployment methods in this repository, Aqua strongly recommends you to refer the [Product documentation on Deployments](https://docs.aquasec.com/docs/deployment-overview).
+Before you start using the deployment methods in this repository, we strongly recommend that you to refer to the official product documentation:
+* [Aqua Environment and Configuration](https://docs.aquasec.com/v2022.4/platform/aqua-environment-and-configuration/aqua-env-and-config-purpose-of-this-section/)
+* [Deployments]([https://docs.aquasec.com/docs/deployment-overview](https://docs.aquasec.com/v2022.4/platform/deployments/))
