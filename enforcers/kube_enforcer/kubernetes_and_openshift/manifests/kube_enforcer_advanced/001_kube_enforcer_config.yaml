@@ -273,6 +273,9 @@ rules:
   - apiGroups: ["*"]
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
     verbs: ["get", "list", "watch"]
+  - apiGroups: [ "" ]
+    resources: [ "serviceaccounts"]
+    verbs: ["get", "list", "watch"]
   - apiGroups:
       - apps.openshift.io
     resources:
@@ -329,7 +332,7 @@ rules:
 #    resources: ["imagecontentsourcepolicies", "openshiftapiservers", "kubeapiservers"]
 #    verbs: ["get", "list", "watch"]
 #  - apiGroups: [ "" ]
-#    resources: [ "serviceaccounts", "endpoints" ]
+#    resources: ["endpoints"]
 #    verbs: [ "list" ]
 #  - apiGroups: [ "config.openshift.io" ]
 #    resources: [ "clusteroperators" ]
