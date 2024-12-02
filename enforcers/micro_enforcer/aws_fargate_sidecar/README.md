@@ -1,4 +1,4 @@
-# README for `inject_microenforcer.py`
+# Inject microenforcer as a sidecar to AWS ECS Task Definition
 
 ## Overview
 
