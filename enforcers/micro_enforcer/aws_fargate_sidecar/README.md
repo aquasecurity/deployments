@@ -24,24 +24,45 @@
 
 ## Usage
 
+### Flow
+- **Download AWS ECS task definition JSON file**
+  - In AWS console locate your task definition under ECS -> Task Definitions
+  - Select task definition revision
+  - Select "JSON" tab under "Overview" section
+  - Click on "Download AWS CLI input"
+  - Use the downloaded file path as an `--input-json-file` in the script below
+- **Create secret for private registry**
+  - Should private registry be used, like registry.aquasec.com, or any other container registry which requires username and password to pull images following instructions have to be followed:
+    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
+- **Execute script** as shown in Example command section.
+- **Create new task definition revision**
+  - Copy terminal output or the content of `--output-json-file` if selected
+  - In AWS console locate your task definition under ECS -> Task Definitions
+  - Select "Create new revision" -> "Create new revision with JSON"
+  - Replace json with the content from the script output
+  - Select "Create"
+- **Update task or service**
+  - Proceed as usual to update your task or service with the updated task definition
+
+
 ### Command-Line Arguments
 
-| Argument                             | Description                                                                                  | Required |
-|--------------------------------------|----------------------------------------------------------------------------------------------|----------|
-| `-i`, `--input-json-file`            | Path to the input AWS ECS task definition JSON file.                                         | Yes      |
-| `-u`, `--server-url`                 | URL of the Aqua server.                                                                      | Yes      |
-| `-t`, `--token`                      | Authorization token for the MicroEnforcer group.                                             | Yes      |
-| `-m`, `--image`                      | Aqua MicroEnforcer image (e.g., `registry.aquasec.com/microenforcer-basic:2022.4.662`).     | Yes      |
-| `-s`, `--image-creds-secretmanager-arn` | ARN for image registry credentials stored in AWS Secrets Manager.                            | No       |
-| `-e`, `--task-execution-role-arn`    | ARN for the task execution role.                                                            | No       |
-| `-o`, `--output-json-file`           | Path to save the updated ECS task definition JSON file.                                      | No       |
+| Argument                                | Description                                                                                                                                                                                      | Required                        |
+|-----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| `-i`, `--input-json-file`               | Path to the input AWS ECS task definition JSON file.                                                                                                                                             | Yes                             |
+| `-u`, `--aqua-gateway-url`              | IP address and port of any Aqua Gateway, as received from Aqua Security                                                                                                                          | Yes                             |
+| `-t`, `--aqua-token`                    | Deployment token of any MicroEnforcer group. In the Aqua UI: Navigate to Administration > Enforcers and edit a MicroEnforcer group (e.g., the "default micro enforcer group").                   | Yes                             |
+| `-m`, `--image`                         | Aqua MicroEnforcer image (e.g., `registry.aquasec.com/microenforcer-basic:2022.4.662`).                                                                                                          | Yes                             |
+| `-s`, `--image-creds-secretmanager-arn` | ARN for image registry credentials stored in AWS Secrets Manager. ( To create required resources please refer to https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html ) | Required for private registries |
+| `-e`, `--task-execution-role-arn`       | ARN for the task execution role. ( To create required resources please refer to https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html )                                  | Required for private registries |
+| `-o`, `--output-json-file`              | Path to save the updated ECS task definition JSON file.                                                                                                                                          | No                              |
 
 ### Example Command
 
 ```bash
 python inject_microenforcer.py \
     -i task_definition.json \
-    -u https://aqua-server-url.com \
+    -u aqua-gateway-url.com \
     -t your-auth-token \
     -m registry.aquasec.com/microenforcer-basic:2022.4.662 \
     -o updated_task_definition.json

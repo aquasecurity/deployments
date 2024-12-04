@@ -7,17 +7,17 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description="Inject micorenforcer to AWS task definition JSON."
     )
-    parser.add_argument("-i", "--input-json-file", type=str, help="path to input json file.", required=True)
-    parser.add_argument("-u", "--server-url", type=str, help="URL of the Aqua server.", required=True)
-    parser.add_argument("-t", "--token", type=str, help="Authorization token for the microenforcer group.",
+    parser.add_argument("-i", "--input-json-file", type=str, help="Path to the input AWS ECS task definition JSON file.", required=True)
+    parser.add_argument("-u", "--aqua-gateway-url", type=str, help="IP address and port of any Aqua Gateway, as received from Aqua Security.", required=True)
+    parser.add_argument("-t", "--aqua-token", type=str, help="Deployment token of any MicroEnforcer group. In the Aqua UI: Navigate to Administration > Enforcers and edit a MicroEnforcer group (e.g., the 'default micro enforcer group').",
                         required=True)
     parser.add_argument("-m", "--image", type=str,
-                        help="Microenforcer image (registry.aquasec.com/microenforcer-basic:2022.4.662).",
+                        help="Aqua MicroEnforcer image (e.g., `registry.aquasec.com/microenforcer-basic:2022.4.662`).",
                         required=True)
     parser.add_argument("-s", "--image-creds-secretmanager-arn", type=str,
-                        help="Microenforcer image registry credentials secretmanager key.", required=False)
-    parser.add_argument("-e", "--task-execution-role-arn", type=str, help="Task execution role arn.", required=False)
-    parser.add_argument("-o", "--output-json-file", type=str, help="Path to output json file.", required=False)
+                        help="ARN for image registry credentials stored in AWS Secrets Manager.", required=False)
+    parser.add_argument("-e", "--task-execution-role-arn", type=str, help="ARN for the task execution role.", required=False)
+    parser.add_argument("-o", "--output-json-file", type=str, help="Path to save the updated ECS task definition JSON file.", required=False)
     return parser.parse_args()
 
 
@@ -121,8 +121,8 @@ def main():
     aqua_sidecar = create_aqua_sidecar_container(image=args.image, credentials=args.image_creds_secretmanager_arn)
     secured_ecs_task_definition = inject_microenforcer_to_ecs_task_definition(aqua_sidecar=aqua_sidecar,
                                                                               task_definition=task_definition,
-                                                                              aqua_server_url=args.server_url,
-                                                                              aqua_token=args.token,
+                                                                              aqua_server_url=args.aqua_gateway_url,
+                                                                              aqua_token=args.aqua_token,
                                                                               execution_role=args.task_execution_role_arn)
     if not secured_ecs_task_definition:
         print("ERROR: Failed to inject microenforcer to the tas definition")
