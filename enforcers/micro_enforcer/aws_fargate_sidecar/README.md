@@ -68,6 +68,159 @@ python inject_microenforcer.py \
     -o updated_task_definition.json
 ```
 
+### Expected result
+
+Given input task definition:
+```json
+{
+    "family": "example-task-definition",
+    "containerDefinitions": [
+        {
+            "name": "gotty",
+            "image": "dieterreuter/gotty",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "http-8080",
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/example-task-definition",
+                    "mode": "non-blocking",
+                    "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": []
+        }
+    ],
+    "executionRoleArn": "arn:aws:iam::AWS_ACCOUNT_ID:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    }
+}
+```
+
+The expected result should be:
+```diff
+{
+    "family": "example-task-definition",
+    "containerDefinitions": [
+        {
+            "name": "gotty",
+            "image": "dieterreuter/gotty",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "http-8080",
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
++            "environment": [
++                {
++                    "name": "AQUA_MICROENFORCER",
++                    "value": "1"
++                },
++                {
++                    "name": "AQUA_SERVER",
++                    "value": "aqua_gateway_url:443"
++                },
++                {
++                    "name": "AQUA_TOKEN",
++                    "value": "211029312309-210391u20132-1231o23h"
++                },
++                {
++                    "name": "LD_PRELOAD",
++                    "value": "/.aquasec/bin/$PLATFORM/slklib.so"
++                }
++            ],
+            "mountPoints": [],
++            "volumesFrom": [
++                {
++                    "sourceContainer": "aqua-sidecar",
++                    "readOnly": false
++                }
++            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/example-task-definition",
+                    "mode": "non-blocking",
+                    "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": [],
++            "entryPoint": [
++                "/.aquasec/bin/microenforcer"
++            ],
++            "command": [
++                "/gotty",
++                "--permit-write",
++                "--reconnect",
++                "/bin/ash"
++            ]
+        },
++        {
++            "name": "aqua-sidecar",
++            "image": "registry.aquasec.com/microenforcer-basic:2022.4.662",
++            "cpu": 0,
++            "portMappings": [],
++            "essential": false,
++            "environment": [],
++            "environmentFiles": [],
++            "mountPoints": [],
++            "volumesFrom": [],
++            "systemControls": [],
++            "repositoryCredentials": {
++                "credentialsParameter": "arn:aws:secretsmanager:AWS-REGION:AWS_ACCOUNT_ID:secret:aquasec-registry"
++            }
++        }
+    ],
+-    "executionRoleArn": "arn:aws:iam::AWS_ACCOUNT_ID:role/ecsTaskExecutionRole",
++    "executionRoleArn": "arn:aws:iam::AWS_ACCOUNT_ID:role/updatedEcsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    }
+}
+```
+
 ## Functionality
 
 1. **Parse Arguments**: Uses `argparse` to process command-line inputs.
