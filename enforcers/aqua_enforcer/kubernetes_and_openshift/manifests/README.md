@@ -21,6 +21,7 @@ The deployment commands shown below, use the **kubectl** cli, however they can b
 
 It is recommended that you complete the sizing and capacity assessment for the deployment. Refer to [Sizing Guide](https://docs.aquasec.com/docs/sizing-guide).
 
+## 
 ## Considerations
 
 You may consider the following options for deploying the Aqua Enforcer:
@@ -101,8 +102,16 @@ kubectl create secret docker-registry aqua-registry \
    ```SHELL
    kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/002_aqua_enforcer_configMap.yaml
    ```
+**Step 3. Create Cluster-metadata configmap**
+This step is particularly important in a Kubernetes environment if you also plan to deploy the Aqua Kube-Enforcer
+along with the Aqua Enforcer(either now, or perhaps later). The configmap will hold the unique identification of the cluster so that the Aqua console(server)
+can distinguish clusters discovered by the Aqua Enforcers vs those discovered by the Aqua Kube-Enforcer.
+NOTE: If you have deployed the Aqua Enforcer in a namespace other than aqua, make sure to use the same namespace in the shell script .
+```SHELL
+./create-ae-cm.sh 
+```
 
-**Step 3. Deploy Aqua Enforcer as daemonset.**
+**Step 4. Deploy Aqua Enforcer as daemonset.**
    * For **gke-autopilot** replace **/var/lib** with **/var/autopilot/addon** under volumeMounts and volumes sections
    ```SHELL
    curl -s https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/aqua_enforcer/kubernetes_and_openshift/manifests/004_aqua_enforcer_daemonset.yaml | sed -e "s/\/var\/lib/\/var\/autopilot\/addon/" | kubectl apply -f -
