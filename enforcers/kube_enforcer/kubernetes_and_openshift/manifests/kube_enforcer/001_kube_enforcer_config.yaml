@@ -23,7 +23,7 @@ data:
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
-  AQUA_KB_IMAGE_NAME: "registry.aquasec.com/kube-bench:v0.7.3"
+  AQUA_KB_IMAGE_NAME: "registry.aquasec.com/kube-bench:v0.9.2"
   AQUA_ME_IMAGE_NAME: "registry.aquasec.com/microenforcer:2022.4"
   AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
   AQUA_ENFORCER_DS_NAME: "aqua-agent"               #Sets Daemonset name
@@ -73,7 +73,8 @@ webhooks:
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
-# Uncomment the below to ensure that the webhook executes exclusively on objects in namespaces other than kube-system and kube-node-lease.
+# Uncomment the below to ensure that the webhook executes exclusively on objects in namespaces other than kube-system,
+# kube-node-lease and aqua.
 #    namespaceSelector:
 #      matchExpressions:
 #        - key: kubernetes.io/metadata.name
@@ -81,6 +82,7 @@ webhooks:
 #          values:
 #            - kube-system
 #            - kube-node-lease
+#            - aqua
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
@@ -104,7 +106,8 @@ webhooks:
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
-# Uncomment the below to ensure that the webhook executes exclusively on objects in namespaces other than kube-system and kube-node-lease.
+# Uncomment the below to ensure that the webhook executes exclusively on objects in namespaces other than kube-system,
+# kube-node-lease and aqua.
 #    namespaceSelector:
 #      matchExpressions:
 #        - key: kubernetes.io/metadata.name
@@ -112,6 +115,7 @@ webhooks:
 #          values:
 #            - kube-system
 #            - kube-node-lease
+#            - aqua
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -127,6 +131,9 @@ rules:
   - apiGroups: ["*"]
     resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
     verbs: ["get", "list", "watch"]
+  - apiGroups: [ "" ]
+    resources: [ "serviceaccounts"]
+    verbs: ["get","list","watch" ]
   - apiGroups:
       - apps.openshift.io
     resources:
@@ -149,7 +156,7 @@ rules:
 #    resources: ["imagecontentsourcepolicies", "openshiftapiservers", "kubeapiservers"]
 #    verbs: ["get", "list", "watch"]
 #  - apiGroups: [ "" ]
-#    resources: [ "serviceaccounts", "endpoints" ]
+#    resources: ["endpoints"]
 #    verbs: [ "list" ]
 #  - apiGroups: [ "config.openshift.io" ]
 #    resources: [ "clusteroperators" ]
@@ -260,7 +267,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.20"
+    app.kubernetes.io/version: "0.15.23"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -390,7 +397,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.20"
+    app.kubernetes.io/version: "0.15.23"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

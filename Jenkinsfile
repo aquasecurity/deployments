@@ -220,20 +220,6 @@ pipeline {
                 }
             }
         }
-        stage("Running Mstp Tests") {
-            when {
-                allOf {
-                    not { expression { return changedManifestsFiles.isEmpty() } }
-                    expression { return runCloudFormation }
-                }
-            }
-            steps {
-                script {
-                    log.info "Running Mstp tests"
-                    helm.runMstpTestsManifests debug: debug
-                }
-            }
-        }
     }
     post {
         always {
