@@ -90,8 +90,16 @@ spec:
             # Enable KA policy scanning via Trivy-Operator
             - name: AQUA_KAP_ADD_ALL_CONTROL
               value: "true"
-            - name: AQUA_WATCH_CONFIG_AUDIT_REPORT
+            - name: AQUA_ME_GW_CERT_SECRET_NAME
+              value: ""
+            - name: AQUA_ADMISSION_CONTROL_WHEN_GW_DISCONNECTED
+              value: "false"
+            - name: AQUA_AUTO_WORKLOAD_DISCOVERY
               value: "true"
+            - name: AQUA_AUTO_WORKLOAD_SCAN # This option is available only if "AQUA_AUTO_WORKLOAD_DISCOVERY" is true
+              value: "false"
+            - name: AQUA_AUTO_CONFIGURE_REGISTRIES # This option is available only if "AQUA_AUTO_WORKLOAD_DISCOVERY" is true
+              value: "false"
             - name: AQUA_LOGICAL_NAME
               value: ""
             #Enable Skipping Kube-Bench on nodes based on node labels
