@@ -24,6 +24,8 @@ TLS verify Flag (Optional):
 CPU & memory limits (Optional):
     --memory-limit                enforcer memory limit in Gb. default: 2.6
     --cpu-limit                   enforcer cpu limit in cores. default: 2
+FIPS (Optional):
+    --fips                        Deploy enforcer for FIPS platforms
 
 EOF
 
