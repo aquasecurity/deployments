@@ -134,6 +134,8 @@ spec:
               value: "10"
             - name: OPERATOR_SCAN_JOB_RETRY_AFTER
               value: 30s
+            - name: OPERATOR_EXCLUDE_NAMESPACES
+              value: "kube-system"
             - name: OPERATOR_METRICS_BIND_ADDRESS
               value: :8080
             - name: OPERATOR_HEALTH_PROBE_BIND_ADDRESS
