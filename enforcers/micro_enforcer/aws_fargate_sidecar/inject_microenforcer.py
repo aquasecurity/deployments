@@ -1,6 +1,9 @@
 import argparse
 import json
 import docker
+import re
+import boto3
+import base64
 
 
 def parse_arguments():
@@ -29,10 +32,44 @@ def read_json(json_file_path):
         print(f"ERROR: Error reading JSON file: {e}")
         return None
 
+def parse_ecr_image(image_name):
+    """Extract AWS account ID, region, and repository from image name."""
+    pattern = r"^(\d{12})\.dkr\.ecr\.([a-z0-9-]+)\.amazonaws\.com/([^:]+):([^:]+)$"
+    match = re.match(pattern, image_name)
+    
+    if match:
+        account_id, region, repository, tag = match.groups()
+        return True, account_id, region, repository, tag
+    else:
+        return False, None, None, None, None  # Returns False if validation fails
+
+def get_ecr_login(region):
+    """Retrieve ECR authentication token using boto3."""
+    ecr_client = boto3.client("ecr", region_name=region)
+    response = ecr_client.get_authorization_token()
+
+    # Extract token and registry URL
+    auth_data = response["authorizationData"][0]
+    token = auth_data["authorizationToken"]
+    registry_url = auth_data["proxyEndpoint"]
+
+    # Decode token (Base64)
+    username, password = base64.b64decode(token).decode().split(":")
+    return registry_url, username, password
+
+def docker_login_to_ecr(client, registry_url, username, password):
+    """Login to Docker using credentials."""
+    client.login(username=username, password=password, registry=registry_url)
+    return client
 
 def get_entry_point_from_image(image_name: str()) -> list():
     entry_point = list()
     client = docker.from_env()
+    is_valid, account_id, region, repository, tag = parse_ecr_image(image_name)
+    if is_valid:
+        # Need to login to ecr
+        registry_url, username, password = get_ecr_login(region)
+        docker_login_to_ecr(client, registry_url, username, password)
     try:
         image = client.images.get(image_name)
     except docker.errors.ImageNotFound as e:
@@ -47,6 +84,11 @@ def get_entry_point_from_image(image_name: str()) -> list():
 def get_command_from_image(image_name: str()) -> list():
     command = list()
     client = docker.from_env()
+    is_valid, account_id, region, repository, tag = parse_ecr_image(image_name)
+    if is_valid:
+        # Need to login to ecr
+        registry_url, username, password = get_ecr_login(region)
+        docker_login_to_ecr(client, registry_url, username, password)
     try:
         image = client.images.get(image_name)
     except docker.errors.ImageNotFound as e:
