@@ -78,7 +78,7 @@ spec:
             - name: CLUSTER_NAME
               value: "Default-cluster-name"   # Cluster display name in aqua enterprise.
             - name: AQUA_KB_IMAGE_NAME
-              value: "registry.aquasec.com/kube-bench:v0.9.2"
+              value: "registry.aquasec.com/kube-bench:v0.10.2"
             - name: AQUA_ME_IMAGE_NAME
               value: "registry.aquasec.com/microenforcer:2022.4"
             - name: AQUA_KB_ME_REGISTRY_NAME
@@ -90,8 +90,16 @@ spec:
             # Enable KA policy scanning via Trivy-Operator
             - name: AQUA_KAP_ADD_ALL_CONTROL
               value: "true"
-            - name: AQUA_WATCH_CONFIG_AUDIT_REPORT
+            - name: AQUA_ME_GW_CERT_SECRET_NAME
+              value: ""
+            - name: AQUA_ADMISSION_CONTROL_WHEN_GW_DISCONNECTED
+              value: "false"
+            - name: AQUA_AUTO_WORKLOAD_DISCOVERY
               value: "true"
+            - name: AQUA_AUTO_WORKLOAD_SCAN # This option is available only if "AQUA_AUTO_WORKLOAD_DISCOVERY" is true
+              value: "false"
+            - name: AQUA_AUTO_CONFIGURE_REGISTRIES # This option is available only if "AQUA_AUTO_WORKLOAD_DISCOVERY" is true
+              value: "false"
             - name: AQUA_LOGICAL_NAME
               value: ""
             #Enable Skipping Kube-Bench on nodes based on node labels
@@ -186,7 +194,7 @@ spec:
             - name: OPERATOR_TARGET_NAMESPACES
               value: ""
             - name: OPERATOR_EXCLUDE_NAMESPACES
-              value: ""
+              value: "kube-system"
             - name: OPERATOR_TARGET_WORKLOADS
               value: "pod,replicaset,replicationcontroller,statefulset,daemonset,cronjob,job"
             - name: OPERATOR_SERVICE_ACCOUNT

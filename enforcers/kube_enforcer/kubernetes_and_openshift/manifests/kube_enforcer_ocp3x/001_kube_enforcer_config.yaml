@@ -23,12 +23,18 @@ data:
   # Enable KA policy scanning via starboard
   AQUA_KAP_ADD_ALL_CONTROL: "true"
   AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
-  AQUA_KB_IMAGE_NAME: "registry.aquasec.com/kube-bench:v0.9.2"
+  AQUA_KB_IMAGE_NAME: "registry.aquasec.com/kube-bench:v0.10.2"
   AQUA_ME_IMAGE_NAME: "registry.aquasec.com/microenforcer:2022.4"
   AQUA_KB_ME_REGISTRY_NAME: "aqua-registry"
   AQUA_ENFORCER_DS_NAME: "aqua-agent"                        #Sets Daemonset name
+  AQUA_ME_GW_CERT_SECRET_NAME: ""
+  AQUA_ADMISSION_CONTROL_WHEN_GW_DISCONNECTED: "false"
+  AQUA_AUTO_WORKLOAD_DISCOVERY: "true"
+  AQUA_AUTO_WORKLOAD_SCAN: "false" # This option is available only if "AQUA_AUTO_WORKLOAD_DISCOVERY" is true
+  AQUA_AUTO_CONFIGURE_REGISTRIES: "false" # This option is available only if "AQUA_AUTO_WORKLOAD_DISCOVERY" is true
   #Enable Skipping Kube-Bench on nodes based on node labels
   # AQUA_NODE_LABELS_TO_SKIP_KB: ""  #Comma-separated node-labels for nodes on which Kube-Bench is to be skipped. key1=val1,key2=val2,...
+
   # Enable the below Env for mTLS between kube-enforcer and gateway
   # AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.crt"
   # AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/aqua_kube-enforcer.key"
@@ -225,7 +231,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.22"
+    app.kubernetes.io/version: "0.15.23"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -356,7 +362,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.22"
+    app.kubernetes.io/version: "0.15.23"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

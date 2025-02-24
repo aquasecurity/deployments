@@ -114,7 +114,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.15.22
+          image: docker.io/aquasec/starboard-operator:0.15.23
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -150,6 +150,8 @@ spec:
               value: "10s"
             - name: OPERATOR_CLUSTER_COMPLIANCE_ENABLED
               value: "false"
+            - name: OPERATOR_EXCLUDE_NAMESPACES
+              value: "kube-system"
           ports:
             - name: metrics
               containerPort: 8080
