@@ -89,6 +89,7 @@ webhooks:
 #            - kube-node-lease
 #            - aqua
 ---
+
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
@@ -134,7 +135,7 @@ metadata:
   name: aqua-kube-enforcer
 rules:
   - apiGroups: ["*"]
-    resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
+    resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "services" ] #"componentstatuses" has been removed from the permissions as it is depricated.
     verbs: ["get", "list", "watch"]
   - apiGroups: [ "" ]
     resources: [ "serviceaccounts"]
