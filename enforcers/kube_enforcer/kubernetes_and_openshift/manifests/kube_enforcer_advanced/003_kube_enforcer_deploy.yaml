@@ -78,7 +78,7 @@ spec:
             - name: CLUSTER_NAME
               value: "Default-cluster-name"   # Cluster display name in aqua enterprise.
             - name: AQUA_KB_IMAGE_NAME
-              value: "registry.aquasec.com/kube-bench:v0.10.2"
+              value: "registry.aquasec.com/kube-bench:v0.10.3"
             - name: AQUA_ME_IMAGE_NAME
               value: "registry.aquasec.com/microenforcer:2022.4"
             - name: AQUA_KB_ME_REGISTRY_NAME
@@ -182,7 +182,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.15.23
+          image: docker.io/aquasec/starboard-operator:0.15.24
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
