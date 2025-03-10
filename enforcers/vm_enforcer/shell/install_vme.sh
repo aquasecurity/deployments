@@ -24,6 +24,8 @@ TLS verify Flag (Optional):
 CPU & memory limits (Optional):
     --memory-limit                enforcer memory limit in Gb. default: 2.6
     --cpu-limit                   enforcer cpu limit in cores. default: 2
+FIPS (Optional):
+    --fips                        Deploy enforcer for FIPS platforms
 
 EOF
 
@@ -48,17 +50,21 @@ warning_message() {
   echo "Warning: $1"
 }
 
+info_message() {
+  echo "Info: $1"
+}
+
 load_config_from_env() {
   if [ -z "${ENFORCER_VERSION}" ] || [ -z "${GATEWAY_ENDPOINT}" ] || [ -z "${TOKEN}" ]; then
     usage
     exit 1
   fi
   if [ -z "${AQUA_TLS_VERIFY}" ]; then
-    echo "Info: AQUA_TLS_VERIFY var is missing, Setting it to 'false'"
+    info_message "AQUA_TLS_VERIFY var is missing, Setting it to 'false'"
     AQUA_TLS_VERIFY=false
   fi
   if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]; then
-    echo "Info: AQUA_ROOT_CA, AQUA_PUBLIC_KEY, AQUA_PRIVATE_KEY  var is missing, Setting it to blank "
+    info_message "AQUA_ROOT_CA, AQUA_PUBLIC_KEY, AQUA_PRIVATE_KEY  var is missing, Setting it to blank "
     AQUA_ROOT_CA=""
     AQUA_PUBLIC_KEY=""
     AQUA_PRIVATE_KEY=""
@@ -87,14 +93,14 @@ is_it_rhel() {
   cat /etc/*release | grep PLATFORM_ID | grep "platform:el8\|platform:el9" &>/dev/null
 
   if [ $? -eq 0 ]; then
-    echo "Info: This is RHEL 8\9 system. Going to download and apply SELinux policy module"
-    echo "Info: Downloading SELinux policy module"
+    info_message "This is RHEL 8\9 system. Going to download and apply SELinux policy module"
+    info_message "Downloading SELinux policy module"
     curl -s -o aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.te
     curl -s -L -o aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/aquavme.pp
     if [ ! -f "${ENFORCER_SELINUX_POLICY_FILE_NAME}" ]; then
       error_message "Unable to locate ${ENFORCER_SELINUX_POLICY_FILE_NAME} on current directory"
     fi
-    echo "Info: Applying SELinux policy module"
+    info_message "Applying SELinux policy module"
     semodule -i ${ENFORCER_SELINUX_POLICY_FILE_NAME}
   fi
 }
@@ -102,15 +108,15 @@ is_it_rhel() {
 is_it_fedora() {
   cat /etc/*release | grep PLATFORM_ID | grep "platform:f3" &>/dev/null
   if [ $? -eq 0 ]; then
-    echo "Info: This is Fedora system. Going to download and apply SELinux policy module"
-    echo "Info: Downloading SELinux policy module"
+    info_message "This is Fedora system. Going to download and apply SELinux policy module"
+    info_message "Downloading SELinux policy module"
     curl -s -o fcos_aquavme.te https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.te
     curl -s -L -o fcos_aquavme.pp https://github.com/aquasecurity/deployments/raw/2022.4/enforcers/vm_enforcer/rpm/selinux/aquavme/fcos_aquavme.pp
 
     if [ ! -f "fcos_aquavme.pp" ]; then
       error_message "Unable to locate fcos_aquavme.pp on current directory"
     fi
-    echo "Info: Applying SELinux policy module"
+    info_message "Applying SELinux policy module"
     semodule -i fcos_aquavme.pp
   fi
 }
@@ -118,7 +124,10 @@ is_it_fedora() {
 check_arch() {
   # In internal storage artifact stored per architecture
   arch_suffix=""
-  if [ "${DEV_INSTALL}" != "true" ]; then
+  if [[ "${FIPS_ENABLED}"  == "true" ]]; then
+    info_message "FIPS version selected"
+    arch_suffix="-fips"
+  elif [ "${DEV_INSTALL}" != "true" ]; then
     arch=$(uname -m)
     arch_suffix=".$arch"
   fi
@@ -198,15 +207,11 @@ get_app_online() {
   	ENFORCER_RUNC_TAR_FILE_URL="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"	
   fi
   
-  ENFORCER_RUNC_CONFIG_URL="https://download.aquasec.com/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_CONFIG_TEMPLATE}"
-  ENFORCER_RUNC_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-runc-config.json"
-  ENFORCER_RUNC_OLD_CONFIG_URL_DEV="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/aqua-enforcer-v1.0.0-rc2-runc-config.json"
-
   if ! curl --output /dev/null --silent --head --fail -u ${AQUA_USERNAME}:${AQUA_PWD} ${ENFORCER_RUNC_TAR_FILE_URL}; then
     error_message "Unable to download package. please check credentials or the version"
   fi
 
-  echo "Info: Downloading enforcer filesystem version ${ENFORCER_VERSION}."
+  info_message "Downloading enforcer filesystem version ${ENFORCER_VERSION}."
   curl -u ${AQUA_USERNAME}:${AQUA_PWD} -s -o ${ENFORCER_RUNC_TAR_FILE_NAME} ${ENFORCER_RUNC_TAR_FILE_URL}
 
 }
@@ -233,11 +238,15 @@ get_app() {
 }
 
 edit_templates_sh() {
-  echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME} file."
+  info_message "Creating ${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME} file."
+  FIPS_CONFIGURATION=""
+  if [ "${FIPS_ENABLED}" == "true" ]; then
+    FIPS_CONFIGURATION=",\"OPENSSL_CONF=/opt/aquasec/openssl.cnf\",\"OPENSSL_MODULES=/opt/aquasec\""
+  fi
 
   sed "s|HOSTNAME=.*\"|HOSTNAME=$(hostname)\"|;
 		s|AQUA_PRODUCT_PATH=.*\"|AQUA_PRODUCT_PATH=${INSTALL_PATH}/aquasec\"|;
-		s|AQUA_INSTALL_PATH=.*\"|AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\"|;
+		s|AQUA_INSTALL_PATH=.*\"|AQUA_INSTALL_PATH=${INSTALL_PATH}/aquasec\"${FIPS_CONFIGURATION}|;
 		s|AQUA_SERVER=.*\"|AQUA_SERVER=${GATEWAY_ENDPOINT}\"|;
 		s|AQUA_TOKEN=.*\"|AQUA_TOKEN=${TOKEN}\"|;    
 		s|LD_LIBRARY_PATH=.*\"|LD_LIBRARY_PATH=/opt/aquasec\"|;
@@ -249,10 +258,11 @@ edit_templates_sh() {
     s|\"period\"\:.*|\"period\"\: 100000|;
     s|\"quota\"\:.*|\"quota\"\: ${AQUA_QUOTA_CPU_LIMIT},|" ${ENFORCER_RUNC_CONFIG_TEMPLATE} >${ENFORCER_RUNC_DIRECTORY}/${ENFORCER_RUNC_CONFIG_FILE_NAME}
 
-  echo "Info: Creating ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} file."
+
+  info_message "Creating ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} file."
   sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_" ${RUN_SCRIPT_TEMPLATE_FILE_NAME} >${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME} && chmod +x ${ENFORCER_RUNC_DIRECTORY}/${RUN_SCRIPT_FILE_NAME}
 
-  echo "Info: Creating ${ENFORCER_SERVICE_FILE_NAME_PATH} file."
+  info_message "Creating ${ENFORCER_SERVICE_FILE_NAME_PATH} file."
   sed "s_{{ .Values.RuncPath }}_${RUNC_LOCATION}_;s_{{ .Values.WorkingDirectory }}_${ENFORCER_RUNC_DIRECTORY}_" ${SYSTEMD_TEMPLATE_TO_USE} >${ENFORCER_SERVICE_FILE_NAME_PATH}
 
 }
@@ -268,7 +278,7 @@ systemd_type() {
 }
 
 untar() {
-  echo "Info: Unpacking enforcer filesystem to ${ENFORCER_RUNC_FS_DIRECTORY}."
+  info_message "Unpacking enforcer filesystem to ${ENFORCER_RUNC_FS_DIRECTORY}."
   tar -xf ${ENFORCER_RUNC_TAR_FILE_NAME} -C ${ENFORCER_RUNC_FS_DIRECTORY}
 }
 
@@ -299,7 +309,7 @@ setup_sh_env() {
     AQUA_TLS_VERIFY=false
   fi
   if [ -z "${AQUA_PUBLIC_KEY_PATH}" ] && [ -z "${AQUA_PRIVATE_KEY_PATH}" ]; then
-    echo "Info: AQUA_ROOT_CA, AQUA_PUBLIC_KEY, AQUA_PRIVATE_KEY  var is missing, Setting it to blank "
+    info_message "AQUA_ROOT_CA, AQUA_PUBLIC_KEY, AQUA_PRIVATE_KEY  var is missing, Setting it to blank "
     AQUA_ROOT_CA=""
     AQUA_PUBLIC_KEY=""
     AQUA_PRIVATE_KEY=""
@@ -344,12 +354,12 @@ create_folder_sh() {
 }
 
 start_service() {
-  echo "Info: Enabling the ${ENFORCER_SERVICE_FILE_NAME} service."
+  info_message "Enabling the ${ENFORCER_SERVICE_FILE_NAME} service."
   systemctl enable ${ENFORCER_SERVICE_FILE_NAME}
-  echo "Info: Starting the ${ENFORCER_SERVICE_FILE_NAME} service."
+  info_message "Starting the ${ENFORCER_SERVICE_FILE_NAME} service."
   systemctl start ${ENFORCER_SERVICE_FILE_NAME}
   if [ $? -eq 0 ]; then
-    echo "Info: VM Enforcer was successfully deployed and started."
+    info_message "VM Enforcer was successfully deployed and started."
   else
     error_message "Unable to start service. please check the logs."
   fi
@@ -473,6 +483,10 @@ bootstrap_args_sh() {
       is_flag_value_valid "--memory-limit" "$2"
       AQUA_MEMORY_LIMIT="$2"
       shift
+      shift
+      ;;
+    --fips)
+      FIPS_ENABLED=true
       shift
       ;;
     esac
