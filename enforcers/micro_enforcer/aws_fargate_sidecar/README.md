@@ -2,19 +2,21 @@
 
 ## Overview
 
-`inject_microenforcer.py` is a Python script designed to integrate Aqua MicroEnforcer into an AWS ECS task definition. This process enhances container security by injecting the Aqua security agent and its configurations into existing task definitions.
+`inject_microenforcer.py` is a Python script that automates the integration of Aqua MicroEnforcer into an AWS ECS task definition. This enhances container security by injecting the Aqua security agent and its required configurations into existing task definitions.
 
 ## Features
 
-- Parses AWS ECS task definition JSON files.
-- Adds Aqua MicroEnforcer as a sidecar container.
-- Updates container definitions with necessary environment variables and volume mounts.
-- Configures entry points and commands for each container.
-- Optionally updates the task execution role ARN.
-- Supports input and output of task definitions in JSON format.
+ - Parses AWS ECS task definition JSON files.
+ - Adds Aqua MicroEnforcer as a sidecar container.
+ - Updates container definitions with necessary environment variables and volume mounts.
+ - Configures entry points and commands for each container.
+ - Optionally updates the task execution role ARN.
+ - Supports input and output of task definitions in JSON format.
+ - Supports MicroEnforcers stored in Amazon Elastic Container Registry (ECR).
 
 ## Requirements
 
+If using a local setup instead of AWS CloudShell, ensure the following:
 - **Python**: Version 3.7 or higher.
 - **Docker**: Local Docker installation to pull and inspect container images.
 - **Python Libraries**:
@@ -24,6 +26,33 @@
 
 ## Usage
 
+1. Download the ECS Task Definition
+	1.	Go to AWS ECS → Task Definitions.
+	2.	Select the task definition and revision you want to modify.
+	3.	Click the JSON tab and download the AWS CLI Input file.
+ 
+2. Upload Files to AWS CloudShell
+	1.	Open AWS CloudShell.
+	2.	Upload the MicroEnforcer Injection Script:
+	    - [Download Script](https://github.com/aquasecurity/deployments/tree/2022.4/enforcers/micro_enforcer/aws_fargate_sidecar)
+        - Use Actions → Upload File in CloudShell.
+	3.	Upload the task definition JSON file.
+3. Run the Script
+ 
+Execute the script with the required arguments:
+
+    python inject_microenforcer.py \
+    -i original-task-definition-AWS-CLI-input.json \
+    -u <AQUA_GATEWAY_URL> \
+    -t <AQUA_DEPLOYMENT_TOKEN> \
+    -m registry.aquasec.com/microenforcer-basic:<release-number> \
+    -s <AWS_SECRETS_MANAGER_ARN> \
+    -e <ECS_TASK_EXECUTION_ROLE_ARN> \
+    -o updated-task-definition.json
+
+For a more detailed step-by-step guide, visit:
+
+📖 [Full Guide on Aqua Wiki](https://wiki-aquasec.atlassian.net/wiki/spaces/RD/pages/1331429708/Auto+Deployment+Microenforcer+Script)
 ### Flow
 - **Download AWS ECS task definition JSON file**
   - In AWS console locate your task definition under ECS -> Task Definitions
@@ -49,13 +78,13 @@
 
 | Argument                                | Description                                                                                                                                                                                      | Required                        |
 |-----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
-| `-i`, `--input-json-file`               | Path to the input AWS ECS task definition JSON file.                                                                                                                                             | Yes                             |
-| `-u`, `--aqua-gateway-url`              | IP address and port of any Aqua Gateway, as received from Aqua Security                                                                                                                          | Yes                             |
-| `-t`, `--aqua-token`                    | Deployment token of any MicroEnforcer group. In the Aqua UI: Navigate to Administration > Enforcers and edit a MicroEnforcer group (e.g., the "default micro enforcer group").                   | Yes                             |
-| `-m`, `--image`                         | Aqua MicroEnforcer image (e.g., `registry.aquasec.com/microenforcer-basic:2022.4.662`).                                                                                                          | Yes                             |
-| `-s`, `--image-creds-secretmanager-arn` | ARN for image registry credentials stored in AWS Secrets Manager. ( To create required resources please refer to https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html ) | Required for private registries |
-| `-e`, `--task-execution-role-arn`       | ARN for the task execution role. ( To create required resources please refer to https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html )                                  | Required for private registries |
-| `-o`, `--output-json-file`              | Path to save the updated ECS task definition JSON file.                                                                                                                                          | No                              |
+| `-i`, `--input-json-file`               | Input ECS task definition JSON file.                                                                                                                                             | Yes                             |
+| `-u`, `--aqua-gateway-url`              | Aqua Gateway URL and port.                                                                                                                          | Yes                             |
+| `-t`, `--aqua-token`                    | MicroEnforcer deployment token.                   | Yes                             |
+| `-m`, `--image`                         | Aqua MicroEnforcer image.                                                                                                          | Yes                             |
+| `-s`, `--image-creds-secretmanager-arn` | AWS Secrets Manager ARN for registry credentials | Required for private registries |
+| `-e`, `--task-execution-role-arn`       | ARN for the ECS task execution role.                                  | Required for private registries |
+| `-o`, `--output-json-file`              | Name of the updated task definition file.                                                                                                                                          | No                              |
 
 ### Example Command
 
@@ -332,17 +361,14 @@ The diff between input and output will be:
    - Appends the Aqua sidecar container to the task definition.
 6. **Write Output JSON**: Saves the updated task definition to a file or prints it to the console.
 
-## Error Handling
+ ## Error Handling and Notes
 
-- Reports errors in reading input files.
-- Ensures the specified Docker image exists or pulls it from the registry.
-- Prints error messages for issues in modifying the task definition.
-
-## Notes
-
-- Docker must be running on the system where this script is executed.
-- Ensure AWS IAM roles and permissions are properly configured to use the provided ARNs.
+- The script validates input files and checks for missing dependencies.
+- Docker must be running for local setups (non CloudShell setups).
+- Ensure AWS IAM roles and permissions are correctly configured.
 
 ## License
 
-This script is provided as-is, without any warranties. Users are responsible for ensuring its compatibility and security in their environments.
+This script is provided as-is, with no warranties. Users are responsible for verifying security and compatibility in their environments.
+
+
