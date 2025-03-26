@@ -1,0 +1,173 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+    This Cloudformation Template Installs Aqua Scanner on ECS Cluster with EC2 / Fargate compatibilities.
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Aqua Component Configurations
+        Parameters:
+          - AquaServerAddress
+          - AquaScannerToken
+          - AquaScannerImage
+          - ECSClusterName
+          #- SSLCert
+    ParameterLabels:
+        AquaServerAddress:
+            default: Existing Aqua Server DNS/IP
+        AquaScannerToken:
+            default: Aqua Scanner Token
+        AquaScannerImage:
+            default: Aqua Scanner Image
+        ECSClusterName:
+            default: ECS Cluster Name 
+Parameters:
+    AquaServerAddress:
+        Type: String
+        Description: The Aqua Server DNS/IP.
+    AquaScannerToken:
+        Description: Aqua Token to authenticate scanner with Aqua server.
+        Type: String
+    AquaScannerImage:
+        Type: String
+        Description: Enter Scanner image URI from ECR
+    ECSClusterName:
+        Type: String
+        Description: Enter the existing ECS Cluster name.
+    SecurityGroupIDs:
+        Type: CommaDelimitedList
+        Default: sg-0b323ecaeb5d39379,sg-0390a728fe71d50ca
+    SubnetIDs:
+        Type: CommaDelimitedList
+        Default: subnet-0b0db515a07b3a402,subnet-046ad0cd38c7e05cb,subnet-070627f825b1ca7a5,subnet-02081b7a023f2661f,subnet-09f04cf8eda5f7f00,subnet-0428c45315633c12f,subnet-0ed8ad693f0ac237e,subnet-0b774184c69364847
+    VpcID:
+        Type: String
+        Default: vpc-00e3afef8b5f4ad67
+Resources:
+  AquaScannerTaskDefinition:
+      Type: 'AWS::ECS::TaskDefinition'
+      DependsOn:
+        - AquaEcsTaskRole
+        - AquaScannerLogs
+      Properties:
+        Family: !Join 
+          - '-'
+          - - !Ref ECSClusterName
+            - aqua-scanner
+        RequiresCompatibilities:
+          - EC2
+          - FARGATE
+        Cpu: '1024'
+        Memory: '2048'
+        Volumes:
+          - Host: {}
+            Name: docker-socket
+        ContainerDefinitions:
+          - Name: !Join ['-', [!Ref ECSClusterName, 'aqua-scanner']]
+            Image: !Ref AquaScannerImage
+            EntryPoint: 
+              -  "/bin/sh"
+            Command: 
+              -  "-c" 
+              -  "/opt/aquasec/scannercli daemon --host ${AQUA_SERVER} --token ${AQUA_SCANNER_TOKEN}"
+            Cpu: '1024'
+            Memory: '2048'
+            MountPoints:
+              - ContainerPath: /var/run/docker.sock
+                SourceVolume: docker-socket
+            LogConfiguration:
+              LogDriver: awslogs
+              Options:
+                awslogs-group: !Join ['-', ['/aqua/scanner', !Ref ECSClusterName]]
+                awslogs-region: !Ref "AWS::Region"
+                awslogs-stream-prefix: aquaScanner
+            Essential: 'true'
+            Environment:
+              - Name: AQUA_SERVER
+                Value: !Ref AquaServerAddress
+              - Name: AQUA_SCANNER_TOKEN
+                Value: !Ref AquaScannerToken
+              - Name: AQUA_LOGICAL_NAME
+                Value: !Join 
+                  - '-'
+                  - - ECS
+                    - !Ref ECSClusterName
+        NetworkMode: awsvpc
+        TaskRoleArn: !Ref AquaEcsTaskRole
+        ExecutionRoleArn: !Ref AquaEcsTaskRole
+  AquaScannerService:
+      Type: 'AWS::ECS::Service'
+      DependsOn:
+        - AquaScannerTaskDefinition
+      Properties:
+        Cluster: !Ref ECSClusterName
+        ServiceName: !Join 
+          - '-'
+          - - !Ref ECSClusterName
+            - aqua-scanner
+        DesiredCount: 1
+        DeploymentConfiguration:
+          MaximumPercent: '200'
+          MinimumHealthyPercent: '100'
+        TaskDefinition: !Ref AquaScannerTaskDefinition
+        CapacityProviderStrategy:
+            -
+                CapacityProvider: FARGATE
+                Base: 0
+                Weight: 1
+        NetworkConfiguration:
+            AwsvpcConfiguration:
+                AssignPublicIp: ENABLED
+                SecurityGroups: !Ref SecurityGroupIDs
+                Subnets: !Ref SubnetIDs
+  AquaEcsTaskRole:
+      Type: 'AWS::IAM::Role'
+      Properties:
+        RoleName: !Join 
+          - '-'
+          - - !Ref ECSClusterName
+            - Scanner
+            - AquaEcsTaskRole
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - ecs-tasks.amazonaws.com
+              Action:
+                - 'sts:AssumeRole'
+        Path: /
+        Policies:
+          - PolicyName: !Join 
+              - '-'
+              - - !Ref ECSClusterName
+                - Scanner
+                - AquaScannerPolicy
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - 'ecr:GetDownloadUrlForLayer'
+                    - 'ecr:BatchGetImage'
+                    - 'ecr:DescribeImages'
+                    - 'ecr:GetAuthorizationToken'
+                    - 'ecr:DescribeRepositories'
+                    - 'ecr:ListImages'
+                    - 'ecr:BatchCheckLayerAvailability'
+                    - 'ecr:GetRepositoryPolicy'
+                    - 'logs:CreateLogStream'
+                    - 'logs:PutLogEvents'
+                    - 'logs:CreateLogGroup'
+                    - 'logs:PutLogEvents'
+                    - 'logs:CreateLogDelivery'
+                    - 'logs:CreateLogStream'
+                    - 'logs:TagLogGroup'
+                  Resource: '*'
+                - !Ref 'AWS::NoValue'
+  AquaScannerLogs:
+      Type: 'AWS::Logs::LogGroup'
+      Properties:
+        LogGroupName: !Join ['-', ['/aqua/scanner', !Ref ECSClusterName]]
+        RetentionInDays: 30
