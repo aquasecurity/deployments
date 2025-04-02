@@ -166,7 +166,7 @@ metadata:
   labels:
     app.kubernetes.io/name: trivy-operator
     app.kubernetes.io/instance: trivy-operator
-    app.kubernetes.io/version: "0.20.1"
+    app.kubernetes.io/version: "0.28.0"
     app.kubernetes.io/managed-by: kubectl
 spec:
   replicas: 1
@@ -186,7 +186,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: "trivy-operator"
-          image: "docker.io/aquasec/trivy-operator:0.20.1"
+          image: "docker.io/aquasec/trivy-operator:0.28.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: OPERATOR_NAMESPACE
@@ -200,17 +200,13 @@ spec:
             - name: OPERATOR_SERVICE_ACCOUNT
               value: "trivy-operator"
             - name: OPERATOR_LOG_DEV_MODE
-              value: "true"
+              value: "false"
             - name: OPERATOR_SCAN_JOB_TIMEOUT
               value: "5m"
             - name: OPERATOR_CONCURRENT_SCAN_JOBS_LIMIT
               value: "10"
             - name: OPERATOR_SCAN_JOB_RETRY_AFTER
               value: "30s"
-            - name: OPERATOR_BATCH_DELETE_LIMIT
-              value: "10"
-            - name: OPERATOR_BATCH_DELETE_DELAY
-              value: "10s"
             - name: OPERATOR_METRICS_BIND_ADDRESS
               value: ":8080"
             - name: OPERATOR_METRICS_FINDINGS_ENABLED
@@ -229,6 +225,10 @@ spec:
               value: "false"
             - name: OPERATOR_CONFIG_AUDIT_SCANNER_ENABLED
               value: "true"
+            - name: OPERATOR_BATCH_DELETE_LIMIT
+              value: "10"
+            - name: OPERATOR_BATCH_DELETE_DELAY
+              value: "10s"
             - name: OPERATOR_CLUSTER_COMPLIANCE_ENABLED
               value: "false"
             - name: OPERATOR_RBAC_ASSESSMENT_SCANNER_ENABLED
@@ -255,6 +255,8 @@ spec:
               value: "true"
             - name: CONTROLLER_CACHE_SYNC_TIMEOUT
               value: "5m"
+            - name: OPERATOR_CLUSTER_SBOM_CACHE_ENABLED
+              value: "false"
           ports:
             - name: metrics
               containerPort: 8080

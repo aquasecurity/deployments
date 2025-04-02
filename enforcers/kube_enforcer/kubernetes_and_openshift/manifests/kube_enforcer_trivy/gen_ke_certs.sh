@@ -100,11 +100,14 @@ EOF
     fi
 }
 
-_prepare_ke() {
+# for using custom namespace instead of AQUA NS download the 001_kube_enforcer_config.yaml, make changes to it and keep it in current directory where this script is running
+_prepare_ke() {          
     script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
     _rootCA=$(cat rootCA.crt | base64 | tr -d '\n' | tr -d '\r')
-    githubBranch="2022.4"
-    if test -f "$script_dir/001_kube_enforcer_config.yaml"; then
+    local_config_file="./001_kube_enforcer_config.yaml"             # path of local 001_kube_enforcer_config.yaml file
+
+    if test -f "$local_config_file"; then
+        # Add CA bundle to the local KubeEnforcer config file
         _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
         if eval "$_addCABundle"; then
             printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
@@ -113,7 +116,7 @@ _prepare_ke() {
             printf "\nError: Failed to prepare KubeEnforcer config file from local"
             exit 1
         fi
-    elif curl https://raw.githubusercontent.com/aquasecurity/deployments/$githubBranch/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_trivy/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"; then
+    elif curl https://raw.githubusercontent.com/aquasecurity/deployments/$githubBranch/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced_trivy/001_kube_enforcer_config.yaml -o "001_kube_enforcer_config.yaml"; then
         _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$script_dir/001_kube_enforcer_config.yaml")
         if eval "$_addCABundle"; then
             printf "\nInfo: Successfully prepared 001_kube_enforcer_config.yaml manifest file.\n"
@@ -124,6 +127,7 @@ _prepare_ke() {
         fi
     else
         printf "\nError: Failed to download 001_kube_enforcer_config.yaml manifest file"
+        exit 1
     fi
 }
 

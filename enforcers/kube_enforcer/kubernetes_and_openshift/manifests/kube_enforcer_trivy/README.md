@@ -7,9 +7,9 @@ This repository shows the manifest yaml files required to deploy Aqua KubeEnforc
 * OpenShift 
 * Kubernetes engines: EKS, GKE, ICP, AKS, TKG, and TKGI
 
-Trivy Operator is deployed with the KubeEnforcer to increase the effectiveness of Kubernetes security.
+Trivy-Operator is deployed with the KubeEnforcer to increase the effectiveness of Kubernetes security.
 
-Trivy Operator assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
+Trivy-Operator assesses workload compliance throughout the lifecycle of the workloads. This enables the KubeEnforcer to:
 * Re-evaluate workload compliance during workload runtime, taking any workload and policy changes into account
 * Reflect the results of compliance evaluation in the Aqua UI at all times, not only when workloads are created
 
