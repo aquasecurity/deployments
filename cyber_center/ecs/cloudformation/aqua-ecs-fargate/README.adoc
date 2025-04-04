@@ -35,8 +35,6 @@ A CloudFormation template is used to deploy Cyber Center.
 
 [source,options="nowrap",subs="attributes"]
 ----
-docker pull registry.aquasec.com/cc-standard:latest
-or
 docker pull registry.aquasec.com/cc-premium:latest
 ----
 
