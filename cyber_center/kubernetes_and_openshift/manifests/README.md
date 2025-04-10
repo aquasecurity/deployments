@@ -22,10 +22,9 @@ It is recommended that you complete the sizing and capacity assessment for the d
 
 ### CyberCenter image for deployment
 
-The CyberCenter image is added in the [CyberCenter deploy yaml file](./002_cybercenter_deploy.yaml#L40) at the line 40. You can use one of the two following CyberCenter images:
+The required CyberCenter image is added in the [CyberCenter deploy yaml file](./002_cybercenter_deploy.yaml#L44) at the line 44. The deployment uses the following image:
 
-* **cc-standard:latest**: is used for support on vulnerabilities related to all the operating systems. This image is used in the deployment yaml file.
-* **cc-premium:latest**: is used to get support on vulnerabilities related to all the programming languages including the operating systems.
+* **cc-premium:latest**: Provides support for identifying vulnerabilities related to all supported programming languages and operating systems.
 
 ### mTLS
 

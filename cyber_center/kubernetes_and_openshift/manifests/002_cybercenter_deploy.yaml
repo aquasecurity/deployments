@@ -41,7 +41,7 @@ spec:
         fsGroup: 11433
       containers:
       - name: aqua-cc
-        image: "registry.aquasec.com/cc-standard:latest"
+        image: "registry.aquasec.com/cc-premium:latest"
         imagePullPolicy: Always
         args:
         - --address=:5000
