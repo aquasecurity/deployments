@@ -31,7 +31,7 @@ goto end
 
 :display_prompt
 @echo.
-SET /P PROCEED=The Aqua Golden Image preparation script will perform irreversible cleanup actions on the VM Enforcer. Proceed? [Y/N] 
+SET /P PROCEED=The Aqua Security Golden Image preparation script will perform irreversible cleanup actions on the VM Enforcer. Proceed? [Y/N]
 IF /I "%PROCEED%" NEQ "Y" goto end
 
 :please_wait
@@ -41,10 +41,14 @@ IF /I "%PROCEED%" NEQ "Y" goto end
 :stop_service
 net stop slkd >nul 2>&1
 net stop containermonitor >nul 2>&1
+goto delete_logical_name
+
+:delete_logical_name
+reg add HKEY_LOCAL_MACHINE\SOFTWARE\AquaSecurity\WindowsAgent /v AgentLogicalName /t REG_SZ /d "" /f
 goto delete_database
 
 :delete_database
-del /Q /F "%AQUA_DATA_DIR%\*" >nul 2>&1
+del /Q /F "%AQUA_DATA_DIR%\*.db*" >nul 2>&1
 goto delete_guid
 
 :delete_guid
