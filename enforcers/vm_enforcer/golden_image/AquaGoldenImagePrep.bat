@@ -11,8 +11,8 @@ goto check_Permissions
 :check_Permissions
 net session >nul 2>&1
 if %errorLevel% NEQ 0 (
-    echo Administrator privilege is required.
-    exit 1
+	echo Administrator privilege is required.
+	exit 1
 )
 
 :check_commandline
@@ -31,7 +31,7 @@ goto end
 
 :display_prompt
 @echo.
-SET /P PROCEED=Aqua Security Golden Image Preparation script will perform irrevertible cleanup actions on VM Enforcer. Proceed? [Y/N]
+SET /P PROCEED=The Aqua Security Golden Image preparation script will perform irreversible cleanup actions on the VM Enforcer. Proceed? [Y/N]
 IF /I "%PROCEED%" NEQ "Y" goto end
 
 :please_wait
@@ -61,7 +61,7 @@ goto print_success
 
 :print_success
 @echo.
-@echo Operation successfull. VM Enforcer is ready for Golden Image creation.
+@echo Operation successful. The VM Enforcer is ready for Golden Image creation.
 goto end
 
 :end
