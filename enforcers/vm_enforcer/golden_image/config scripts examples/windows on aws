@@ -38,14 +38,10 @@ $configPath = 'C:\Program Files\AquaSec\GI_AQUA_CONFIG-prod_env.json'
 $tempPath   = "$configPath.tmp"
 
 $jsonConfig | Set-Content -Path $tempPath -Encoding ASCII -Force
-Move-Item    -Path $tempPath -Destination $configPath -Force
 
-$acl  = New-Object System.Security.AccessControl.FileSecurity
-$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-            'SYSTEM','FullControl','Allow')
-$acl.SetOwner([System.Security.Principal.NTAccount]'SYSTEM')
-$acl.SetAccessRuleProtection($true,$false)
-$acl.SetAccessRule($rule)
-Set-Acl -Path $configPath -AclObject $acl
+icacls $tempPath /inheritance:d `
+                /grant:r "SYSTEM:F" "BUILTIN\Administrators:F" | Out-Null
+
+Move-Item    -Path $tempPath -Destination $configPath -Force
 
 </powershell>
