@@ -11,4 +11,5 @@ You can prepare a golden image for automated and easy deployment of VMs (hosts) 
 ### Deployment steps
 
 Refer to the [Product documentation](https://docs.aquasec.com/v2022.4/docs/vm-enforcer-golden-image) for the complete description and instructions.
-The example configuration scripts in this folder and the process for using them are further explained in the documentation.
+
+Inside the config_scripts_examples folder you’ll find six ready-to-adapt templates that turn a dormant VM Enforcer baked into a golden image into an active, policy-enforcing agent. Each script retrieves the needed configuration parameters from cloud-native secret stores, writes them into conifg json in the Enforcer install directory — no restarts, no manual edits. All other details on how to use these examples — secret naming, managed-identity/IAM permissions, and deployment - are covered in the full documentation. 
