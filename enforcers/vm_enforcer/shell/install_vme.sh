@@ -126,7 +126,7 @@ check_arch() {
   arch_suffix=""
   if [[ "${FIPS_ENABLED}"  == "true" ]]; then
     info_message "FIPS version selected"
-    arch_suffix="-fips"
+    arch_suffix=".fips"
   elif [ "${DEV_INSTALL}" != "true" ]; then
     arch=$(uname -m)
     arch_suffix=".$arch"
