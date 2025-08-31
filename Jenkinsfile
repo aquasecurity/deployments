@@ -25,7 +25,7 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('aqua-cloudsecurity-dev-svc-team-1-secret')
         AWS_REGION = "us-west-2"
         AWS_ACCOUNT_ID = "172746256356" // aqua-cloudsecurity-dev
-        AQUADEV_AZURE_ACR_PASSWORD = credentials('aquadevAzureACRpassword')
+        AQUADEV_AZURE_ACR_PASSWORD = credentials('aquadev-acr-creds')
         DOCKER_HUB_USERNAME = 'aquaautomationci'
         DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
         DEPLOY_REGISTRY = "aquasec.azurecr.io"
