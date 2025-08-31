@@ -204,7 +204,9 @@ pipeline {
     post {
         always {
             script {
-                deployments.deleteKindCluster clusterName: env.BUILD_NUMBER
+                if (!changedManifestsFiles.isEmpty() && runCloudFormation) {
+                    deployments.deleteKindCluster clusterName: env.BUILD_NUMBER
+                }
             }
         }
     }
