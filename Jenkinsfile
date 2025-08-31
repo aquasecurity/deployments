@@ -26,7 +26,6 @@ pipeline {
         AWS_REGION = "us-west-2"
         AWS_ACCOUNT_ID = credentials('awsDeploymentAccountID')
         AQUADEV_AZURE_ACR_PASSWORD = credentials('aquadevAzureACRpassword')
-        AUTH0_CREDS = credentials('auth0Credential')
         DOCKER_HUB_USERNAME = 'aquaautomationci'
         DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
         DEPLOY_REGISTRY = "aquasec.azurecr.io"
