@@ -38,7 +38,7 @@ pipeline {
         stage("Checkout") {
             steps {
                 script {
-                    gitUtils.clone repo: "deployment", branch: "master"
+                    gitUtils.clone repo: "deployment", branch: "master", credentialsId: "bitbucket-read-access"
                     dir("deployments") {
                         checkout scm
                     }
