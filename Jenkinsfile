@@ -25,9 +25,6 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('aqua-cloudsecurity-dev-svc-team-1-secret')
         AWS_REGION = "us-west-2"
         AWS_ACCOUNT_ID = "172746256356" // aqua-cloudsecurity-dev
-        AQUADEV_AZURE_ACR_PASSWORD = credentials('aquadev-acr-creds')
-        DOCKER_HUB_USERNAME = 'aquaautomationci'
-        DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
         DEPLOY_REGISTRY = "aquasec.azurecr.io"
     }
     stages {
@@ -46,7 +43,9 @@ pipeline {
                         checkout scm
                     }
                     log.info "CHANGE_TARGET: ${CHANGE_TARGET}\n CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    utils.dockerlogin username: env.DOCKER_HUB_USERNAME, password: DOCKER_HUB_PASSWORD, registry: ""
+                    withCredentials([usernamePassword(credentialsId: "dockerhub-aquabuildci-creds", passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+                        utils.dockerlogin username: env.USER, password: env.PASSWORD, registry: ""
+                    }
                 }
             }
         }
