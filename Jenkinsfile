@@ -27,9 +27,6 @@ pipeline {
         AWS_ACCOUNT_ID = credentials('awsDeploymentAccountID')
         AQUADEV_AZURE_ACR_PASSWORD = credentials('aquadevAzureACRpassword')
         AUTH0_CREDS = credentials('auth0Credential')
-        VAULT_TERRAFORM_SID = credentials('VAULT_TERRAFORM_SID')
-        VAULT_TERRAFORM_SID_USERNAME = "$VAULT_TERRAFORM_SID_USR"
-        VAULT_TERRAFORM_SID_PASSWORD = "$VAULT_TERRAFORM_SID_PSW"
         DOCKER_HUB_USERNAME = 'aquaautomationci'
         DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
         DEPLOY_REGISTRY = "aquasec.azurecr.io"
