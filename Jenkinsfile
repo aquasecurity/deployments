@@ -1,12 +1,10 @@
-@Library('aqua-pipeline-lib@master') _
-import com.aquasec.deployments.orchestrators.*
+@Library('aqua-pipeline-lib@lihiz_deployment_prs') _
 
 def pythonImage = 'python:3-slim-buster'
 def changedCfFiles = []
 def changedFiles = []
 def changedManifestsFiles = []
 def sortedOtherChangedFiles = []
-def orchestrator = new OrcFactory(this).GetOrc()
 def debug = true
 def runCloudFormation = false
 
@@ -32,9 +30,6 @@ pipeline {
         VAULT_TERRAFORM_SID = credentials('VAULT_TERRAFORM_SID')
         VAULT_TERRAFORM_SID_USERNAME = "$VAULT_TERRAFORM_SID_USR"
         VAULT_TERRAFORM_SID_PASSWORD = "$VAULT_TERRAFORM_SID_PSW"
-        VAULT_TERRAFORM_RID = credentials('VAULT_TERRAFORM_RID')
-        VAULT_TERRAFORM_RID_USERNAME = "$VAULT_TERRAFORM_RID_USR"
-        VAULT_TERRAFORM_RID_PASSWORD = "$VAULT_TERRAFORM_RID_PSW"
         DOCKER_HUB_USERNAME = 'aquaautomationci'
         DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
         DEPLOY_REGISTRY = "aquasec.azurecr.io"
