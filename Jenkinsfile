@@ -21,10 +21,10 @@ pipeline {
     }
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('svc_team_1_aws_access_key_id')
-        AWS_SECRET_ACCESS_KEY = credentials('svc_team_1_aws_secret_access_key')
+        AWS_ACCESS_KEY_ID = credentials('aqua-cloudsecurity-dev-svc-team-1-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('aqua-cloudsecurity-dev-svc-team-1-secret')
         AWS_REGION = "us-west-2"
-        AWS_ACCOUNT_ID = credentials('awsDeploymentAccountID')
+        AWS_ACCOUNT_ID = "172746256356" // aqua-cloudsecurity-dev
         AQUADEV_AZURE_ACR_PASSWORD = credentials('aquadevAzureACRpassword')
         DOCKER_HUB_USERNAME = 'aquaautomationci'
         DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
