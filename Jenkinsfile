@@ -12,7 +12,7 @@ def runCloudFormation = false
 
 pipeline {
     agent {
-        label 'deployment_slave'
+        kubernetes kubernetesAgents.bottlerocket(size: '4xLarge', cloud: 'kubernetes', dind: 'True', capacityType: 'on-demand')
     }
 
     options {
@@ -20,7 +20,6 @@ pipeline {
         disableConcurrentBuilds()
         skipDefaultCheckout()
         buildDiscarder(logRotator(daysToKeepStr: '7'))
-        lock('k3s')
     }
 
     environment {
@@ -41,6 +40,13 @@ pipeline {
         DEPLOY_REGISTRY = "aquasec.azurecr.io"
     }
     stages {
+        stage('downloads') {
+            steps {
+                script {
+                    sh "curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin"
+                }
+            }
+        }
         stage("Checkout") {
             steps {
                 script {
@@ -88,10 +94,8 @@ pipeline {
                             ["${shortName}": {
                                 stage("Trivy scan ${shortName}") {
                                     docker.withRegistry('https://aquadev.azurecr.io', 'aquadev-push') {
-                                        docker.image("aquadev.azurecr.io/helm-cicd").inside("-u root") {
-                                            log.info "Starting Trivy scan for file: ${filename}"
-                                            sh "trivy config --severity HIGH,CRITICAL --ignorefile .trivyignore --exit-code 1 ${filename}"
-                                        }
+                                        log.info "Starting Trivy scan for file: ${filename}"
+                                        sh "trivy config --severity HIGH,CRITICAL --ignorefile .trivyignore --exit-code 1 ${filename}"
                                     }
                                 }
                             }]
@@ -169,7 +173,7 @@ pipeline {
                 }
             }
         }
-        stage("K3S Cluster Install and Prepare") {
+        stage("kind Cluster Install and Prepare") {
             when {
                 allOf {
                     not { expression { return changedManifestsFiles.isEmpty() } }
@@ -178,8 +182,8 @@ pipeline {
             }
             steps {
                 script {
-                    orchestrator.install()
-                    helm.settingKubeConfig()
+                    deployments.installKind()
+                    deployments.createKindCluster clusterName: env.BUILD_NUMBER
                     kubectl.createNamespace create: "yes"
                     kubectl.createDockerRegistrySecret create: "yes", registry: env.DEPLOY_REGISTRY
                 }
@@ -206,35 +210,11 @@ pipeline {
                 }
             }
         }
-        stage("Updating Consul") {
-            when {
-                allOf {
-                    not { expression { return changedManifestsFiles.isEmpty() } }
-                    expression { return runCloudFormation }
-                }
-            }
-            steps {
-                script {
-                    helm.updateConsul("create")
-                    log.info "Updated Consul successfully"
-                }
-            }
-        }
     }
     post {
         always {
             script {
-                try {
-                    helm.updateConsul("delete")
-                    orchestrator.uninstall()
-                    echo "k3s uninstalled"
-                    helm.removeDockerLocalImages()
-                    cleanWs()
-                }
-                catch (err) {
-                    cleanWs()
-                    helm.removeDockerLocalImages()
-                }
+                deployments.deleteKindCluster clusterName: env.BUILD_NUMBER
             }
         }
     }
