@@ -1,4 +1,4 @@
-@Library('aqua-pipeline-lib@lihiz_deployment_prs') _
+@Library('aqua-pipeline-lib@master') _
 
 def pythonImage = 'python:3-slim-buster'
 def changedCfFiles = []
