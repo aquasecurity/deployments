@@ -83,10 +83,8 @@ pipeline {
 
                             ["${shortName}": {
                                 stage("Trivy scan ${shortName}") {
-                                    docker.withRegistry('https://aquadev.azurecr.io', 'aquadev-push') {
-                                        log.info "Starting Trivy scan for file: ${filename}"
-                                        sh "trivy config --severity HIGH,CRITICAL --ignorefile .trivyignore --exit-code 1 ${filename}"
-                                    }
+                                    log.info "Starting Trivy scan for file: ${filename}"
+                                    sh "trivy config --severity HIGH,CRITICAL --ignorefile .trivyignore --exit-code 1 ${filename}"
                                 }
                             }]
                         }
