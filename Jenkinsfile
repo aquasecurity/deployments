@@ -1,18 +1,16 @@
 @Library('aqua-pipeline-lib@master') _
-import com.aquasec.deployments.orchestrators.*
 
 def pythonImage = 'python:3-slim-buster'
 def changedCfFiles = []
 def changedFiles = []
 def changedManifestsFiles = []
 def sortedOtherChangedFiles = []
-def orchestrator = new OrcFactory(this).GetOrc()
 def debug = true
 def runCloudFormation = false
 
 pipeline {
     agent {
-        label 'deployment_slave'
+        kubernetes kubernetesAgents.bottlerocket(size: '4xLarge', cloud: 'kubernetes', dind: 'True', capacityType: 'on-demand')
     }
 
     options {
@@ -20,36 +18,34 @@ pipeline {
         disableConcurrentBuilds()
         skipDefaultCheckout()
         buildDiscarder(logRotator(daysToKeepStr: '7'))
-        lock('k3s')
     }
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('svc_team_1_aws_access_key_id')
-        AWS_SECRET_ACCESS_KEY = credentials('svc_team_1_aws_secret_access_key')
+        AWS_ACCESS_KEY_ID = credentials('aqua-cloudsecurity-dev-svc-team-1-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('aqua-cloudsecurity-dev-svc-team-1-secret')
         AWS_REGION = "us-west-2"
-        AWS_ACCOUNT_ID = credentials('awsDeploymentAccountID')
-        AQUADEV_AZURE_ACR_PASSWORD = credentials('aquadevAzureACRpassword')
-        AUTH0_CREDS = credentials('auth0Credential')
-        VAULT_TERRAFORM_SID = credentials('VAULT_TERRAFORM_SID')
-        VAULT_TERRAFORM_SID_USERNAME = "$VAULT_TERRAFORM_SID_USR"
-        VAULT_TERRAFORM_SID_PASSWORD = "$VAULT_TERRAFORM_SID_PSW"
-        VAULT_TERRAFORM_RID = credentials('VAULT_TERRAFORM_RID')
-        VAULT_TERRAFORM_RID_USERNAME = "$VAULT_TERRAFORM_RID_USR"
-        VAULT_TERRAFORM_RID_PASSWORD = "$VAULT_TERRAFORM_RID_PSW"
-        DOCKER_HUB_USERNAME = 'aquaautomationci'
-        DOCKER_HUB_PASSWORD = credentials('aquaautomationciDockerHubToken')
+        AWS_ACCOUNT_ID = "172746256356" // aqua-cloudsecurity-dev
         DEPLOY_REGISTRY = "aquasec.azurecr.io"
     }
     stages {
+        stage('downloads') {
+            steps {
+                script {
+                    sh "curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin"
+                }
+            }
+        }
         stage("Checkout") {
             steps {
                 script {
-                    gitUtils.clone repo: "deployment", branch: "master"
+                    gitUtils.clone repo: "deployment", branch: "master", credentialsId: "bitbucket-read-access"
                     dir("deployments") {
                         checkout scm
                     }
                     log.info "CHANGE_TARGET: ${CHANGE_TARGET}\n CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    utils.dockerlogin username: env.DOCKER_HUB_USERNAME, password: DOCKER_HUB_PASSWORD, registry: ""
+                    withCredentials([usernamePassword(credentialsId: "dockerhub-aquabuildci-creds", passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+                        utils.dockerlogin username: env.USER, password: env.PASSWORD, registry: ""
+                    }
                 }
             }
         }
@@ -87,12 +83,8 @@ pipeline {
 
                             ["${shortName}": {
                                 stage("Trivy scan ${shortName}") {
-                                    docker.withRegistry('https://aquadev.azurecr.io', 'aquadev-push') {
-                                        docker.image("aquadev.azurecr.io/helm-cicd").inside("-u root") {
-                                            log.info "Starting Trivy scan for file: ${filename}"
-                                            sh "trivy config --severity HIGH,CRITICAL --ignorefile .trivyignore --exit-code 1 ${filename}"
-                                        }
-                                    }
+                                    log.info "Starting Trivy scan for file: ${filename}"
+                                    sh "trivy config --severity HIGH,CRITICAL --ignorefile .trivyignore --exit-code 1 ${filename}"
                                 }
                             }]
                         }
@@ -169,7 +161,7 @@ pipeline {
                 }
             }
         }
-        stage("K3S Cluster Install and Prepare") {
+        stage("kind Cluster Install and Prepare") {
             when {
                 allOf {
                     not { expression { return changedManifestsFiles.isEmpty() } }
@@ -178,8 +170,8 @@ pipeline {
             }
             steps {
                 script {
-                    orchestrator.install()
-                    helm.settingKubeConfig()
+                    deployments.installKind()
+                    deployments.createKindCluster clusterName: env.BUILD_NUMBER
                     kubectl.createNamespace create: "yes"
                     kubectl.createDockerRegistrySecret create: "yes", registry: env.DEPLOY_REGISTRY
                 }
@@ -206,34 +198,12 @@ pipeline {
                 }
             }
         }
-        stage("Updating Consul") {
-            when {
-                allOf {
-                    not { expression { return changedManifestsFiles.isEmpty() } }
-                    expression { return runCloudFormation }
-                }
-            }
-            steps {
-                script {
-                    helm.updateConsul("create")
-                    log.info "Updated Consul successfully"
-                }
-            }
-        }
     }
     post {
         always {
             script {
-                try {
-                    helm.updateConsul("delete")
-                    orchestrator.uninstall()
-                    echo "k3s uninstalled"
-                    helm.removeDockerLocalImages()
-                    cleanWs()
-                }
-                catch (err) {
-                    cleanWs()
-                    helm.removeDockerLocalImages()
+                if (!changedManifestsFiles.isEmpty() && runCloudFormation) {
+                    deployments.deleteKindCluster clusterName: env.BUILD_NUMBER
                 }
             }
         }
