@@ -4,7 +4,7 @@ metadata:
   name: aqua-csp-server-config
   namespace: aqua
 data:  
-  # The name of the HTTP header used by the Aqua Server for authentication. Defaults to the standard Authorization header. Can be used when running behind reverse proxies that override this header.
+  # The namez of the HTTP header used by the Aqua Server for authentication. Defaults to the standard Authorization header. Can be used when running behind reverse proxies that override this header.
   #AUTHORIZATION_HEADER: "aqua-auth"
   
   # DNS name or IP address of the host of the Postgres Audit database.
