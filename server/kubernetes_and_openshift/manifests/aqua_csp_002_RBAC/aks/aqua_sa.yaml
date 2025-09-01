@@ -4,7 +4,7 @@ imagePullSecrets:
 kind: ServiceAccount
 metadata:
   annotations:
-    description: Servicez account for pulling Aqua images and for Aqua privileged
+    description: Service account for pulling Aqua images and for Aqua privileged
   labels:
     deployedby: aqua-yaml
   name: aqua-sa
