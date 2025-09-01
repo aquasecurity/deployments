@@ -104,7 +104,9 @@ pipeline {
                     docker.image("${pythonImage}").inside("-u root") {
                         sh "pip install --upgrade -r requirements.txt"
                         sh "pip -q install awscli"
+                        log.debug "1"
                         sh "aws --region ${env.AWS_REGION} codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${env.AWS_ACCOUNT_ID}"
+                        log.debug "2"
                         sh "pip install --no-build-isolation aqua-deployment"
 
                         parallel changedCfFiles.collectEntries { filename ->
