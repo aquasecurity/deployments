@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: 'AWS::LanguageExtensions'
 Description: >-
-  This AWS CloudFormation template installs the Aqua Command Center components
+  This AWSz CloudFormation template installs the Aqua Command Center components
   in ECS EC2.
 Metadata:
   'AWS::CloudFormation::Interface':
