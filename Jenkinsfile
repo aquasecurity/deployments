@@ -38,7 +38,7 @@ pipeline {
         stage("Checkout") {
             steps {
                 script {
-                    gitUtils.clone repo: "deployment", branch: "master", credentialsId: "bitbucket-read-access"
+                    gitUtils.clone repo: "deployment", branch: "lihiz_refactor_prepare", credentialsId: "bitbucket-read-access"
                     dir("deployments") {
                         checkout scm
                     }
@@ -189,6 +189,7 @@ pipeline {
                 script {
 //                     def deploymentImage = docker.build("deployment-k3s-image", "-f Dockerfile-k3s .")
 //                     deploymentImage.inside("-u root --network host") {
+                        log.info "Installing AWS cli"
                         sh "pip install --upgrade -r requirements.txt"
                         sh "pip -q install awscli"
 
