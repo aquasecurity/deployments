@@ -186,15 +186,16 @@ pipeline {
             }
             steps {
                 script {
-                    def deploymentImage = docker.build("deployment-k3s-image", "-f Dockerfile-k3s .")
-                    deploymentImage.inside("-u root --network host") {
-                        log.info "Pulling manifests with Aquactl and modifying other manifests"
-                        sh """
-                        aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${AWS_ACCOUNT_ID}
-                        pip install aqua-deployment
-                        /bin/bash k3s/prepare.sh ${DEPLOY_REGISTRY}
-                        """
-                    }
+                    log.info "Installing AWS cli"
+                    sh "pip install --upgrade -r requirements.txt"
+                    sh "pip -q install awscli"
+
+                    log.info "Pulling manifests with Aquactl and modifying other manifests"
+                    sh """
+                    aws codeartifact login --tool pip --repository deployment --domain aqua-deployment --domain-owner ${AWS_ACCOUNT_ID} --region us-west-2
+                    pip install aqua-deployment
+                    /bin/bash k3s/prepare.sh ${DEPLOY_REGISTRY}
+                    """
                 }
             }
         }
@@ -202,7 +203,8 @@ pipeline {
     post {
         always {
             script {
-                if (!changedManifestsFiles.isEmpty() && runCloudFormation) {
+                def ret = sh script: "kind get clusters | grep ${env.BUILD_NUMBER}", returnStatus: true
+                if (!ret) {
                     deployments.deleteKindCluster clusterName: env.BUILD_NUMBER
                 }
             }
