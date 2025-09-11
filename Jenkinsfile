@@ -207,8 +207,8 @@ pipeline {
     post {
         always {
             script {
-                // Todo: check if kind cluster exists
-                if (!changedManifestsFiles.isEmpty() && runCloudFormation) {
+                def ret = sh script: "kind get clusters | grep ${env.BUILD_NUMBER}", returnStatus: true
+                if (!ret) {
                     deployments.deleteKindCluster clusterName: env.BUILD_NUMBER
                 }
                 input "hi"
