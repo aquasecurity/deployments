@@ -211,7 +211,6 @@ pipeline {
                 if (!ret) {
                     deployments.deleteKindCluster clusterName: env.BUILD_NUMBER
                 }
-                input "hi"
             }
         }
     }
