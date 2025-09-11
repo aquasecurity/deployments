@@ -409,7 +409,7 @@ metadata:
   name: configauditreports.aquasecurity.github.io
   labels:
     app.kubernetes.io/managed-by: starboard
-    app.kubernetes.io/version: "0.15.25"
+    app.kubernetes.io/version: "0.15.27"
 spec:
   group: aquasecurity.github.io
   versions:
@@ -539,7 +539,7 @@ metadata:
   labels:
     app.kubernetes.io/name: starboard-operator
     app.kubernetes.io/instance: starboard-operator
-    app.kubernetes.io/version: "0.15.25"
+    app.kubernetes.io/version: "0.15.27"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
