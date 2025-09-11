@@ -207,6 +207,7 @@ pipeline {
     post {
         always {
             script {
+                // Todo: check if kind cluster exists
                 if (!changedManifestsFiles.isEmpty() && runCloudFormation) {
                     deployments.deleteKindCluster clusterName: env.BUILD_NUMBER
                 }
