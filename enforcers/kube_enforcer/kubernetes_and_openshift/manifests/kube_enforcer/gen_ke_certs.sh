@@ -101,7 +101,7 @@ EOF
 }
 
 # for using custom namespace instead of AQUA NS download the 001_kube_enforcer_config.yaml, make changes to it and keep it in current directory where this script is running
-_prepare_ke() {          
+_prepare_ke() {
     script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
     _rootCA=$(cat rootCA.crt | base64 | tr -d '\n' | tr -d '\r')
     local_config_file="./001_kube_enforcer_config.yaml"             # path of local 001_kube_enforcer_config.yaml file
