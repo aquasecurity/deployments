@@ -78,7 +78,7 @@ spec:
             - name: CLUSTER_NAME
               value: "Default-cluster-name"   # Cluster display name in aqua enterprise.
             - name: AQUA_KB_IMAGE_NAME
-              value: "registry.aquasec.com/kube-bench:v0.11.2"
+              value: "registry.aquasec.com/kube-bench:v0.14.1"
             - name: AQUA_ME_IMAGE_NAME
               value: "registry.aquasec.com/microenforcer:2022.4"
             - name: AQUA_KB_ME_REGISTRY_NAME
