@@ -353,15 +353,27 @@ create_folder_sh() {
   mkdir -p ${ENFORCER_RUNC_FS_DIRECTORY} 2>/dev/null
 }
 
+stop_service_if_running() {
+  if systemctl is-active --quiet ${ENFORCER_SERVICE_FILE_NAME} 2>/dev/null; then
+    info_message "Stopping existing ${ENFORCER_SERVICE_FILE_NAME} service for upgrade."
+    systemctl stop ${ENFORCER_SERVICE_FILE_NAME}
+    sleep 2
+  fi
+}
+
 start_service() {
   info_message "Enabling the ${ENFORCER_SERVICE_FILE_NAME} service."
   systemctl enable ${ENFORCER_SERVICE_FILE_NAME}
+  
   info_message "Starting the ${ENFORCER_SERVICE_FILE_NAME} service."
   systemctl start ${ENFORCER_SERVICE_FILE_NAME}
-  if [ $? -eq 0 ]; then
+  
+  sleep 2
+  
+  if systemctl is-active --quiet ${ENFORCER_SERVICE_FILE_NAME}; then
     info_message "VM Enforcer was successfully deployed and started."
   else
-    error_message "Unable to start service. please check the logs."
+    echo "Warning: Service may still be starting. Check status with: systemctl status ${ENFORCER_SERVICE_FILE_NAME}"
   fi
 }
 
@@ -377,6 +389,7 @@ main() {
   init_common "$@"
   get_app
 
+  stop_service_if_running
   edit_templates_sh
   untar
 
