@@ -1,13 +1,25 @@
 [Unit]
 Description=Aqua Security Enforcer RunC
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=forking
+ExecStartPre=/bin/sh -c '{{ .Values.RuncPath }} delete -f enforcer 2>/dev/null || true'
 ExecStart={{ .Values.WorkingDirectory }}/run.sh
-ExecStopPost={{ .Values.RuncPath }} delete enforcer
+ExecStopPost=/bin/sh -c '{{ .Values.RuncPath }} delete -f enforcer 2>/dev/null || true'
 WorkingDirectory={{ .Values.WorkingDirectory }}
 PIDFile=/run/aqua-enforcer.pid
-Restart=always
+Restart=on-failure
+RestartSec=10s
+StartLimitBurst=5
+StartLimitIntervalSec=300
+TimeoutStartSec=60s
+TimeoutStopSec=30s
+KillMode=mixed
+KillSignal=SIGTERM
+StandardOutput=append:/opt/aquasec/tmp/aquasec.log
+StandardError=append:/opt/aquasec/tmp/aquasec.log
 
 [Install]
 WantedBy=multi-user.target

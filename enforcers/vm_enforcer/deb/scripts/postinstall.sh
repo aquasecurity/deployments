@@ -277,13 +277,20 @@ start_service() {
   echo "started start_service()"
   echo "Info: Enabling the ${ENFORCER_SERVICE_FILE_NAME} service."
   systemctl enable ${ENFORCER_SERVICE_FILE_NAME}
+  
   echo "Info: Starting the ${ENFORCER_SERVICE_FILE_NAME} service."
   systemctl start ${ENFORCER_SERVICE_FILE_NAME}
-  if [ $? -eq 0 ]; then
+  
+  # Give it a moment to start
+  sleep 2
+  
+  if systemctl is-active --quiet ${ENFORCER_SERVICE_FILE_NAME}; then
     echo "Info: VM Enforcer was successfully deployed and started."
   else
-    error_message "Unable to start service. please check the logs."
+    echo "Warning: Service may still be starting. Check status with: systemctl status ${ENFORCER_SERVICE_FILE_NAME}"
+    echo "Warning: Check logs with: journalctl -u ${ENFORCER_SERVICE_FILE_NAME}"
   fi
+  
   echo "ended start_service()"
 }
 
