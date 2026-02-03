@@ -114,7 +114,7 @@ spec:
       securityContext: {}
       containers:
         - name: operator
-          image: docker.io/aquasec/starboard-operator:0.15.29
+          image: docker.io/aquasec/starboard-operator:0.15.32
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
