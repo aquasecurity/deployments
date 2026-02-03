@@ -1357,11 +1357,11 @@ metadata:
   labels:
     app.kubernetes.io/name: trivy-operator
     app.kubernetes.io/instance: trivy-operator
-    app.kubernetes.io/version: "0.28.0"
+    app.kubernetes.io/version: "0.29.0"
     app.kubernetes.io/managed-by: kubectl
 data:
   trivy.repository: "ghcr.io/aquasecurity/trivy"
-  trivy.tag: "0.64.1"
+  trivy.tag: "0.68.2"
   trivy.additionalVulnerabilityReportFields: ""
   trivy.severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
   trivy.slow: "true"
@@ -1385,7 +1385,7 @@ metadata:
   labels:
     app.kubernetes.io/name: trivy-operator
     app.kubernetes.io/instance: trivy-operator
-    app.kubernetes.io/version: "0.28.0"
+    app.kubernetes.io/version: "0.29.0"
     app.kubernetes.io/managed-by: kubectl
 ---
 apiVersion: v1
@@ -1396,7 +1396,7 @@ metadata:
   labels:
     app.kubernetes.io/name: trivy-operator
     app.kubernetes.io/instance: trivy-operator
-    app.kubernetes.io/version: "0.28.0"
+    app.kubernetes.io/version: "0.29.0"
     app.kubernetes.io/managed-by: kubectl
 ---
 apiVersion: v1
@@ -1415,7 +1415,7 @@ metadata:
   labels:
     app.kubernetes.io/name: trivy-operator
     app.kubernetes.io/instance: trivy-operator
-    app.kubernetes.io/version: "0.28.0"
+    app.kubernetes.io/version: "0.29.0"
     app.kubernetes.io/managed-by: kubectl
 ---
 apiVersion: v1
@@ -1665,7 +1665,7 @@ metadata:
   labels:
     app.kubernetes.io/name: trivy-operator
     app.kubernetes.io/instance: trivy-operator
-    app.kubernetes.io/version: "0.28.0"
+    app.kubernetes.io/version: "0.29.0"
     app.kubernetes.io/managed-by: kubectl
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -1684,7 +1684,7 @@ metadata:
   labels:
     app.kubernetes.io/name: trivy-operator
     app.kubernetes.io/instance: trivy-operator
-    app.kubernetes.io/version: "0.28.0"
+    app.kubernetes.io/version: "0.29.0"
     app.kubernetes.io/managed-by: kubectl
 spec:
   replicas: 1
@@ -1704,7 +1704,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: "trivy-operator"
-          image: "docker.io/aquasec/trivy-operator:0.28.0"
+          image: "docker.io/aquasec/trivy-operator:0.29.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: OPERATOR_NAMESPACE
