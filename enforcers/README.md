@@ -1,22 +1,26 @@
 <img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" height="100" width="100" />
 
-# Aqua Enforcers
+# Enforcers
 
 ### Overview
 
-Aqua Enforcers secure your workloads and infrastructure during runtime.
+Enforcers are the Aqua components that provide enforcement (securing your workloads and infrastructure during runtime) and other related functionality.
 
-### Enforcers Types
-Following are the enforcers that can be deployed in Aqua:
-* [Aqua Enforcer](./aqua_enforcer): full runtime protection for containers, as well as selected host-related functionality.
-* [Kube Enforcer](./kube_enforcer): runtime security for your Kubernetes workloads and infrastructure. It can be deployed with advanced configuration and/or co-requisite Trivy-operator.
+### Enforcer Types
+These types of Enforcers can be deployed in Aqua:
+* [Aqua Enforcer](./aqua_enforcer): full runtime protection and other functionality for containers, as well as selected host-related functionality
+* [MicroEnforcer](./microenforcer): runtime security for containers running in Containers-as-a-Service (CaaS) environments, such as AWS Fargate and Microsoft Azure Container Instances (ACI)
+* [KubeEnforcer](./kubeenforcer): runtime security and other support for your Kubernetes workloads and infrastructure. It can be deployed with advanced configuration and/or co-requisite Trivy-operator.
 * [VM Enforcer](./vm_enforcer): enforcement and assurance functionality for hosts (VMs) and Kubernetes nodes.
 * [Windows Enforcer](./windows_enforcer): full runtime protection for containers, as well as selected host-related functionality for Windows platforms.
 
 ### Suited for
-* Aqua SaaS edition
-* Aqua Self-Hosted Enterprise edition
+* Aqua Platform SaaS Edition
+* Aqua Platform Self-Hosted Edition
 
 ### References
-For more information on the Aqua enforcers, refer the product documentation, [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview) and [Assurance and Enforcement Overview](https://docs.aquasec.com/docs/assurance-and-enforcement-overview).
-
+For more information, see the product documentation:
+* [Assurance and Enforcement](https://docs.aquasec.com/v2022.4/platform/overview-and-concepts/assurance-and-enforcement/)
+* [Introduction to Enforcers](https://docs.aquasec.com/v2022.4/platform/runtime-protection/enforcers/enforcers-introduction/)
+* [Types of Enforcers](https://docs.aquasec.com/v2022.4/platform/runtime-protection/enforcers/enforcers-types/)
+* [Deployments Overview](https://docs.aquasec.com/v2022.4/platform/deployments/deployments-overview/)
