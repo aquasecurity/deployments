@@ -1,6 +1,6 @@
 <img src="https://avatars3.githubusercontent.com/u/12783832?s=200&v=4" height="100" width="100" />
 
-# Aqua KubeEnforcer
+# KubeEnforcer
 
 ## Overview
 
@@ -17,16 +17,18 @@ A single KubeEnforcer can be deployed on each Kubernetes cluster and uses native
 * [Operator](./kubernetes_and_openshift/operator)
 
 ## Supported platforms
-* Kubernetes and Openshift
+* Kubernetes and Red Hat OpenShift
 
 KubeEnforcers are supported on Linux platforms (with exception of VMware Tanzu TKGI).
 
 ## Suited for
-* Aqua Enterprise SaaS
-* Aqua Enterprise Self-Hosted
+* Aqua Platform SaaS Edition
+* Aqua Platform Self-Hosted Edition
 
 ## References
 
-Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends you to refer the following product documentation:
-* [Deploy Kube Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers).
-* [Enforcers Overview](https://docs.aquasec.com/docs/enforcers-overview#section-kube-enforcers).
+Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends that you read the following product documentation:
+* [Introduction to Enforcers](https://docs.aquasec.com/v2022.4/platform/runtime-protection/enforcers/enforcers-introduction/)
+* [Types of Enforcers](https://docs.aquasec.com/v2022.4/platform/runtime-protection/enforcers/enforcers-types/)
+* [Deployments Overview](https://docs.aquasec.com/v2022.4/platform/deployments/deployments-overview/)
+* [Deploy KubeEnforcer: Overview](https://docs.aquasec.com/v2022.4/platform/deployments/deploy-enforcers/deploy-kubeenforcer-in-classic-mode/deploy-kubeenforcer-overview/)
