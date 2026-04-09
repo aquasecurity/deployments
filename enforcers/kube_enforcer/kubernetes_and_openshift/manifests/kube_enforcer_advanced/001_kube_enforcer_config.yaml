@@ -213,6 +213,7 @@ webhooks:
           - persistentvolumeclaims
           - ingresses
           - networkpolicies
+          - globalnetworkpolicies
     clientConfig:
       # Please follow instruction in document to generate new CA cert
       caBundle:
@@ -279,7 +280,7 @@ metadata:
   name: aqua-kube-enforcer
 rules:
   - apiGroups: ["*"]
-    resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services", "persistentvolumes", "persistentvolumeclaims", "ingresses", "networkpolicies", "customresourcedefinitions" ]
+    resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services", "persistentvolumes", "persistentvolumeclaims", "ingresses", "networkpolicies", "customresourcedefinitions", "globalnetworkpolicies"]
     verbs: ["get", "list", "watch"]
   - apiGroups: [ "" ]
     resources: [ "serviceaccounts"]
@@ -304,6 +305,9 @@ rules:
   - apiGroups: [ "networking.k8s.io" ]
     resources: [ "ingresses", "networkpolicies" ]
     verbs: [ "get", "list", "watch" ]
+  - apiGroups: ["crd.projectcalico.org"]
+    resources: ["globalnetworkpolicies"]
+    verbs: ["get", "list", "watch"]
   - apiGroups:
       - "*"
     resources:
@@ -1373,6 +1377,14 @@ rules:
       - networking.k8s.io
     resources:
       - networkpolicies
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - crd.projectcalico.org
+    resources:
+      - globalnetworkpolicies
     verbs:
       - get
       - list
