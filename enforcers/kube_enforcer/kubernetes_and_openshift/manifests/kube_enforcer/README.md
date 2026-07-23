@@ -111,6 +111,28 @@ You can skip any step in this section, if you have already performed.
   kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
 ```
 
+## NetworkPolicy (optional)
+
+Requires a CNI that enforces networking.k8s.io/v1 NetworkPolicy (e.g. Calico). Note that each CNI implements NetworkPolicies slightly differently and may require slightly different set of rules. Verify that the policy is working.
+
+**Warning — Do not apply `005_kube_enforcer_networkpolicy.yaml` without editing it first.** The example `10.x` CIDR values are placeholders only. Applying unchanged can break admission webhooks or health probes.
+
+This policy applies to kube-enforcer only (`app: aqua-kube-enforcer`). The trivy-operator deployment in this manifest is not covered; add a separate policy if you need to restrict it.
+
+To restrict kube-enforcer connectivity to its operational needs, edit `005_kube_enforcer_networkpolicy.yaml` and replace the example CIDR values (node/control-plane, pod subnet, service subnet). Two Kubernetes API egress rules are included: service-CIDR on port 443 (for CNIs that enforce policy before DNAT) and control-plane IP on port 6443 (required for Calico and most CNIs that enforce after DNAT). Replace both with your cluster values.
+
+**Warning — Ingress CIDRs on managed clouds:** On EKS, GKE, and AKS, API servers often do not source admission webhook traffic from node, pod, or service CIDRs. The example ingress rules may be insufficient; admission can break until ingress sources are validated for your environment.
+
+On-prem gateway egress to `aqua-gateway:8443` and Kubernetes API egress (service-CIDR:443 and control-plane:6443) are enabled by default (gateway matches `AQUA_GATEWAY_SECURE_ADDRESS` in `001_kube_enforcer_config.yaml`). For on-prem only, you may delete the `0.0.0.0/0:443` egress rule once gateway and API server paths are confirmed. For SaaS or external HTTPS, keep `0.0.0.0/0:443` or replace it with scoped CIDRs for your gateway endpoints.
+
+Apply the policy:
+
+```shell
+kubectl apply -f 005_kube_enforcer_networkpolicy.yaml
+```
+
+Verify the deployment: confirm the pod is `Ready` (`kubectl -n aqua get pods -l app=aqua-kube-enforcer`), check logs for successful gateway registration (`kubectl -n aqua logs deploy/aqua-kube-enforcer -c kube-enforcer --tail=30`), and create a test workload to ensure admission webhooks still respond.
+
 ### Deploy the KubeEnforcer Config manually
 
 Step 1. Download the manifest yaml file, *001_kube_enforcer_config.yaml*.

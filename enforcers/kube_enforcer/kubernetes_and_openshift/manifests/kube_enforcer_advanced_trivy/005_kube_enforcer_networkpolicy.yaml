@@ -1,0 +1,79 @@
+# Combined NetworkPolicy for kube-enforcer (advanced / Envoy deployment).
+# Requires a CNI that enforces networking.k8s.io/v1 NetworkPolicy (e.g. Calico).
+# Replace example CIDR values below with your cluster settings before applying.
+#
+# Discovery commands:
+#   kubectl get configmap kubeadm-config -n kube-system -o yaml
+#   kubectl get nodes -l node-role.kubernetes.io/control-plane -o wide
+#   kubectl get svc kubernetes -n default -o jsonpath='{.spec.clusterIP}{"\n"}'
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kube-enforcer
+  namespace: aqua
+spec:
+  podSelector:
+    matchLabels:
+      app: aqua-kube-enforcer
+  policyTypes: [Ingress, Egress]
+  # WARNING: Ingress CIDRs may be insufficient on managed clouds (EKS/GKE/AKS).
+  # API servers often do not source admission webhook traffic from node/pod/service CIDRs.
+  # Admission can break until ingress sources are validated for your environment.
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 10.0.0.0/16          # REPLACE: node or control-plane CIDR
+        - ipBlock:
+            cidr: 10.244.0.0/16        # REPLACE: pod CIDR
+        - ipBlock:
+            cidr: 10.96.0.0/12         # REPLACE: service CIDR
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: TCP
+          port: 8443
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Kubernetes API (kubernetes.default.svc:443). Replace with your service CIDR.
+    # Only effective on CNIs that enforce egress policy before kube-proxy DNAT.
+    - to:
+        - ipBlock:
+            cidr: 10.96.0.0/12         # REPLACE: service CIDR
+      ports:
+        - protocol: TCP
+          port: 443
+    # Required on CNIs (e.g. Calico) that enforce policy after DNAT (dest becomes node IP:6443).
+    - to:
+        - ipBlock:
+            cidr: 10.0.0.5/32          # REPLACE: control-plane node IP or CIDR
+      ports:
+        - protocol: TCP
+          port: 6443
+    # On-prem: matches default AQUA_GATEWAY_SECURE_ADDRESS (aqua-gateway.aqua:8443)
+    - to:
+        - podSelector:
+            matchLabels:
+              app: aqua-gateway
+      ports:
+        - protocol: TCP
+          port: 8443
+    # On-prem only: delete the 0.0.0.0/0:443 rule below once gateway (8443) and API server egress are confirmed.
+    # SaaS: keep 0.0.0.0/0:443, or replace with scoped CIDRs for your gateway endpoints.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
