@@ -118,7 +118,7 @@ _prepare_ke() {
         fi
     else                                # for deploying kube enforcer in default namespace, i.e., AQUA.
         printf "\nInfo: Local config file not found, attempting to download from GitHub\n"
-        githubBranch="2022.4"
+        githubBranch="main"
         if curl https://raw.githubusercontent.com/aquasecurity/deployments/$githubBranch/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/001_kube_enforcer_config.yaml -o "$local_config_file"; then
             # Add CA bundle to the downloaded KubeEnforcer config file
             _addCABundle=$(sed -i'.original' "s/caBundle.*/caBundle\:\ $_rootCA/g" "$local_config_file")
