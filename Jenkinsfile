@@ -43,7 +43,7 @@ pipeline {
                         checkout scm
                     }
                     log.info "CHANGE_TARGET: ${CHANGE_TARGET}\n CHANGE_BRANCH: ${CHANGE_BRANCH}"
-                    withCredentials([usernamePassword(credentialsId: "dockerhub-aquabuildci-creds", passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+                    withCredentials([usernamePassword(credentialsId: "dockerhub-authenticated-public-read", passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
                         utils.dockerlogin username: env.USER, password: env.PASSWORD, registry: ""
                     }
                 }
