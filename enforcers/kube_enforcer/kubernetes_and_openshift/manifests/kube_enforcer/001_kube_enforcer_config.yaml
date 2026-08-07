@@ -55,6 +55,8 @@ webhooks:
           - pods
           - deployments
           - deployments/scale
+          - rollouts
+          - rollouts/scale
           - deploymentconfigs
           - replicasets
           - replicasets/scale
@@ -143,7 +145,7 @@ metadata:
   name: aqua-kube-enforcer
 rules:
   - apiGroups: ["*"]
-    resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services", "persistentvolumes", "persistentvolumeclaims", "ingresses", "networkpolicies", "customresourcedefinitions","globalnetworkpolicies"]
+    resources: ["pods", "nodes", "namespaces", "deployments", "rollouts", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services", "persistentvolumes", "persistentvolumeclaims", "ingresses", "networkpolicies", "customresourcedefinitions","globalnetworkpolicies"]
     verbs: ["get", "list", "watch"]
   - apiGroups: [ "" ]
     resources: [ "serviceaccounts"]
@@ -167,6 +169,9 @@ rules:
     verbs: [ "get", "list", "watch" ]
   - apiGroups: [ "crd.projectcalico.org" ]
     resources: [ "globalnetworkpolicies" ]
+    verbs: [ "get", "list", "watch" ]
+  - apiGroups: [ "argoproj.io" ]
+    resources: [ "rollouts" ]
     verbs: [ "get", "list", "watch" ]
 #### Please uncomment the below block if your platform is Openshift
 #  - apiGroups: ["*"]
@@ -1135,6 +1140,14 @@ rules:
       - apps
     resources:
       - deployments
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - rollouts
     verbs:
       - get
       - list
