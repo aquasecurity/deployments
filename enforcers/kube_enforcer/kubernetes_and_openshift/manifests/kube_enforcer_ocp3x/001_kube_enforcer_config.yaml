@@ -76,6 +76,14 @@ webhooks:
           - ingresses
           - networkpolicies
           - globalnetworkpolicies
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups:
+          - argoproj.io
+        apiVersions:
+          - v1alpha1
+        resources:
+          - rollouts
+          - rollouts/scale
     clientConfig:
       # Please follow instruction in document to generate new CA cert
       caBundle:
@@ -158,6 +166,9 @@ rules:
     verbs: [ "get", "list", "watch" ]
   - apiGroups: [ "crd.projectcalico.org" ]
     resources: [ "globalnetworkpolicies" ]
+    verbs: [ "get", "list", "watch" ]
+  - apiGroups: [ "argoproj.io" ]
+    resources: [ "rollouts" ]
     verbs: [ "get", "list", "watch" ]
   - apiGroups:
       - "*"
