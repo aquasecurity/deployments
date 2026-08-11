@@ -52,6 +52,11 @@ You can skip any step in this section, if you have already performed.
    ```
    Note: (Optional) Instead of Aqua Namespace, You can also use your custom Namespace to deploy KubeEnforcer.
 
+***Note: For KubeEnforcer deployment in Talos environments***
+* Create the aqua namespace with PSA so that kube-bench can run successfully.
+  ```shell
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer_advanced_trivy/005_kube_enforcer_ns.yaml
+  ```
 
 **Step 2. Create a docker-registry secret (if not already done).**
    ```shell

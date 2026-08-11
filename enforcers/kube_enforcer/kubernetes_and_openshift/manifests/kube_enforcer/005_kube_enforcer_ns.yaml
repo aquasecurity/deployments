@@ -1,0 +1,13 @@
+# Kube-bench
+# Pod Security Admission (PSA) is set to "privileged" so that
+# privileged workloads (which KB requires for mounts and host access)
+# are allowed without being blocked, audited, or warned.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aqua
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged
+  
