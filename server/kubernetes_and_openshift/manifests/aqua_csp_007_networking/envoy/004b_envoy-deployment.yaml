@@ -1,0 +1,76 @@
+# Envoy Deployment — Gateway API mode
+# Use this file (004b) when deploying with Kubernetes Gateway API.
+#
+# Differences from 004_envoy-deployment.yaml:
+#   - No bundled LoadBalancer Service (external access is via the Gateway API
+#     managed proxy, not a dedicated LB on the Envoy pod)
+#   - TLS secret (envoy-ssl) mounted at /etc/ssl/envoy (required for TLS termination)
+#   - Volume mount name aligned with configmap name (envoy-conf)
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy
+  namespace: aqua
+  labels:
+    aqua.component: envoy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: envoy
+  template:
+    metadata:
+      labels:
+        aqua.component: envoy
+        app: envoy
+    spec:
+      serviceAccount: aqua-sa
+      containers:
+      - name: envoy
+        image: registry.aquasec.com/envoy:2022.4
+        env:
+        - name: ENVOY_UID
+          value: "0"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: https
+          containerPort: 8443
+        volumeMounts:
+        - name: envoy-conf
+          mountPath: /etc/envoy
+        - name: envoy-ssl
+          mountPath: /etc/ssl/envoy
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /healthz
+            httpHeaders:
+            - name: x-envoy-livenessprobe
+              value: healthz
+            port: 8443
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        livenessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /healthz
+            httpHeaders:
+            - name: x-envoy-livenessprobe
+              value: healthz
+            port: 8443
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      volumes:
+      - name: envoy-conf
+        configMap:
+          name: envoy-conf
+      - name: envoy-ssl
+        secret:
+          secretName: envoy-ssl
+      imagePullSecrets:
+      - name: aqua-registry
