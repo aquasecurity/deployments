@@ -60,7 +60,7 @@ webhooks:
           - replicationcontrollers
           - replicationcontrollers/scale
           - statefulsets
-          - statefulsets/scales
+          - statefulsets/scale
           - daemonsets
           - jobs
           - cronjobs

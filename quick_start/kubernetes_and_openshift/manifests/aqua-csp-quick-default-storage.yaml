@@ -629,6 +629,7 @@ webhooks:
           - pods
           - deployments
           - deployments/scale
+          - deploymentconfigs
           - replicasets
           - replicasets/scale
           - replicationcontrollers
@@ -645,13 +646,18 @@ webhooks:
           - clusterroles
           - clusterrolebindings
           - customresourcedefinitions
+          - persistentvolumes
+          - persistentvolumeclaims
+          - ingresses
+          - networkpolicies
+          - globalnetworkpolicies
     clientConfig:
       # Please follow instruction in document to generate new CA cert
       caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZEekNDQXZlZ0F3SUJBZ0lVR0RVUjhyVVdZUUdRU2R6QUtOVVluRmUvRTNrd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0Z6RVZNQk1HQTFVRUF3d01ZV1J0YVhOemFXOXVYMk5oTUI0WERUSXlNVEF5TlRFek1qQTBNVm9YRFRJMQpNRGd4TkRFek1qQTBNVm93RnpFVk1CTUdBMVVFQXd3TVlXUnRhWE56YVc5dVgyTmhNSUlDSWpBTkJna3Foa2lHCjl3MEJBUUVGQUFPQ0FnOEFNSUlDQ2dLQ0FnRUEwbnV4a3dGRG5vLy9ZakVBa2RyR213N1F1aHFMaGhXMnRDZVcKOEpGT2w2R3Y5TXlxSVoza01sWkxwMGhVYWJEejJSd0U0MXJ1ZHhNaDNENFQzelBuUTh6RGNBaDJzRnZINjhGZwpmT1hINzZxcUkzalVnTlpqVXQrTG1pcmpEMm53VHhIVG1SSE1YY3QxbzBBUHBxTWN0WDZWN1dVS0lxT1VuWGFFCkMwOVBrd1l0S3BrTTlwSkw5YW55aHYwMkhCc2JIaVRoZ05NbVRiM0R2WWQyTGR0WitOVDJBTnF1Rmk5UkN2aTcKUHBVUFZOVURVZDM0ZXZ2K25Pb3M2N1VLWWVYNmdhV1VvNXcyWENMOWhSMmQzNHVPcTAxTXIvVFdKMzRJemI2awpkaVU2a0lqZWd4bVE4UTR3VnhOaC8vR296eHpoWUt2YTcyZE15MWRBdVQrS3VWd3JHYmwwMlhabXJuL2hQKzkvCnovWTJvNUpOKzJHUzlWdEMyWitKeGNRWStnK0dhQ0tHcUZhSVh6ek4zUmV5QUcyZCtxc2FTRUJQRG92dlBhZnQKVDY0WU5ZeFZxUHRWN3Z5TFNFYlhBaXlmTVYxRml1My9zdjNRRU1YM1ovcllPQ1pRVzdmbUlIZktwUFNTc1JVWApOZ3JUYkZTdGJrSSt2ZU92a3J2OXZIVFJXbGJlSFIwSEUyL1pmYlIrQWRvOXJXcmFqaGpKN1RBU1d4cmlNVXZZCmM5WHEyNzJuQzB0UzN6RWs5NWt0YjdJNGVia2lablRHTlZkb1ZVWVUzWUIwSGFoQTlTTVQvUDRQbWd1cUFBTCsKdlV2bW5OT0hDY0IwTDdBTmx1eWIxM1hiUnBUSVptY2lsbUZPWWY1MGF2bmw2c0x4M3VHWlQ3aFJkY2JQMG4zTgpVMUE2aTlzQ0F3RUFBYU5UTUZFd0hRWURWUjBPQkJZRUZDRWFMNUY3cnZzNnRyaDNqejQ4SHczbzEzRm1NQjhHCkExVWRJd1FZTUJhQUZDRWFMNUY3cnZzNnRyaDNqejQ4SHczbzEzRm1NQThHQTFVZEV3RUIvd1FGTUFNQkFmOHcKRFFZSktvWklodmNOQVFFTEJRQURnZ0lCQUczNzhDdW4xSHUyaHhmVklDMEN2Z1FibHp3bVFuN2syU2VCbDMvdgpOQ1Y2MUN6WjVCWEd5Yzh2SWt1emdhNGdOUG4zYS9QdU5hRGYyYVV4REU3bEJDMEhOYkxPYzNBaFRmQlNaeTlDCllGcnFYK25BL282N3J5YytQd0FMR09RQlRuVjdidEF6dFdjQmZNZjFFa2VnektlRHNVc0w0aE1HTHF4d0s2bXMKdzhXS1JNT0J5eUJlTW5EK3UzNUVocjUrQTV5bURBa0drcm9oQVN0dXVJMkx3Y3FvR1JuUXpQWXB5Ty9mRitYOApFMWVjOWxTRSs4YnQ0VnhTbThBY2V0aWFzSXB2bUtmZFIrcC9LMmVZZTNrV09HRHJvY1AzOHhucFlIc2tCZmV3Clk2SlhYVlc0aXhSTDRuSlJYTmtWSjYxOFVYb2RuRFFFYzc4SFY5S2NIdHpnQ08rYjQwaG1URE5RM3FRUi8yTXAKbEsvdktXMTFBTGRqVGJmSUtIckRuU1R2N3BZeG83Z2F3ekE2em9kVXI0aG1CSjFVSWYzT0tqWDNidzQwWDM1bwpYWThPcXRiVEVFZU1qdldvM3FZaXAzeG5tMEtJSDBpRGpxZW1BWEM2WmJOMHUxNU5SbGpOLzVNNVBNYXNGU3ZNCkVpaDU4MlNBNWpBU3grd1ltcXFsS2VEY01rM0t0SmxXaWV5cDVNS3lJYjh3NGJnMUh4dHdqMStTOVQ0SmVlamUKS05vbWttS0RtM2RBMmpNVktmNEZWc25oMUlnWWRQZTAxMldEQTFRL3hmUkx4VEhRc0V0ZVF0VXBGN3Zjc1g0aQpZOHJTN1F6RXdzUFBaNFJxOVAxRFpaVVBsTnp6RUtSSk9yUVdQTUhuU2xReGU4U1U5QmRMbjdwQzU1SklUbkpBCnp6bGsKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
       service:
         namespace: aqua
         name: aqua-kube-enforcer
-    timeoutSeconds: 5
+    timeoutSeconds: 2
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
@@ -675,7 +681,7 @@ webhooks:
         apiGroups: ["*"]
         apiVersions: ["v1"]
         resources: ["pods"]
-    timeoutSeconds: 5
+    timeoutSeconds: 2
     failurePolicy: Ignore
     admissionReviewVersions: ["v1beta1"]
     sideEffects: "None"
@@ -693,8 +699,11 @@ metadata:
   name: aqua-kube-enforcer
 rules:
   - apiGroups: ["*"]
-    resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services" ]
+    resources: ["pods", "nodes", "namespaces", "deployments", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers", "statefulsets", "clusterroles", "clusterrolebindings", "componentstatuses", "services", "persistentvolumes", "persistentvolumeclaims", "ingresses", "networkpolicies", "customresourcedefinitions","globalnetworkpolicies"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: [ "" ]
+    resources: [ "serviceaccounts"]
+    verbs: ["get","list","watch" ]
   - apiGroups:
       - apps.openshift.io
     resources:
@@ -709,6 +718,15 @@ rules:
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["configauditreports", "clusterconfigauditreports"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: [ "" ]
+    resources: [ "persistentvolumes", "persistentvolumeclaims" ]
+    verbs: [ "get", "list", "watch" ]
+  - apiGroups: [ "networking.k8s.io" ]
+    resources: [ "ingresses", "networkpolicies" ]
+    verbs: [ "get", "list", "watch" ]
+  - apiGroups: [ "crd.projectcalico.org" ]
+    resources: [ "globalnetworkpolicies" ]
+    verbs: [ "get", "list", "watch" ]
   - apiGroups: ["*"]
     resources: ["configmaps"]
     verbs: ["get", "list", "watch", "update", "create"]
@@ -1615,9 +1633,33 @@ rules:
       - list
       - watch
   - apiGroups:
+      - crd.projectcalico.org
+    resources:
+      - globalnetworkpolicies
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - rbac.authorization.k8s.io
     resources:
       - clusterrolebindings
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - persistentvolumes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - persistentvolumeclaims
     verbs:
       - get
       - list
