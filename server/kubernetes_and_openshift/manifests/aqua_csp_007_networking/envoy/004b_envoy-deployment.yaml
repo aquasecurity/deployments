@@ -7,6 +7,9 @@
 #   - TLS secret (envoy-ssl) mounted at /etc/ssl/envoy (required for TLS termination)
 #   - Volume mount name aligned with configmap name (envoy-conf)
 #
+# NOTE: Do not apply together with 004_envoy-deployment.yaml — both define a
+#       Deployment named "envoy" and one will overwrite the other.
+#
 apiVersion: apps/v1
 kind: Deployment
 metadata:

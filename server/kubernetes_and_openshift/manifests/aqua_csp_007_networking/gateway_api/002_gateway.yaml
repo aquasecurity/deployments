@@ -1,17 +1,4 @@
 apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: <GATEWAY_CLASS_NAME>
-spec:
-  # Controller name must match the installed Gateway API implementation.
-  # Common values:
-  #   - "gateway.envoyproxy.io/gatewayclass-controller"  (Envoy Gateway)
-  #   - "istio.io/gateway-controller"                    (Istio)
-  #   - "projectcontour.io/gateway-controller"           (Contour)
-  #   - "gateway.nginx.org/nginx-gateway-controller"     (NGINX Gateway Fabric)
-  controllerName: gateway.envoyproxy.io/gatewayclass-controller
----
-apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: aqua-gateway-proxy
@@ -22,7 +9,7 @@ spec:
   gatewayClassName: "<GATEWAY_CLASS_NAME>"
   listeners:
     - name: aqua-tls-passthrough
-      port: "<PORT>"
+      port: <PORT>
       protocol: TLS
       tls:
         mode: Passthrough
