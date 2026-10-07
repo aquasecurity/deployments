@@ -1,12 +1,10 @@
+# OPTIONAL — apply only if your Gateway API implementation has not already
+# created a suitable GatewayClass (check with: kubectl get gatewayclass).
+# See "Configuration" in README.md for the placeholder values.
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
   name: <GATEWAY_CLASS_NAME>
 spec:
-  # Controller name must match the installed Gateway API implementation.
-  # Common values:
-  #   - "gateway.envoyproxy.io/gatewayclass-controller"  (Envoy Gateway)
-  #   - "istio.io/gateway-controller"                    (Istio)
-  #   - "projectcontour.io/gateway-controller"           (Contour)
-  #   - "gateway.nginx.org/nginx-gateway-controller"     (NGINX Gateway Fabric)
   controllerName: <GATEWAY_CONTROLLER_NAME>
+

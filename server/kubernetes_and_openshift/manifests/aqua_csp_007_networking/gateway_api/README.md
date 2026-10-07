@@ -29,26 +29,15 @@ Refer to the [Gateway API installation guide](https://gateway-api.sigs.k8s.io/gu
 ### 2. A Gateway API Implementation with TLS Passthrough Support
 
 This solution requires a Gateway API implementation that supports `TLSRoute` with
-`Passthrough` mode. Supported implementations include:
+`Passthrough` mode. `TLSRoute` support varies by implementation and version, and
+some implementations require it to be explicitly enabled — confirm this in your
+vendor's documentation before deploying.
 
-| Implementation | GatewayClass Name | Notes |
-|---|---|---|
-| [Envoy Gateway](https://gateway.envoyproxy.io/) | `eg` | Open source, CNCF project |
-| [Istio](https://istio.io/) | `istio` | Service mesh with Gateway API support |
-| [Contour](https://projectcontour.io/) | `contour` | CNCF project |
-| [NGINX Gateway Fabric](https://github.com/nginxinc/nginx-gateway-fabric) | `nginx` | NGINX implementation |
-
-**Note:** Check whether a GatewayClass already exists with `kubectl get gatewayclass`. 
-If one exists for your implementation, reuse its name in `002_gateway.yaml` and **skip** applying `000_gatewayclass.yaml`.
-
-**Note:** `TLSRoute` support and enablement vary by implementation and version — some require experimental features to be enabled. 
-Confirm your implementation supports `TLSRoute` with `Passthrough` before deploying.
-
-Enterprise and commercial Gateway implementations that support the Kubernetes
-Gateway API spec with TLS Passthrough are also compatible. Refer to your vendor's
-documentation for installation and the GatewayClass name to use.
-
-For a full list of implementations, see the
+Examples include [Envoy Gateway](https://gateway.envoyproxy.io/),
+[Istio](https://istio.io/), [Contour](https://projectcontour.io/) and
+[NGINX Gateway Fabric](https://github.com/nginxinc/nginx-gateway-fabric).
+Enterprise and commercial implementations that support the Gateway API spec with
+TLS Passthrough are also compatible. For a full list, see the
 [Gateway API implementations page](https://gateway-api.sigs.k8s.io/implementations/).
 
 ### 3. TLS Secrets
@@ -57,12 +46,13 @@ Three TLS secrets are required in the `aqua` namespace before deploying:
 
 | Secret Name | Type | Used By |
 |---|---|---|
-| `envoy-ssl` | `kubernetes.io/tls` | Envoy — downstream TLS with Enforcers. The envoy-ssl SANs must include the Gateway's external DNS name or IP. |
+| `envoy-ssl` | `kubernetes.io/tls` | Envoy — downstream TLS with Enforcers |
 | `aqua-grpc-web` | `Opaque` | aqua-web — gRPC TLS with Gateway pods |
 | `aqua-grpc-gateway` | `Opaque` | aqua-gateway — TLS with Envoy upstream |
 
-Note: With TLS Passthrough, Enforcers receive Envoy's certificate (envoy-ssl) directly. Its Subject Alternative Names (SANs) must 
-include the external DNS name and/or IP address of the Gateway.
+> **Important:** With TLS Passthrough, Enforcers receive Envoy's certificate
+> (`envoy-ssl`) directly. Its Subject Alternative Names (SANs) must include the
+> external DNS name and/or IP address of the Gateway.
 
 Refer to the Aqua documentation for certificate requirements and generation steps.
 
@@ -138,34 +128,64 @@ Deploy the following Envoy prerequisites from the `envoy/` directory:
 - `003_envoy-configmap.yaml` — Envoy static configuration
 - `004b_envoy-deployment.yaml` — Envoy Deployment with `envoy-ssl` secret mounted
 
-> Use `004b_envoy-deployment.yaml` for Gateway API deployments. In this mode,
-> external access is provided by the Gateway — Envoy does not require its own
-> LoadBalancer service. Do not apply together with 004_envoy-deployment.yaml.
+> Use `004b_envoy-deployment.yaml` for Gateway API deployments — external access is
+> provided by the Gateway, so Envoy does not need its own LoadBalancer. Do not apply
+> it together with `004_envoy-deployment.yaml`.
+>
+> If you are migrating from `004_envoy-deployment.yaml`, delete its LoadBalancer
+> Service so Envoy is no longer exposed directly, bypassing the Gateway:
+>
+> ```bash
+> kubectl delete service aqua-lb -n aqua
+> ```
 
 ## Configuration
 
-Before deploying, update `002_gateway.yaml` to match your environment:
+Replace the placeholders in the following files before deploying.
 
-**`<GATEWAY_CLASS_NAME>`** — replace with the GatewayClass name of your installed
-implementation (e.g. `eg` for Envoy Gateway, `istio` for Istio).
-Skip creating gatewayclass if your implementation already created a GatewayClass (kubectl get gatewayclass).
+### GatewayClass (`000_gatewayclass.yaml`) — optional
 
-**`<GATEWAY_CONTROLLER_NAME>`** — replace with the Gateway controller name of your installed
-implementation (e.g. `eg` for Envoy Gateway, `istio` for Istio).
+Run `kubectl get gatewayclass`. If your implementation already created a
+GatewayClass (for example, Istio creates `istio`), skip this file and use that
+name for `<GATEWAY_CLASS_NAME>` in `002_gateway.yaml`.
 
-  # Controller name must match the installed Gateway API implementation.
-  # Common values:
-  #   - "gateway.envoyproxy.io/gatewayclass-controller"  (Envoy Gateway)
-  #   - "istio.io/gateway-controller"                    (Istio)
-  #   - "projectcontour.io/gateway-controller"           (Contour)
-  #   - "gateway.nginx.org/nginx-gateway-controller"     (NGINX Gateway Fabric)
+Otherwise, set:
 
-**`<PORT>`** — replace with the external port Enforcers will use to connect. Choose
-a port that does not conflict with other services in your cluster. 
+| Placeholder | Value |
+|---|---|
+| `<GATEWAY_CLASS_NAME>` | A new, unused GatewayClass name (e.g. `aqua-gateway-class`) |
+| `<GATEWAY_CONTROLLER_NAME>` | The controller name of your implementation (see below) |
 
-**Hostname-based SNI routing (optional)** — if your Enforcers connect using a specific
-FQDN, uncomment and set `hostname` in `002_gateway.yaml` and `hostnames` in
-`003_tls-route.yaml`.
+Controller names for common implementations:
+
+| Implementation | `<GATEWAY_CONTROLLER_NAME>` |
+|---|---|
+| Envoy Gateway | `gateway.envoyproxy.io/gatewayclass-controller` |
+| Istio | `istio.io/gateway-controller` |
+| Contour | `projectcontour.io/gateway-controller` |
+| NGINX Gateway Fabric | `gateway.nginx.org/nginx-gateway-controller` |
+
+For other implementations, refer to your vendor's documentation.
+
+> The controller name of an existing GatewayClass cannot be changed. Do not reuse
+> the name of a GatewayClass that already exists, or the apply will fail.
+
+### Gateway (`002_gateway.yaml`)
+
+| Placeholder | Value |
+|---|---|
+| `<GATEWAY_CLASS_NAME>` | The existing GatewayClass name, or the same name set in `000_gatewayclass.yaml` |
+| `<PORT>` | The external port Enforcers connect to, as an integer (e.g. `443`) |
+
+> If the Gateway shares its external address with other services (for example,
+> on clusters where all LoadBalancer services use a single IP, or behind a shared
+> ingress), choose a `<PORT>` that is not already used on that address, such as
+> the aqua-web port `443`.
+
+### Hostname-based SNI routing (optional)
+
+If your Enforcers connect using a specific FQDN, uncomment and set `hostname` in
+`002_gateway.yaml` and `hostnames` in `003_tls-route.yaml`. The values must match.
 
 ## Deployment
 
@@ -184,7 +204,7 @@ kubectl apply -f aqua_csp_007_networking/envoy/003_envoy-configmap.yaml
 kubectl apply -f aqua_csp_007_networking/envoy/004b_envoy-deployment.yaml
 
 # 3. Deploy Gateway API resources
-# (Optional) Apply only if no suitable GatewayClass exists — see Prerequisites
+# (Optional) Only if no suitable GatewayClass exists — see Configuration
 kubectl apply -f aqua_csp_007_networking/gateway_api/000_gatewayclass.yaml
 
 kubectl apply -f aqua_csp_007_networking/gateway_api/001_envoy-service.yaml
@@ -208,18 +228,27 @@ kubectl get tlsroute aqua-envoy-passthrough -n aqua
 # Check all Aqua pods are running
 kubectl get pods -n aqua
 
-# Get the Gateway's external address — configure Enforcers to connect here
+# Get the Gateway's external address
 kubectl get gateway aqua-gateway-proxy -n aqua -o jsonpath='{.status.addresses[0].value}'
 ```
 
 ## Connecting Enforcers
 
-Once the Gateway is programmed and has an address, configure your Enforcers to connect to the Gateway's external address and the listener port you configured. 
+Configure Enforcers and KubeEnforcers to connect to the Gateway's external address
+(from the Verification step above) and the `<PORT>` set in `002_gateway.yaml`.
 
-If you are deploying Enforcers via Helm, set the gateway address in your `values.yaml` (or via `--set`):
+**Helm** — set in `values.yaml` or via `--set`:
 
 ```yaml
 global:
   gateway:
     address: "<gateway-address>"
     port: <PORT>
+```
+
+**Manifests** — set the gateway address environment variable:
+
+| Component | Variable | Value |
+|---|---|---|
+| Enforcer | `AQUA_SERVER` | `<gateway-address>:<PORT>` |
+| KubeEnforcer | `AQUA_GATEWAY_SECURE_ADDRESS` | `<gateway-address>:<PORT>` |

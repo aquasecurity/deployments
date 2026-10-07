@@ -9,6 +9,9 @@
 #
 # NOTE: Do not apply together with 004_envoy-deployment.yaml — both define a
 #       Deployment named "envoy" and one will overwrite the other.
+#       If migrating from 004, also delete its LoadBalancer Service so Envoy is
+#       not still exposed directly (bypassing the Gateway):
+#         kubectl delete service aqua-lb -n aqua
 #
 apiVersion: apps/v1
 kind: Deployment
