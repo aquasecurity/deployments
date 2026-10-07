@@ -27,7 +27,7 @@ KubeEnforcers are supported on Linux platforms (with exception of VMware Tanzu T
 
 ## References
 
-Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends that you read the following product documentation:
+Before you start using any of the deployment methods documented in this repository, Aqua strongly recommends that you read the following product documentation:
 * [Introduction to Enforcers](https://docs.aquasec.com/v2022.4/platform/runtime-protection/enforcers/enforcers-introduction/)
 * [Types of Enforcers](https://docs.aquasec.com/v2022.4/platform/runtime-protection/enforcers/enforcers-types/)
 * [Deployments Overview](https://docs.aquasec.com/v2022.4/platform/deployments/deployments-overview/)

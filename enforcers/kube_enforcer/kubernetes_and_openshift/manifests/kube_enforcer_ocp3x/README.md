@@ -16,7 +16,7 @@ Starboard assesses workload compliance throughout the lifecycle of the workloads
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua KubeEnforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-kubeenforcers) for detailed information.
 
 ## Specific OpenShift notes
-The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below use the **kubectl** cli, however they can be easily replaced with the **oc** cli commands, to work on all platforms including OpenShift.
 
 ## Prerequisites
 

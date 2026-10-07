@@ -29,7 +29,7 @@ In Kubernetes, the enforcer runs as a DaemonSet deployment for workload runtime 
 
 
 ## References
-Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends you to refer the following product documentation:
+Before you start using any of the deployment methods documented in this repository, Aqua strongly recommends you to refer the following product documentation:
 * [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers)
 * [Kubernetes with Helm Charts](https://docs.aquasec.com/docs/kubernetes-with-helm#section-step-4-deploy-the-aqua-enforcer)
 * [Deploy Aqua on Amazon Elastic Container Service (ECS)](https://docs.aquasec.com/docs/amazon-elastic-container-service-ecs#section-step-2-deploy-aqua-enforcers).

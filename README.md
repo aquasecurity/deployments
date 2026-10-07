@@ -44,7 +44,7 @@ You can deploy the mentioned Aqua components using one or more of the following 
 
 Each Aqua component can be deployed through a selection of the methods above, as listed in component's directory itself.
 
-Before you start using any of the deployment methods documented in this reposiory, Aqua strongly recommends that you read the following product documentation:
+Before you start using any of the deployment methods documented in this repository, Aqua strongly recommends that you read the following product documentation:
 * [Introduction to Enforcers](https://docs.aquasec.com/v2022.4/platform/runtime-protection/enforcers/enforcers-introduction/)
 * [Types of Enforcers](https://docs.aquasec.com/v2022.4/platform/runtime-protection/enforcers/enforcers-types/)
 * [Deployments Overview](https://docs.aquasec.com/v2022.4/platform/deployments/deployments-overview/)

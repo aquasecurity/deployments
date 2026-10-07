@@ -17,7 +17,7 @@ This repository shows all the directories and manifest yaml files required to de
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Server Components](https://docs.aquasec.com/docs/deploy-k8s-server-components).
 
 ## Specific OpenShift notes
-The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below use the **kubectl** cli, however they can be easily replaced with the **oc** cli commands, to work on all platforms including OpenShift.
 
 ## Prerequisites
 * Your Aqua credentials: username and password
