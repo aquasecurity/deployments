@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: TLSRoute
+metadata:
+  name: aqua-envoy-passthrough
+  namespace: aqua
+  labels:
+    app: aqua-envoy-passthrough
+spec:
+  parentRefs:
+    - name: aqua-gateway-proxy
+      sectionName: aqua-tls-passthrough
+  # Optional: match on SNI hostname.
+  # Must match the hostname in the Gateway listener if one is set.
+  # Uncomment and set if using hostname-based routing.
+  # hostnames:
+  #   - "aqua-gw.example.com"
+  rules:
+    - backendRefs:
+        - name: aqua-envoy
+          port: 8443
+

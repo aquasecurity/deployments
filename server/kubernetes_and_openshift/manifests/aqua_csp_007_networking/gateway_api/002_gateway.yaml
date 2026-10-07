@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: aqua-gateway-proxy
+  namespace: aqua
+  labels:
+    app: aqua-gateway-proxy
+spec:
+  gatewayClassName: "<GATEWAY_CLASS_NAME>"
+  listeners:
+    - name: aqua-tls-passthrough
+      port: <PORT>
+      protocol: TLS
+      tls:
+        mode: Passthrough
+      # Optional: restrict to a specific hostname for SNI-based routing.
+      # Uncomment and set if your Enforcers connect using a specific FQDN.
+      # hostname: "aqua-gw.example.com"
+      allowedRoutes:
+        namespaces:
+          from: Same
