@@ -9,11 +9,11 @@ spec:
   parentRefs:
     - name: aqua-gateway-proxy
       sectionName: aqua-tls-passthrough
-  # Optional: match on SNI hostname.
-  # Must match the hostname in the Gateway listener if one is set.
-  # Uncomment and set if using hostname-based routing.
-  # hostnames:
-  #   - "aqua-gw.example.com"
+  # Required by TLSRoute (Gateway API v1.6+): the SNI name Enforcers connect with.
+  # Must be a DNS name (IP addresses are not allowed) and must match the
+  # listener hostname in 002_gateway.yaml.
+  hostnames:
+    - "<GATEWAY_HOSTNAME>"
   rules:
     - backendRefs:
         - name: aqua-envoy
