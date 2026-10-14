@@ -14,6 +14,9 @@ load balancing, and distributes traffic across multiple Aqua Gateway pods.
 Enforcer ──TLS──▶ Gateway (Passthrough) ──TLS──▶ Envoy ──gRPC──▶ Aqua Gateway Pods
 ```
 
+The Gateway routes by the TLS SNI name, so Enforcers must connect using a DNS name
+(`<GATEWAY_HOSTNAME>`), not an IP address.
+
 > The Aqua Web Console is exposed separately via its own LoadBalancer service and
 > is not routed through the Gateway API.
 
@@ -42,7 +45,8 @@ TLS Passthrough are also compatible. For a full list, see the
 
 ### 3. TLS Secrets
 
-Three TLS secrets are required in the `aqua` namespace before deploying:
+Three TLS secrets are required in the `aqua` namespace. Create them **before**
+deploying the server (Deployment step 1):
 
 | Secret Name | Type | Used By |
 |---|---|---|
@@ -50,9 +54,24 @@ Three TLS secrets are required in the `aqua` namespace before deploying:
 | `aqua-grpc-web` | `Opaque` | aqua-web — gRPC TLS with Gateway pods |
 | `aqua-grpc-gateway` | `Opaque` | aqua-gateway — TLS with Envoy upstream |
 
+```bash
+kubectl create secret tls envoy-ssl -n aqua \
+  --cert=<envoy.crt> --key=<envoy.key>
+
+kubectl create secret generic aqua-grpc-web -n aqua \
+  --from-file=aqua_web.crt=<aqua_web.crt> \
+  --from-file=aqua_web.key=<aqua_web.key> \
+  --from-file=rootCA.crt=<rootCA.crt>
+
+kubectl create secret generic aqua-grpc-gateway -n aqua \
+  --from-file=aqua_gateway.crt=<aqua_gateway.crt> \
+  --from-file=aqua_gateway.key=<aqua_gateway.key> \
+  --from-file=rootCA.crt=<rootCA.crt>
+```
+
 > **Important:** With TLS Passthrough, Enforcers receive Envoy's certificate
-> (`envoy-ssl`) directly. Its Subject Alternative Names (SANs) must include the
-> external DNS name and/or IP address of the Gateway.
+> (`envoy-ssl`) directly. Its Subject Alternative Names (SANs) must contain
+> `<GATEWAY_HOSTNAME>` (see [Configuration](#gateway-hostname-required)).
 
 Refer to the Aqua documentation for certificate requirements and generation steps.
 
@@ -74,6 +93,9 @@ AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
 
 In your chosen server deployment file (`aqua_csp_006_server_deployment/`), uncomment
 the volume mounts for `aqua-web` and `aqua-gateway`:
+In **one** server deployment file from `aqua_csp_006_server_deployment/` (packaged DB
+or managed DB, whichever you deploy), uncomment the volume mounts for `aqua-web`
+and `aqua-gateway`:
 
 **aqua-web**:
 ```yaml
@@ -138,10 +160,13 @@ Deploy the following Envoy prerequisites from the `envoy/` directory:
 > ```bash
 > kubectl delete service aqua-lb -n aqua
 > ```
+> it together with `004_envoy-deployment.yaml`. If you are migrating from `004`, see
+> [Migrating from 004_envoy-deployment.yaml](#migrating-from-004_envoy-deploymentyaml).
 
 ## Configuration
 
 Replace the placeholders in the following files before deploying.
+Replace the placeholders in the following files **before** deploying.
 
 ### GatewayClass (`000_gatewayclass.yaml`) — optional
 
@@ -171,21 +196,40 @@ For other implementations, refer to your vendor's documentation.
 > the name of a GatewayClass that already exists, or the apply will fail.
 
 ### Gateway (`002_gateway.yaml`)
+### Gateway (`002_gateway.yaml`) and TLSRoute (`003_tls-route.yaml`)
 
 | Placeholder | Value |
 |---|---|
 | `<GATEWAY_CLASS_NAME>` | The existing GatewayClass name, or the same name set in `000_gatewayclass.yaml` |
 | `<PORT>` | The external port Enforcers connect to, as an integer (e.g. `443`) |
+| Placeholder | File(s) | Value |
+|---|---|---|
+| `<GATEWAY_CLASS_NAME>` | `002_gateway.yaml` | The existing GatewayClass name, or the same name set in `000_gatewayclass.yaml` |
+| `<PORT>` | `002_gateway.yaml` | The external port Enforcers connect to, as an integer (e.g. `9443`) |
+| `<GATEWAY_HOSTNAME>` | `002_gateway.yaml` and `003_tls-route.yaml` | DNS name Enforcers connect with (e.g. `aqua-gw.example.com`). Must be identical in both files. |
 
 > If the Gateway shares its external address with other services (for example,
 > on clusters where all LoadBalancer services use a single IP, or behind a shared
 > ingress), choose a `<PORT>` that is not already used on that address, such as
 > the aqua-web port `443`.
+> ingress), choose a `<PORT>` that is not already used on that address. In
+> particular, avoid `443` and `8080` if the aqua-web LoadBalancer uses them.
 
 ### Hostname-based SNI routing (optional)
+### Gateway hostname (required)
 
 If your Enforcers connect using a specific FQDN, uncomment and set `hostname` in
 `002_gateway.yaml` and `hostnames` in `003_tls-route.yaml`. The values must match.
+`TLSRoute` requires a hostname and does not accept IP addresses, so
+`<GATEWAY_HOSTNAME>` must be set in both `002_gateway.yaml` (listener `hostname`)
+and `003_tls-route.yaml` (`hostnames`). Without it, `kubectl apply` of the TLSRoute
+fails with `spec.hostnames: Required value`.
+
+- Enforcers and KubeEnforcers must connect using this DNS name. Connections by IP
+  address, or without SNI, are reset at the Gateway.
+- The `envoy-ssl` certificate SAN must contain this name.
+- Create a DNS record that points this name at the Gateway address (see
+  [Verification](#verification) for how to get it).
 
 ## Deployment
 
@@ -196,15 +240,17 @@ kubectl apply -f aqua_csp_002_RBAC/<platform>/
 kubectl apply -f aqua_csp_003_secrets/
 kubectl apply -f aqua_csp_004_configMaps/
 kubectl apply -f aqua_csp_005_storage/
-kubectl apply -f aqua_csp_006_server_deployment/
+
+# Apply ONE server deployment file only (they define the same resources):
+kubectl apply -f aqua_csp_006_server_deployment/aqua_server_deployment_<packaged_db|managed_db>.yaml
 
 # 2. Deploy Envoy stack
 kubectl apply -f aqua_csp_007_networking/envoy/001_server_gateway_service-envoy.yaml
 kubectl apply -f aqua_csp_007_networking/envoy/003_envoy-configmap.yaml
 kubectl apply -f aqua_csp_007_networking/envoy/004b_envoy-deployment.yaml
 
-# 3. Deploy Gateway API resources
-# (Optional) Only if no suitable GatewayClass exists — see Configuration
+# 3. Deploy Gateway API resources (placeholders replaced — see Configuration)
+# (Optional) Only if no suitable GatewayClass exists
 kubectl apply -f aqua_csp_007_networking/gateway_api/000_gatewayclass.yaml
 
 kubectl apply -f aqua_csp_007_networking/gateway_api/001_envoy-service.yaml
@@ -228,21 +274,25 @@ kubectl get tlsroute aqua-envoy-passthrough -n aqua
 # Check all Aqua pods are running
 kubectl get pods -n aqua
 
-# Get the Gateway's external address
+# Get the Gateway's external address — point the DNS record for <GATEWAY_HOSTNAME> at it
 kubectl get gateway aqua-gateway-proxy -n aqua -o jsonpath='{.status.addresses[0].value}'
+
+# Confirm TLS passes through to Envoy using the hostname (SNI)
+openssl s_client -connect <gateway-address>:<PORT> -servername <GATEWAY_HOSTNAME> </dev/null
 ```
 
 ## Connecting Enforcers
 
-Configure Enforcers and KubeEnforcers to connect to the Gateway's external address
-(from the Verification step above) and the `<PORT>` set in `002_gateway.yaml`.
+Configure Enforcers and KubeEnforcers to connect using `<GATEWAY_HOSTNAME>` and the
+`<PORT>` set in `002_gateway.yaml`. Do not use the Gateway's IP address. Ensure DNS
+resolves `<GATEWAY_HOSTNAME>` to the Gateway address.
 
 **Helm** — set in `values.yaml` or via `--set`:
 
 ```yaml
 global:
   gateway:
-    address: "<gateway-address>"
+    address: "<GATEWAY_HOSTNAME>"
     port: <PORT>
 ```
 
@@ -250,5 +300,21 @@ global:
 
 | Component | Variable | Value |
 |---|---|---|
-| Enforcer | `AQUA_SERVER` | `<gateway-address>:<PORT>` |
-| KubeEnforcer | `AQUA_GATEWAY_SECURE_ADDRESS` | `<gateway-address>:<PORT>` |
+| Enforcer | `AQUA_SERVER` | `<GATEWAY_HOSTNAME>:<PORT>` |
+| KubeEnforcer | `AQUA_GATEWAY_SECURE_ADDRESS` | `<GATEWAY_HOSTNAME>:<PORT>` |
+
+## Migrating from 004_envoy-deployment.yaml
+
+If Envoy was previously exposed through the `aqua-lb` LoadBalancer Service
+(`004_envoy-deployment.yaml`), migrate in this order so Enforcers are not
+disconnected:
+
+1. Deploy the Gateway API resources and complete [Verification](#verification).
+2. Move all Enforcers and KubeEnforcers to `<GATEWAY_HOSTNAME>:<PORT>`
+   (see [Connecting Enforcers](#connecting-enforcers)) and confirm they are connected.
+3. Only then remove the old LoadBalancer so Envoy is no longer exposed directly,
+   bypassing the Gateway:
+
+```bash
+kubectl delete service aqua-lb -n aqua
+```

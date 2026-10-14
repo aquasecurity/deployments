@@ -11,11 +11,10 @@ spec:
     - name: aqua-tls-passthrough
       port: <PORT>
       protocol: TLS
+      # DNS name Enforcers connect with (SNI). Must match hostnames in 003_tls-route.yaml.
+      hostname: "<GATEWAY_HOSTNAME>"
       tls:
         mode: Passthrough
-      # Optional: restrict to a specific hostname for SNI-based routing.
-      # Uncomment and set if your Enforcers connect using a specific FQDN.
-      # hostname: "aqua-gw.example.com"
       allowedRoutes:
         namespaces:
           from: Same
