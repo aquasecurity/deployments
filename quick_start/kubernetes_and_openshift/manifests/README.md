@@ -57,10 +57,73 @@ kubectl create secret docker-registry aqua-registry \
 Deploy Aqua Enterprise using the required yaml file mentioned in the current directory as per your use case. For example:
 
 ```SHELL
-kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/quick_start/kubernetes_and_openshift/manifests/aqua-csp-quick-DaemonSet-hostPath.yaml
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/main/quick_start/kubernetes_and_openshift/manifests/aqua-csp-quick-DaemonSet-hostPath.yaml
 ```
 
 For more information on selecting the yaml file that you need, refer to the [Configuration of Enforcers and storage](#configuration-of-enforcers-and-storage) section.
+
+### Deploying with KubeEnforcer
+
+The files that deploy KubeEnforcer (*aqua-csp-quick-default-storage.yaml* and *aqua-csp-quick-hostpath.yaml*) do not ship a certificate for the KubeEnforcer admission webhook. Generate one and add it to the manifest before you apply it. The examples use *aqua-csp-quick-hostpath.yaml*.
+
+**Step 1. Download the manifest.**
+
+```SHELL
+curl -O https://raw.githubusercontent.com/aquasecurity/deployments/main/quick_start/kubernetes_and_openshift/manifests/aqua-csp-quick-hostpath.yaml
+```
+
+**Step 2. Generate the CA bundle and SSL certificates** with the KubeEnforcer script. Answer `y` to proceed. When it offers to deploy the KubeEnforcer config, answer `N`: the quick-start manifest deploys KubeEnforcer itself. The script creates *rootCA.crt*, *aqua_ke.crt* and *aqua_ke.key* in the current directory.
+
+```SHELL
+curl -s https://raw.githubusercontent.com/aquasecurity/deployments/main/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh | bash
+```
+
+After `N`, the script prints "User abandoned. Please deploy KubeEnforcer config from 001_kube_enforcer_config.yaml manifest using kubectl" and exits. This is expected: do not apply *001_kube_enforcer_config.yaml*, continue with step 3.
+
+**Step 3. Add the CA bundle to the manifest.**
+
+```SHELL
+sed -i'.original' "s/caBundle.*/caBundle: $(cat rootCA.crt | base64 | tr -d '\n')/g" aqua-csp-quick-hostpath.yaml
+```
+
+**Step 4. Create the SSL cert secret.**
+
+```SHELL
+kubectl create secret generic kube-enforcer-ssl --from-file aqua_ke.key --from-file aqua_ke.crt -n aqua
+```
+
+**Step 5. Deploy Aqua Enterprise.**
+
+```SHELL
+kubectl apply -f aqua-csp-quick-hostpath.yaml
+```
+
+#### Renewing the KubeEnforcer certificate
+
+The generated SSL certificate is valid for 365 days. To renew it without re-applying the manifest:
+
+**Step 1. Generate new certificates** by running step 2 of [Deploying with KubeEnforcer](#deploying-with-kubeenforcer) again, answering the same way.
+
+**Step 2. Replace the SSL cert secret.**
+
+```SHELL
+kubectl create secret generic kube-enforcer-ssl --from-file aqua_ke.key --from-file aqua_ke.crt -n aqua --dry-run=client -o yaml | kubectl replace -f -
+```
+
+**Step 3. Update the CA bundle in both webhooks and in the local manifest.**
+
+```SHELL
+CA=$(cat rootCA.crt | base64 | tr -d '\n')
+kubectl patch validatingwebhookconfiguration kube-enforcer-admission-hook-config --type=json -p "[{\"op\":\"replace\",\"path\":\"/webhooks/0/clientConfig/caBundle\",\"value\":\"$CA\"}]"
+kubectl patch mutatingwebhookconfiguration kube-enforcer-me-injection-hook-config --type=json -p "[{\"op\":\"replace\",\"path\":\"/webhooks/0/clientConfig/caBundle\",\"value\":\"$CA\"}]"
+sed -i'.original' "s/caBundle.*/caBundle: $CA/g" aqua-csp-quick-hostpath.yaml
+```
+
+**Step 4. Restart KubeEnforcer.**
+
+```SHELL
+kubectl rollout restart deployment aqua-kube-enforcer -n aqua
+```
 
 ## Access Aqua Enterprise console
 
