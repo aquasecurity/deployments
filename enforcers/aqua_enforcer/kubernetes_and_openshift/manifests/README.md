@@ -10,7 +10,7 @@ This repository shows the manifest yaml files required to deploy Aqua Enforcer o
 Before you follow the deployment steps explained below, Aqua strongly recommends you refer the product documentation, [Deploy Aqua Enforcer(s)](https://docs.aquasec.com/docs/deploy-k8s-aqua-enforcers) for detailed information.
 
 ### Specific OpenShift notes
-The deployment commands shown below, use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below, use the **kubectl** cli, however they can be easily replaced with the **oc** cli commands, to work on all platforms including OpenShift.
 
 ## Prerequisites for manifest deployment
 
@@ -31,7 +31,7 @@ You may consider the following options for deploying the Aqua Enforcer:
 
 - Gateway
   
-  - To connect with an exteranl Gateway, update the **AQUA_SERVER** value with the gateway endpoint address in the *002_aqua_enforcer_configMaps.yaml* configMap manifest file.
+  - To connect with an external Gateway, update the **AQUA_SERVER** value with the gateway endpoint address in the *002_aqua_enforcer_configMaps.yaml* configMap manifest file.
 
 ## Supported platforms
 | < PLATFORM >              | Description                                                  |
