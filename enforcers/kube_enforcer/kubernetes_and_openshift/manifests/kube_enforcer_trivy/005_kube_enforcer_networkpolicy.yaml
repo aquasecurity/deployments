@@ -36,6 +36,8 @@ spec:
           port: 8443
         - protocol: TCP
           port: 8080
+        - protocol: TCP
+          port: 8996           # Prometheus listener; match AQUA_PROMETHEUS_PORT
   egress:
     - to:
         - namespaceSelector:
