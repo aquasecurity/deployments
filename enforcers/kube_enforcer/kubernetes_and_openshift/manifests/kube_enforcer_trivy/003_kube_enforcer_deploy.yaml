@@ -54,8 +54,8 @@ spec:
             - containerPort: 8080
               protocol: TCP
             # Dedicated Prometheus listener; keep in sync with AQUA_PROMETHEUS_PORT and the 005 NetworkPolicy.
-            # Listens only while the Console enables the exporter in Settings AND the Enforcer Group;
-            # AQUA_ENABLE_METRICS is not needed. /metrics on 8080 is not controlled by these switches.
+            # Listens only while AQUA_ENABLE_METRICS is true and the Console enables the exporter in
+            # Settings AND the Enforcer Group. /metrics on 8080 is a separate route.
             - name: prometheus
               containerPort: 8996
               protocol: TCP
