@@ -47,6 +47,12 @@ spec:
           ports:
             - containerPort: 8449
             - containerPort: 8442
+            # Dedicated Prometheus listener; keep in sync with AQUA_PROMETHEUS_PORT and the 005 NetworkPolicy.
+            # Listens only while AQUA_ENABLE_METRICS is true and the Console enables the exporter in
+            # Settings AND the Enforcer Group. /metrics on 8080 is a separate route.
+            - name: prometheus
+              containerPort: 8996
+              protocol: TCP
           env:
             #Enable/Disable KB scanning on tainted nodes
             - name: AQUA_KB_SCAN_TAINTED_NODES
@@ -75,6 +81,13 @@ spec:
               value: "8449"
             - name: AQUA_KE_SERVER_PORT
               value: "8442"
+            # Port for the dedicated Prometheus /metrics listener (plain HTTP). Default value is 8996.
+            - name: AQUA_PROMETHEUS_PORT
+              value: "8996"
+            # Enables kube_enforcer_* metric collection. The dedicated Prometheus listener also needs the Console
+            # exporter enabled in Settings AND the Enforcer Group. Off when unset or "false".
+            - name: AQUA_ENABLE_METRICS
+              value: "true"
             - name: CLUSTER_NAME
               value: "Default-cluster-name"   # Cluster display name in aqua enterprise.
             - name: AQUA_KB_IMAGE_NAME
