@@ -193,6 +193,7 @@ webhooks:
           - pods
           - deployments
           - deployments/scale
+          - deploymentconfigs
           - replicasets
           - replicasets/scale
           - replicationcontrollers

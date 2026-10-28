@@ -20,7 +20,7 @@ Before you follow the deployment steps explained below, Aqua strongly recommends
 Deploying KubeEnforcer with advanced configuration will cause Pod Enforcer traffic to be routed to the KubeEnforcers via a local envoy, which then forwards the traffic to an Aqua Gateway. This configuration improves performance and reduces remote network connections between pods and Gateways.
 
 ## Specific OpenShift notes
-The deployment commands shown below use the **kubectl** cli, however they can be easliy replaced with the **oc** cli commands, to work on all platforms including OpenShift.
+The deployment commands shown below use the **kubectl** cli, however they can be easily replaced with the **oc** cli commands, to work on all platforms including OpenShift.
 
 ## Prerequisites
 
