@@ -54,8 +54,10 @@ spec:
             - containerPort: 8080
               protocol: TCP
             # Dedicated Prometheus listener; keep in sync with AQUA_PROMETHEUS_PORT and any NetworkPolicy you apply.
-            # Listens only while AQUA_ENABLE_METRICS is true and the Console enables the exporter in
-            # Settings AND the Enforcer Group. /metrics on 8080 is a separate route.
+            # Opens only while the Console enables the exporter in Settings AND the Enforcer Group.
+            # Enabling it turns on kube_enforcer_* collection; AQUA_ENABLE_METRICS is not needed.
+            # Collection then stays on until the pod restarts, even if the exporter is turned off.
+            # The /metrics routes on 8080 and TLS stay up either way and serve the same metrics.
             - name: prometheus
               containerPort: 8996
               protocol: TCP
