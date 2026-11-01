@@ -19,9 +19,6 @@ data:
   AQUA_TLS_PORT: "8443"
   # Port for the dedicated Prometheus /metrics listener (plain HTTP). Default value is 8996.
   AQUA_PROMETHEUS_PORT: "8996"
-  # Enables kube_enforcer_* metric collection. The dedicated Prometheus listener also needs the Console
-  # exporter enabled in Settings AND the Enforcer Group. Off when unset or "false".
-  AQUA_ENABLE_METRICS: "true"
   AQUA_LOGICAL_NAME: ""
   # Cluster display name in aqua enterprise.
   CLUSTER_NAME: "Default-cluster-name"
