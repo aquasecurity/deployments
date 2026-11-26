@@ -68,11 +68,11 @@ You can skip any step in this section, if you have already performed.
         
       1. Generate certs for aqua namespace.
         ```shell
-        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh | bash
+        curl -s  https://raw.githubusercontent.com/aquasecurity/deployments/main/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh | bash
         ```
       2. Generate certs for custom namespace, Replace the `<namespace name>` in the below command with the namespace where KE is going to be deployed, and run the command.
         ```shell
-        curl  https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh | bash -s -- <namespace name>
+        curl  https://raw.githubusercontent.com/aquasecurity/deployments/main/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/gen_ke_certs.sh | bash -s -- <namespace name>
         ```
 
    - **Option B (Manual)**: Perform the steps mentioned in the [Deploy the KubeEnforcer Config manually](#deploy-the-kubeenforcer-config-manually) section.
@@ -96,19 +96,19 @@ You can skip any step in this section, if you have already performed.
 * Download, edit, and apply the secrets manifest file to create the token and SSL cert secrets.
 
   ```SHELL
-  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/002_kube_enforcer_secrets.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/main/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/002_kube_enforcer_secrets.yaml
   ```  
 
 ***Note: For KubeEnforcer deployment in OpenShift environments***
    * Prior to deployment of the KubeEnforcer, apply kube-enforcer scc:
   ```shell
-  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/004_kube_enforcer_scc.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/main/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/004_kube_enforcer_scc.yaml
   ```
 
 **Step 3. Deploy KubeEnforcer.**
 
 ```SHELL
-  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/2022.4/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
+  kubectl apply -f https://raw.githubusercontent.com/aquasecurity/deployments/main/enforcers/kube_enforcer/kubernetes_and_openshift/manifests/kube_enforcer/003_kube_enforcer_deploy.yaml
 ```
 
 ## NetworkPolicy (optional)
